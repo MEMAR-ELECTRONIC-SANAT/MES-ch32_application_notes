@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>راهنمای حالت‌های کم‌مصرف و بیدارسازی در میکروکنترلرهای CH32 — ترجمۀ فارسی AN01000</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">راهنمای جامع</div>
+    <div class="t2">حالت‌های کم‌مصرف</div>
+    <div class="t3">در میکروکنترلرهای <span class="en">CH32</span></div>
+  </div>
+  <div class="c-sub">از تفاوت <span class="en">SLEEP</span>، <span class="en">STOP</span> و <span class="en">STANDBY</span> تا نمونه‌های عملی بیدارسازی با <span class="en">RTC</span>، پایۀ <span class="en">WKUP</span>، ماژول <span class="en">AWU</span>، تایمر <span class="en">LPTIM</span> و پایشگر <span class="en">PVD</span></div>
+  <div class="c-desc">در این جزوه، ترجمۀ فارسی سند رسمی <span class="en">AN01000</span> (نسخۀ ۱٫۰، منتشرۀ شرکت <span class="en">WCH</span>) را با ترجمۀ فنی و روان و با حفظ اصطلاحات اصلی سخت‌افزار می‌خوانید؛ تفاوت حالت‌های کم‌مصرف و شیوۀ انتخاب حالت مناسب، کاربرد منابع بیدارسازی همراه با نمونه‌های پیکربندی، روش‌های بهینه‌سازی جریان مصرفی در حالت خواب از سه منظر نرم‌افزار، سخت‌افزار و خطای اندازه‌گیری، و نکات مهم حین خواب و بیدارسازی را گام‌به‌گام مرور می‌کنیم.</div>
+  <div class="c-tags">
+    <span class="c-tag">حالت‌های کم‌مصرف</span>
+    <span class="c-tag">بیدارسازی با <span class="en">RTC</span></span>
+    <span class="c-tag">پایۀ <span class="en">WKUP</span></span>
+    <span class="c-tag">ماژول <span class="en">AWU</span></span>
+    <span class="c-tag">تایمر <span class="en">LPTIM</span></span>
+    <span class="c-tag">پایشگر <span class="en">PVD</span></span>
+    <span class="c-tag">بهینه‌سازی جریان خواب</span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN01000 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | حالت‌های کم‌مصرف</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-111"><span class="s-id">1.1.1</span><span>حالت <span class="en">SLEEP</span></span><span class="s-dots"></span><span class="s-page">۴</span></a>
+    <a class="toc-sub" href="#sec-112"><span class="s-id">1.1.2</span><span>حالت <span class="en">STOP</span></span><span class="s-dots"></span><span class="s-page">۴</span></a>
+    <a class="toc-sub" href="#sec-113"><span class="s-id">1.1.3</span><span>حالت <span class="en">STANDBY</span></span><span class="s-dots"></span><span class="s-page">۴</span></a>
+    <a class="toc-sub" href="#sec-121"><span class="s-id">1.2.1</span><span>بیدارسازی با هشدار <span class="en">RTC</span></span><span class="s-dots"></span><span class="s-page">۴</span></a>
+    <a class="toc-sub" href="#sec-122"><span class="s-id">1.2.2</span><span>بیدارسازی با پایۀ <span class="en">WKUP</span></span><span class="s-dots"></span><span class="s-page">۶</span></a>
+    <a class="toc-sub" href="#sec-123"><span class="s-id">1.2.3</span><span>بیدارسازی خودکار <span class="en">AWU</span></span><span class="s-dots"></span><span class="s-page">۷</span></a>
+    <a class="toc-sub" href="#sec-124"><span class="s-id">1.2.4</span><span>بیدارسازی با <span class="en">LPTIM</span></span><span class="s-dots"></span><span class="s-page">۸</span></a>
+    <a class="toc-sub" href="#sec-125"><span class="s-id">1.2.5</span><span>بیدارسازی با <span class="en">PVD</span></span><span class="s-dots"></span><span class="s-page">۹</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2" style="margin-top:6px;"><span class="t-num">۳</span><span class="t-title">بخش ۲ | نکات و ملاحظات کم‌مصرف</span><span class="t-dots"></span><span class="t-page">۹</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-211"><span class="s-id">2.1.1</span><span>پیکربندی پایه‌های <span class="en">MCU</span></span><span class="s-dots"></span><span class="s-page">۹</span></a>
+    <a class="toc-sub" href="#sec-212"><span class="s-id">2.1.2</span><span>خاموش‌کردن جانبی‌ها و کاهش فرکانس</span><span class="s-dots"></span><span class="s-page">۱۰</span></a>
+    <a class="toc-sub" href="#sec-213"><span class="s-id">2.1.3</span><span>صرفه‌جویی ریگولاتور و <span class="en">RAM</span></span><span class="s-dots"></span><span class="s-page">۱۰</span></a>
+    <a class="toc-sub" href="#sec-214"><span class="s-id">2.1.4</span><span>اجرای کد از <span class="en">SRAM</span></span><span class="s-dots"></span><span class="s-page">۱۰</span></a>
+    <a class="toc-sub" href="#sec-215"><span class="s-id">2.1.5</span><span>بررسی مدارهای اطراف</span><span class="s-dots"></span><span class="s-page">۱۱</span></a>
+    <a class="toc-sub" href="#sec-216"><span class="s-id">2.1.6</span><span>کاهش خطای اندازه‌گیری جریان</span><span class="s-dots"></span><span class="s-page">۱۱</span></a>
+    <a class="toc-sub" href="#sec-221"><span class="s-id">2.2.1</span><span>خواب و بیدارسازی صحیح</span><span class="s-dots"></span><span class="s-page">۱۲</span></a>
+    <a class="toc-sub" href="#sec-222"><span class="s-id">2.2.2</span><span>حفظ سطح پایه‌ها در <span class="en">STANDBY</span></span><span class="s-dots"></span><span class="s-page">۱۲</span></a>
+    <a class="toc-sub" href="#sec-223"><span class="s-id">2.2.3</span><span>دریافت منبع رویداد <span class="en">WFE</span></span><span class="s-dots"></span><span class="s-page">۱۲</span></a>
+    <a class="toc-sub" href="#sec-224"><span class="s-id">2.2.4</span><span>حفظ <span class="en">RAM</span> در <span class="en">STANDBY</span></span><span class="s-dots"></span><span class="s-page">۱۳</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver" style="margin-top:6px;"><span class="t-num">۴</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۱۳</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۵</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۱۳</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها و جدول‌ها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">شکل ۱-۱</span><span>نمونۀ پیکربندی بیدارسازی با هشدار <span class="en">RTC</span></span><span class="f-dots"></span><span class="f-page">۵</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۲</span><span>نمونۀ وقفۀ بیدارسازی با هشدار <span class="en">RTC</span></span><span class="f-dots"></span><span class="f-page">۶</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۳</span><span>نمونۀ بیدارسازی با پایۀ <span class="en">WKUP</span></span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۴</span><span>نمونۀ بیدارسازی خودکار <span class="en">AWU</span></span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۱</span><span>نمودار اندازه‌گیری جریان</span><span class="f-dots"></span><span class="f-page">۱۱</span></div>
+      </div>
+      <div>
+        <div class="frow"><span class="f-id">جدول ۱-۱</span><span>مرور کلی حالت‌های کم‌مصرف</span><span class="f-dots"></span><span class="f-page">۳</span></div>
+        <div class="frow"><span class="f-id">جدول ۱</span><span>دامنۀ کاربرد سند</span><span class="f-dots"></span><span class="f-page">۳</span></div>
+        <div class="frow"><span class="f-id">جدول ۲</span><span>تاریخچۀ نسخه‌ها</span><span class="f-dots"></span><span class="f-page">۱۳</span></div>
+        <div class="frow"><span class="f-id">جدول ۳</span><span>واژگان کلیدی</span><span class="f-dots"></span><span class="f-page">۱۳</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> میکروکنترلرهای سری <span class="en">CH32</span> حالت‌های کم‌مصرف متعددی ارائه می‌کنند. این سند کاربردی تفاوت حالت‌های کم‌مصرف مختلف را فهرست می‌کند، نمونه‌هایی از بیدارسازی سیستم از حالت کم‌مصرف به‌وسیلۀ بخشی از منابع بیدارسازی ارائه می‌دهد، روش‌های بهینه‌سازی جریان مصرفی در حالت کم‌مصرف را از منظر پیکربندی نرم‌افزار، طراحی سخت‌افزار و خطای اندازه‌گیری معرفی می‌کند و نکات موردتوجه و ترفندهای کاربردی در فرایند خواب و بیدارسازی را شرح می‌دهد.</div>
+</div>
+
+<!-- ============================== BODY ============================== -->
+<div class="main-content">
+
+  <!-- ---- توضیحات و دامنۀ کاربرد ---- -->
+  <div class="chapter-header" id="sec-intro" style="margin-top:0;">
+    <span class="sec-pill">مقدمه</span>
+    <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>میکروکنترلرهای سری <span class="en">CH32</span> چندین حالت کم‌مصرف ارائه می‌کنند. این سند کاربردی تفاوت حالت‌های کم‌مصرف مختلف را فهرست کرده و نمونه‌هایی از کاربرد برخی منابع بیدارسازی برای بیدارکردن سیستم از حالت کم‌مصرف ارائه می‌دهد؛ روش‌های بهینه‌سازی جریان مصرفی در حالت کم‌مصرف را از منظرهای پیکربندی نرم‌افزار، طراحی سخت‌افزار و خطای اندازه‌گیری معرفی می‌کند و نکات موردتوجه و ترفندهای کاربردی در فرایند خواب و بیدارسازی را شرح می‌دهد.</p>
+  <div class="tblwrap" id="tab-01">
+    <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+    <table class="tbl">
+      <tr><th style="width:38%;">دامنۀ کاربرد</th><th>سری</th></tr>
+      <tr><td><span class="en">MCU</span> عمومی</td><td>میکروکنترلرهای عمومی <span class="en">CH32</span></td></tr>
+    </table>
+  </div>
+
+  <!-- ================= بخش ۱ ================= -->
+  <div class="chapter-header" id="sec-b1">
+    <span class="sec-pill">بخش ۱</span>
+    <div class="sec-title">حالت‌های کم‌مصرف</div>
+    <div class="sec-divider"></div>
+  </div>
+
+  <h3 class="h2x"><span class="dm">◆</span>۱.۱ معرفی حالت‌های کم‌مصرف</h3>
+  <p>میکروکنترلرهای سری <span class="en">CH32</span> حالت‌های کم‌مصرف متعددی مانند <span class="en">SLEEP</span>، <span class="en">STOP</span> و <span class="en">STANDBY</span> ارائه می‌کنند و روش‌های بیدارسازی متفاوتی برای خروج سیستم از این حالت‌ها در اختیار می‌گذارند. هنگامی‌که سیستم نیازی به ادامهٔ اجرا ندارد، می‌توان متناسب با نیاز سیستم، حالت کم‌مصرف مناسب را برای صرفه‌جویی در مصرف توان انتخاب کرد.</p>
+  <div class="tblwrap" id="tab-11">
+    <div class="tblcap"><span class="cap-pill">جدول ۱-۱</span><span class="cap-text">مرور کلی حالت‌های کم‌مصرف</span></div>
+    <table class="tbl">
+      <tr><th style="width:13%;">حالت</th><th style="width:22%;">نحوۀ ورود</th><th style="width:24%;">بیدارسازی</th><th>توضیح</th></tr>
+      <tr>
+        <td rowspan="2"><span class="en">SLEEP</span></td>
+        <td><span class="en">WFI</span></td>
+        <td>بیدارسازی با هر وقفه</td>
+        <td rowspan="2" class="jt">ساعت هسته خاموش می‌شود و از سایر ساعت‌ها اثری نیست؛ همهٔ پایه‌های <span class="en">I/O</span> حفظ می‌شوند و پس از بیدارسازی اجرا ادامه می‌یابد.</td>
+      </tr>
+      <tr>
+        <td><span class="en">WFE</span></td>
+        <td>بیدارسازی با هر رویداد</td>
+      </tr>
+      <tr>
+        <td><span class="en">STOP</span> <span style="color:var(--copper-dark);">(۱)</span></td>
+        <td class="jt">قرار دادن <span class="en">SLEEPDEEP</span> روی ۱<br>و <span class="en">PDDS</span> روی ۰</td>
+        <td><span class="en">WFI</span> یا <span class="en">WFE</span>؛<br>هر وقفه یا رویداد خارجی <span style="color:var(--copper-dark);">(۱)</span></td>
+        <td class="jt">ساعت‌های <span class="en">HSE</span>، <span class="en">HSI</span>، <span class="en">PLL</span> و ساعت جانبی‌ها خاموش می‌شوند؛ همهٔ پایه‌های <span class="en">I/O</span> حفظ می‌شوند و پس از بیدارسازی اجرا ادامه می‌یابد.</td>
+      </tr>
+      <tr>
+        <td><span class="en">STANDBY</span> <span style="color:var(--copper-dark);">(۱)</span></td>
+        <td class="jt">قرار دادن <span class="en">SLEEPDEEP</span> روی ۱<br>و <span class="en">PDDS</span> روی ۱</td>
+        <td><span class="en">WFI</span> یا <span class="en">WFE</span>؛<br>هر رویداد و موارد مشابه <span style="color:var(--copper-dark);">(۱)</span></td>
+        <td class="jt">ساعت‌های <span class="en">HSE</span>، <span class="en">HSI</span>، <span class="en">PLL</span> و ساعت جانبی‌ها خاموش می‌شوند؛ پس از بیدارسازی اجرا ادامه می‌یابد یا سیستم reset می‌شود.</td>
+      </tr>
+    </table>
+  </div>
+  <div class="note"><span class="lbl">توجه:</span> برخی محصولات حالت <span class="en">STOP</span> یا <span class="en">STANDBY</span> را ارائه نمی‌کنند؛ منابع بیدارسازی در محصولات مختلف متفاوت است و در برخی محصولات، پس از بیدارسازی از حالت <span class="en">STANDBY</span> سیستم به اجرا ادامه می‌دهد. برای جزئیات دقیق‌تر به دیتاشیت همان تراشه مراجعه کنید.</div>
+
+  <h4 class="h3x" id="sec-111"><span class="dm">◆</span>۱.۱.۱ حالت <span class="en">SLEEP</span></h4>
+  <p>با اجرای دستور <code>WFI</code> یا <code>WFE</code> وارد حالت خواب می‌شوید. در حالت <span class="en">SLEEP</span>، همهٔ پایه‌های <span class="en">I/O</span> وضعیت خود را در حالت اجرا حفظ می‌کنند و ساعت همهٔ جانبی‌ها نیز به‌صورت عادی فعال است؛ بنابراین پیش از ورود به خواب، تا جای ممکن ساعت جانبی‌های غیرموردنیاز را خاموش کنید تا مصرف توان کاهش یابد. زمان لازم برای بیدارسازی در این حالت از همهٔ حالت‌ها کمتر است.</p>
+
+  <h4 class="h3x" id="sec-112"><span class="dm">◆</span>۱.۱.۲ حالت <span class="en">STOP</span></h4>
+  <p>در این حالت دامنۀ ساعت‌های فرکانس‌بالا (<span class="en">HSE/HSI/PLL</span>) خاموش می‌شود، محتوای <span class="en">SRAM</span> و رجیسترها حفظ می‌گردد و وضعیت پایه‌های <span class="en">I/O</span> نیز حفظ می‌شود. پس از بیدارسازی از این حالت، سیستم می‌تواند به اجرا ادامه دهد و <span class="en">HSI</span> ساعت پیش‌فرض سیستم است. اگر در لحظۀ ورود به این حالت برنامه‌نویسی <span class="en">Flash</span> در جریان باشد، سیستم تا تکمیل دسترسی به حافظه وارد حالت توقف نمی‌شود؛ همچنین اگر دسترسی به <span class="en">PB</span> در جریان باشد، تا پایان آن دسترسی وارد حالت توقف نمی‌شود. حالت <span class="en">STOP</span> تعادلی میان مصرف توان و انعطاف‌پذیری برقرار می‌کند و برای بیشتر کاربردهای کم‌مصرف مناسب است.</p>
+
+  <h4 class="h3x" id="sec-113"><span class="dm">◆</span>۱.۱.۳ حالت <span class="en">STANDBY</span></h4>
+  <p>در حالت آماده‌به‌کار، ریگولاتور ولتاژ خاموش می‌شود و همهٔ مدارها به‌جز مدار بیدارسازی و مدارهای دامنۀ پشتیبان (Backup) از برق خارج می‌شوند تا کمترین مصرف توان حاصل شود. پس از خروج در شرایط بیدارسازی مشخص‌شده، میکروکنترلر reset می‌شود و reset از نوع تغذیه (Power Reset) اجرا می‌گردد (در برخی تراشه‌ها مانند سری‌های <span class="en">CH32V00x</span> و <span class="en">CH32X03x</span>، در حالت <span class="en">STANDBY</span> محتوای <span class="en">SRAM</span> و رجیسترها حفظ می‌شود، وضعیت پایه‌های <span class="en">I/O</span> حفظ می‌گردد، پس از بیدارسازی سیستم به اجرا ادامه می‌دهد و <span class="en">HSI</span> ساعت پیش‌فرض سیستم است). حالت <span class="en">STANDBY</span> کمترین مصرف توان را دارد، اما معمولاً پس از بیدارسازی باید سیستم دوباره راه‌اندازی شود و برای سناریوهایی که الزام واقع‌زمانی ندارند مناسب است.</p>
+
+  <h3 class="h2x"><span class="dm">◆</span>۱.۲ کاربرد برخی منابع بیدارسازی</h3>
+
+  <h4 class="h3x" id="sec-121"><span class="dm">◆</span>۱.۲.۱ بیدارسازی با هشدار <span class="en">RTC</span></h4>
+  <p><span class="en">RTC</span> می‌تواند بدون نیاز به وقفۀ خارجی، بیدارسازی خودکار را ممکن کند. با برنامه‌ریزی روی مبنای زمانی، می‌توان به‌صورت دوره‌ای از حالت‌های <span class="en">STOP</span> یا <span class="en">STANDBY</span> بیدار شد.</p>
+  <p>برای مثال در <span class="en">CH32F/V20x_V30x</span> می‌توان کریستال خارجی کم‌فرکانس دقیق <span class="en">32.768kHz</span> یعنی <span class="en">LSE</span> را به‌عنوان منبع ساعت <span class="en">RTC</span> انتخاب کرد یا نوسانگر داخلی <span class="en">LSI</span> را به‌عنوان منبع ساعت <span class="en">RTC</span> به کار برد؛ شاخص دقت و مصرف توان <span class="en">LSI</span> نسبت به <span class="en">LSE</span> ضعیف‌تر است. اگر از بیدارسازی رویدادی استفاده می‌کنید، لازم است سیگنال درخواست رویدادِ کانال ۱۷ وقفۀ خارجی فعال شود؛ اگر از بیدارسازی وقفه‌ای استفاده می‌کنید، باید سیگنال درخواست وقفۀ کانال ۱۷ وقفۀ خارجی فعال شود، وقفۀ خارجی هشدار فعال گردد و تابع سرویس وقفه نوشته شود. حالت <span class="en">STOP</span> هم از بیدارسازی با رویداد و هم با وقفه پشتیبانی می‌کند و پس از بیدارسازی سیستم به اجرا ادامه می‌دهد؛ اما حالت <span class="en">STANDBY</span> فقط با رویداد قابل بیدارسازی است، نیازی به پیکربندی خط ۱۷ وقفۀ خارجی ندارد و پس از بیدارسازی سیستم reset می‌شود.</p>
+  <div class="fig" id="fig-11">
+    <div class="figbox">
+      <img src="assets/img/fig1-1a.jpg" alt="شکل ۱-۱">
+      <img src="assets/img/fig1-1b.jpg" alt="شکل ۱-۱">
+    </div>
+    <div class="figcap"><span class="cap-pill">شکل ۱-۱</span><span class="cap-text">نمونۀ پیکربندی بیدارسازی با هشدار <span class="en">RTC</span></span></div>
+  </div>
+  <p>ساعت جانبی‌های <span class="en">PWR</span> و <span class="en">BKP</span> فعال می‌شود و منبع ساعت <span class="en">RTC</span> پیکربندی می‌گردد؛ پس از پایدارشدن ساعت <span class="en">LSE/LSI</span>، ساعت <span class="en">RTC</span> و وقفۀ هشدار فعال می‌شوند، ضریب تقسیم ساعت <span class="en">RTC</span> و مقدار هشدار تنظیم می‌شود و حالت <span class="en">STOP</span> اجرا می‌گردد. پس از ۱۰ ثانیه وقفۀ هشدار رخ می‌دهد و سیستم بیدار می‌شود. باید توجه داشت که پس از بیداری، <span class="en">HSI</span> ساعت پیش‌فرض سیستم است؛ برای تضمین اجرای صحیح برنامه توصیه می‌شود مقداردهی اولیۀ ساعت سیستم دوباره انجام شود.</p>
+  <div class="fig" id="fig-12">
+    <div class="figbox">
+      <img src="assets/img/fig1-2.jpg" alt="شکل ۱-۲">
+    </div>
+    <div class="figcap"><span class="cap-pill">شکل ۱-۲</span><span class="cap-text">نمونۀ وقفۀ بیدارسازی با هشدار <span class="en">RTC</span></span></div>
+  </div>
+  <p>در نمونۀ بالا از تابع وقفۀ هشدار <span class="en">RTC</span> یعنی <code>RTCAlarm_IRQHandler()</code> استفاده شده و از وقفۀ سراسری <span class="en">RTC</span> یعنی <code>RTC_IRQHandler()</code> استفاده نشده است. اگر قرار باشد هر دو تابع وقفه هم‌زمان به کار روند، باید چنین تنظیمی انجام دهید که حفره‌ای باقی نماند: اولویت تابع <code>RTCAlarm_IRQHandler()</code> حتماً باید بالاتر از <code>RTC_IRQHandler()</code> باشد. دلیل آن این است:</p>
+  <p>اندکی پیش از وقوع وقفۀ هشدار، حتماً وقفۀ ثانیه رخ داده است؛ پس ابتدا تابع وقفۀ <code>RTC_IRQHandler()</code> اجرا می‌شود و در جریان اجرای آن، پرچم وقفۀ هشدار دوباره در وضعیت معلق قرار می‌گیرد. از آنجا که <code>RTC_IRQHandler()</code> تابع وقفۀ سراسری است، برنامه تنها زمانی از این تابع خارج می‌شود که همهٔ پرچم‌های وقفه پاک شده باشند. اگر <code>RTC_IRQHandler()</code> و <code>RTCAlarm_IRQHandler()</code> اولویت یکسانی داشته باشند، برای خارج‌شدن برنامه از <code>RTC_IRQHandler()</code> ناگزیر باید پرچم وقفۀ هشدار را پاک کنید (اگر پرچم را پاک نکنید، برنامه در <code>RTC_IRQHandler()</code> گیر می‌کند). اما پس از پاک‌کردن پرچم وقفۀ هشدار، برنامه دیگر وارد <code>RTCAlarm_IRQHandler()</code> نمی‌شود و در نتیجه تابع <code>RTCAlarm_IRQHandler()</code> هرگز اجرا نخواهد شد.</p>
+  <p>با تنظیم اولویت تابع وقفۀ هشدار <code>RTCAlarm_IRQHandler()</code> بالاتر از تابع وقفۀ سراسری <code>RTC_IRQHandler()</code>، هنگام اجرای تابع سراسری اگر وقفۀ هشدار رخ دهد، وقفه به‌صورت تودرتو برای اجرای <code>RTCAlarm_IRQHandler()</code> پرش می‌کند و پس از اتمام آن، اجرای <code>RTC_IRQHandler()</code> ادامه می‌یابد.</p>
+
+  <h4 class="h3x" id="sec-122"><span class="dm">◆</span>۱.۲.۲ بیدارسازی با پایۀ <span class="en">WKUP</span></h4>
+  <p>سری‌هایی مانند <span class="en">CH32F/V10x_20x_V30x</span> و <span class="en">CH32L103</span> دارای رابط سخت‌افزاری اختصاصی برای بیدارسازی <span class="en">MCU</span> از حالت کم‌مصرف هستند: پایۀ <span class="en">WKUP</span> (<span class="en">PA0</span>). پس از فعال‌سازی، پایۀ <span class="en">WKUP</span> به‌صورت اجباری در حالت ورودی با مقاومت کشیدن به پایین (Pull-down) پیکربندی می‌شود و لبۀ بالاروندۀ <span class="en">WKUP</span> برای بیدارکردن <span class="en">MCU</span> از حالت <span class="en">STANDBY</span> به کار می‌رود. توصیه می‌شود در مقداردهی اولیه، پرچم بیدارسازی (<code>PWR_GetFlagStatus(PWR_FLAG_WU)</code>) بررسی شود تا مشخص گردد آیا راه‌اندازی ناشی از بیدارسازی بوده است یا خیر.</p>
+  <div class="fig" id="fig-13">
+    <div class="figbox">
+      <img src="assets/img/fig1-3a.jpg" alt="شکل ۱-۳">
+      <img src="assets/img/fig1-3b.jpg" alt="شکل ۱-۳">
+    </div>
+    <div class="figcap"><span class="cap-pill">شکل ۱-۳</span><span class="cap-text">نمونۀ بیدارسازی با پایۀ <span class="en">WKUP</span></span></div>
+  </div>
+
+  <h4 class="h3x" id="sec-123"><span class="dm">◆</span>۱.۲.۳ بیدارسازی خودکار <span class="en">AWU</span></h4>
+  <p>برای <span class="en">MCU</span>های سری <span class="en">RISC-V</span> که فاقد قابلیت <span class="en">RTC</span> هستند&nbsp;— مانند سری‌های <span class="en">CH32V00x</span> و <span class="en">CH32X03x</span>&nbsp;— هنگامی‌که در حالت کم‌مصرف نیاز به بیدارسازی خودکار باشد، قابلیت <span class="en">AWU</span> ارائه شده است. <span class="en">AWU</span> از بیدارسازی <span class="en">MCU</span> به دو شیوۀ وقفه یا رویداد پشتیبانی می‌کند؛ در بیدارسازی به شیوۀ رویداد، کد ساده‌تر است و فضای کمتری از <span class="en">Flash</span> می‌گیرد و برای <span class="en">MCU</span>های ظرفیت‌کم انتخاب بهتری به شمار می‌رود.</p>
+  <p>ماژول <span class="en">AWU</span> یک شمارندۀ ۶ بیتی خودافزا است؛ هنگامی‌که مقدار شمارش با مقدار نوشته‌شده در آن برابر شود، از حالت <span class="en">STOP</span> یا <span class="en">STANDBY</span> بیدار می‌شود. فرمول محاسبۀ زمان <span class="en">AWU</span> به این صورت است:</p>
+  <div class="formula">T = Windows Value × (Prescaler / AWU_CLK)&nbsp; (s)</div>
+  <p>برای مثال در <span class="en">CH32V00x</span> با ضریب تقسیم ۱۰۲۴۰ و مقدار پنجرۀ ۲۵: نوسانگر داخلی کم‌فرکانس <span class="en">128kHz</span> یعنی <span class="en">LSI</span> مبنای زمانی شمارش بیدارسازی خودکار است و پس از تقسیم بر ۱۰۲۴۰، زمان هر شمارش <span class="en">1/12.5</span> ثانیه می‌شود؛ در نتیجه فاصلۀ زمانی بیدارسازی برابر ۲۵ ÷ ۱۲٫۵ = ۲ ثانیه است. روش محاسبه در <span class="en">CH32X035</span> مانند <span class="en">CH32V00x</span> است، اما منبع ساعت ماژول <span class="en">AWU</span> متفاوت است: منبع ساعت ماژول <span class="en">AWU</span> در <span class="en">CH32X035</span>، ساعت تقسیم‌شدهٔ <span class="en">47KHz</span> از ساعت سریع داخلی <span class="en">HSI</span> است.</p>
+  <p>روش پیکربندی بیدارسازی رویدادی <span class="en">AWU</span>: ابتدا خط وقفۀ خارجی متناظر با <span class="en">AWU</span> در حالت رویداد پیکربندی می‌شود، ساعت <span class="en">PWR</span> فعال می‌گردد و <span class="en">LSI</span> روشن می‌شود؛ پس از پایدارشدن <span class="en">LSI</span>، مقدار پیش‌تقسیم‌کننده و مقدار مقایسۀ پنجرۀ <span class="en">AWU</span> تنظیم می‌شود و پس از تکمیل پیکربندی، قابلیت <span class="en">AWU</span> فعال می‌گردد و با فرمان <code>WFE</code>، <span class="en">MCU</span> وارد حالت کم‌مصرف می‌شود. به این ترتیب هدف بیدارسازی <span class="en">MCU</span> در حالت کم‌مصرف از طریق رویداد محقق می‌شود. ضمناً <span class="en">AWU</span> فقط یک بار نیاز به پیکربندی دارد و نیازی به پیکربندی مجدد پس از هر بیدارسازی نیست.</p>
+  <p>روش پیکربندی بیدارسازی وقفه‌ای <span class="en">AWU</span>: ابتدا خط وقفۀ خارجی متناظر با <span class="en">AWU</span> در حالت وقفه پیکربندی می‌شود (در <span class="en">CH32V00x</span> چون <span class="en">AWU</span> به خط ۹ وقفۀ خارجی متصل است و وقفه‌های خارجی فقط ۰ تا ۷ هستند، لازم است وقفۀ <span class="en">AWU</span> فعال شود و در تابع سرویس وقفه، پرچم وقفۀ خط ۹ وقفۀ خارجی پاک گردد؛ در <span class="en">CH32X035</span> کافی است مستقیماً وارد وقفۀ خارجی متناظر شوید و پرچم‌های وقفۀ مربوطه را پاک کنید). سپس وقفۀ مربوطه فعال و اولویت وقفه تنظیم می‌شود، ساعت جانبی <span class="en">PWR</span> فعال می‌گردد، پیش‌تقسیم‌کنندۀ <span class="en">AWU</span> و مقدار مقایسۀ پنجرۀ <span class="en">AWU</span> پیکربندی و <span class="en">AWU</span> فعال می‌شود و با اجرای <code>WFI</code> وارد حالت کم‌مصرف می‌شوید. در این حالت بیدارسازی زمان‌بندی‌شدۀ <span class="en">MCU</span> به شیوۀ وقفه از طریق <span class="en">AWU</span> محقق می‌شود.</p>
+  <div class="fig" id="fig-14">
+    <div class="figbox">
+      <img src="assets/img/fig1-4.jpg" alt="شکل ۱-۴">
+    </div>
+    <div class="figcap"><span class="cap-pill">شکل ۱-۴</span><span class="cap-text">نمونۀ بیدارسازی خودکار <span class="en">AWU</span></span></div>
+  </div>
+
+  <h4 class="h3x" id="sec-124"><span class="dm">◆</span>۱.۲.۴ بیدارسازی با <span class="en">LPTIM</span></h4>
+  <p>جانبی <span class="en">LPTIM</span> در سری <span class="en">CH32L103</span> تایمری کم‌مصرف است که مخصوصاً برای سناریوهای کاربردی کم‌مصرف طراحی شده است. <span class="en">LPTIM</span> تایمری ۱۶ بیتی با شمارش صعودی است و منابع ساعت قابل‌انتخاب متنوعی دارد (منابع ساعت داخلی: <span class="en">LSE</span>، <span class="en">LSI</span>، <span class="en">HSI</span> یا ساعت <span class="en">PB1</span>؛ منبع ساعت خارجی: ساعت خارجی روی ورودی <span class="en">LPTIM</span>)؛ به همین دلیل <span class="en">LPTIM</span> می‌تواند در همهٔ حالت‌های تغذیه به‌جز حالت آماده‌به‌کار کار کند. <span class="en">LPTIM</span> حتی بدون منبع ساعت داخلی نیز می‌تواند کار کند و بر همین اساس می‌توان از آن به‌عنوان «شمارندۀ پالس» استفاده کرد. افزون بر این، <span class="en">LPTIM</span> قادر است سیستم را از حالت کم‌مصرف بیدار کند؛ بنابراین <span class="en">LPTIM</span> برای پیاده‌سازی «قابلیت زمان‌بندی و تایم‌اوت» با مصرف توان بسیار کم بسیار مناسب است.</p>
+  <p>اثر حالت‌های کم‌مصرف بر <span class="en">LPTIM</span>:</p>
+  <p class="bl">حالت <span class="en">SLEEP</span>: بدون تأثیر؛ وقفۀ <span class="en">LPTIM</span> موجب خروج دستگاه از حالت خواب می‌شود.</p>
+  <p class="bl">حالت <span class="en">STOP</span>: جانبی <span class="en">LPTIM</span> در زمانی که با <span class="en">LSE</span> یا <span class="en">LSI</span> ساعت‌دهی می‌شود فعال است؛ وقفۀ <span class="en">LPTIM</span> موجب خروج دستگاه از حالت توقف می‌شود.</p>
+  <p class="bl">حالت <span class="en">STANDBY</span>: جانبی <span class="en">LPTIM</span> برق‌قطع شده است و باید پس از خروج از حالت آماده‌به‌کار دوباره مقداردهی اولیه شود.</p>
+  <p>اگر از بیدارسازی رویدادی استفاده می‌کنید، باید سیگنال درخواست رویداد کانال ۲۱ وقفۀ خارجی فعال شود؛ اگر از بیدارسازی وقفه‌ای استفاده می‌کنید، باید سیگنال درخواست وقفۀ کانال ۲۱ وقفۀ خارجی فعال شود، وقفۀ خارجی <span class="en">LPTIM</span> فعال گردد و تابع سرویس وقفه نوشته شود.</p>
+
+  <h4 class="h3x" id="sec-125"><span class="dm">◆</span>۱.۲.۵ بیدارسازی با <span class="en">PVD</span></h4>
+  <p>پایشگر ولتاژ قابل‌برنامه‌ریزی <span class="en">PVD</span> عمدتاً برای پایش تغییرات منبع تغذیۀ اصلی سیستم به کار می‌رود؛ ولتاژ با آستانۀ تنظیم‌شده توسط بیت‌های <span class="en">PLS[2:0]</span> در رجیستر کنترل توان <span class="en">PWR_CTLR</span> مقایسه می‌شود و با هماهنگی پیکربندی رجیسترهای وقفۀ خارجی (<span class="en">EXTI</span>) می‌تواند رویداد یا وقفۀ مربوطه را تولید کند و سیستم را از حالت <span class="en">SLEEP</span> یا <span class="en">STOP</span> بیدار سازد.</p>
+  <p>روش پیکربندی به این صورت است: ابتدا ساعت <span class="en">PWR</span> فعال می‌شود، سپس آستانۀ پایش ولتاژ تنظیم می‌گردد و پس از آن بیت <span class="en">PVDE</span> برای روشن‌کردن قابلیت پایش ولتاژ تغذیه فعال می‌شود. قابلیت <span class="en">PVD</span> به‌صورت داخلی به خط ۱۶ ماژول <span class="en">EXTI</span> متصل است و تنظیم تحریف لبهٔ بالارونده/پایین‌رونده روی آن اعمال می‌شود؛ با پیکربندی رجیسترهای مربوطۀ <span class="en">EXTI</span>، هرگاه <span class="en">VDD</span> به زیر آستانۀ <span class="en">PVD</span> سقوط کند یا از آن بالاتر برود، رویداد یا وقفۀ <span class="en">PVD</span> تولید می‌شود. حالت <span class="en">STANDBY</span> از بیدارسازی با <span class="en">PVD</span> پشتیبانی نمی‌کند.</p>
+
+  <!-- ================= بخش ۲ ================= -->
+  <div class="chapter-header" id="sec-b2">
+    <span class="sec-pill">بخش ۲</span>
+    <div class="sec-title">نکات و ملاحظات کم‌مصرف</div>
+    <div class="sec-divider"></div>
+  </div>
+
+  <h3 class="h2x"><span class="dm">◆</span>۲.۱ چگونه جریان خواب تراشه را بهینه کنیم؟</h3>
+
+  <h4 class="h3x" id="sec-211"><span class="dm">◆</span>۲.۱.۱ پیکربندی پایه‌های <span class="en">MCU</span></h4>
+  <p class="bl">پیش از ورود به حالت کم‌مصرف، لازم است همهٔ پایه‌های <span class="en">I/O</span> به‌صورت ورودی Pull-up/Pull-down یا ورودی آنالوگ پیکربندی شوند تا جریان نشتی ناشی از شناورماندن (Floating) پایه‌های <span class="en">I/O</span> تراشه بروز نکند. دقت کنید که آیا پایه‌های تراشه از ورودی Pull-up/Pull-down یا ورودی آنالوگ پشتیبانی می‌کنند یا خیر (در غیر این صورت پیکربندی اثر نمی‌کند و حالت پیش‌فرض شناور باقی می‌ماند) و متناسب با شرایط انتخاب کنید.</p>
+  <p class="bl">در مدل‌های با بستۀ کوچک، برای پایه‌هایی که در مقایسه با بزرگ‌ترین بستۀ آن خانواده، به بستۀ کوچک‌تر نیاورده شده‌اند، توصیه می‌شود آن‌ها را نیز به‌صورت ورودی Pull-up/Pull-down یا آنالوگ پیکربندی کنید؛ در غیر این صورت ممکن است بر شاخص جریان اثر بگذارد.</p>
+  <p class="bl">رابط اشکال‌زدایی <span class="en">SWD</span> را به‌صورت کارکرد <span class="en">GPIO</span> آزاد کنید و به‌صورت ورودی Pull-up/Pull-down یا آنالوگ پیکربندی نمایید (پس از بیدارسازی قابلیت <span class="en">SWD</span> بازیابی می‌شود): <code>GPIO_PinRemapConfig(GPIO_Remap_SWJ_Disable, ENABLE)</code>.</p>
+
+  <h4 class="h3x" id="sec-212"><span class="dm">◆</span>۲.۱.۲ خاموش‌کردن جانبی‌ها و کاهش فرکانس اصلی</h4>
+  <p class="bl">در حالت <span class="en">SLEEP</span> هسته متوقف می‌شود، اما همهٔ جانبی‌ها (از جمله جانبی‌های اختصاصی هسته) به کار خود ادامه می‌دهند؛ هرچه فرکانس ساعت سیستم بالاتر و تعداد جانبی‌های فعال بیشتر باشد، مصرف توان بیشتر است. توصیه می‌شود پیش از خواب، جانبی‌های استفاده‌نشده را غیرفعال کنید، <span class="en">PLL</span> را خاموش و به ساعت کم‌سرعت سوئیچ کنید تا صرفه‌جویی حاصل شود. ضمناً در برخی محصولات می‌توان <span class="en">HSI</span> را در حالت کم‌مصرف پیکربندی کرد؛ برای مثال در سری <span class="en">CH32L103</span> پس از فعال‌شدن حالت کم‌مصرف <span class="en">HSI</span>، فرکانس خروجی از <span class="en">8MHz</span> به <span class="en">1MHz</span> کاهش می‌یابد (هنگام استفاده از <span class="en">UART</span> با <span class="en">HSI</span> برابر <span class="en">1MHz</span>، نرخ باود تا زیر <span class="en">62.5Kbps</span> پشتیبانی می‌شود).</p>
+  <p class="bl">از خاموش‌سازی ناقص جانبی‌ها بپرهیزید. در حالت <span class="en">STOP</span> یا در حالت <span class="en">STANDBY</span> برخی تراشه‌ها، ریگولاتور ولتاژ خاموش نمی‌شود؛ برای مثال اگر <span class="en">ADC</span> پیش از خواب فعال شده باشد، پس از خواب ساعت جانبی <span class="en">ADC</span> به‌طور خودکار بسته می‌شود، اما بخشی از مدار داخلی <span class="en">ADC</span> همچنان مقداری جریان مصرف می‌کند؛ بنابراین پیش از خواب باید جانبی‌ها را غیرفعال کنید.</p>
+
+  <h4 class="h3x" id="sec-213"><span class="dm">◆</span>۲.۱.۳ فعال‌سازی حالت صرفه‌جویی ریگولاتور ولتاژ و <span class="en">RAM</span></h4>
+  <p>برای مثال در <span class="en">CH32F/V20x_V30x</span>:</p>
+  <p>در حالت <span class="en">STOP</span> می‌توان بیت <span class="en">LPDS</span> را انتخاب کرد: با <span class="en">LPDS=0</span> ریگولاتور ولتاژ در حالت عادی کار می‌کند و با <span class="en">LPDS=1</span> در حالت کم‌مصرف قرار می‌گیرد. در حالت کم‌مصرف می‌توان با پیکربندی <span class="en">RAMLV=1</span> در رجیستر <span class="en">PWR_CTLR</span>، حالت ولتاژ پایین <span class="en">RAM</span> را فعال کرد تا مصرف توان کاهش یابد.</p>
+  <p>در حالت <span class="en">STANDBY</span> هنگام تغذیۀ عادی، با پیکربندی <span class="en">R2KSTY=1</span> در رجیستر <span class="en">PWR_CTLR</span> می‌توان تغذیۀ ۲ کیلوبایت <span class="en">RAM</span> را حفظ کرد و با <span class="en">R30KSTY=1</span> مانع از قطع تغذیۀ ۳۰ کیلوبایت <span class="en">RAM</span> شد؛ هنگام تغذیه با <span class="en">VBAT</span> نیز با پیکربندی <span class="en">R2KVBAT=1</span> در رجیستر <span class="en">PWR_CTLR</span> تغذیۀ ۲ کیلوبایت <span class="en">RAM</span> حفظ می‌شود و با <span class="en">R32K_VBATEN=1</span> تغذیۀ ۳۰ کیلوبایت <span class="en">RAM</span> نگه داشته می‌شود. بر همین اساس می‌توان با پیکربندی <span class="en">RAMLV=1</span> در رجیستر <span class="en">PWR_CTLR</span>، حالت ولتاژ پایین <span class="en">RAM</span> را فعال کرد تا مصرف توان کاهش یابد.</p>
+
+  <h4 class="h3x" id="sec-214"><span class="dm">◆</span>۲.۱.۴ اجرای کد از <span class="en">SRAM</span></h4>
+  <p>برای مثال در سری <span class="en">CH32L103</span>، در حالت‌های <span class="en">SLEEP</span> یا <span class="en">STOP</span> می‌توان کد پردازش داده را در <span class="en">SRAM</span> قرار داد تا اجرا شود، هم‌زمان <span class="en">Flash</span> را در حالت کم‌مصرف پیکربندی کرد و با تنظیم <span class="en">LDOTRIM</span> ولتاژ هستۀ دیجیتال را کاهش داد تا مصرف توان پایین بیاید.</p>
+
+  <h4 class="h3x" id="sec-215"><span class="dm">◆</span>۲.۱.۵ بررسی مدارهای اطراف</h4>
+  <p class="bl">به جریان نشتی قطعات تبدیل توان خارجی توجه کنید: برخی درایورها و تراشه‌های تبدیل توان اگر با نرم‌افزار فعال شده باشند، پس از ورود به حالت کم‌مصرف بهتر است خاموش شوند، چون خودشان جریان کاری مصرف می‌کنند؛ اگر با سخت‌افزار فعال شده باشند، باید در دیتاشیت تراشه بررسی شود جریان کاری ساکن چقدر است و اگر نسبتاً بالا باشد، تنها راه، اصلاح مدار سخت‌افزاری یا جایگزینی با تراشۀ کم‌مصرف است.</p>
+  <p class="bl">آیا در مدار اطراف مسیر بستۀ (حلقۀ جریان) وجود دارد؟ برای مثال اگر مقاومت‌های تقسیم ولتاژ برداشت ولتاژ باز نشده باشند، با اینکه <span class="en">ADC</span> خاموش شده است، این مدار تقسیم ولتاژ همچنان جریان مصرف می‌کند و میزان آن عموماً به مقاومت و ولتاژ تغذیه بستگی دارد؛ قطعات اطراف مانند سنسورها، ماژول‌های ارتباطی و <span class="en">LED</span>های نشانگر باید پیش از ورود به حالت کم‌مصرف از تغذیه قطع شوند.</p>
+  <p class="bl">آیا وضعیت <span class="en">GPIO</span>ها با هم تعارض دارد؟ بر اساس شماتیک دستگاه، مدار اتصال خارجی پایه‌های <span class="en">I/O</span> را بررسی کنید. هنگامی‌که پایه از طریق مقاومت مدار اطراف به زمین کشیده شده (Pull-down خارجی) و پایه به‌صورت ورودی Pull-up پیکربندی شده باشد، مقاومت Pull-up داخلی تراشه و مقاومت Pull-down خارجی یک حلقه می‌سازند و جریان مصرف به این دو مقاومت بستگی دارد؛ به همین ترتیب وقتی پایه از طریق مقاومت مدار اطراف به تغذیه کشیده شده و پایه به‌صورت ورودی Pull-down پیکربندی شده باشد، مقاومت Pull-down داخلی و مقاومت Pull-up خارجی حلقۀ جریان می‌سازند و جریان مصرف نیز به این دو مقاومت بستگی دارد.</p>
+
+  <h4 class="h3x" id="sec-216"><span class="dm">◆</span>۲.۱.۶ کاهش خطای اندازه‌گیری جریان</h4>
+  <p class="bl">هنگام اندازه‌گیری جریان مصرفی، تغذیۀ ماژول‌های اطراف را قطع کنید (مانند سنسورها، تراشه‌های ارتباطی، <span class="en">LED</span> و تراشۀ مبدل <span class="en">USB</span> به سریال) تا اثر نشتی قطعات خارجی حذف شود و فقط حداقل سیستم <span class="en">MCU</span> باقی بماند.</p>
+  <p class="bl">هنگام اندازه‌گیری واقعی جریان، اتصال اشکال‌زدای <span class="en">SWD</span> را کاملاً قطع کنید و فقط خط تغذیه را باقی بگذارید؛ هنگام اندازه‌گیری جریان ساکن در حد میکروآمپر با مولتی‌متر، رنج باید به رنج <span class="en">µA</span> منتقل شود تا دقت به‌خاطر انتخاب برد بزرگ‌تر از دست نرود.</p>
+  <div class="fig" id="fig-21">
+    <div class="figbox">
+      <img src="assets/img/fig2-1.jpg" alt="شکل ۲-۱" style="max-width:420px;">
+    </div>
+    <div class="figcap"><span class="cap-pill">شکل ۲-۱</span><span class="cap-text">نمودار اندازه‌گیری جریان</span></div>
+  </div>
+
+  <h3 class="h2x"><span class="dm">◆</span>۲.۲ نکات مربوط به خواب و بیدارسازی</h3>
+
+  <h4 class="h3x" id="sec-221"><span class="dm">◆</span>۲.۲.۱ خواب و بیدارسازی صحیح</h4>
+  <p class="bl">پیش از خواب، ساعت جانبی <span class="en">PWR</span> را فعال کنید. در حالت‌های کم‌مصرف مختلف، منابع بیدارسازی متفاوت است؛ با مراجعه به دفترچۀ کاربرد مطمئن شوید که حالت کم‌مصرف و منبع بیدارسازی متناظر و منطبق‌اند.</p>
+  <p class="bl">از تحریف مداوم منبع بیدارسازی بپرهیزید؛ برای مثال وقفۀ پیوسته مانع خواب می‌شود و پرچم وقفه باید به‌طور کامل پاک شود.</p>
+  <p class="bl">پس از بیدارسازی، ساعت دوباره ساخته شود: پس از خروج از حالت توقف، <span class="en">HSI</span> به‌طور خودکار ساعت سیستم می‌شود؛ اگر قبلاً از <span class="en">HSE/PLL</span> استفاده می‌کرده‌اید باید دستی سوئیچ کنید (بدون بازپیکربندی ساعت، جانبی‌ها از کار می‌افتند) و پس از بیدارسازی تابع پیکربندی ساعت فراخوانی شود.</p>
+  <p class="bl">بررسی کنید که حالت کم‌مصرف، شیوۀ ورود به خواب (<span class="en">WFI/WFE</span>) و شیوۀ بیدارسازی (رویداد/وقفه) با هم منطبق باشند، خطوط <span class="en">EXTI</span> به‌درستی نگاشت شده باشند و لبۀ تحریف (بالارونده/پایین‌رونده) با سیگنال واقعی یکسان باشد؛ سیگنال باید الزامات لبه را برآورده کند.</p>
+
+  <h4 class="h3x" id="sec-222"><span class="dm">◆</span>۲.۲.۲ روش حفظ سطح منطقی پایه‌ها در حالت <span class="en">STANDBY</span></h4>
+  <p>در حالت عادی هنگام ورود تراشه به حالت <span class="en">STANDBY</span>، پایه‌ها وضعیت قبلی خود را حفظ نمی‌کنند و <span class="en">I/O</span> به‌صورت پیش‌فرض ورودی آنالوگ می‌شود. اگر می‌خواهید تراشه وارد حالت <span class="en">STANDBY</span> شود و سطح منطقی پایه‌ها حفظ گردد، این کار با روش زیر ممکن است:</p>
+  <ul class="steps">
+    <li data-n="۱">پایه را به‌صورت ورودی Pull-up/Pull-down پیکربندی کنید.</li>
+    <li data-n="۲">ساعت <span class="en">AFIO</span> را باز کنید.</li>
+    <li data-n="۳">پایه‌ای که باید سطح آن حفظ شود به‌عنوان پایۀ ورودی وقفۀ خارجی پیکربندی و رجیستر <span class="en">AFIO_EXTICR[x]</span> تنظیم می‌شود (برای مثال <span class="en">PA3</span>: <code>AFIO-&gt;EXTICR[1]=0</code>).</li>
+    <li data-n="۴">درخواست رویداد کانال وقفۀ خارجی فعال و رجیستر <span class="en">EXT_EVENR</span> تنظیم می‌شود (برای مثال <span class="en">PA3</span>: <code>EXTI-&gt;EVENR|=(1&lt;&lt;3)</code>).</li>
+  </ul>
+  <div class="note"><span class="lbl">توجه:</span> فقط حفظ سطح در حالت ورودی Pull-up/Pull-down پشتیبانی می‌شود و حفظ در حالت خروجی پشتیبانی نمی‌شود. چون این قابلیت از طریق <span class="en">AFIO_EXTICR[x]</span> عمل می‌کند و برای مثال <span class="en">PA3</span> و <span class="en">PB3</span> بیت یکسانی از رجیستر <span class="en">AFIO_EXTICR[x]</span> را تنظیم می‌کنند، نمی‌توان سطح پایه‌های کانال <span class="en">EXTI</span> یکسان را هم‌زمان حفظ کرد.</div>
+
+  <h4 class="h3x" id="sec-223"><span class="dm">◆</span>۲.۲.۳ روش دریافت منبع رویداد بیدارسازی <span class="en">WFE</span></h4>
+  <p>بیدارسازی به شیوۀ <span class="en">WFE</span> نیازی به دخالت کنترلر وقفه ندارد. اگر از شیوۀ <span class="en">WFE</span> برای بیدارسازی دستگاه استفاده می‌کنید و نیاز به دریافت منبع بیدارسازی <span class="en">WFE</span> دارید، این کار با روش زیر ممکن است:</p>
+  <ul class="steps">
+    <li data-n="۱">خط <span class="en">EXTI</span> خارجی یا داخلی را در حالت رویداد پیکربندی کنید.</li>
+    <li data-n="۲">سیگنال درخواست وقفۀ خط <span class="en">EXTI</span> مربوطه را فعال کنید (<span class="en">EXTI_INTENR</span>).</li>
+    <li data-n="۳">دستور <code>WFE</code> را اجرا کنید؛ پس از بیدارسازی، رجیستر پرچم وقفه (<span class="en">EXTI_INTFR</span>) را بررسی و منبع رویداد بیدارسازی را تشخیص دهید.</li>
+  </ul>
+
+  <h4 class="h3x" id="sec-224"><span class="dm">◆</span>۲.۲.۴ روش حفظ داده‌های <span class="en">RAM</span> در حالت <span class="en">STANDBY</span></h4>
+  <p>در حالت عادی در حالت <span class="en">STANDBY</span>، ریگولاتور ولتاژ خاموش است و همهٔ مدارها به‌جز مدار بیدارسازی و مدارهای دامنۀ پشتیبان از برق خارج می‌شوند؛ به‌طور پیش‌فرض همهٔ داده‌های <span class="en">RAM</span> از دست می‌رود و پس از خروج در شرایط بیدارسازی مشخص‌شده، میکروکنترلر reset می‌شود.</p>
+  <p>برای مثال در <span class="en">CH32F/V20x_V30x</span> در حالت آماده‌به‌کار، هنگام تغذیۀ عادی با پیکربندی <span class="en">R2KSTY=1</span> در رجیستر <span class="en">PWR_CTLR</span> می‌توان تغذیۀ ۲ کیلوبایت <span class="en">RAM</span> را حفظ کرد و با <span class="en">R30KSTY=1</span> تغذیۀ ۳۰ کیلوبایت <span class="en">RAM</span> را نگه داشت؛ هنگام تغذیه با <span class="en">VBAT</span> با پیکربندی <span class="en">R2KVBAT=1</span> در رجیستر <span class="en">PWR_CTLR</span> تغذیۀ ۲ کیلوبایت <span class="en">RAM</span> حفظ می‌شود و با <span class="en">R32K_VBATEN=1</span> تغذیۀ ۳۰ کیلوبایت <span class="en">RAM</span> نگه داشته می‌شود. بر همین اساس می‌توان با پیکربندی <span class="en">RAMLV=1</span> در رجیستر <span class="en">PWR_CTLR</span>، حالت ولتاژ پایین <span class="en">RAM</span> را فعال کرد تا مصرف توان کاهش یابد.</p>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-02">
+    <div class="tblcap"><span class="cap-pill">جدول ۲</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN01000</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/07/08</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این سند کاربردی صرفاً جهت مرجع ارائه شده است و ترجمۀ فارسی آن توسط تیم معمار الکترونیک صنعت تهیه شده است. نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-03">
+    <div class="tblcap"><span class="cap-pill">جدول ۳</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">SLEEP / STOP / STANDBY</span></td><td class="jt">سه حالت کم‌مصرف اصلی؛ از کم‌عمق‌ترین (<span class="en">SLEEP</span>) تا کم‌مصرف‌ترین (<span class="en">STANDBY</span>)</td></tr>
+      <tr><td><span class="en">WFI</span></td><td class="jt"><span class="en">Wait For Interrupt</span>؛ دستور ورود به خواب با بیدارسازی از طریق وقفه</td></tr>
+      <tr><td><span class="en">WFE</span></td><td class="jt"><span class="en">Wait For Event</span>؛ دستور ورود به خواب با بیدارسازی از طریق رویداد</td></tr>
+      <tr><td><span class="en">RTC</span></td><td class="jt"><span class="en">Real-Time Clock</span>؛ ساعت واقعی؛ بیدارسازی زمان‌بندی‌شده از <span class="en">STOP</span> یا <span class="en">STANDBY</span> را فراهم می‌کند</td></tr>
+      <tr><td><span class="en">WKUP</span></td><td class="jt">پایۀ اختصاصی بیدارسازی (<span class="en">PA0</span>)؛ با لبۀ بالارونده، <span class="en">MCU</span> را از <span class="en">STANDBY</span> بیدار می‌کند</td></tr>
+      <tr><td><span class="en">AWU</span></td><td class="jt"><span class="en">Auto Wake-Up</span>؛ ماژول بیدارسازی خودکار مبتنی بر شمارندۀ ۶ بیتی، در <span class="en">MCU</span>های فاقد <span class="en">RTC</span></td></tr>
+      <tr><td><span class="en">LPTIM</span></td><td class="jt"><span class="en">Low-Power Timer</span>؛ تایمر کم‌مصرف ۱۶ بیتی در سری <span class="en">CH32L103</span> با منابع ساعت متنوع</td></tr>
+      <tr><td><span class="en">PVD</span></td><td class="jt"><span class="en">Programmable Voltage Detector</span>؛ پایشگر ولتاژ قابل‌برنامه‌ریزی برای نظارت بر <span class="en">VDD</span></td></tr>
+      <tr><td><span class="en">HSE / HSI</span></td><td class="jt">اسیلاتور خارجی/داخلی فرکانس‌بالا (<span class="en">High/High-Speed Internal</span>)</td></tr>
+      <tr><td><span class="en">LSE / LSI</span></td><td class="jt">اسیلاتور خارجی/داخلی کم‌فرکانس؛ <span class="en">LSE</span> معمولاً کریستال <span class="en">32.768kHz</span> است</td></tr>
+      <tr><td><span class="en">PLL</span></td><td class="jt">حلقۀ قفل فاز برای ضرب فرکانس و ساخت ساعت سیستم</td></tr>
+      <tr><td><span class="en">PWR_CTLR</span></td><td class="jt">رجیستر کنترل توان؛ بیت‌های <span class="en">LPDS</span>، <span class="en">RAMLV</span>، <span class="en">R2KSTY</span>، <span class="en">R30KSTY</span>، <span class="en">R2KVBAT</span>، <span class="en">R32K_VBATEN</span> و <span class="en">PLS[2:0]</span> در آن تعریف می‌شوند</td></tr>
+      <tr><td><span class="en">SLEEPDEEP / PDDS</span></td><td class="jt">بیت‌های انتخاب عمق خواب و انتخاب حالت <span class="en">STANDBY</span> هنگام ورود به کم‌مصرف</td></tr>
+      <tr><td><span class="en">EXTI</span></td><td class="jt">کنترلر وقفه/رویداد خارجی؛ خط ۱۷ برای <span class="en">RTC</span>، خط ۱۶ برای <span class="en">PVD</span> و کانال ۲۱ برای <span class="en">LPTIM</span></td></tr>
+      <tr><td><span class="en">PWR / BKP / AFIO</span></td><td class="jt">ساعت جانبی‌های مدیریت توان، دامنۀ پشتیبان و پیکربندی جایگزین پایه‌ها</td></tr>
+      <tr><td><span class="en">SRAM / Flash</span></td><td class="jt">حافظۀ دادهٔ سریع / حافظۀ برنامه</td></tr>
+      <tr><td><span class="en">SWD</span></td><td class="jt">رابط اشکال‌زدایی سریال دو سیمه؛ برای اندازه‌گیری دقیق جریان باید کاملاً قطع شود</td></tr>
+      <tr><td><span class="en">VBAT</span></td><td class="jt">تغذیۀ باتری پشتیبان برای حفظ داده‌های <span class="en">RAM</span> و دامنۀ پشتیبان</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN01000 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۱۸</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN01000</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
