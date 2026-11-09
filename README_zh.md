@@ -1,6 +1,6 @@
 # 简介
 
-中文 | [English](README.md)
+[🇮🇷 فارسی](README.md) | [🇬🇧 English](README_EN.md) | [🇨🇳 中文](README_zh.md)
 
 本系列AN(Application Note)手册聚焦CH32系列MCU的***核心功能应用***与***典型场景落地***，弥补芯片数据手册（Datasheet）在“功能如何用、问题如何解”层面的细节空白，同时避免参考手册（Reference Manual）的宏观性，直接针对开发者在实际开发中高频遇到的技术需求，提供可复用、可验证的解决方案,缩短项目研发周期。
 
