@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>راهنمای جامع عیب‌یابی ریست‌های غیرعادی و توقف برنامه در CH32 — ترجمۀ فارسی AN01003</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">راهنمای جامع</div>
+    <div class="t2">عیب‌یابی ریست‌های غیرعادی</div>
+    <div class="t3">و توقف برنامه در <span class="en">CH32</span></div>
+  </div>
+  <div class="c-sub">از روایت یک خطای واقعی در سوئیچ تغذیۀ خارجی دامنۀ <span class="en">VDDK</span> در <span class="en">CH32H417</span>، تا تحلیل منابع ریست با <span class="en">RCC_RSTSCKR</span> و محل‌یابی توقف برنامه با رجیسترهای <span class="en">mcause</span>، <span class="en">mtval</span> و <span class="en">mepc</span></div>
+  <div class="c-desc">در این جزوه، ترجمۀ فارسی سند رسمی <span class="en">AN01003</span> (نسخۀ ۱٫۰، منتشرۀ شرکت <span class="en">WCH</span>) را می‌خوانید. بخش نخست یک پدیدۀ واقعی را از درون تحلیل می‌کند: افت لحظه‌ای <span class="en">VDDK</span> هنگام واگذاری بار به منبع خارجی ۱٫۲ ولت و راهِ برون‌رفت با خازن‌های مناسب. بخش دوم روش عمومی عیب‌یابی را می‌آموزد: خواندن فلگ‌های ریست در <span class="en">RCC_RSTSCKR</span>، بررسی ریست توان، ریست نگه‌بان، ریست پایۀ <span class="en">NRST</span>، ریست نرم‌افزاری و ریستِ پس از Standby، و سپس ردگیری <span class="en">HardFault</span> با سه رجیستر CSR، توقف‌های حلقه‌ای و خطاهای متناوب.</div>
+  <div class="c-tags">
+    <span class="c-tag"><span class="en">CH32H417</span></span>
+    <span class="c-tag">تغذیۀ خارجی <span class="en">VDDK</span></span>
+    <span class="c-tag">افت لحظه‌ای ولتاژ</span>
+    <span class="c-tag"><span class="en">RCC_RSTSCKR</span></span>
+    <span class="c-tag">فلگ‌های منبع ریست</span>
+    <span class="c-tag"><span class="en">HardFault</span> و <span class="en">CSR</span></span>
+    <span class="c-tag">نگه‌بان و <span class="en">NRST</span></span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN01003 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | پدیدۀ غیرعادی سوئیچ تغذیۀ خارجی <span class="en">VDDK</span> در <span class="en">CH32H417</span></span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-111"><span class="s-id">1.1</span><span>معرفی پس‌زمینه</span><span class="s-dots"></span><span class="s-page">۳</span></a>
+    <a class="toc-sub" href="#sec-112"><span class="s-id">1.2</span><span>شرح پدیدۀ غیرعادی</span><span class="s-dots"></span><span class="s-page">۵</span></a>
+    <a class="toc-sub" href="#sec-113"><span class="s-id">1.3</span><span>تحلیل علت</span><span class="s-dots"></span><span class="s-page">۵</span></a>
+    <a class="toc-sub" href="#sec-114"><span class="s-id">1.4</span><span>جمع‌بندی و پیشنهادها</span><span class="s-dots"></span><span class="s-page">۶</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | شیوۀ عیب‌یابی ریست و توقف برنامه</span><span class="t-dots"></span><span class="t-page">۶</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-211"><span class="s-id">2.1</span><span>تحلیل منبع ریست</span><span class="s-dots"></span><span class="s-page">۶</span></a>
+    <a class="toc-sub" href="#sec-212"><span class="s-id">2.2</span><span>محل‌یابی توقف برنامه</span><span class="s-dots"></span><span class="s-page">۹</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۴</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۱۱</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۵</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۱۲</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">شکل ۱-۱</span><span>جریان معمول <span class="en">VDDK\VDD12A</span> در حالت اجرا</span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۲</span><span>مدار اولیۀ <span class="en">LDO</span> خارجی ۱٫۲ ولت</span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۳</span><span>شکاف ولتاژ <span class="en">VDDK</span> هنگام خطا</span><span class="f-dots"></span><span class="f-page">۵</span></div>
+        <div class="frow"><span class="f-id">جدول ۲-۱</span><span>فلگ‌های ریست</span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">کد ۱</span><span>خواندن و پاک‌سازی فلگ‌های ریست</span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">کد ۲</span><span>ردگیری <span class="en">HardFault</span> با رجیسترهای <span class="en">CSR</span></span><span class="f-dots"></span><span class="f-page">۹</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> در توسعهٔ کاربردهای <span class="en">MCU</span>، ریست‌های غیرعادی و توقف برنامه از مسائل رایج اثرگذار بر پایداری سیستم‌اند. این سند حول شیوۀ تحلیل و روش‌های عیب‌یابی چنین مسائلی نوشته شده است: بخش نخست با مثال <span class="en">CH32H417</span>، یک پدیدۀ غیرعادی واقعی در کاربرد و فرایند تحلیل آن را معرفی می‌کند؛ بخش دوم شیوۀ تحلیل عمومی و جهت‌های عیب‌یابی ریست و توقف برنامه را در بر می‌گیرد و روش‌های محل‌یابی ریست‌های غیرعادی و شرایط توقف را پوشش می‌دهد.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>در توسعهٔ کاربردهای <span class="en">MCU</span>، ریست‌های غیرعادی و توقف برنامه از مسائل رایج اثرگذار بر پایداری سیستم‌اند. این سند حول شیوۀ تحلیل و روش‌های عیب‌یابی چنین مسائلی نوشته شده است و دو بخش دارد: بخش نخست با مثال <span class="en">CH32H417</span>، یک پدیدۀ غیرعادیِ رخ‌داده در کاربرد واقعی و فرایند تحلیل آن را معرفی می‌کند؛ بخش دوم شیوۀ تحلیل عمومی و جهت‌های عیب‌یابی ریست و توقف برنامه را در بر می‌گیرد و روش‌های محل‌یابی ریست‌های غیرعادی و شرایط توقف را پوشش می‌دهد. امید است این سند برای عیب‌یابی مسائل مشابه توسط توسعه‌دهندگان مرجعی مفید باشد.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>میکروکنترلرهای همگانی‌منظوره</td><td><span class="en">CH32</span> <span class="en">MCU</span></td></tr>
+  </table>
+</div>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">پدیدۀ غیرعادی سوئیچ تغذیۀ خارجی <span class="en">VDDK</span> در <span class="en">CH32H417</span></div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-111"><span class="dm">◆</span>۱.۱ معرفی پس‌زمینه</h3>
+<p>در میکروکنترلرهای سری <span class="en">CH32H417</span>، دامنۀ <span class="en">VDD12</span> (دامنۀ تغذیۀ هسته و جانبی‌های پرسرعت) معمولاً توسط تنظیم‌گر ولتاژ داخلی تغذیه می‌شود. برای کاهش جریانی که تنظیم‌گر داخلی باید تأمین کند، تراشه اجازه می‌دهد دامنۀ <span class="en">VDD12</span> از طریق منبع خارجی تغذیه شود؛ با این کار گرمای تولیدی خود <span class="en">MCU</span> نیز پایین می‌آید.</p>
+<p>باید توجه داشت که مقدار تنظیم‌شدهٔ ولتاژ تنظیم‌گر داخلی و ولتاژ واقعی روی پایه‌های <span class="en">VDDK\VDD12A</span> دو چیز متفاوت‌اند: هدف از کاهش تنظیم ولتاژ داخلی، کاهش سهم تغذیه از تنظیم‌گر داخلی است؛ اما پس از اینکه منبع خارجی بار را در دست گرفت، ولتاژ واقعی <span class="en">VDDK\VDD12A</span> همچنان باید در بازۀ کاری مجاز تراشه باقی بماند. دیتاشیت تراشه بازۀ تغذیۀ <span class="en">VDDK\VDD12A</span> را <span class="en">1.17~1.27V</span> معرفی می‌کند و خازن‌های کناری مناسب برای این پایه‌ها را الزامی می‌داند.</p>
+<p>وقتی دامنۀ <span class="en">VDD12</span> مستقیماً از خارج تغذیه می‌شود، ولتاژ تغذیه باید دقیقاً الزامات مشخصات تراشه را برآورده کند و توانایی جریان خروجی منبع خارجی باید به‌طور کامل پوشش‌دهندۀ نیاز کل جریان دامنۀ <span class="en">VDD12</span> در <span class="en">CH32H417</span> باشد؛ داده‌های مصرف جریان در دیتاشیت (شکل ۱) مرجع است. جریان <span class="en">VDDK</span> و <span class="en">VDD12A</span> هر یک به عوامل زیر وابسته است:</p>
+<div class="bl">جریان <span class="en">VDDK</span>: به فرکانس کاری <span class="en">CPU</span> و فعالیت هسته وابستگی شدید دارد و منبع اصلی مصرف توان تراشه در حالت اجراست.</div>
+<div class="bl">جریان <span class="en">VDD12A</span>: به وضعیت استفاده از <span class="en">USB 3.0</span> و <span class="en">PHY</span> اترنت وابسته است؛ هنگام کار <span class="en">USB 3.0</span> و ارتباط دوطرفۀ کامل <span class="en">PHY</span> اترنت، جریان دامنۀ <span class="en">VDD12A</span> اضافه می‌شود.</div>
+<div class="fig" id="fig-11">
+  <div class="figbox">
+    <img src="assets/img/an01003-fig_p3_x35.jpeg" alt="شکل ۱-۱" style="max-width:620px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۱</span><span class="cap-text">جریان معمول <span class="en">VDDK\VDD12A</span> در حالت اجرا (داده‌های دیتاشیت؛ پردازش کد به‌صورت متوالی از <span class="en">SRAM</span>)</span></div>
+</div>
+<p>توان مصرفیِ فعال‌سازی یا بستنِ ساعتِ همۀ جانبی‌ها نیز باید لحاظ شود.</p>
+<p>مدار منبع خارجی در این مطالعهٔ موردی:</p>
+<div class="fig" id="fig-12">
+  <div class="figbox">
+    <img src="assets/img/an01003-fig_p3_x36.png" alt="شکل ۱-۲" style="max-width:420px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۲</span><span class="cap-text">مدار اولیۀ <span class="en">LDO</span> خارجی ۱٫۲ ولت</span></div>
+</div>
+<p>منبع خارجی ۱٫۲ ولت با یک <span class="en">LDO</span> از ورودی ۵ ولت تولید می‌شود. در مدار اولیه، ورودی <span class="en">LDO</span> خازن <span class="en">1µF</span> دارد و خروجی آن نیز خازن <span class="en">1µF</span>؛ پایۀ <span class="en">CE</span> به منبع ورودی وصل است. در بازدید میدانی، در مجاورت پایۀ <span class="en">VDDK</span> روی <span class="en">MCU</span> تنها خازن <span class="en">0.1µF</span> دیده شد. منبع خارجی پیش از آنکه نرم‌افزار تنظیم تغذیه را اجرا کند، روشن شده است. چنین مداری در اندازه‌گیری ایستا ولتاژ ۱٫۲ ولتِ سالمی نشان می‌دهد؛ اما ولتاژ ایستای سالم به این معنا نیست که بتواند الزامات پویای لحظۀ واگذاری بار را برآورده کند.</p>
+
+<h3 class="h2x" id="sec-112"><span class="dm">◆</span>۱.۲ شرح پدیدۀ غیرعادی</h3>
+<p>خطا در لحظۀ تنظیم تغذیه رخ می‌دهد: پس از روشن‌شدن دستگاه، <span class="en">MCU</span> راه می‌افتد و برنامه اجرا می‌شود و خروجی ایستای منبع خارجی ۱٫۲ ولت نیز سالم است؛ اما پس از مدتی اجرای برنامه، خطا ظاهر می‌شود. ردگیری دقیق‌تر نشان داد خطا در مرحله‌ای رخ می‌دهد که نرم‌افزار مقدار تنظیمِ ولتاژ تنظیم‌گر داخلی را پایین می‌آورد. این عمل سهم تغذیۀ تنظیم‌گر داخلی را کم می‌کند و بار به منبع خارجی منتقل می‌شود. از منظر محل اجرای برنامه، خطا با عملیات پیکربندی تغذیه گره خورده است و از منظر وضعیت سخت‌افزار، همین عمل منبع تغذیۀ هسته را عوض می‌کند. بنابراین کانون عیب‌یابی به تغییر ولتاژ <span class="en">VDDK</span> پیش و پس از تنظیم تغذیه منتقل شد.</p>
+<p><b>مشاهدۀ افت لحظه‌ای در <span class="en">VDDK</span>:</b> پایش ولتاژ <span class="en">VDDK</span> نشان داد هنگام واگذاری بار به منبع خارجی، ولتاژ <span class="en">VDDK</span> افت آشکاری می‌کند، به سطح غیرقابل کار می‌رسد و با خطای اجرای <span class="en">MCU</span> همراه است. این اندازه‌گیری مسئله را به «سلامت تغذیه در حین واگذاری بار» محدود کرد: منبع خارجی گرچه خروجی ایستا را برقرار کرده بود، اما در فرایند انتقال بار نتوانست ولتاژ <span class="en">VDDK</span> را در بازۀ سالم نگه دارد.</p>
+<div class="fig" id="fig-13">
+  <div class="figbox">
+    <img src="assets/img/an01003-fig_p4_x56.jpeg" alt="شکل ۱-۳" style="max-width:560px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۳</span><span class="cap-text">شکاف ولتاژ <span class="en">VDDK</span> هنگام خطا</span></div>
+</div>
+<p>برای افت ولتاژ در لحظۀ واگذاری، دو اصلاح در محل انجام شد و خطا بهبود یافت:</p>
+<div class="bl">در خروجی ۱٫۲ ولتی <span class="en">LDO</span> خارجی، به‌موازات خازن قبلی یک خازن <span class="en">10µF</span> افزوده شد؛ در مجاورت پایۀ <span class="en">VDDK</span> نیز خازن <span class="en">2.2µF</span> اضافه شد و خازن <span class="en">0.1µF</span> قبلی باقی ماند.</div>
+
+<h3 class="h2x" id="sec-113"><span class="dm">◆</span>۱.۳ تحلیل علت</h3>
+<p>وقتی تنظیم‌گر داخلی سهم تغذیه را کم می‌کند و منبع خارجی باید جریان خروجی خود را افزایش دهد، شبکهٔ تغذیه در فرایند پذیرشِ بار نتوانست پایداری پویای ولتاژ <span class="en">VDDK</span> را حفظ کند و افت لحظه‌ای ولتاژ (کمبود گذرا) به خطای اجرا انجامید.</p>
+<p>وقتی <span class="en">VDDK</span> از بازۀ کاری تضمین‌شده خارج شود، اطمینان به توالی منطق هسته و وضعیت داخلی دیگر معتبر نیست؛ حتی اگر ولتاژ بعداً بازیابد نمی‌توان با این توجیه که «ولتاژ برگشته» فرض کرد برنامه می‌تواند وضعیت قبلی را سالم ادامه دهد. افزودن خازن <span class="en">10µF</span> به خروجی <span class="en">LDO</span>، توانایی گره تغذیه در تأمین کوتاه‌مدت جریان را تقویت می‌کند: در فرایند تنظیم جریان خروجی، خازن بخشی از جریان گذرا را فراهم و تغییر ولتاژ را کوچک می‌کند. علاوه بر این، دیتاشیت برای پایۀ اصلی <span class="en">VDDK</span> علاوه بر <span class="en">0.1µF</span>، خازن <span class="en">2.2µF</span> را نیز الزامی کرده است؛ طرح اولیه در کنار <span class="en">VDDK</span> فقط <span class="en">0.1µF</span> داشت که یادآور است الزامات خازنی قطعه باید کامل اجرا شود و به‌بهانۀ استفاده از تغذیۀ خارجی نباید خازن‌های کنار پایه را حذف کرد.</p>
+
+<h3 class="h2x" id="sec-114"><span class="dm">◆</span>۱.۴ جمع‌بندی و پیشنهادها</h3>
+<h4 class="h3x" id="sec-1141"><span class="dm">◆</span>۱.۴.۱ منبع خارجی باید توان تأمین مستقل بار را داشته باشد</h4>
+<p>منبع خارجی <span class="en">VDD12</span> باید بتواند بار پیوستۀ دامنۀ تغذیۀ مربوط را به‌تنهایی تأمین کند و در فرایند واگذاری بار، به‌موقع جریان لازم را برقرار سازد. اگر پس از کامل‌کردن خازن‌ها و چیدمان، باز هم افت <span class="en">VDDK</span> از بازۀ مجاز بیرون می‌زند، باید تنظیم‌گر خارجی را بازارزیابی یا جایگزین کرد؛ نکات اصلیِ بررسی: پاسخ گذرای بار، تناسب کارکرد هنگامی که خروجی از سوی منبع دیگر پیش‌تنظیم شده است، ویژگی محدودسازی جریان و توانایی بارِ پیوسته. خازن می‌تواند کسری جریان کوتاه‌مدت را جبران کند.</p>
+<h4 class="h3x" id="sec-1142"><span class="dm">◆</span>۱.۴.۲ واگذاری تغذیه در مرحلۀ بارِ پایین انجام شود</h4>
+<p>نرم‌افزار باید پس از پایدارشدن منبع خارجی و تا حد امکان پیش از بالا بردن فرکانس کاری و راه‌اندازی جانبی‌های سنگین، تنظیم تغذیه را طبق روند کامل کند و سپس گام‌به‌گام وارد کار عادی شود تا تغییر جریان در لحظۀ واگذاری کوچک بماند. این تدبیر به کاهش ضربۀ جابه‌جایی کمک می‌کند اما جانشین توانایی سخت‌افزاری تغذیه نیست.</p>
+<h4 class="h3x" id="sec-1143"><span class="dm">◆</span>۱.۴.۳ ولتاژ واقعی <span class="en">VDDK</span> معیار نهایی است</h4>
+<p>در فرایند واگذاری، کار عادی و تغییر بار، <span class="en">VDDK</span> باید همیشه در بازۀ کاری مجاز بماند و اضافه‌شدن و لرزشِ غیرقابل‌پذیرش نیز نباید رخ دهد. خروجی منبع خارجی باید طبق دیتاشیتِ خودش خازن خروجی داشته باشد و بر اساس تغییر بار واقعی، نیاز به افزایش ظرفیت ارزیابی شود. خازن‌های کناری <span class="en">VDDK</span> باید تا حد ممکن نزدیک پایۀ تغذیۀ مربوط قرار گیرند.</p>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">شیوۀ عیب‌یابی ریست و توقف برنامه</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-211"><span class="dm">◆</span>۲.۱ تحلیل منبع ریست</h3>
+<p>رجیستر کنترل/وضعیتِ تعبیه‌شده در سری <span class="en">CH32</span> با نام <span class="en">RCC_RSTSCKR</span> (آدرس <span class="en">0x40021024</span>) نقطۀ ورود نخستِ عیب‌یابی ریست‌های غیرعادی است. این رجیستر همهٔ شاخه‌های ریستِ سیستم را نشان می‌دهد؛ با خواندن رجیستر وضعیت ریست، جهت کلی ریست روشن می‌شود و سپس تجزیه‌وتحلیل دقیق‌تر انجام می‌گیرد.</p>
+<div class="tblwrap" id="tab-21">
+  <div class="tblcap"><span class="cap-pill">جدول ۲-۱</span><span class="cap-text">فلگ‌های ریست</span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:18%;">بیت</th><th>معنا</th></tr></thead>
+    <tr><td><span class="en">bit 31</span></td><td class="jt"><span class="en">LPWRRSTF</span> — ریست کم‌مصرف</td></tr>
+    <tr><td><span class="en">bit 30</span></td><td class="jt"><span class="en">WWDGRSTF</span> — ریست نگه‌بان پنجره‌ای</td></tr>
+    <tr><td><span class="en">bit 29</span></td><td class="jt"><span class="en">IWDGRSTF</span> — ریست نگه‌بان مستقل</td></tr>
+    <tr><td><span class="en">bit 28</span></td><td class="jt"><span class="en">SFTRSTF</span> — ریست نرم‌افزاری</td></tr>
+    <tr><td><span class="en">bit 27</span></td><td class="jt"><span class="en">PORRSTF</span> — ریست روشن‌شدن/افت توان</td></tr>
+    <tr><td><span class="en">bit 26</span></td><td class="jt"><span class="en">PINRSTF</span> — ریست پایۀ <span class="en">NRST</span></td></tr>
+    <tr><td><span class="en">bit 24</span></td><td class="jt"><span class="en">RMVF</span> — پاک‌سازی فلگ‌های ریست</td></tr>
+  </table>
+</div>
+<div class="fig" id="code-1">
+  <div class="codeblk"><span class="cm">uint32_t rst = RCC-&gt;RSTSCKR;</span>
+printf("RSTSCKR=0x%08x\r\n", rst);
+RCC-&gt;RSTSCKR |= (1 &lt;&lt; 24); <span class="cm">// پاک‌سازی فلگ‌ها</span></div>
+  <div class="figcap"><span class="cap-pill">کد ۱</span><span class="cap-text">خواندن و پاک‌سازی فلگ‌های منبع ریست</span></div>
+</div>
+<p>این رجیستر تا وقتی برق قطع نشده، هیچ بیتی صفر نمی‌شود؛ برای آنکه منبع ریست مبهم نماند، باید پیش از ریست غیرعادی بعدی، علت ریست قبلی پاک شود. پس از پاک‌سازی با بیت ۲۴، همهٔ فلگ‌ها صفر می‌شوند و ریست بعدی فقط منبع جدید را ثبت می‌کند.</p>
+
+<h4 class="h3x"><span class="dm">◆</span>ریست روشن‌شدن/افت توان</h4>
+<p>مدارهای <span class="en">POR</span> (ریست روشن‌شدن) و <span class="en">PDR</span> (ریست افت توان) در تراشه تعبیه شده‌اند و همیشه فعال‌اند تا وقتی توان بالاتر از ولتاژ ریست است، کار عادی تضمین شود؛ اگر <span class="en">VDD</span> به زیر آستانۀ <span class="en">POR/PDR</span> برسد، ریست رخ می‌دهد. علل ممکن و نقاط بررسی:</p>
+<div class="bl">(۱) توان تأمینی ناکافی است. روشن‌شدن موتور، جذب رله و ارسال ماژول بی‌سیم بار همان منبع را ناگهان بالا می‌برد و ولتاژ می‌افتد. به تغییر وضعیت کار تراشه دقت کنید: افزایش فرکانس، خروج از حالت کم‌مصرف، روشن‌کردن ساعت‌ها، افزایش حافظه و دسترسی گذرگاه و اجرای برنامه با فعالیت بالاتر، جریان را اضافه می‌کند؛ اگر تراشه و قطعۀ خارجی هم‌زمان یک سیگنال را با سطوح متضاد برانند یا پیکربندی پایه اشتباه باشد، جریان غیرعادی ممکن است رخ دهد و اگر به‌قدر کافی بزرگ شود، تغذیۀ مرتبط را پایین می‌کشد. باتریِ با شارژ کم، به‌محض بارگیری افت آشکار می‌کند.</div>
+<div class="bl">(۲) محافظت حرارتی یا محدودسازی جریانِ تنظیم‌گر یا کندی پاسخ گذرای آن نسبت به تغییر بار. وقتی اختلاف ولتاژ <span class="en">LDO</span> زیاد، بار سنگین، دمای محیط بالا یا خنک‌کاری ناکافی است، تنظیم‌گر ممکن است وارد محافظت حرارتی شود؛ اگر مشکل پس از مدتی کار ظاهر شود و با خنک‌شدن برطرف گردد، تطابق زمانیِ دما و لحظۀ افت را بررسی کنید. اگر جریان بار یا جریان راه‌اندازی از حد مجاز بگذرد، تنظیم‌گر برای محدودسازی جریان ممکن است ولتاژ خروجی را پایین بیاورد؛ سازوکار محدودسازی جریان، بازۀ آستانه و شرایط بازیابی قطعه را چک کنید. با افزایش سریع جریان بار، تنظیم‌گر زمان می‌خواهد تا تنظیم شود؛ خازن خروجی ابتدا جریان مازاد را می‌دهد و ولتاژ خروجی ممکن است کوتاه‌مدت افت کند.</div>
+<div class="bl">(۳) مسیر تغذیه و ولتاژ پایۀ <span class="en">VDD</span> تراشه. افت ولتاژ زیاد در کابل، کانکتور یا قطعات اتصال تحت بار، و نیز مشکل مسیر تغذیه یا اتصالات لحیم روی <span class="en">PCB</span> می‌تواند ولتاژ پایۀ تراشه را زیر ولتاژ کار عادی ببرد.</div>
+<div class="bl">(۴) اتصال کوتاه، نشتی یا روشن‌شدن قطعۀ حفاظتی در شاخۀ تغذیه. خرابی قطعات جانبی، پل لحیم، اجسام رسانا و آسیب کابل می‌تواند بار پیوسته یا متناوب بسازد. اضافه‌ولتاژ یا رویداد گذرای روی رابط‌ها ممکن است قطعۀ حفاظتی را روشن و تغذیۀ تراشه را متأثر کند.</div>
+<div class="bl">(۵) پیکربندی خازن‌ها (جابه‌جایی، نصب اشتباه، لحیم سرد یا خرابی). ظرفیت اشتباه، قطع لحیم، ترک، نشتی یا اتصال کوتاه خازن می‌تواند تغذیه را متأثر کند. قطعۀ واقعی و وضعیت لحیم را مطابقت دهید؛ اتصال کوتاه یا نشتی خازن خودش به‌صورت بار اضافی ظاهر می‌شود.</div>
+<div class="bl">(۶) خطای نرم‌افزار یا عملکرد نامناسب. عملکرد اشتباه نرم‌افزار روی پایۀ کنترل تغذیه، تغییر سیگنال فعال‌سازی تغذیه، کلید بار یا مدیریت منبع خارجی؛ ورود به حالت تغذیۀ کم‌مصرف پیش از کاهش بار، یا بیدارکردن بارهای سنگین پیش از بازیابی تغذیه می‌تواند توان تأمین کوتاه‌مدت را ناکافی کند.</div>
+
+<h4 class="h3x"><span class="dm">◆</span>ریست نگه‌بان</h4>
+<div class="bl">(۱) هنگام دانلود کد بررسی کنید (دانلود <span class="en">ISP</span> یا دانلود با <span class="en">WCH-LinkUtility</span> روی میزبان <span class="en">SWD</span>) که گزینۀ نگه‌بان سخت‌افزاری به‌اشتباه تیک نخورده باشد. اگر این گزینه فعال شده باشد، نگه‌بان از سطح سخت‌افزار روشن می‌شود و اگر کد تغذیۀ نگه‌بان را ندهد، سیستم دائماً در وضعیت ریست نگه‌بان باقی می‌ماند.</div>
+<div class="bl">(۲) ریست نگه‌بان می‌تواند نتیجۀ خطای برنامه باشد. بررسی کنید آیا پیش از ریست، برنامه به تابع پردازش استثنا، تابع پردازش وقفۀ پیش‌فرض یا حلقۀ انتظارِ خطا رفته است؛ وقتی برنامه در این نقاط می‌ماند، دیگر نمی‌تواند نگه‌بان را تغذیه کند و در نهایت ریست نگه‌بان رخ می‌دهد. برای خطاهای متناوبِ پس از اجرای طولانی یا خطاهایی که با داده‌های مشخص فعال می‌شوند، سرریز آرایه و بافر، اعتبار اشاره‌گر، کفایت پیلۀ فضای کار و درستی آدرس و طول انتقال <span class="en">DMA</span> را بررسی کنید.</div>
+
+<h4 class="h3x"><span class="dm">◆</span>ریست پایۀ <span class="en">NRST</span></h4>
+<p>با مولتی‌متر یا اسیلوسکوپ ولتاژ پایۀ <span class="en">NRST</span> نسبت به زمین را اندازه بگیرید. اگر ولتاژ پیوسته پایین باشد، تراشه در وضعیت ریست می‌ماند و راه نمی‌افتد. مقاومت کشش‌به‌بالای آن را از نظر جابه‌جایی، لحیم سرد و مقدار اشتباه بررسی کنید. اگر ریست با روشن/خاموش‌شدن موتور، اتصال و جداسازی رابط‌ها یا جابه‌جایی دستگاه دیگر مرتبط است، توصیه می‌شود <span class="en">NRST</span> و سیگنال اقدام مربوط را هم‌زمان مشاهده کنید و مطمئن شوید پالس سطح پایینِ کافی برای ریست روی خط ریست ظاهر نشده باشد.</p>
+
+<h4 class="h3x"><span class="dm">◆</span>ریست نرم‌افزاری</h4>
+<p>این ریست توسط کد مشتری افزوده می‌شود و معمولاً بخشی از منطق عادی ریست مشتری است؛ اما گاهی خودِ نویسنده آن را فراموش می‌کند. در پروژه به‌صورت فراگیر عبارت <span class="en">NVIC_SystemReset</span> را جست‌وجو کنید تا همهٔ نقاط فراخوانی یافت شود. همچنین ریست نرم‌افزاریِ درون پردازش <span class="en">HardFault</span> را جدی بگیرید: اگر تابع پردازش <span class="en">HardFault</span> منطق ریست نرم‌افزاری داشته باشد، هر استثنایی که به <span class="en">HardFault</span> برسد (مثل عبور اشاره‌گر از مرز یا سرریز پشته) در نهایت به شکل ریست نرم‌افزاری ظاهر می‌شود. در عیب‌یابی باید اطلاعات استثنای <span class="en">HardFault</span> را نیز برای یافتن ریشهٔ ماجرا به‌کار گرفت.</p>
+
+<h4 class="h3x"><span class="dm">◆</span>ریست روشن‌شدن/افت توان پس از بیداری از حالت آماده‌به‌کار</h4>
+<p>در واژۀ انتخاب کاربر، ویژگیِ «ریست خودکار پس از ورود به حالت آماده‌به‌کار» تنظیم‌شدنی است؛ وقتی این پیکربندی فعال شود، تراشه پس از ورود به Standby خودکار ریست می‌کند، مشتری نمی‌تواند وضعیت آماده‌به‌کار را نگه دارد و در نتیجه مصرف واقعی Standby اندازه‌گیری نمی‌شود. راه‌حل: با ابزار <span class="en">ISP</span> یا <span class="en">WCH-LinkUtility</span> گزینۀ «عدم ریست در حالت کم‌مصرف» را انتخاب کنید.</p>
+
+<h3 class="h2x" id="sec-212"><span class="dm">◆</span>۲.۲ محل‌یابی توقف برنامه</h3>
+<h4 class="h3x"><span class="dm">◆</span>ردگیری استثنای <span class="en">HardFault</span></h4>
+<p>وقتی برنامه دچار استثنا می‌شود (مثل دستور غیرمجاز، خطای گذرگاه یا خطای هم‌ترازی) وارد وقفۀ استثنای <span class="en">HardFault_Handler</span> می‌شود. هستۀ <span class="en">RISC-V</span> هنگام ورود به استثنا به‌طور خودکار اطلاعات وضعیت را در سه رجیستر <span class="en">CSR</span> ذخیره می‌کند؛ با این سه رجیستر معمولاً می‌توان به یک خط کد مشخص و علت دقیق خطا رسید. در تابع پردازش <span class="en">HardFault_Handler</span> چاپ رجیسترها را اضافه کنید:</p>
+<div class="fig" id="code-2">
+  <div class="codeblk">void HardFault_Handler(void)
+{
+printf("HardFault!\r\n");
+printf("mcause=0x%08x\r\n", __get_MCAUSE());
+printf("mtval=0x%08x\r\n", __get_MTVAL());
+printf("mepc=0x%08x\r\n", __get_MEPC());
+while(1);
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۲</span><span class="cap-text">چاپ رجیسترهای <span class="en">CSR</span> در پردازشگر <span class="en">HardFault</span></span></div>
+</div>
+<div class="bl"><span class="en">mcause</span>: نوع استثنا یا وقفه را مشخص می‌کند.</div>
+<div class="bl"><span class="en">mepc</span>: آدرس دستور عامل استثنا یا آدرس بازگشت وقفه را ثبت می‌کند؛ معنای دقیق آن بسته به بیت <span class="en">bit[31]</span> از <span class="en">mcause</span> است (<span class="en">bit[31]=0</span> استثنا و <span class="en">bit[31]=1</span> وقفه).</div>
+<div class="bl"><span class="en">mtval</span>: اطلاعات تکمیلی مرتبط با استثنا را می‌دهد؛ ممکن است آدرس دسترسی خطادار یا رمز دستور غیرمجاز باشد و در دیگر استثناها معمولاً صفر است.</div>
+<p>نمونه:</p>
+<div class="codeblk">uint8_t data[10];
+for (int i = 0; i &lt; 10; i++)
+{
+printf("%x ", *(uint16_t *)(data + i));
+}</div>
+<p>پس از اجرای برنامه، وارد <span class="en">HardFault</span> می‌شود. با چاپ رجیسترهای استثنا روی پورت سری، این اطلاعات به دست می‌آید:</p>
+<div class="fig" id="fig-hf">
+  <div class="figbox">
+    <img src="assets/img/an01003-fig_p8_x88.png" alt="خروجی سریال" style="max-width:380px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">خروجی</span><span class="cap-text">خروجی سریال پس از ورود به <span class="en">HardFault</span></span></div>
+</div>
+<p><b>تفسیر رجیسترها:</b></p>
+<div class="bl"><span class="en">mcause</span>: مقدار <span class="en">0x00000004</span> یعنی آدرس Load ناهم‌تراز است.</div>
+<div class="bl"><span class="en">mtval</span>: مقدار <span class="en">0x20007fe5</span> آدرس دسترسی خطادار است؛ رقم آخر ۵ (فرد) است و هم‌ترازی ۲ بایتی را رعایت نمی‌کند.</div>
+<div class="bl"><span class="en">mepc</span>: مقدار <span class="en">0x000001e8</span> آدرس دستور عامل استثنا است.</div>
+<p>در فایل مونتاژ معکوس <span class="en">.lst</span> آدرس <span class="en">1e8</span> را پیدا می‌کنیم؛ دستور متناظر این است:</p>
+<div class="codeblk">1e8: ff47d583    lhu a1, -12(a5)</div>
+<p>علت مسئله مشخص می‌شود: <span class="en">data</span> آرایه‌ای از نوع <span class="en">uint8_t</span> با آدرس شروع زوج (مثل <span class="en">0x20007fe4</span>) است. وقتی مقدار <span class="en">i</span> طوری باشد که <span class="en">data+i</span> آدرس فرد شود، تبدیل اجباری به <span class="en">uint16_t*</span> و خواندن ۱۶ بیتی با <span class="en">lhu</span> استثنای ناهم‌ترازی Load را برمی‌انگیزد.</p>
+
+<h4 class="h3x"><span class="dm">◆</span>توقف برنامه در حلقۀ انتظار</h4>
+<p>برنامه از حلقه بیرون نمی‌آید و دیگر ادامه نمی‌یابد. این حلقه می‌تواند منطق انتظارِ نوشتۀ کاربر باشد یا حلقۀ انتظارِ درون توابع کتابخانه‌ای — مثل انتظار پایداری ساعت، انتظار یک‌شدن فلگ جانبی یا اتمام شمارش مهلت. موارد رایج: ساعت جانبی فعال نشده است، جانبی درست مقداردهی نشده، سخت‌افزار وصل نیست یا پایه اشتباه پیکربندی شده — در نتیجه شرطی مثل <span class="en">while(FLAG==RESET)</span> همیشه برقرار می‌ماند. رویداد وقفهٔ منتظرشده هرگز رخ نمی‌دهد: وقفه فعال نیست یا اولویت وقفه اشتباه پیکربندی شده و وقفه‌ای که باید فلگ را یک کند اصلاً اجرا نمی‌شود. متغیر حلقه بدون <span class="en">volatile</span> مانده است: اگر متغیر را وقفه تغییر می‌دهد ولی در حلقهٔ اصلی با <span class="en">volatile</span> اعلان نشده باشد، کامپایلر ممکن است آن را به ثابت بهینه کند و شرط حلقه همیشه برقرار بماند.</p>
+
+<h4 class="h3x"><span class="dm">◆</span>خطاهای متناوب</h4>
+<p>وقتی توقف برنامه متناوب است و نه <span class="en">HardFault</span> رخ می‌دهد و نه ریست، کلید عیب‌یابی یافتن شرایط مؤثر بر تکرار خطاست. توصیه می‌شود تک‌تک شرایط را تغییر دهید و ببینید آیا نرخ تکرار توقف با آن تغییر می‌کند. شرایط قابل تغییر: فرکانس کاری، ولتاژ تغذیه، دمای محیط، مدت اجرا، منبع ساعت، روشن/خاموش‌بودن جانبی‌ها، نرخ وقفه، استفاده از <span class="en">DMA</span>، محل اجرای کد و…. اگر شرطی نرخ تکرار را به‌طور آشکار تغییر دهد، مسئله با همان شرط مرتبط است و جهت عیب‌یابی حول آن شکل می‌گیرد. برای مثال:</p>
+<div class="bl">با افزایش فرکانس کاری، توقف‌ها بیشتر می‌شوند: پاسخ پویای تغذیه، خازن‌های کناری، پیکربندی ساعت، دورهای انتظار فلش و ریپل تغذیه را بررسی کنید و مطمئن شوید در بازۀ ولتاژ و فرکانس کاری مجاز تراشه هستید. با بالا رفتن فرکانس، نرخ تغییر جریان بار بزرگ‌تر می‌شود و افت لحظه‌ای روی اندوکتانس پراکندهٔ مسیر تغذیه بزرگ‌تر می‌شود؛ اگر تنظیم‌گر به آن سرعت نرسد، ولتاژ خروجی پیش از تنظیم می‌افتد و ولتاژ کار تراشه زیر مقدار مجاز می‌رود؛ خطای گاه‌به‌گاه توالی داخلی رخ می‌دهد و توقف برنامه می‌سازد. همچنین با افزایش فرکانس <span class="en">CPU</span>، زمان واکشی فلش نسبتاً کوتاه می‌شود؛ اگر دورهای انتظار هم‌زمان افزایش نیابند، <span class="en">CPU</span> پیش از آماده‌شدن داده نمونه‌برداری می‌کند و دستور اشتباه می‌خواند.</div>
+<div class="bl">با جایگزینی منبع تنظیم خارجی، توقف‌ها از بین می‌روند: پایداری و توان تأمین مدار تغذیۀ روی برد، افت ولتاژ مسیر تغذیه، چیدمان خازن‌های کناری و حلقۀ زمین را جدی بررسی کنید.</div>
+<p>با این مقایسه‌های شرطی، دامنۀ مسئله گام‌به‌گام کوچک می‌شود. اگر هیچ شرطی بر تکرار اثر نداشت، مسئله احتمالاً به ترکیب چند عامل یا عوامل هنوز شناسایی‌نشده وابسته است. در این حالت به محیط اصلی بازگردید و با لرزش <span class="en">IO</span> یا چاپ سری، مسیر اجرای برنامه را ثبت کنید تا آخرین تابع یا بخش کدِ اجراشده پیش از توقف پیدا شود؛ سپس با دیتاشیت تراشه رفتار سخت‌افزاری آن عمل را تحلیل کنید و دامنه را گام‌به‌گام ببندید.</p>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN01003</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/09/24</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">VDD12</span></td><td class="jt">دامنۀ تغذیۀ ۱٫۲ ولت هسته و جانبی‌های پرسرعت در <span class="en">CH32H417</span>؛ قابل تأمین از منبع خارجی</td></tr>
+      <tr><td><span class="en">VDDK / VDD12A</span></td><td class="jt">تغذیۀ هسته / تغذیۀ بخش آنالوگ <span class="en">USB 3.0</span> و <span class="en">ETH PHY</span>؛ بازۀ مجاز <span class="en">1.17~1.27V</span></td></tr>
+      <tr><td><span class="en">LDO</span></td><td class="jt">ریگولاتور خطی کم‌افت؛ در این سند منبع خارجی ۱٫۲ ولت مولّد <span class="en">VDD12</span></td></tr>
+      <tr><td><span class="en">瞬态 / افت لحظه‌ای</span></td><td class="jt">افت گذرای ولتاژ تغذیه هنگام جابه‌جایی بار؛ عامل اصلی خطای سوئیچ تغذیه در بخش ۱</td></tr>
+      <tr><td><span class="en">RCC_RSTSCKR</span></td><td class="jt">رجیستر وضعیت/کنترل ریست در آدرس <span class="en">0x40021024</span>؛ نمایشگر همۀ شاخه‌های ریست سیستم</td></tr>
+      <tr><td><span class="en">LPWRRSTF … RMVF</span></td><td class="jt">فلگ‌های منبع ریست در <span class="en">RCC_RSTSCKR</span>؛ بیت ۲۴ (<span class="en">RMVF</span>) همهٔ فلگ‌ها را پاک می‌کند</td></tr>
+      <tr><td><span class="en">POR / PDR</span></td><td class="jt">ریست روشن‌شدن / ریست افت توان داخلی؛ با عبور <span class="en">VDD</span> از آستانۀ آنها فعال می‌شوند</td></tr>
+      <tr><td><span class="en">IWDG / WWDG</span></td><td class="jt">نگه‌بان مستقل / نگه‌بان پنجره‌ای؛ توقف تغذیۀ آنها به ریست سیستم می‌انجامد</td></tr>
+      <tr><td><span class="en">HardFault</span></td><td class="jt">استثنای خطای سخت در هستۀ <span class="en">RISC-V</span>؛ نقطۀ ورود تحلیل خطاهای غیرقابل بازیابی</td></tr>
+      <tr><td><span class="en">mcause / mtval / mepc</span></td><td class="jt">سه رجیستر <span class="en">CSR</span>: نوع استثنا/وقفه، اطلاعات تکمیلی (مثل آدرس خطا) و آدرس دستورِ عامل خطا</td></tr>
+      <tr><td><span class="en">lhu / شبه‌دستور</span></td><td class="jt">دستور بارگذاری ۱۶ بیتی بی‌علامت؛ اجرای آن روی آدرس فرد، استثنای ناهم‌ترازی Load می‌دهد</td></tr>
+      <tr><td><span class="en">NVIC_SystemReset</span></td><td class="jt">تابع ریست نرم‌افزاری؛ با جست‌وجوی فراگیر در پروژه، همهٔ فراخوانی‌های آن یافت می‌شود</td></tr>
+      <tr><td><span class="en">EXTI / WKUP</span></td><td class="jt">خط رویداد خارجی / پایۀ بیداری؛ در مسیر خروج از Standby نقش بیدارگر دارند</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN01003 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۱۹</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN01003</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
