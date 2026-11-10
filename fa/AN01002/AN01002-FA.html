@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>راهنمای جامع مصرف توان و حالت‌های کم‌مصرف در CH32L103 — ترجمۀ فارسی AN01002</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">راهنمای جامع</div>
+    <div class="t2">مصرف توان و حالت‌های <span class="en">کم‌مصرف</span></div>
+    <div class="t3">در میکروکنترلر <span class="en">CH32L103</span></div>
+  </div>
+  <div class="c-sub">از مقایسۀ حالت‌های <span class="en">Sleep</span>، <span class="en">Stop1~4</span> و <span class="en">Standby</span> و تحلیل منابع جریان، تا راهنمای انتخاب حالت خواب، بیداری زمان‌بندی‌شده با <span class="en">LPTIM</span> و بهینه‌سازی مرحلۀ اجرا با فرکانس کاری، <span class="en">HSI-LP</span> و <span class="en">DMA</span></div>
+  <div class="c-desc">در این جزوه، ترجمۀ فارسی سند رسمی <span class="en">AN01002</span> (نسخۀ ۱٫۰، منتشرۀ شرکت <span class="en">WCH</span>) را می‌خوانید: مصرف سیستم نه‌تنها به خود تراشه، بلکه به پیکربندی نرم‌افزاری حالت‌های توان، سیستم ساعت و جانبی‌ها بستگی دارد. جدول مقایسۀ کامل حالت‌های کم‌مصرف، تحلیل منابع جریان پویا و ساکن، منطق انتخاب حالت خواب همراه با دو سناریوی واقعی (قفل هوشمند و نمایشگر الکترونیکی)، بیداری زمان‌بندی‌شده با <span class="en">LPTIM</span> و روش‌های بهینه‌سازی مرحلۀ اجرا (فرکانس کاری، <span class="en">HSI-LP/HSE-LP</span>، اجرا از <span class="en">RAM</span> با <span class="en">FLASH_LP</span> و <span class="en">DMA</span>) گام‌به‌گام مرور می‌شود.</div>
+  <div class="c-tags">
+    <span class="c-tag">میکروکنترلر <span class="en">CH32L103</span></span>
+    <span class="c-tag"><span class="en">Sleep / Stop / Standby</span></span>
+    <span class="c-tag">منابع جریان پویا و ساکن</span>
+    <span class="c-tag">بیداری با <span class="en">LPTIM</span></span>
+    <span class="c-tag"><span class="en">HSI-LP / HSE-LP</span></span>
+    <span class="c-tag"><span class="en">FLASH_LP</span> و اجرا از <span class="en">RAM</span></span>
+    <span class="c-tag">انتقال داده با <span class="en">DMA</span></span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN01002 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | حالت‌های کم‌مصرف و منابع جریان</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-111"><span class="s-id">1.1</span><span>حالت‌های کم‌مصرف</span><span class="s-dots"></span><span class="s-page">۳</span></a>
+    <a class="toc-sub" href="#sec-112"><span class="s-id">1.2</span><span>منابع جریان</span><span class="s-dots"></span><span class="s-page">۵</span></a>
+    <a class="toc-sub" href="#sec-113"><span class="s-id">1.3</span><span>انتخاب حالت خواب</span><span class="s-dots"></span><span class="s-page">۶</span></a>
+    <a class="toc-sub" href="#sec-114"><span class="s-id">1.4</span><span>بیداری زمان‌بندی‌شده با <span class="en">LPTIM</span></span><span class="s-dots"></span><span class="s-page">۸</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | بهینه‌سازی مرحلۀ اجرا</span><span class="t-dots"></span><span class="t-page">۹</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-211"><span class="s-id">2.1</span><span>فرکانس کاری و <span class="en">HSI</span> کم‌مصرف</span><span class="s-dots"></span><span class="s-page">۹</span></a>
+    <a class="toc-sub" href="#sec-212"><span class="s-id">2.2</span><span><span class="en">FLASH</span> و <span class="en">SRAM</span></span><span class="s-dots"></span><span class="s-page">۱۰</span></a>
+    <a class="toc-sub" href="#sec-213"><span class="s-id">2.3</span><span>کاهش زمان درگیری <span class="en">CPU</span></span><span class="s-dots"></span><span class="s-page">۱۱</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۴</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۱۱</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۵</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۱۲</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">شکل ۱-۱</span><span>جریان وظیفۀ دوره‌ای در سه حالت</span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۲</span><span>پیکربندی بیداری کم‌مصرف <span class="en">LPTIM</span></span><span class="f-dots"></span><span class="f-page">۹</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۱</span><span>جریان اجرا و مدت‌زمان در فرکانس‌های متفاوت</span><span class="f-dots"></span><span class="f-page">۹</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۲</span><span>ورود <span class="en">FLASH</span> به حالت کم‌مصرف</span><span class="f-dots"></span><span class="f-page">۱۱</span></div>
+        <div class="frow"><span class="f-id">جدول ۱-۱</span><span>مرور حالت‌های کم‌مصرف</span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">جدول ۱-۲</span><span>منابع اصلی مصرف جریان</span><span class="f-dots"></span><span class="f-page">۵</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> سری <span class="en">CH32L103</span> میکروکنترلر همگانی‌منظورۀ صنعتی کم‌مصرف مبتنی بر هستۀ <span class="en">RISC-V</span> است و چندین حالت کم‌مصرف (<span class="en">Sleep</span>، <span class="en">Stop</span>، <span class="en">Standby</span>) را در خود جای داده است. در کاربرد واقعی، مصرف سیستم نه‌تنها به خود تراشه بلکه به پیکربندی منطقی حالت‌های توان، سیستم ساعت و جانبی‌ها توسط نرم‌افزار نیز وابسته است. این سند کمک می‌کند منابع مصرف <span class="en">CH32L103</span>، منطق انتخاب حالت کم‌مصرف و راهبردهای پیاده‌سازی آن را بشناسید؛ مقایسۀ حالت‌های کم‌مصرف، تحلیل منابع جریان، راهنمای انتخاب حالت خواب و روش‌های بهینه‌سازی مرحلۀ اجرا را پوشش می‌دهد.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>سری <span class="en">CH32L103</span> میکروکنترلر همگانی‌منظورۀ صنعتی کم‌مصرف مبتنی بر هستۀ <span class="en">RISC-V</span> است و چندین حالت کم‌مصرف (<span class="en">Sleep</span>، <span class="en">Stop</span>، <span class="en">Standby</span>) را در خود جای داده است. در کاربرد واقعی، مصرف سیستم نه‌تنها به خود تراشه بلکه به پیکربندی منطقی حالت‌های توان، سیستم ساعت و جانبی‌ها توسط نرم‌افزار نیز بستگی دارد. هدف این سند آن است که منابع مصرف <span class="en">CH32L103</span>، منطق انتخاب حالت کم‌مصرف و راهبردهای پیاده‌سازی کم‌مصرف را معرفی کند؛ مقایسۀ حالت‌های کم‌مصرف، تحلیل منابع جریان، راهنمای انتخاب حالت خواب و روش‌های بهینه‌سازی مرحلۀ اجرا را پوشش می‌دهد.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>میکروکنترلرهای همگانی‌منظوره</td><td><span class="en">CH32L103</span> و مشابه</td></tr>
+  </table>
+</div>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">حالت‌های کم‌مصرف و منابع جریان</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-111"><span class="dm">◆</span>۱.۱ حالت‌های کم‌مصرف</h3>
+<p>حالت‌های کم‌مصرف از نظر توان مصرفی، زمان بیداری، پیکربندی ساعت و وضعیت حفظ داده‌ها تفاوت‌های چشمگیری دارند. حالت <span class="en">Stop</span> خود به چهار پلۀ <span class="en">Stop1~4</span> تقسیم می‌شود که سطوح متفاوتی از مصرف و راهبرد حفظ <span class="en">RAM</span> را فراهم می‌کنند. هنگام انتخاب حالت باید میان سه عامل توان، سرعت بیداری و حفظ وضعیت، توازن برقرار کرد.</p>
+
+<div class="tblwrap" id="tab-11">
+  <div class="tblcap"><span class="cap-pill">جدول ۱-۱</span><span class="cap-text">مرور حالت‌های کم‌مصرف</span></div>
+  <table class="tbl" style="font-size:11px;">
+    <thead><tr><th style="width:17%;">حالت و پیکربندی کلیدی</th><th style="width:24%;">وضعیت هنگام خواب</th><th style="width:13%;">مدارهای فعال</th><th style="width:22%;">منابع بیداری</th><th>رفتار پس از بیداری</th></tr></thead>
+    <tr>
+      <td class="jt"><span class="en">Sleep</span><br><span class="en">SLEEPDEEP=0</span><br>اجرای <span class="en">WFI</span> یا <span class="en">WFE</span></td>
+      <td class="jt">هسته از اجرا باز می‌ایستد؛ سایر ساعت‌ها به‌طور خودکار با ورود به <span class="en">Sleep</span> بسته نمی‌شوند؛ وضعیت <span class="en">SRAM</span>، رجیسترها و <span class="en">IO</span> حفظ می‌شود.</td>
+      <td class="jt">جانبی‌هایی که فعال و صاحب ساعت‌اند می‌توانند به کار ادامه دهند. برای کاهش جریان، پیش از ورود، ساعت جانبی‌های بلااستفاده را ببندید.</td>
+      <td class="jt"><span class="en">WFI</span>: بیداری با وقفه.<br><span class="en">WFE</span>: بیداری با رویداد؛ طبق دفترچه می‌توان بیداری با رویدادهای مرتبط با وقفه را نیز پیکربندی کرد.</td>
+      <td class="jt">ریست نمی‌شود. پس از بیداری با <span class="en">WFI</span> نخست تابع سرویس وقفه اجرا می‌شود؛ پس از بیداری رویدادیِ <span class="en">WFE</span> اجرا ادامه می‌یابد و مسیر دقیق به پیکربندی رویداد بستگی دارد.</td>
+    </tr>
+    <tr>
+      <td class="jt"><span class="en">Stop1</span><br><span class="en">SLEEPDEEP=1</span>، <span class="en">PDDS=0</span>، <span class="en">LPDS=0</span>؛ صرفه‌جویی <span class="en">LDO</span> بسته</td>
+      <td rowspan="4" class="jt">ساعت‌های <span class="en">HSE</span>، <span class="en">HSI</span>، <span class="en">PLL</span> و ساعت جانبی‌ها بسته می‌شوند؛ وضعیت <span class="en">SRAM</span>، رجیسترها و <span class="en">IO</span> حفظ می‌شود. شیوۀ توقف ساعت در <span class="en">Stop1~4</span> یکسان است.</td>
+      <td rowspan="4" class="jt">ماژول‌های قابل کار:<br><span class="en">IWDG</span>، <span class="en">RTC</span>، <span class="en">LSI/LSE</span>، <span class="en">LPTIM</span>.</td>
+      <td rowspan="4" class="jt">وقفه یا رویداد خارجی، خروجی <span class="en">PVD</span>، رویداد هشدار <span class="en">RTC</span>، سیگنال بیداری <span class="en">USB</span>، سیگنال بیداری <span class="en">USB PD</span>، <span class="en">CMP</span>، <span class="en">LPTIM</span>؛ خروج با <span class="en">NRST</span> نیز ممکن است ولی در مسیر ریست قرار می‌گیرد.</td>
+      <td rowspan="4" class="jt">پس از بیداری غیرریستی اجرا از همان‌جا ادامه می‌یابد و <span class="en">HSI</span> ساعت سیستم پیش‌فرض است؛ اگر وظیفه به <span class="en">HSE</span>، <span class="en">PLL</span> یا ساعت خاصی نیاز دارد، برنامه آن را بازمی‌گرداند. مسیر <span class="en">NRST</span> ریست را اجرا می‌کند.</td>
+    </tr>
+    <tr><td class="jt"><span class="en">Stop2</span><br><span class="en">SLEEPDEEP=1</span>، <span class="en">PDDS=0</span>، <span class="en">LPDS=0</span>؛ <span class="en">AUTO_LDO_EC=1</span> یا <span class="en">LDO_EC=1</span></td></tr>
+    <tr><td class="jt"><span class="en">Stop3</span><br><span class="en">SLEEPDEEP=1</span>، <span class="en">PDDS=0</span>، <span class="en">LPDS=1</span>، <span class="en">RAMLV=0</span>؛ پیش از ورود <span class="en">FLASH_LP=10b</span></td></tr>
+    <tr><td class="jt"><span class="en">Stop4</span><br><span class="en">SLEEPDEEP=1</span>، <span class="en">PDDS=0</span>، <span class="en">LPDS=1</span>، <span class="en">RAMLV=1</span>؛ پیش از ورود <span class="en">FLASH_LP=10b</span></td></tr>
+    <tr>
+      <td class="jt"><span class="en">Standby</span><br><span class="en">SLEEPDEEP=1</span>، <span class="en">PDDS=1</span><br>اجرای <span class="en">WFI</span> یا <span class="en">WFE</span>؛ پیش از ورود <span class="en">FLASH_LP=10b</span></td>
+      <td class="jt">ساعت‌های <span class="en">HSE</span>، <span class="en">HSI</span>، <span class="en">PLL</span> و ساعت جانبی‌ها بسته و تنظیم‌گر ولتاژ اصلی خاموش می‌شود؛ به‌جز مدار بیداری و دامنۀ پشتیبان، بقیۀ مدارها بی‌برق می‌شوند. بسته به پیکربندی می‌توان <span class="en">2KB</span>، <span class="en">18KB</span> یا دو بخش <span class="en">SRAM</span> را حفظ کرد؛ رجیسترهای معمولی و زمینۀ اجرا نگه داشته نمی‌شود.</td>
+      <td class="jt"><span class="en">IWDG</span>، <span class="en">RTC</span>،<br><span class="en">LSI/LSE</span>.</td>
+      <td class="jt">لبه بالارونده پایۀ <span class="en">WKUP</span>، رویداد هشدار <span class="en">RTC</span>، <span class="en">NRST</span>، ریست <span class="en">IWDG</span>؛ رویدادهای خارجی <span class="en">EXTI0~EXTI17</span> نیز بیدار می‌کنند — اینجا مسیر رویداد خارجی است، نه وقفۀ معمول <span class="en">EXTI</span>.</td>
+      <td class="jt">تمام مسیرهای خروج، فرایند ریست توان را آغاز می‌کنند و اجرا از محل ورود به <span class="en">Standby</span> از سر گرفته نمی‌شود.</td>
+    </tr>
+  </table>
+</div>
+
+<h3 class="h2x" id="sec-112"><span class="dm">◆</span>۱.۲ منابع جریان</h3>
+<p>مصرف جریان <span class="en">CH32L103</span> به دو دسته تقسیم می‌شود: جریان پویا (ناشی از کار هسته، گذرگاه و جانبی‌های دیجیتال) و جریان ساکن (ناشی از ماژول‌های آنالوگ، تنظیم‌گرهای داخلی و جریان نشتی). در حالت اجرا و حالت‌های کم‌مصرف، منابع جریان و سهم هر یک از کل مصرف، تفاوت بزرگی دارند.</p>
+
+<div class="tblwrap" id="tab-12">
+  <div class="tblcap"><span class="cap-pill">جدول ۱-۲</span><span class="cap-text">منابع اصلی مصرف جریان</span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:22%;">منبع اصلی</th><th style="width:36%;">فعالیت مولّد جریان</th><th>پیکربندی / شرایط مؤثر بر جریان</th></tr></thead>
+    <tr><td class="jt">هسته و گذرگاه</td><td class="jt">اجرای دستور، خواندن/نوشتن رجیستر، انتقال داده</td><td class="jt">فرکانس کاری سیستم، <span class="en">HSILP</span>، <span class="en">PLLON</span></td></tr>
+    <tr><td class="jt">سیستم ساعت</td><td class="jt">نوسان <span class="en">HSI/HSE</span> و <span class="en">PLL</span> و توزیع ساعت</td><td class="jt">منبع ساعت، فرکانس، <span class="en">PLL</span> و فعال‌سازی ساعت ماژول‌ها</td></tr>
+    <tr><td class="jt"><span class="en">FLASH</span> و <span class="en">SRAM</span></td><td class="jt">واکشی دستور و خواندن ثابت‌ها از فلش؛ خواندن/نوشتن <span class="en">SRAM</span> و حفظ داده‌ها</td><td class="jt">محل اجرای کد، حالت کم‌مصرف فلش، دامنۀ حفظ <span class="en">RAM</span></td></tr>
+    <tr><td class="jt">جانبی‌های دیجیتال و آنالوگ</td><td class="jt">جریان لازم برای کار ماژول‌ها و دیگر جانبی‌ها</td><td class="jt">فعال‌سازی ساعت جانبی، زمان کار، حالت کاری</td></tr>
+    <tr><td class="jt">رابط <span class="en">IO</span></td><td class="jt">مدار ورودی، کشش بالا/پایین داخلی و درایور خروجی</td><td class="jt">حالت پایه، کشش بالا/پایین و لرزش خروجی</td></tr>
+    <tr><td class="jt">تنظیم‌گر تغذیۀ داخلی و…</td><td class="jt">تغذیۀ تنظیم‌گر و حفظ وضعیت <span class="en">SRAM</span></td><td class="jt"><span class="en">LDO_EC</span>، <span class="en">LPDS</span>، <span class="en">RAMLV</span> و نواحی محفوظ</td></tr>
+  </table>
+</div>
+
+<h4 class="h3x" id="sec-1121"><span class="dm">◆</span>۱.۲.۱ در حالت اجرا</h4>
+<p>در حالت اجرا، مصرف جریان هسته عمدتاً از واکشی دستور و دسترسی به داده‌ها می‌آید. هم‌زمان سیگنال ساعت از درخت ساعت به گذرگاه و همهٔ جانبی‌های صاحبِ ساعت توزیع می‌شود و تایمر، <span class="en">USART</span>، <span class="en">SPI</span>، <span class="en">I2C</span> و دیگر ماژول‌ها را به کار می‌اندازد. اگر برنامه بارها یک بیت وضعیت را پرس‌وجو کند و کار مؤثری انجام ندهد، <span class="en">CPU</span>، فلش و گذرگاه فعال می‌مانند؛ این سربار پرس‌وجوی مداوم نتیجۀ واقعی ندارد اما جریان همچنان مصرف می‌شود. ماژول‌های آنالوگ مانند <span class="en">ADC</span> و <span class="en">CMP</span> نیز هنگام فعال بودن، مصرف جریان مستقل خود را دارند.</p>
+<p>بنابراین در یک فرکانس کاری ثابت، اجرای کد از فلش یا از <span class="en">RAM</span>، روشن بودن ساعت ماژول‌ها، پرس‌وجوی مکرر و لرزش پیوستۀ <span class="en">IO</span>، همگی جریان اجرا را تغییر می‌دهند. کاهش فرکانس ممکن است جریان لحظه‌ای را پایین بیاورد، اما می‌تواند زمان کار هسته و جانبی‌ها را طولانی‌تر کند؛ بستن ساعت ماژول‌های بلااستفاده و کوتاه کردن زمان وظیفه نیز هر یک منبع متفاوتی از مصرف را هدف می‌گیرند.</p>
+
+<h4 class="h3x" id="sec-1122"><span class="dm">◆</span>۱.۲.۲ در طول حالت‌های کم‌مصرف</h4>
+<p>آنچه <span class="en">Sleep</span> کاهش می‌دهد عمدتاً فعالیت‌های مرتبط با اجرای هسته است. <span class="en">Stop</span> وضعیت <span class="en">SRAM</span>، رجیسترها، شمارش کم‌سرعت و مدارهای لازم برای بیداری را نگه می‌دارد؛ پله‌های مختلف <span class="en">Stop</span> وضعیت تغذیۀ تنظیم‌گر داخلی و <span class="en">RAM</span> را نیز تغییر می‌دهند. در <span class="en">Standby</span>، ماژول <span class="en">RTC</span>، مدار بیداری و بخش انتخاب‌شدۀ حفظ <span class="en">SRAM</span> همچنان ممکن است جریان بکشند.</p>
+
+<h3 class="h2x" id="sec-113"><span class="dm">◆</span>۱.۳ انتخاب حالت خواب</h3>
+<h4 class="h3x" id="sec-1131"><span class="dm">◆</span>۱.۳.۱ بر اساس وضعیت کاری</h4>
+<p>نخست باید دید در زمان خواب چه کارکردهایی باید حفظ شوند و پس از بیداری اجرا از کجا ادامه یابد.</p>
+<div class="bl"><span class="en">Sleep</span>: هسته می‌ایستد ولی ساعت جانبی‌ها طبق پیکربندی قبلی به کار ادامه می‌دهند. اگر در زمان خواب هنوز به جانبی‌های ساعت‌پُر نیاز دارید (مثل دریافت <span class="en">USART</span>، تبدیل پیوستۀ <span class="en">ADC</span> یا حالت اسلیوِ <span class="en">SPI</span>)، <span class="en">Sleep</span> معمولاً تنها گزینۀ کم‌مصرفِ در دسترس است.</div>
+<div class="bl"><span class="en">Stop</span>: ساعت‌های پرسرعت (دامنۀ <span class="en">HSE/HSI/PLL</span>) بسته می‌شود و وضعیت <span class="en">SRAM</span>، رجیسترها و <span class="en">IO</span> حفظ می‌ماند. اگر در زمان خواب فقط شمارش کم‌سرعت (<span class="en">RTC</span>، <span class="en">LPTIM</span>) یا بیداری رویدادی (<span class="en">EXTI</span>، <span class="en">CMP</span>، <span class="en">PVD</span> و…) لازم است و پس از بیداری باید اجرا از همان برنامهٔ قبلی ادامه یابد، <span class="en">Stop</span> گزینه‌ای درخور است.</div>
+<div class="bl"><span class="en">Standby</span>: تنظیم‌گر ولتاژ اصلی خاموش می‌شود، بیشتر مدارها بی‌برق می‌شوند و حفظ بخشی از <span class="en">SRAM</span> اختیاری است. پس از بیداری، اجرا از فرایند ریست توان آغاز می‌شود. تنها وقتی <span class="en">Standby</span> را در نظر بگیرید که منبع بیداری در دسترس باشد، زمان راه‌اندازی پذیرفتنی باشد و وضعیت برنامه قابل بازسازی یا از راه‌های مجازِ حفظ بازیابی‌شدنی باشد.</div>
+
+<h4 class="h3x" id="sec-1132"><span class="dm">◆</span>۱.۳.۲ مقایسۀ چرخۀ کامل</h4>
+<p>برای وظایف دوره‌ای، سه حالت را با «یک وظیفه و یک دورۀ بیداریِ» یکسان مقایسه می‌کنیم؛ هر چرخه سه بخش دارد: بیداری و بازگشت، اجرای وظیفه و خواب دوباره. جریان خواب در <span class="en">Sleep</span> بالاتر است اما هسته سریع برمی‌گردد؛ جریان خواب <span class="en">Stop</span> میان <span class="en">Sleep</span> و <span class="en">Standby</span> است و پس از بیداری باید ساعت‌ها و جانبی‌های لازمِ وظیفه بازگردانده شوند؛ <span class="en">Standby</span> مصرف را باز هم پایین می‌آورد، به‌بهای راه‌اندازی از ریست و بازسازی وضعیت.</p>
+
+<div class="fig" id="fig-11">
+  <div class="figbox">
+    <img src="assets/img/an01002-fig_p5_x55.jpeg" alt="شکل ۱-۱" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۱</span><span class="cap-text">جریان وظیفۀ دوره‌ای در سه حالت کم‌مصرف</span></div>
+</div>
+<p>در شکل، محور افقی زمان و محور عمودی جریان است. میانگین جریان هر چرخه حاصل ترکیب سه بخش جریان و مدت‌زمان هر یک است؛ نه صرفاً مقایسۀ جریان خواب و نه صرفاً مقایسۀ اوج جریان بیداری.</p>
+<div class="bl">دوره‌های کوتاه: سهم «بازگشت و کار» زیاد است و فرصت صرفه‌جویی جریان خواب در <span class="en">Stop</span> یا <span class="en">Standby</span> محدود می‌شود؛ در این شرایط ممکن است <span class="en">Sleep</span> میانگین جریان چرخه را پایین‌تر بیاورد.</div>
+<div class="bl">طولانی‌شدن دوره: هزینهٔ بازگشت بر زمان خواب بیشتری تقسیم می‌شود و جریان خواب پایینِ <span class="en">Stop</span> و <span class="en">Standby</span> آسان‌تر به سود خالص می‌رسد.</div>
+<div class="bl">وظیفه‌ای که تقریباً بی‌وقفه اجرا می‌شود: در چرخۀ کامل بخش خواب کافی وجود ندارد. این‌جا اجرای پیوسته با جریان اجرای پایین‌تر هم وارد انتخاب می‌شود؛ مثلاً <span class="en">HSI</span> کم‌مصرف <span class="en">1MHz</span> یا اجرا از <span class="en">RAM</span> همراه با ورود فلش به حالت کم‌مصرف. این‌ها جریانِ کارِ پیوسته را تغییر می‌دهند؛ هنگام مقایسه با <span class="en">Sleep</span>، <span class="en">Stop</span> و <span class="en">Standby</span> همچنان ملاک، میانگین جریان در وظیفه و بازۀ زمانی یکسان است.</div>
+
+<h4 class="h3x" id="sec-1133"><span class="dm">◆</span>۱.۳.۳ نمونه‌های انتخاب در کاربرد</h4>
+<div class="scen"><span class="lbl">سناریو ۱ —</span> قفل هوشمندِ دروازه در نبودِ کاربر در حالت آماده‌به‌کار است؛ ماژول اثر انگشت باید دوره‌ای بیدار شود تا فشار انگشت را بررسی کند؛ بازۀ بررسی حدود <span class="en">200ms~500ms</span> است. هر بررسی کوتاه است و پس از پایان، بلافاصله به خواب بازمی‌گردد.</div>
+<p><span class="en">Stop4</span> ساعت‌های <span class="en">HSE/HSI/PLL</span> را می‌بندد، فقط ماژول‌های کم‌سرعت را نگه می‌دارد، محتوای <span class="en">SRAM</span> و رجیسترها از بین نمی‌رود و پس از بیداری اجرا از همان برنامه ادامه می‌یابد و <span class="en">HSI</span> ساعت سیستم پیش‌فرض است؛ <span class="en">LPTIM</span> می‌تواند از <span class="en">LSE</span> یا <span class="en">LSI</span> ساعت بگیرد و هر دو در حالت <span class="en">Stop</span> کار می‌کنند، پس می‌تواند <span class="en">CPU</span> را دوره‌ای بیدار کند. <span class="en">Sleep</span> ساعت‌های پرسرعت را نمی‌بندد و سیستم ساعت در کل دوره جریان می‌کشد؛ <span class="en">Standby</span> پس از بیداری از فرایند ریست توان راه می‌افتد و ماژول اثر انگشت باید دوباره مقداردهی شود. چون بخش عمدهٔ زمان قفل، آماده‌به‌کار است و زمان بررسی کوتاه، <span class="en">Stop4</span> مصرف آماده‌به‌کار را به کمترین می‌رساند و <span class="en">LPTIM</span> زمان‌بندی دوره‌ای را به سخت‌افزار می‌سپارد؛ <span class="en">CPU</span> فقط هنگام بررسی کوتاه‌مدت کار می‌کند. پیکربندی <span class="en">Stop4</span>: <span class="en">SLEEPDEEP=1</span>، <span class="en">PDDS=0</span>، <span class="en">LPDS=1</span> (تنظیم‌گر ولتاژ در حالت کم‌مصرف)، <span class="en">RAMLV=1</span> (<span class="en">RAM</span> در ولتاژ پایین) و پیش‌تنظیم <span class="en">FLASH_LP[1:0]=10b</span>.</p>
+<div class="scen"><span class="lbl">سناریو ۲ —</span> نمایشگر کاغذ الکترونیکیِ باتری‌خور که فاصلۀ به‌روزرسانی محتوا از زمان بازسازی صفحه بسیار بزرگ‌تر است. پس از هر بازسازی، صفحه بدون تغذیه هم محتوا را نگه می‌دارد. دستگاه بین دو به‌روزرسانی هیچ وظیفۀ محاسباتی یا ارتباطی پیوسته‌ای ندارد؛ <span class="en">MCU</span> وارد حالت آماده‌به‌کار می‌شود و منتظر بیداری با رویداد زمان‌بند یا رویداد خارجی بعدی می‌ماند.</div>
+<p><span class="en">MCU</span> وارد حالت <span class="en">Standby</span> از <span class="en">CH32L103</span> می‌شود. <span class="en">RTC</span> به‌صورت هشدار دوره‌ای پیکربندی می‌شود و منبع اصلی بیداری است. داده‌هایی که باید از یک دورۀ ریست به دورۀ بعد بمانند، در <span class="en">RAM</span> حفظ‌شده نگه داشته می‌شوند؛ با تنظیم <span class="en">R2KSTY=1</span> حدود <span class="en">2KB</span> از <span class="en">RAM</span> بی‌برق نمی‌شود. برنامه از <span class="en">RAM</span> حفظ‌شده داده‌ها را می‌خواند، با <span class="en">SPI</span> صفحه را بازسازی می‌کند، سپس دوباره هشدار <span class="en">RTC</span> و حفظ <span class="en">RAM</span> را پیکربندی کرده و وارد <span class="en">Standby</span> می‌شود. اگر نیاز به بیداری با رویداد خارجی هست، پایۀ مربوط را می‌توان به‌عنوان منبع بیداری <span class="en">EXTI</span> یا <span class="en">WKUP</span> پیکربندی کرد.</p>
+
+<h3 class="h2x" id="sec-114"><span class="dm">◆</span>۱.۴ بیداری زمان‌بندی‌شده در حالت‌های کم‌مصرف — <span class="en">LPTIM</span></h3>
+<p>ماژول <span class="en">LPTIM</span> (<span class="en">Low-Power Timer</span>) تایمری است که ویژهٔ سناریوهای فوق‌کم‌مصرف طراحی شده است. ارزش اصلی <span class="en">LPTIM</span> آن است که در همهٔ حالت‌های توان به‌جز Standby می‌تواند کار کند و با مصرف بسیار کم، کارکرد شمارش را نگه می‌دارد.</p>
+<p>منابع ساعت <span class="en">LPTIM</span> متنوع‌اند: <span class="en">LSE</span> داخلی (<span class="en">32.768kHz</span>)، <span class="en">LSI</span> (حدود <span class="en">40kHz</span>)، <span class="en">HSI</span> یا ساعت <span class="en">HB</span>، و ساعت خارجی روی ورودی خارجی <span class="en">LPTIM</span>.</p>
+<p>اثر حالت‌های کم‌مصرف بر <span class="en">LPTIM</span>:</p>
+<div class="bl">حالت <span class="en">SLEEP</span>: بی‌اثر؛ وقفۀ <span class="en">LPTIM</span> دستگاه را از خواب بیرون می‌آورد.</div>
+<div class="bl">حالت <span class="en">STOP</span>: جانبۀ <span class="en">LPTIM</span> هنگامی که با <span class="en">LSE</span> یا <span class="en">LSI</span> ساعت می‌گیرد فعال می‌ماند؛ وقفۀ <span class="en">LPTIM</span> دستگاه را از حالت توقف بیرون می‌آورد.</div>
+<div class="bl">حالت <span class="en">STANDBY</span>: جانبۀ <span class="en">LPTIM</span> بی‌برق است و پس از خروج از Standby باید دوباره مقداردهی شود.</div>
+<p>روند پیکربندی بیداری کم‌مصرف با <span class="en">LPTIM</span> در <span class="en">CH32L103</span> به این شکل است:</p>
+<div class="fig" id="fig-12">
+  <div class="figbox">
+    <img src="assets/img/an01002-fig_p6_x63.jpeg" alt="شکل ۱-۲" style="max-width:620px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۲</span><span class="cap-text">پیکربندی بیداری کم‌مصرف <span class="en">LPTIM</span></span></div>
+</div>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">بهینه‌سازی مرحلۀ اجرا</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-211"><span class="dm">◆</span>۲.۱ فرکانس کاری و <span class="en">HSI</span> کم‌مصرف</h3>
+<h4 class="h3x" id="sec-2111"><span class="dm">◆</span>۲.۱.۱ تنظیم فرکانس بر اساس نوع وظیفه</h4>
+<p>هرچه فرکانس کاری بالاتر برود، تعداد دورهای ساعت اجراشده توسط هسته و گذرگاه در هر ثانیه بیشتر می‌شود؛ واکشی دستور و خواندن/نوشتن داده چشمگیرتر می‌شود و در نتیجه جریان اجرا در پیکربندی ثابت معمولاً بالا می‌رود. با کاهش فرکانس، این فعالیت‌ها کم می‌شود و جریان اجرا ممکن است پایین بیاید؛ اما هر دور ساعت طولانی‌تر است و اجرای همان بخش کد معمولاً زمان بیشتری می‌برد.</p>
+<div class="fig" id="fig-21">
+  <div class="figbox">
+    <img src="assets/img/an01002-fig_p7_x67.jpeg" alt="شکل ۲-۱" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۱</span><span class="cap-text">جریان اجرا و مدت‌زمان در فرکانس‌های متفاوت</span></div>
+</div>
+<p>میزان افت جریان اجرا لزوماً به اندازۀ میزان افت فرکانس نیست: در طول اجرای کد، <span class="en">HSI</span>، فلش، جانبی‌های روشن و مدارهای تغذیۀ داخلی همچنان جریان می‌کشند. پس فرکانس پایین اگرچه بخشی از جریان اجرا را کم می‌کند، این مدارها را طولانی‌تر فعال نگه می‌دارد و سودِ کاهش جریان ممکن است با افزایش زمان اجرا خنثی شود. برعکس، فرکانس بالاتر اگرچه جریان اجرا را بالا می‌برد، تا وقتی همان کد به‌اندازۀ کافی سریع تمام شود، مصرف کل فرایند اجرا می‌تواند حتی کمتر باشد.</p>
+
+<h4 class="h3x" id="sec-2112"><span class="dm">◆</span>۲.۱.۲ <span class="en">HSI-LP</span> و <span class="en">HSE-LP</span></h4>
+<p><span class="en">HSI-LP</span>: حالت کم‌مصرف داخلیِ <span class="en">HSI</span> در <span class="en">CH32L103</span>؛ پس از روشن‌کردن آن (قرار دادن بیت <span class="en">HSILP</span> در <span class="en">RCC_CTLR</span>) خروجی <span class="en">HSI</span> از <span class="en">8MHz</span> به <span class="en">1MHz</span> کاهش می‌یابد. برنامه همچنان می‌تواند اجرا شود؛ برای مراحلی که نیاز به اجرای پیوسته دارند و <span class="en">1MHz</span> برای زمان اجرا و زمان‌بندی جانبی‌ها کافی است، <span class="en">HSILP</span> جریان اجرای همان مرحله را پایین می‌آورد؛ اگر برنامه به‌طور طبیعی خیلی زود تمام می‌شود، سود به مدت‌زمان اجرای کم‌سرعت بستگی دارد. هنگام ورود به <span class="en">HSILP</span>، مقدار کالیبراسیون کم‌مصرف مربوط به تراشه را در <span class="en">HSITRIM</span> بارگذاری کنید و نرخ باود سری، زمان‌بندی‌ها و مهلت‌های نرم‌افزاری را بازبینی کنید.</p>
+<p><span class="en">HSE-LP</span>: نوسان‌ساز کریستالی می‌تواند با قرار دادن بیت <span class="en">HSELP</span> در رجیستر <span class="en">RCC_CTRL</span> وارد حالت کم‌مصرف شود. اگر کریستال خارجی، دقت ساعت یا زمان راه‌اندازی در کار شما حساس است، باید در پیکربندی هدف و شرایط کاری راستی‌آزمایی شود؛ وقتی <span class="en">HSE</span> استفاده نمی‌شود، روشن‌کردن <span class="en">HSELP</span> جانشینِ بستنِ <span class="en">HSE</span> بلااستفاده نیست.</p>
+
+<h4 class="h3x" id="sec-2113"><span class="dm">◆</span>۲.۱.۳ <span class="en">PLL</span> و ساعت جانبی‌ها</h4>
+<div class="bl"><span class="en">PLL</span> بلااستفاده را ببندید. اگر کار فعلی و کارکردهای دیگر دیگر به خروجی <span class="en">PLL</span> نیاز ندارند، پس از جابه‌جایی ساعت می‌توان <span class="en">PLL</span> را بست تا در اجرای کم‌سرعت جریان اضافی نکشد.</div>
+<div class="bl">گذرگاه جانبی‌ها را به‌اندازۀ نیاز تقسیم فرکانس کنید. <span class="en">CH32L103</span> اجازه می‌دهد <span class="en">HCLK</span>، <span class="en">PCLK1</span> و <span class="en">PCLK2</span> جداگانه پیکربندی شوند. وقتی هسته به فرکانس بالاتر نیاز دارد، می‌توان گذرگاه <span class="en">PB</span> را به فرکانسی که زمان‌بندی رابط‌ها را برآورده کند پایین آورد؛ جانبی‌هایی که به‌کلی استفاده نمی‌شوند را ساعت ماژولشان را ببندید.</div>
+<div class="bl">راه‌اندازی و جابه‌جایی تکراری را کم کنید. راه‌اندازی مکرر <span class="en">PLL</span> بین وظایف کوتاه، انتظار برای پایداری یا مقداردهی دوبارۀ جانبی‌ها، می‌تواند سود اجرای کم‌فرکانس را بلعیده شود.</div>
+<div class="bl">منبع ساعت <span class="en">RTC</span> میان <span class="en">LSE</span>، <span class="en">LSI</span> یا <span class="en">HSE/128</span> انتخاب‌شدنی است. اگر <span class="en">RTC</span> از تقسیم <span class="en">HSE</span> ساعت می‌گیرد، شمارش پیوستۀ <span class="en">RTC</span> به <span class="en">HSE</span> وابسته است و نمی‌توان <span class="en">HSE</span> را فقط برای کاهش جریان اجرا بست. برای شمارش بلندمدت، در مقداردهی اولیه <span class="en">LSE</span> یا <span class="en">LSI</span> را با دقت موردنیاز انتخاب کنید تا ساعت پرسرعت فقط برای شمارش نگه داشته نشود.</div>
+
+<h3 class="h2x" id="sec-212"><span class="dm">◆</span>۲.۲ <span class="en">FLASH</span> و <span class="en">SRAM</span></h3>
+<p>در <span class="en">CH32L103</span> بیت پیکربندی حالت کم‌مصرف فلش وجود دارد؛ می‌توان برنامه را از فلش به <span class="en">RAM</span> منتقل کرد و اجرا را از <span class="en">RAM</span> انجام داد و هم‌زمان با پیکربندی <span class="en">FLASH_LP</span> فلش را وارد حالت کم‌مصرف نمود. در این حالت، <span class="en">CPU</span> در حین اجرای پیوسته دیگر از فلش واکشی نمی‌کند؛ فعالیت خواندن فلش و جریان ساکن آن با هم کاهش می‌یابد و جریان اجرا پایین می‌آید. این طرح همراه با <span class="en">HSILP</span> بخش ۲.۱.۲ می‌تواند جریان اجرا را باز هم پایین‌تر ببرد. برای بخش‌های برنامه با زمان اجرای طولانی‌تر، حجم کوچک‌تر و بدون نیاز به دسترسی به فلش در میان اجرا مناسب است.</p>
+<div class="fig" id="fig-22">
+  <div class="figbox">
+    <img src="assets/img/an01002-fig_p8_x75.jpeg" alt="شکل ۲-۲" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۲</span><span class="cap-text">ورود <span class="en">FLASH</span> به حالت کم‌مصرف</span></div>
+</div>
+
+<h3 class="h2x" id="sec-213"><span class="dm">◆</span>۲.۳ کاهش زمان درگیری <span class="en">CPU</span></h3>
+<p>در مرحلۀ اجرا، وظایف دارای حجم دادهٔ بالا مانند نمونه‌برداری پیوستۀ گروه معمول <span class="en">ADC</span>، دریافت و ارسال <span class="en">USART</span> و ارتباط <span class="en">SPI</span> را می‌توان با <span class="en">DMA</span> انجام داد تا انتقال داده میان جانبی و <span class="en">RAM</span> بر دوش <span class="en">DMA</span> بیفتد. <span class="en">CPU</span> مسئول پیکربندی کانال <span class="en">DMA</span>، جهت انتقال، آدرس جانبی و حافظه، پهنای داده، تعداد انتقال و شرایط وقفه است؛ پس از آغاز انتقال، <span class="en">DMA</span> بنا بر درخواست جانبی انتقال داده را انجام می‌دهد. <span class="en">CPU</span> می‌تواند در نیمۀ انتقال، پایان انتقال یا هنگام خطا به‌صورت متمرکز داده‌ها را پردازش کند و نیازی به خواندن یا نوشتن تک‌تک داده‌ها در رجیسترهای جانبی نیست.</p>
+<p>وقتی <span class="en">CPU</span> خودش داده‌ها را یکی‌یکی جابه‌جا می‌کند، باید بارها وضعیت را بخواند، به رجیسترهای جانبی دسترسی داشته باشد، <span class="en">RAM</span> را بخواند/بنویسد و موقعیت بافر را به‌روز کند؛ در کنار آن اجرای دستور، واکشی فلش و دسترسی گذرگاه هم جریان دارد. با مهاجرت به <span class="en">DMA</span>، این بخش از اجرای <span class="en">CPU</span> و دسترسی فلش کاهش می‌یابد و تعداد وقفه‌ها در انتقال دادهٔ پیوسته نیز کمتر می‌شود. البته کنترل‌گر <span class="en">DMA</span>، جانبی و ساعت گذرگاه در طول انتقال فعال می‌مانند و دسترسی <span class="en">DMA</span> و <span class="en">CPU</span> به <span class="en">SRAM</span> نیز به داوری نیاز دارد. بنابراین <span class="en">DMA</span> برای نمونه‌برداری پیوسته، بسته‌های دادهٔ بلندتر یا وظایف دارای بافر حلقوی مناسب‌تر است؛ برای داده‌های بسیار کوچک و انتقال‌های کم‌تکرار، سربار پیکربندی و پردازش پایانِ انتقال می‌تواند بخشی از سود را خنثی کند.</p>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN01002</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/09/21</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">CH32L103</span></td><td class="jt">سری میکروکنترلر صنعتی کم‌مصرف مبتنی بر هستۀ <span class="en">RISC-V</span> با حالت‌های <span class="en">Sleep</span>، <span class="en">Stop</span> و <span class="en">Standby</span></td></tr>
+      <tr><td><span class="en">Sleep</span></td><td class="jt">حالت خواب سبک (<span class="en">SLEEPDEEP=0</span>)؛ هسته متوقف، ساعت‌های دیگر روشن و <span class="en">SRAM</span>/رجیسترها/<span class="en">IO</span> حفظ می‌شود</td></tr>
+      <tr><td><span class="en">Stop1~4</span></td><td class="jt">چهار پلۀ حالت توقف با سطوح متفاوت توان و حفظ <span class="en">RAM</span>؛ ساعت‌های پرسرعت خاموش و بیداری از مسیر وقفه/رویداد</td></tr>
+      <tr><td><span class="en">Standby</span></td><td class="jt">عمیق‌ترین حالت؛ تنظیم‌گر اصلی خاموش، بیشتر مدارها بی‌برق و خروج همیشه از مسیر ریست توان</td></tr>
+      <tr><td><span class="en">WFI / WFE</span></td><td class="jt">دستور خواب با انتظار وقفه / با انتظار رویداد؛ دو مسیر ورود به حالت‌های کم‌مصرف</td></tr>
+      <tr><td><span class="en">SLEEPDEEP / PDDS</span></td><td class="jt">بیت انتخاب عمق خواب در <span class="en">SCR</span> / بیت انتخاب Standby در ثبت توان؛ تعیین‌کنندۀ نوع حالت</td></tr>
+      <tr><td><span class="en">LPDS / RAMLV</span></td><td class="jt">تنظیم <span class="en">LDO</span> در حالت کم‌مصرف در Stop / ولتاژ حفظ <span class="en">RAM</span> در Stop3 و Stop4</td></tr>
+      <tr><td><span class="en">FLASH_LP</span></td><td class="jt">بیت حالت کم‌مصرف فلش که باید پیش از ورود به Stop3/Stop4 و Standby روی <span class="en">10b</span> تنظیم شود</td></tr>
+      <tr><td><span class="en">LPTIM</span></td><td class="jt">تایمر کم‌مصرف؛ در همهٔ حالت‌ها به‌جز Standby فعال می‌ماند و بیداری دوره‌ای می‌دهد</td></tr>
+      <tr><td><span class="en">LSE / LSI</span></td><td class="jt">نوسان‌ساز خارجی <span class="en">32.768kHz</span> / نوسان‌ساز داخلی حدود <span class="en">40kHz</span>؛ ساعت‌های کم‌مصرف شمارش</td></tr>
+      <tr><td><span class="en">HSI-LP / HSE-LP</span></td><td class="jt">حالت کم‌مصرف نوسان‌ساز داخلی (افت <span class="en">8MHz</span> به <span class="en">1MHz</span>) / نوسان‌ساز خارجی</td></tr>
+      <tr><td><span class="en">R2KSTY</span></td><td class="jt">پیکربندی حفظ <span class="en">2KB</span> از <span class="en">RAM</span> در حالت Standby برای داده‌های میان‌ریستی</td></tr>
+      <tr><td><span class="en">DMA</span></td><td class="jt">میسر دسترسی مستقیم به حافظه؛ برداشت بار انتقال داده از دوش <span class="en">CPU</span> در مرحلۀ اجرا</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN01002 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۱۹</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN01002</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
