@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>راهنمای جامع کارایی حافظه‌های CH32V467 — ترجمۀ فارسی AN03004</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">راهنمای جامع</div>
+    <div class="t2">کارایی حافظه‌های</div>
+    <div class="t3">میکروکنترلر <span class="en">CH32V467</span></div>
+  </div>
+  <div class="c-sub">از توزیع حافظه‌های روی‌تراشه (<span class="en">Flash</span> بی‌انتظار، <span class="en">Flash</span> دارای انتظار، <span class="en">SRAM</span> و <span class="en">PSRAM</span>) و شش سناریوی چیدمان کد و داده، تا نتایج <span class="en">CoreMark</span>، تحلیل کارایی و توصیه‌های کاربردی</div>
+  <div class="c-desc">در این جزوه، ترجمۀ فارسی سند رسمی <span class="en">AN03004</span> (نسخۀ ۱٫۰، منتشرۀ شرکت <span class="en">WCH</span>) را می‌خوانید: میکروکنترلرهای <span class="en">CH32V467</span> بر پایۀ هستۀ <span class="en">Qingke V4V</span> با فرکانس کاری تا <span class="en">200MHz</span>، رسانه‌های ذخیره‌سازی متنوعی را در خود دارند؛ هر رسانه از نظر تأخیر دسترسی، پهنای باند و ظرفیت وضعیت متفاوتی دارد و چیدمان درست کد و داده اثر آشکاری بر کارایی سیستم دارد. این سند با داده‌های اندازه‌گیری‌شده، تفاوت کارایی <span class="en">CH32V467</span> در پیکربندی‌های مختلف حافظه را کمّی می‌کند و برای تخصیص منابع حافظه و بهینه‌سازی سیستم مرجع می‌سازد.</div>
+  <div class="c-tags">
+    <span class="c-tag"><span class="en">CH32V467</span> / <span class="en">Qingke V4V</span></span>
+    <span class="c-tag"><span class="en">Flash</span> بی‌انتظار</span>
+    <span class="c-tag"><span class="en">SRAM 200KB</span></span>
+    <span class="c-tag"><span class="en">PSRAM 4/8MB</span></span>
+    <span class="c-tag"><span class="en">CoreMark</span></span>
+    <span class="c-tag"><span class="en">GCC15 / -OFast</span></span>
+    <span class="c-tag">تخصیص کد و داده</span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN03004 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | پیکربندی آزمون و توضیحات</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-111"><span class="s-id">1.1</span><span>روش آزمون</span><span class="s-dots"></span><span class="s-page">۳</span></a>
+    <a class="toc-sub" href="#sec-112"><span class="s-id">1.2</span><span>توضیح پیکربندی آزمون</span><span class="s-dots"></span><span class="s-page">۴</span></a>
+    <a class="toc-sub" href="#sec-113"><span class="s-id">1.3</span><span>روند پیکربندی آزمون</span><span class="s-dots"></span><span class="s-page">۶</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | نتایج آزمون و تحلیل</span><span class="t-dots"></span><span class="t-page">۷</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-211"><span class="s-id">2.1</span><span>نتایج آزمون</span><span class="s-dots"></span><span class="s-page">۷</span></a>
+    <a class="toc-sub" href="#sec-212"><span class="s-id">2.2</span><span>تحلیل کارایی</span><span class="s-dots"></span><span class="s-page">۸</span></a>
+    <a class="toc-sub" href="#sec-213"><span class="s-id">2.3</span><span>توصیه‌های کاربردی</span><span class="s-dots"></span><span class="s-page">۹</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۴</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۱۰</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۵</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۱۰</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">جدول ۱-۱</span><span>توزیع حافظه‌های <span class="en">CH32V467</span></span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">جدول ۱-۲</span><span>محیط آزمون</span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۱</span><span>توزیع نتایج آزمون <span class="en">Coremark</span></span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">جدول ۲-۱</span><span>مقایسۀ امتیاز در فرکانس‌های ۴۰۰/۲۰۰</span><span class="f-dots"></span><span class="f-page">۹</span></div>
+        <div class="frow"><span class="f-id">جدول ۲-۲</span><span>مقایسۀ امتیاز در فرکانس‌های ۳۰۰/۱۵۰</span><span class="f-dots"></span><span class="f-page">۹</span></div>
+        <div class="frow"><span class="f-id">کد ۱</span><span>قطعۀ فایل راه‌اندازی اصلاح‌شده</span><span class="f-dots"></span><span class="f-page">۶</span></div>
+        <div class="frow"><span class="f-id">کد ۲</span><span>تابع <span class="en">__late_init()</span></span><span class="f-dots"></span><span class="f-page">۷</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> میکروکنترلرهای سری <span class="en">CH32V467</span> بر پایۀ هستۀ <span class="en">Qingke V4V</span> با فرکانس کاری تا <span class="en">200MHz</span> ساخته شده‌اند. تراشه رسانه‌های ذخیره‌سازی متعددی را در خود دارد، از جمله ناحیۀ بی‌انتظارِ فلش، ناحیۀ دارای انتظارِ فلش، <span class="en">SRAM</span> و <span class="en">PSRAM</span> با ظرفیت بزرگ. رسانه‌های مختلف از نظر تأخیر دسترسی، پهنای باند و ظرفیت هر یک نقاط قوت و ضعف خود را دارند و پیکربندی منطقی محل قرارگیری کد و داده، اثر چشمگیری بر کارایی سیستم دارد. این سند با داده‌های اندازه‌گیری‌شده، تفاوت کارایی <span class="en">CH32V467</span> را در پیکربندی‌های مختلف رسانه‌های ذخیره‌سازی کمّی می‌کند تا برای تخصیص منابع حافظه و بهینه‌سازی سیستم توسط توسعه‌دهندگان مرجع فراهم شود.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>میکروکنترلرهای سری <span class="en">CH32V467</span> بر پایۀ هستۀ <span class="en">Qingke V4V</span> با حداکثر فرکانس کاری <span class="en">200MHz</span> ساخته شده‌اند. تراشه رسانه‌های ذخیره‌سازی متعددی را در خود جای داده است؛ از جمله ناحیۀ بی‌انتظارِ فلش، ناحیۀ دارای انتظارِ فلش، <span class="en">SRAM</span> و <span class="en">PSRAM</span> با ظرفیت بزرگ. رسانه‌های ذخیره‌سازی مختلف از نظر تأخیر دسترسی، پهنای باند و ظرفیت هر یک نقاط قوت و ضعف متفاوتی دارند و پیکربندی منطقی محل قرارگیری کد و داده، اثر چشمگیری بر کارایی سیستم دارد.</p>
+<p>این سند می‌کوشد با داده‌های اندازه‌گیری‌شده، تفاوت کارایی <span class="en">CH32V467</span> را در پیکربندی‌های مختلف رسانه‌های ذخیره‌سازی کمّی کند و برای تخصیص منابع حافظه و بهینه‌سازی سیستم توسط توسعه‌دهندگان مرجعی فراهم سازد.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>میکروکنترلرهای همگانی‌منظوره</td><td>سری <span class="en">CH32V467</span></td></tr>
+  </table>
+</div>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">پیکربندی آزمون و توضیحات</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-111"><span class="dm">◆</span>۱.۱ روش آزمون</h3>
+<p>توزیع منابع حافظۀ روی‌تراشۀ <span class="en">CH32V467</span> در جدول زیر آمده است:</p>
+<div class="tblwrap" id="tab-11">
+  <div class="tblcap"><span class="cap-pill">جدول ۱-۱</span><span class="cap-text">توزیع حافظه‌های <span class="en">CH32V467</span></span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:22%;">نوع حافظه</th><th style="width:30%;">ظرفیت</th><th style="width:24%;">بازۀ آدرس</th><th>ویژگی دسترسی</th></tr></thead>
+    <tr><td class="jt">ناحیۀ بی‌انتظارِ فلش</td><td class="jt">حداکثر <span class="en">576KB</span> (شامل <span class="en">SRAM</span> قابل پیکربندی)</td><td class="en-cell"><span class="en">0x00000000</span> به بعد</td><td class="jt">اجرای بدون انتظار</td></tr>
+    <tr><td class="jt">ناحیۀ دارای انتظارِ فلش</td><td class="jt">حداکثر <span class="en">416KB</span></td><td class="jt">بلافاصله پس از ناحیۀ بی‌انتظار</td><td class="jt">نیاز به درج دور انتظار</td></tr>
+    <tr><td><span class="en">SRAM</span></td><td class="jt"><span class="en">200KB</span> (قابل پیکربندی)</td><td class="en-cell"><span class="en">0x20000000</span> به بعد</td><td class="jt">دسترسی تک‌دوری، بیشترین سرعت</td></tr>
+    <tr><td><span class="en">PSRAM</span></td><td class="jt"><span class="en">4MB / 8MB</span> (وابسته به مدل)</td><td class="en-cell"><span class="en">0x30000000</span> به بعد</td><td class="jt">ظرفیت بزرگ، پشتیبانی از دسترسی پرسرعت <span class="en">DMA</span></td></tr>
+  </table>
+</div>
+<div class="tblwrap" id="tab-12">
+  <div class="tblcap"><span class="cap-pill">جدول ۱-۲</span><span class="cap-text">محیط آزمون</span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:40%;">مورد</th><th>توضیح</th></tr></thead>
+    <tr><td class="jt">مدل تراشه</td><td class="en-cell"><span class="en">CH32V467xx</span></td></tr>
+    <tr><td class="jt">محیط توسعه</td><td class="en-cell"><span class="en">MounRiver Studio V2.5.0</span></td></tr>
+    <tr><td class="jt">کامپایلر</td><td class="en-cell"><span class="en">RISC-V Embedded GCC15</span></td></tr>
+    <tr><td class="jt">سطح بهینه‌سازی</td><td class="en-cell"><span class="en">-OFast</span></td></tr>
+  </table>
+</div>
+
+<h3 class="h2x" id="sec-112"><span class="dm">◆</span>۱.۲ توضیح پیکربندی آزمون</h3>
+<h4 class="h3x" id="sec-1121"><span class="dm">◆</span>۱.۲.۱ توضیح گزینه‌های کامپایل یکسان</h4>
+<p>بر بستر الگوی پروژۀ رسمی، گزینه‌های کامپایل اختصاصی اضافه شده تا کارایی اجرای برنامه بالا برود؛ شرح گزینه‌های کامپایل مرتبط:</p>
+<div class="bl"><span class="en">-funroll-all-loops</span>: بازکردن همهٔ حلقه‌ها. با کاپی‌کردن کد بدنۀ حلقه، سربار کنترل حلقه کاهش می‌یابد و سرعت اجرا به بهای افزایش حجم کد بالا می‌رود. برخلاف <span class="en">-funroll-loops</span>، همهٔ حلقه‌ها از جمله حلقه‌های با تعداد تکرار نامشخص باز می‌شوند.</div>
+<div class="bl"><span class="en">-finline-limit=600</span>: آزادکردن حد اندازۀ درج درون‌خطی. <span class="en">-finline-limit=n</span> آستانۀ اندازۀ درج خودکار توابع را (بر حسب «تعداد شبه‌دستور») تعیین می‌کند؛ مقدار پیش‌فرض معمولاً کوچک است و تنظیم روی <span class="en">600</span> یعنی کامپایلر اجازه دارد توابع کمی بزرگ‌تر را هم درون‌خطی باز کند — بهینه‌سازی مهاجمِ «فنا در برابر زمان».</div>
+<div class="bl"><span class="en">-ftree-dominator-opts</span>: روشن‌کردن بهینه‌سازی درخت ممسیک. یکی از بهینه‌سازی‌های <span class="en">GCC</span> مبتنی بر فرم <span class="en">SSA</span> (تک‌تخصیص ایستا) که در <span class="en">-O1</span> و بالاتر به‌طور پیش‌فرض روشن است؛ با تحلیل جریان دادهٔ «درخت ممسیک» کد افزونه را حذف یا جریان کنترل را ساده می‌کند و بخشی از ترکیب بهینه‌سازی <span class="en">-O2/-O3</span> است.</div>
+<div class="bl"><span class="en">-fno-if-conversion2</span>: خاموش‌کردن تبدیل دوم شرط. <span class="en">-fif-conversion2</span> می‌کوشد انشعاب‌های شرطی را به عملیات حسابی/منطقی بدون انشعاب (مثل جابه‌جایی شرطی) تبدیل کند تا کارایی خط لوله بالا برود، ولی ممکن است تعداد دستورها زیاد شود. خاموش‌کردن این گزینه، موازنۀ «تعداد دستور و کارایی اجرا» در سناریوهایی است که سود نمی‌برند.</div>
+<div class="bl"><span class="en">-fno-code-hoisting</span>: خاموش‌کردن جابه‌جایی کد. <span class="en">-fcode-hoisting</span> در <span class="en">-O2</span> و بالاتر به‌طور پیش‌فرض روشن است و عبارت‌های بی‌تغییرِ درون حلقه را به بیرون حلقه می‌برد. پس از خاموشی، چنین «برون‌کشی» انجام نمی‌شود و ممکن است اجرا کندتر شود، اما رفتار تولید کد محافظه‌کارانه‌تر می‌ماند که برای دیباگ یا تضمین یکسانی رفتار در حالات مرزی به‌کار می‌آید.</div>
+<div class="bl"><span class="en">-fselective-scheduling</span>: روشن‌کردن زمان‌بندی گزینشی دستورها. تلاش می‌کند وقتی پردازنده چند واحد کارکردی دارد، ترتیب دستورها را بازچینی کند تا موازی‌سازی سطح دستور (<span class="en">ILP</span>) بهتر بهره گرفته شود و کارایی زمان اجرا بالا برود؛ این بهینه‌سازی معمولاً در <span class="en">-O2</span> و بالاتر به‌طور پیش‌فرض روشن است.</div>
+<div class="bl"><span class="en">-mno-save-restore</span>: خاموش‌کردن استفاده از دستورهای <span class="en">save/restore</span>. این دستورها برای ذخیره/بازیابی گروهی رجیسترها در پیش‌درآمد/پایان‌درآمد توابع‌اند. روشن‌بودن <span class="en">-msave-restore</span> (پیش‌فرضِ ممکن) کار ذخیره را به توابع کتابخانه می‌سپارد تا حجم کد کم شود؛ <span class="en">-mno-save-restore</span> کامپایلر را مجبور می‌کند در هر فراخوانی تابع، کد ذخیره/بازیابی را صریح تولید کند — حجم دودویی بیشتر می‌شود ولی با حذف سربار فراخوانی کتابخانه، بهبود کوچکی در کارایی ممکن است.</div>
+<h4 class="h3x" id="sec-1122"><span class="dm">◆</span>۱.۲.۲ توضیح پیکربندی گروه‌ها</h4>
+<div class="bl">(۱) کد در ناحیۀ بی‌انتظارِ فلش و داده در <span class="en">SRAM</span> — پیکربندی برای سناریوهای پیگیری کارایی نهایی همراه با مراقبت از اندازۀ <span class="en">RAM</span>: کد کلیدی و توابع سرویس وقفه در فلش بی‌انتظار، متغیرهای فراگیرِ پرخوانش‌ونوشت و پشته در <span class="en">SRAM</span>.</div>
+<div class="bl">(۲) کد در ناحیۀ بی‌انتظارِ فلش و داده در <span class="en">PSRAM</span> — پیکربندی متناسب با سناریوهای پردازش داده با حافظۀ بزرگ (مثل نمایش گرافیکی و بافر صدا) که داده‌ها در <span class="en">PSRAM</span> نگه داشته می‌شوند.</div>
+<div class="bl">(۳) کد در ناحیۀ دارای انتظارِ فلش و داده در <span class="en">SRAM</span> — این پیکربندی به‌عنوان خط پایۀ کارایی، برای کمّی‌کردن تفاوت کارایی ناحیۀ بی‌انتظار و دارای انتظار به‌کار می‌رود.</div>
+<div class="bl">(۴) کد در ناحیۀ دارای انتظارِ فلش و داده در <span class="en">PSRAM</span> — نمایش کارایی در بدترین حالت برای کمک به ارزیابی کف کارایی سیستم.</div>
+<div class="bl">(۵) کد در ناحیۀ بی‌انتظارِ فلش، دادهٔ فراگیر در <span class="en">SRAM</span> و پشته در <span class="en">PSRAM</span> — پیکربندی برای سناریوهای کمبود منابع <span class="en">SRAM</span> و عمق پشۀ زیاد: متغیرهای فراگیر در <span class="en">SRAM</span> پرسرعت می‌مانند تا کارایی دسترسی حفظ شود، پشته به <span class="en">PSRAM</span> منتقل می‌شود تا فضای <span class="en">SRAM</span> آزاد شود؛ برای کسب‌وکارهایی با فراخوانی بازگشتیِ عمیق و متغیرهای محلی بزرگ ولی دادهٔ فراگیر کم مناسب است.</div>
+<div class="bl">(۶) همهٔ محتوا در <span class="en">PSRAM</span> (کد + داده + پشته) — این پیکربندی کد، دادهٔ فراگیر و پشته را همگی درون <span class="en">PSRAM</span> بارگذاری و اجرا می‌کند و فلش فقط تصویر میان‌افزار را نگه می‌دارد؛ بیشتر برای دیباگ کامل حافظه، تغییر پویای کد و سناریوهای محدودیت فلش به‌کار می‌رود. کارایی کل تحت زمان‌بندی دسترسی <span class="en">PSRAM</span> محدود است و معمولاً به‌عنوان پیکربندی رسمی اجرای محصول به‌کار نمی‌رود.</div>
+
+<h3 class="h2x" id="sec-113"><span class="dm">◆</span>۱.۳ روند پیکربندی آزمون</h3>
+<p>ساختار پروژه را به این شکل پیکربندی می‌کنیم:</p>
+<div class="codeblk">C:.
+├─.mrs
+├─Core
+├─Debug
+├─Ld
+├─Peripheral
+│  ├─inc
+│  └─src
+├─Startup
+└─User
+   └─coremark</div>
+<p>بخش‌های مختلف <span class="en">./User/coremark</span> را به حافظه‌های متفاوت تخصیص می‌دهیم.</p>
+<p>فایل راه‌اندازی را طوری تغییر می‌دهیم که دیگر پیکربندی ساعتِ نمونۀ آماده را به‌کار نبرد؛ از تابع <span class="en">__late_init()</span> نوشتۀ خودمان برای پیکربندی ساعت به‌همراه <span class="en">PSRAM</span> استفاده می‌کنیم. قطعۀ فایل راه‌اندازیِ اصلاح‌شده:</p>
+<div class="fig" id="code-1">
+  <div class="codeblk">jal __late_init
+li sp, 0x80100000
+la t0, main
+csrw mepc, t0</div>
+  <div class="figcap"><span class="cap-pill">کد ۱</span><span class="cap-text">قطعۀ فایل راه‌اندازی اصلاح‌شده</span></div>
+</div>
+<p>در <span class="en">__late_init</span> علاوه بر پیکربندی ساعت و <span class="en">PSRAM</span>، بخش‌های داده/کد اضافیِ نیازمند جابه‌جایی نیز باید به جایگاه مربوط منتقل شوند:</p>
+<div class="fig" id="code-2">
+  <div class="codeblk long">void __late_init() {
+#if defined(PSRAM_150MHz_150MHz)
+PSRAM_150MHz_HCLK_150M_HSE();
+#elif defined(PSRAM_200MHz_200MHz)
+PSRAM_200MHz_HCLK_200M_HSE();
+#elif defined(PSRAM_200MHz_100MHz)
+PSRAM_200MHz_HCLK_100M_HSE();
+#elif defined(PSRAM_300MHz_150MHz)
+PSRAM_300MHz_HCLK_150M_HSE();
+#endif
+SystemCoreClockUpdate();
+Delay_Init();
+USART_Printf_Init(115200);
+PSRAM_INIT();
+uint32_t *wp = __psram_vma;
+uint32_t *rp = __psram_lma;
+while (wp &lt; __psram_vma_end) {
+*wp++ = *rp++;
+}
+asm("nop");
+wp = __psram_bss;
+while(wp &lt; __psram_bss_end){
+*wp++ = 0;
+}
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۲</span><span class="cap-text">تابع <span class="en">__late_init()</span>؛ پیکربندی ساعت و <span class="en">PSRAM</span> و جابه‌جایی بخش‌ها</span></div>
+</div>
+<p>در این لحظه همهٔ <span class="en">code</span> و <span class="en">data</span> آماده‌اند؛ بنا بر جایگاه پشته که پیکربندی آزمون می‌خواهد، خط <span class="en">li sp, 0x80100000</span> را کامنت می‌کنیم یا نگه می‌داریم. چون در <span class="en">LD</span> جایگاه دوم نوک پشته تعیین نشده، هنگام تعیین دستی آدرس پشته باید مطمئن شوید این ناحیه به‌طور مطلق امن است. سپس با <span class="en">mret</span> به تابع <span class="en">main</span> در <span class="en">./User/coremark/main.c</span> پرش می‌شود و آزمون آغاز می‌گردد.</p>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">نتایج آزمون و تحلیل</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-211"><span class="dm">◆</span>۲.۱ نتایج آزمون</h3>
+<p>در ادامه، خلاصۀ امتیازهای <span class="en">Coremark</span> اندازه‌گیری‌شده برای پیکربندی‌های مختلف در فرکانس‌های متفاوتِ <span class="en">PSRAM</span> و <span class="en">CPU</span> آمده است:</p>
+<div class="fig" id="fig-21">
+  <div class="figbox">
+    <img src="assets/img/an03004-fig21.png" alt="شکل ۲-۱" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۱</span><span class="cap-text">توزیع نتایج آزمون <span class="en">Coremark</span></span></div>
+</div>
+<div class="note"><span class="lbl">توضیح:</span> در نسخۀ اصلی سند، تصویر این شکل به‌درستی جاسازی نشده و ناحیۀ آن خالی است؛ نمودار بالا بر اساس داده‌های جدول‌های ۲-۱ و ۲-۲ و مقادیر ذکرشده در متن سند (ZeroWait برابر <span class="en">3.888</span> و NoneZeroWait برابر <span class="en">0.209</span>) بازسازی شده است.</div>
+
+<h3 class="h2x" id="sec-212"><span class="dm">◆</span>۲.۲ تحلیل کارایی</h3>
+<p>در همهٔ پیکربندی‌های آزمون، ترتیب کارایی کلِ راهبردهای ذخیره‌سازی چنین است:</p>
+<p style="text-align:center; direction:ltr;"><span class="en"><b>ZeroWait (3.888) &gt; StackInPSRAM (2.265~3.076) &gt; TextInPSRAM (0.710~1.271) &gt; DataInPSRAM (0.499~0.910) &gt; NoneZeroWait (0.209) &gt; FullInPSRAM (0.161~0.313)</b></span></p>
+<div class="steps">
+  <li data-n="۱"><b>کارایی حالت بی‌انتظار بهترین است و به پیکربندی فرکانس وابسته نیست.</b> در حالت <span class="en">ZeroWait</span> مقدار <span class="en">Mark</span> همیشه <span class="en">3.887938</span> است و به ترکیب فرکانس <span class="en">PSRAM/CPU</span> بی‌ربط. این نشان می‌دهد در وضعیت بی‌انتظار، پردازنده هنگام دسترسی به حافظه هیچ دور انتظاری ندارد، کارایی کاملاً توسط خود <span class="en">CPU</span> تعیین می‌شود و نسبت فرکانس دیگر گلوگاه نیست. در مقایسه، حالت <span class="en">NoneZeroWait</span> فقط مقدار <span class="en">Mark</span> برابر <span class="en">0.209140</span> دارد؛ افت کارایی حدود <span class="en">94.6%</span> است که نشان می‌دهد دورهای انتظار اثر بسیار آشکاری بر کارایی اجرا دارند.</li>
+  <li data-n="۲"><b>قرارگیری هم‌زمان کد و داده در <span class="en">PSRAM</span> بدترین کارایی را دارد.</b> حالت <span class="en">FullInPSRAM</span> در همهٔ پیکربندی‌های فرکانس کمترین مقدار <span class="en">Mark</span> (<span class="en">0.161~0.313</span>) را دارد و حتی از <span class="en">NoneZeroWait</span> هم پایین‌تر است. علت آن است که واکشی دستور و دسترسی داده هم‌زمان بر پهنای باند <span class="en">PSRAM</span> رقابت می‌کنند، برخورد گذرگاه شدید است و کارایی اجرای واقعی به‌طور چشمگیر افت می‌کند.</li>
+  <li data-n="۳"><b>قرارگیری پشته در <span class="en">PSRAM</span> کمترین اثر را بر کارایی دارد.</b> مقدار <span class="en">Mark</span> حالت <span class="en">StackInPSRAM</span> در بازۀ <span class="en">2.264~3.076</span> است؛ بالاترین میان همهٔ راهبردهای اقامت در <span class="en">PSRAM</span>. علت این است که دسترسی پشته ماهیت محلی‌بودن بالا دارد و الگوی دسترسی آن قابل پیش‌بینی است؛ سازوکار حافظۀ نهانِ پردازنده می‌تواند تأخیر دسترسی <span class="en">PSRAM</span> را به‌طور مؤثر بپوشاند.</li>
+  <li data-n="۴"><b>وقتی کد یا داده در <span class="en">PSRAM</span> قرار می‌گیرد، فرکانس بر کارایی اثر می‌گذارد.</b> وقتی فرکانس <span class="en">CPU</span> به نیمۀ فرکانس <span class="en">PSRAM</span> کاهش یابد، امتیاز کارایی بر مگاهرتز به‌طور آشکار بالا می‌رود. این نشان می‌دهد در سناریوهای اقامت در <span class="en">PSRAM</span>، سرعت دسترسی <span class="en">PSRAM</span> گلوگاه اصلی است؛ کاهش فرکانس <span class="en">CPU</span> فشار دسترسی پردازنده به <span class="en">PSRAM</span> را کم می‌کند و کارایی مؤثرِ هر مگاهرتز بالا می‌رود.</li>
+</div>
+<div class="tblwrap" id="tab-21">
+  <div class="tblcap"><span class="cap-pill">جدول ۲-۱</span><span class="cap-text">مقایسۀ امتیاز در فرکانس‌های ۴۰۰/۲۰۰</span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:22%;"><span class="en">PSRAM/CPU</span></th><th><span class="en">TEXTINPSRAM</span></th><th><span class="en">FULLINPSRAM</span></th><th><span class="en">DATAINPSRAM</span></th><th><span class="en">STACKINPSRAM</span></th></tr></thead>
+    <tr><td><span class="en">200/200</span></td><td><span class="en">0.71</span></td><td><span class="en">0.161</span></td><td><span class="en">0.499</span></td><td><span class="en">2.264</span></td></tr>
+    <tr><td><span class="en">200/100</span></td><td><span class="en">1.271</span></td><td><span class="en">0.313</span></td><td><span class="en">0.91</span></td><td><span class="en">3.076</span></td></tr>
+    <tr><td class="jt">میزان بهبود</td><td><span class="en">79.01%</span></td><td><span class="en">94.41%</span></td><td><span class="en">82.36%</span></td><td><span class="en">35.87%</span></td></tr>
+  </table>
+</div>
+<p>به همین ترتیب، مقایسۀ <span class="en">150/150</span> با <span class="en">300/150</span> (فرکانس <span class="en">CPU</span> ثابت، فرکانس <span class="en">PSRAM</span> دو برابر):</p>
+<div class="tblwrap" id="tab-22">
+  <div class="tblcap"><span class="cap-pill">جدول ۲-۲</span><span class="cap-text">مقایسۀ امتیاز در فرکانس‌های ۳۰۰/۱۵۰</span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:22%;"><span class="en">PSRAM/CPU</span></th><th><span class="en">TEXTINPSRAM</span></th><th><span class="en">FULLINPSRAM</span></th><th><span class="en">DATAINPSRAM</span></th><th><span class="en">STACKINPSRAM</span></th></tr></thead>
+    <tr><td><span class="en">150/150</span></td><td><span class="en">0.744</span></td><td><span class="en">0.172</span></td><td><span class="en">0.531</span></td><td><span class="en">2.35</span></td></tr>
+    <tr><td><span class="en">300/150</span></td><td><span class="en">1.182</span></td><td><span class="en">0.28</span></td><td><span class="en">0.822</span></td><td><span class="en">2.945</span></td></tr>
+    <tr><td class="jt">میزان بهبود</td><td><span class="en">58.87%</span></td><td><span class="en">62.79%</span></td><td><span class="en">54.80%</span></td><td><span class="en">25.32%</span></td></tr>
+  </table>
+</div>
+<p>دو برابر شدن فرکانس <span class="en">PSRAM</span> بهبود کارایی واحد <span class="en">25%~62%</span> داده است؛ این هم تأییدی دیگر بر آن است که پهنای باند <span class="en">PSRAM</span> گلوگاه کارایی در این سناریوهاست.</p>
+
+<h3 class="h2x" id="sec-213"><span class="dm">◆</span>۲.۳ توصیه‌های کاربردی</h3>
+<div class="bl"><b>اولویت با حالت بی‌انتظار:</b> اگر شرایط سخت‌افزاری اجازه می‌دهد، حالت بی‌انتظار بهترین کارایی را می‌دهد و نیازی به نگرانی درباره نسبت فرکانس‌ها نیست.</div>
+<div class="bl"><b>از پیکربندی <span class="en">FullInPSRAM</span> پرهیز کنید:</b> اقامت هم‌زمان کد و داده در <span class="en">PSRAM</span> رقابت شدید پهنای باند می‌سازد؛ تا حد ممکن کد یا دادهٔ کلیدی را در <span class="en">SRAM</span>/فلش داخلی بگذارید.</div>
+<div class="bl"><b>نسبت فرکانس <span class="en">PSRAM/CPU</span> را منطقی پیکربندی کنید:</b> در سناریوهایی که اقامت کد یا داده در <span class="en">PSRAM</span> اجتناب‌ناپذیر است، باید مطمئن شوید فرکانس <span class="en">PSRAM</span> از <span class="en">CPU</span> کمتر نباشد؛ نسبت پیشنهادی <span class="en">PSRAM:CPU ≥ 2:1</span> است تا کارایی اجرای هر مگاهرتز بیشینه شود.</div>
+<div class="bl"><b>پشته را می‌توان با اولویت در <span class="en">PSRAM</span> گذاشت:</b> اگر منابع حافظۀ داخلی تنگ است، قرارگیری پشته در <span class="en">PSRAM</span> کمترین اثر را بر کارایی کل دارد؛ نخستین گزینه برای جابه‌جایی است.</div>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN03004</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/08/27</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">CH32V467</span></td><td class="jt">سری <span class="en">MCU</span> مبتنی بر هستۀ <span class="en">Qingke V4V</span> با فرکانس تا <span class="en">200MHz</span> و رسانه‌های ذخیره‌سازی متنوع</td></tr>
+      <tr><td><span class="en">Flash بی‌انتظار</span></td><td class="jt">ناحیۀ فلش با اجرای بدون دور انتظار تا <span class="en">576KB</span> از آدرس <span class="en">0x00000000</span></td></tr>
+      <tr><td><span class="en">Flash دارای انتظار</span></td><td class="jt">ناحیۀ فلش تا <span class="en">416KB</span> پس از ناحیۀ بی‌انتظار؛ نیاز به درج دور انتظار دارد</td></tr>
+      <tr><td><span class="en">SRAM</span></td><td class="jt">حافظۀ <span class="en">200KB</span> قابل پیکربندی از آدرس <span class="en">0x20000000</span>؛ دسترسی تک‌دوری و بیشترین سرعت</td></tr>
+      <tr><td><span class="en">PSRAM</span></td><td class="jt">حافظۀ بزرگ <span class="en">4MB/8MB</span> از آدرس <span class="en">0x30000000</span>؛ پشتیبانی از دسترسی پرسرعت <span class="en">DMA</span></td></tr>
+      <tr><td><span class="en">-funroll-all-loops</span></td><td class="jt">بازکردن همهٔ حلقه‌ها حتی حلقه‌های با تعداد تکرار نامشخص؛ افزایش حجم کد در برابر سرعت</td></tr>
+      <tr><td><span class="en">-finline-limit=600</span></td><td class="jt">آستانۀ درج درون‌خطی توابع؛ بهینه‌سازی مهاجم «فضا در برابر زمان»</td></tr>
+      <tr><td><span class="en">-mno-save-restore</span></td><td class="jt">خاموش‌کردن دستورهای save/restore؛ تولید صریح کد ذخیره/بازیابی رجیسترها در فراخوانی توابع</td></tr>
+      <tr><td><span class="en">ZeroWait / NoneZeroWait</span></td><td class="jt">چیدمان کد در ناحیۀ بی‌انتظار / دارای انتظار فلش؛ دو مرزِ بالایی و پایینیِ کارایی</td></tr>
+      <tr><td><span class="en">TextInPSRAM / DataInPSRAM</span></td><td class="jt">قرارگیری کد در <span class="en">PSRAM</span> / قرارگیری داده در <span class="en">PSRAM</span></td></tr>
+      <tr><td><span class="en">StackInPSRAM</span></td><td class="jt">قرارگیری پشته در <span class="en">PSRAM</span>؛ کمترین آسیب کارایی میان راهبردهای اقامت در <span class="en">PSRAM</span></td></tr>
+      <tr><td><span class="en">FullInPSRAM</span></td><td class="jt">قرارگیری کد، داده و پشته هم‌زمان در <span class="en">PSRAM</span>؛ بدترین پیکربندی به‌دلیل رقابت پهنای باند</td></tr>
+      <tr><td><span class="en">__late_init()</span></td><td class="jt">تابع مقداردهی پیش از main در فایل راه‌اندازی؛ پیکربندی ساعت، <span class="en">PSRAM</span> و جابه‌جایی بخش‌های داده/کد</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN03004 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۱۹</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN03004</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
