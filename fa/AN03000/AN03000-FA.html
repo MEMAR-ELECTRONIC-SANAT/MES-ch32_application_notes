@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>راهنمای جامع شتاب‌دهی اجرا با ICache در CH32H417 — ترجمۀ فارسی AN03000</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">راهنمای جامع</div>
+    <div class="t2">شتاب‌دهی اجرا با <span class="en">ICache</span></div>
+    <div class="t3">در <span class="en">CH32H417</span></div>
+  </div>
+  <div class="c-sub">از کارکرد حافظۀ نهان دستورالعمل در هستۀ <span class="en">QingKe V5</span>، تا کنترل آن با رجیستر راهبرد و کانال‌های <span class="en">PMP</span>، پاک‌سازی پس از ریست و مقایسۀ عملکرد <span class="en">CoreMark</span></div>
+  <div class="c-desc">در این جزوه، ترجمۀ فارسی سند رسمی <span class="en">AN03000</span> (نسخۀ ۱٫۰، منتشرۀ شرکت <span class="en">WCH</span>) را می‌خوانید: <span class="en">CH32H417</span> به‌طور پیش‌فرض برنامه را در <span class="en">RAM</span> بارگذاری می‌کند؛ اما با منابع <span class="en">FLASH 960K</span> و <span class="en">RAM 896K</span>، فشار بر حافظۀ <span class="en">RAM</span> محسوس است. با کش‌کردن دستورالعمل‌ها از فلش می‌توان این فشار را کاهش داد و سرعت اجرا را نزدیک به <span class="en">ITCM</span> رساند: سازوکار کش، کنترل با <span class="en">CACHE_STRTG_CTLR</span> و <span class="en">PMP</span>، الزام پاک‌سازی پس از ریست و نتایج <span class="en">CoreMark</span> گام‌به‌گام بررسی می‌شود.</div>
+  <div class="c-tags">
+    <span class="c-tag">هستۀ <span class="en">QingKe V5</span></span>
+    <span class="c-tag"><span class="en">ICache 32K</span></span>
+    <span class="c-tag"><span class="en">CACHE_STRTG_CTLR</span></span>
+    <span class="c-tag">کانال‌های <span class="en">PMP</span></span>
+    <span class="c-tag"><span class="en">PMP</span> / <span class="en">NA4</span> / <span class="en">NAPOT</span></span>
+    <span class="c-tag"><span class="en">CoreMark</span></span>
+    <span class="c-tag"><span class="en">ITCM</span></span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN03000 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | معرفی کارکرد کش در هستۀ V5</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | روش استفاده از کش</span><span class="t-dots"></span><span class="t-page">۴</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-211"><span class="s-id">2.1</span><span>کنترل کش با راهبرد حافظهٔ نهان</span><span class="s-dots"></span><span class="s-page">۴</span></a>
+    <a class="toc-sub" href="#sec-212"><span class="s-id">2.2</span><span>کنترل کش با کانال‌های <span class="en">PMP</span></span><span class="s-dots"></span><span class="s-page">۶</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b3"><span class="t-num">۴</span><span class="t-title">بخش ۳ | مقایسۀ عملکرد کش</span><span class="t-dots"></span><span class="t-page">۱۰</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-311"><span class="s-id">3.1</span><span>مقایسۀ <span class="en">CoreMark</span> با کش در هستۀ V5</span><span class="s-dots"></span><span class="s-page">۱۰</span></a>
+    <a class="toc-sub" href="#sec-312"><span class="s-id">3.2</span><span>مقایسۀ عملکرد کش در آزمون خطی</span><span class="s-dots"></span><span class="s-page">۱۲</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۵</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۱۲</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۶</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۱۳</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">شکل ۲-۱</span><span>تعریف بیت‌های رجیستر راهبرد حافظهٔ نهان</span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۲</span><span>تعریف بیت‌های رجیستر عملیات حافظهٔ نهان</span><span class="f-dots"></span><span class="f-page">۵</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۳</span><span>حالت‌های <span class="en">PMP</span></span><span class="f-dots"></span><span class="f-page">۶</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۴</span><span>تعریف بیت‌های رجیستر آدرس <span class="en">PMP</span></span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۵</span><span>تعریف بیت‌های رجیستر پیکربندی <span class="en">PMP</span></span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۶</span><span>رجیستر پوشش راهبرد کشِ <span class="en">PMP</span></span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">شکل ۳-۱</span><span>نتیجۀ <span class="en">CoreMark</span> با اجرا از <span class="en">FLASH</span></span><span class="f-dots"></span><span class="f-page">۱۰</span></div>
+        <div class="frow"><span class="f-id">شکل ۳-۲</span><span>نتیجۀ <span class="en">CoreMark</span> با <span class="en">FLASH+Cache</span></span><span class="f-dots"></span><span class="f-page">۱۱</span></div>
+      </div>
+      <div>
+        <div class="frow"><span class="f-id">شکل ۳-۳</span><span>نتیجۀ <span class="en">CoreMark</span> در <span class="en">ITCM</span></span><span class="f-dots"></span><span class="f-page">۱۱</span></div>
+        <div class="frow"><span class="f-id">جدول ۱</span><span>مقایسۀ عملکرد کش</span><span class="f-dots"></span><span class="f-page">۱۲</span></div>
+        <div class="frow"><span class="f-id">کد ۱</span><span>پاک‌سازی و فعال‌سازی کش</span><span class="f-dots"></span><span class="f-page">۵</span></div>
+        <div class="frow"><span class="f-id">کد ۲</span><span>کش‌کردن بازۀ کد با <span class="en">PMP</span></span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">کد ۳</span><span>تعریف بخش <span class="en">.text1</span> در فایل <span class="en">LD</span></span><span class="f-dots"></span><span class="f-page">۹</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> برای تراشۀ <span class="en">CH32H417</span> معمولاً برنامه به‌طور پیش‌فرض در <span class="en">RAM</span> بارگذاری می‌شود تا کارایی بالا برود؛ اما با نگاه به کل منابع — <span class="en">FLASH 960K</span> و <span class="en">RAM</span> (<span class="en">SRAM+ITCM+DTCM</span>) برابر <span class="en">896K</span> — منابع <span class="en">RAM</span> نسبتاً کمتر است و نمی‌توان همۀ آن را برای بارگذاری و اجرای برنامۀ فلش به‌کار گرفت. در این وضعیت می‌توان بخشی از کد را از طریق حافظۀ نهانِ دستورالعمل (<span class="en">Cache</span>) کش کرد و فشار بر منابع <span class="en">RAM</span> را به‌اندازۀ مناسبی کاهش داد.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>برای تراشۀ <span class="en">CH32H417</span> معمولاً برنامه به‌طور پیش‌فرض در <span class="en">RAM</span> بارگذاری می‌شود تا کارایی بالا برود؛ اما با نگاه به کل منابع — فلش <span class="en">960K</span> و حافظۀ <span class="en">RAM</span> (<span class="en">SRAM+ITCM+DTCM</span>) برابر <span class="en">896K</span> — منابع <span class="en">RAM</span> نسبتاً کمتر است و همهٔ آن هم نمی‌تواند برای بارگذاری و اجرای برنامۀ فلش مصرف شود. در چنین شرایطی می‌توان بخشی از کد را با حافظۀ نهانِ دستورالعمل کش کرد و فشار بر منابع <span class="en">RAM</span> را به‌اندازۀ مناسبی کاست.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>میکروکنترلرهای همگانی‌منظوره</td><td><span class="en">CH32H417</span></td></tr>
+  </table>
+</div>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">معرفی کارکرد کش در هستۀ V5</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-111"><span class="dm">◆</span>۱.۱ معرفی کارکرد کش</h3>
+<p><span class="en">Icache</span> حافظۀ بسیار کوچک اما بسیار سریعی درون <span class="en">CPU</span> است که اندازۀ آن معمولاً ثابت است و در <span class="en">H417</span> برابر <span class="en">32K</span> می‌باشد.</p>
+<p>پس از فعال‌شدن کش، جریان کار به این شکل است: نخست <span class="en">CPU</span> درخواست واکشی آدرس می‌دهد؛ به‌جای دسترسی مستقیم به آدرس کند، ابتدا در <span class="en">Icache</span> «جست‌وجو» و «مقایسه» انجام می‌شود. اگر برچسب آدرس درون <span class="en">Icache</span> با برچسب آدرسِ هدفِ دسترسی یکسان باشد، یعنی برخورد با کش (hit) رخ داده است. اگر برچسب‌ها نابرابر باشند یعنی خطای کش (miss) و در این حالت خط لولۀ <span class="CPU">CPU</span> متوقف می‌شود، درخواست خواندن حافظه انجام می‌گیرد و بلوک پیوستۀ خوانده‌شده در آدرس شاخص <span class="en">Icache</span> ذخیره و مقدار برچسب نیز به‌روز می‌شود. دفعهٔ بعد که <span class="en">CPU</span> به همان آدرس برسد، اگر با برچسب آدرسِ <span class="en">Icache</span> بخواند، دیگر نیازی به خواندن اضافی حافظه نیست. چون اندازۀ هر <span class="en">Icache line</span> معمولاً ۶۴ بایت است، ۱۵ دستور بعدی نیز پیوسته برخورد خواهند داشت.</p>
+<p>سرعت اجرای فلش در <span class="en">H417</span> نسبتاً پایین است؛ بنابراین هنگام اجرا از فلش، روشن‌کردن کارکرد <span class="en">Icache</span> می‌تواند سرعت واکشی و اجرای <span class="en">CPU</span> را به‌طور مؤثر بالا ببرد.</p>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">روش استفاده از کش</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-211"><span class="dm">◆</span>۲.۱ کنترل کش با راهبرد حافظهٔ نهان</h3>
+<p>کنترل کش با راهبرد حافظهٔ نهان یعنی پیکربندی رجیستر <span class="en">CACHE_STRTG_CTLR</span> در آدرس <span class="en">0xBC2</span>. با تنظیم بیت‌های متناظر این رجیستر، <span class="en">CPU</span> برای نواحی مختلف دستورالعمل‌ها را کش می‌کند. مزیت آن سادگی است: در حالت ماشین با نوشتن یک رجیستر انجام می‌شود. اما دامنۀ کنترل آدرس بزرگ است؛ اگر کد واقعی از <span class="en">32K</span> (اندازۀ <span class="en">Icache</span>) بزرگ‌تر شود، خطای کش مکرر رخ می‌دهد و تا حدی کارایی اجرا پایین می‌آید.</p>
+<h4 class="h3x" id="sec-2111"><span class="dm">◆</span>۲.۱.۱ رجیسترها و بیت‌های پیکربندی مرتبط</h4>
+<p>تعریف رجیستر <span class="en">CACHE_STRTG_CTLR</span> به شکل زیر است.</p>
+<div class="fig" id="fig-21">
+  <div class="figbox">
+    <img src="assets/img/an03000-fig_p4_x40.jpeg" alt="شکل ۲-۱" style="max-width:600px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۱</span><span class="cap-text">تعریف بیت‌های رجیستر راهبرد حافظۀ نهان</span></div>
+</div>
+<p>بیت‌های <span class="en">bit[24:27]</span> رجیستر، بیت‌های کنترل کش دستورالعملِ هر ناحیه هستند که به‌طور پیش‌فرض روشن‌اند و بر اساس نیاز واقعی پیکربندی می‌شوند؛ بیت <span class="en">bit[1]</span> بیت فعال‌سازی کش دستورالعمل است و به‌طور پیش‌فرض خاموش است؛ با صفر کردن آن، کارکرد کش دستورالعمل فعال می‌شود.</p>
+<p>تنها روشن‌کردن کش کافی نیست: با هر روشن‌شدن دوبارهٔ برق، کش به‌طور طبیعی درست کار می‌کند چون مقدار کش پس از روشن‌شدن به حالت تصادفی برمی‌گردد؛ اما اگر ریست نرم‌افزاری یا سخت‌افزاری انجام شود، داده‌های درون کش باقی می‌مانند و در این حالت برچسب‌ها (Tag) و دادهٔ دستورالعمل‌ها متعلق به برنامهٔ قدیمی‌اند. پس از ریست، هنگام واکشی دستور ممکن است <span class="CPU">CPU</span> به‌اشتباه این خط‌های قدیمی را «برخورد» بپندارد، اجرا به‌هم بریزد و استثنای دستور غیرمجاز یا «پرواز» برنامه رخ دهد. برای حل این مسئله، پیش از فعال‌سازی کش دستورالعمل می‌توان محتوای کش را دستی پاک کرد. رجیستر آن در آدرس <span class="en">0xBD0</span> است و باید بیت <span class="en">bit[2]</span> آن یک شود.</p>
+<div class="fig" id="fig-22">
+  <div class="figbox">
+    <img src="assets/img/an03000-fig_p5_x44.jpeg" alt="شکل ۲-۲" style="max-width:600px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۲</span><span class="cap-text">تعریف بیت‌های رجیستر عملیات حافظۀ نهان</span></div>
+</div>
+<h4 class="h3x" id="sec-2112"><span class="dm">◆</span>۲.۱.۲ نمونۀ پیکربندی برنامه</h4>
+<div class="fig" id="code-1">
+  <div class="codeblk"><span class="cm">/* Flush Cache */</span>
+li t0, 0x4
+csrw 0xbd0, t0
+
+<span class="cm">/* Enable ICache */</span>
+li t0, 0x0E000002
+csrc 0xbc2, t0</div>
+  <div class="figcap"><span class="cap-pill">کد ۱</span><span class="cap-text">پاک‌سازی کش و فعال‌سازی کش دستورالعمل</span></div>
+</div>
+<p>این کد را در فایل <span class="en">startup_ch32h417_v5f.S</span> قرار دهید تا هنگام مقداردهی اولیۀ سیستم، کارکرد کش پیکربندی شود. کارکرد آن نخست محتوای کش را پاک می‌کند، سپس فقط برای ناحیهٔ <span class="en">0x00000000-0x1fffffff</span> کش دستورالعمل را فعال می‌کند و خود کارکرد را نیز روشن می‌سازد. در عمل می‌توانید بسته به نیاز، بیت‌های متناظر <span class="en">0xbc2</span> را تنظیم کنید و ناحیهٔ کش‌شدنی را به‌صورت انعطاف‌پذیر انتخاب نمایید.</p>
+
+<h3 class="h2x" id="sec-212"><span class="dm">◆</span>۲.۲ کنترل کش با کانال‌های <span class="en">PMP</span></h3>
+<p><span class="en">PMP</span> یعنی واحد حفاظت حافظۀ فیزیکی؛ در معماری <span class="en">RISC-V</span> برای افزایش امنیت سیستم، مجموعه‌ای از محدودسازی‌های دسترسی آدرس فیزیکی تعریف شده است که می‌تواند برای حافظۀ فیزیکی نواحی، ویژگی‌های خواندن، نوشتن و اجرا تنظیم کند و حفاظت با طول ناحیۀ حداقل ۴ بایت را برآورده سازد. هستۀ <span class="en">QingKeV5</span> در پیکربندی کش می‌تواند از قابلیت تقسیم نواحی حفاظتیِ حافظه در <span class="en">PMP</span> بهره بگیرد و درون کانال‌های نواحیِ تقسیم‌شده، کش دستورالعمل را فعال کند؛ به این ترتیب کارکرد کش انعطاف‌پذیرتر قابل استفاده است.</p>
+<p>حالت‌های حفاظت حافظه در <span class="en">PMP</span> سه‌تاست: <span class="en">TOR</span>، <span class="en">NA4</span> و <span class="en">NAPOT</span>. <span class="en">NA4</span> حفاظت ثابت ۴ بایتی است؛ <span class="en">NAPOT</span> حفاظت <span class="en">2^(G+2)</span> بایتی با <span class="en">G≥1</span> است؛ اندازۀ ناحیۀ حفاظت در حالت <span class="en">TOR</span> محدودیتی ندارد و مرزهای کانال حفاظت کامل با رجیسترهای آدرس پیکربندی می‌شود، پس این شیوۀ نسبتاً انعطاف‌پذیرتر است. تفاوت دقیق سه حالت در شکل زیر آمده است.</p>
+<div class="fig" id="fig-23">
+  <div class="figbox">
+    <img src="assets/img/an03000-fig_p5_x45.jpeg" alt="شکل ۲-۳" style="max-width:600px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۳</span><span class="cap-text">حالت‌های <span class="en">PMP</span></span></div>
+</div>
+<h4 class="h3x" id="sec-2121"><span class="dm">◆</span>۲.۲.۱ رجیسترها و بیت‌های پیکربندی مرتبط</h4>
+<p>چهار رجیستر آدرس <span class="en">PMP</span> وجود دارد؛ در حالت <span class="en">TOR</span>، آدرس صفر همراه با چهار رجیستر آدرس <span class="en">PMP</span> می‌تواند چهار ناحیه تقسیم کند. رجیسترهای آدرس به شکل زیرند؛ توجه کنید که در عمل باید آدرس را ۲ بیت به راست شیفت داده و سپس بنویسید.</p>
+<div class="fig" id="fig-24">
+  <div class="figbox">
+    <img src="assets/img/an03000-fig_p6_x56.jpeg" alt="شکل ۲-۴" style="max-width:600px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۴</span><span class="cap-text">تعریف بیت‌های رجیستر آدرس <span class="en">PMP</span></span></div>
+</div>
+<p>رجیسترهای پیکربندی <span class="en">PMP</span> نیز چهار مجموعه‌اند و هر یک به پیکربندی ناحیۀ کانال متناظر خود مربوط است؛ به‌عنوان نمونه <span class="en">pmp0cfg[7:0]</span> در شکل زیر آمده است. باید بیت ۵ (کارکرد کش دستورالعمل) پیکربندی شود، حالت <span class="en">PMP</span> یعنی مقدار <span class="en">A</span> در بیت‌های <span class="en">bit[4:3]</span> انتخاب گردد (مطابق حالت‌های <span class="en">PMP</span> در شکل ۲-۳) و بسته به نیاز، مجوزهای خواندن/نوشتن/اجرا تنظیم شود.</p>
+<div class="fig" id="fig-25">
+  <div class="figbox">
+    <img src="assets/img/an03000-fig_p6_x57.jpeg" alt="شکل ۲-۵" style="max-width:560px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۵</span><span class="cap-text">تعریف بیت‌های رجیستر پیکربندی <span class="en">PMP</span></span></div>
+</div>
+<p>علاوه بر این‌ها باید رجیستر پوشش راهبرد کشِ <span class="en">PMP</span> یعنی <span class="en">CACHE_PMP_OVR</span> نیز پیکربندی شود؛ تعریف دقیق بیت‌ها در شکل زیر آمده است. پس از یک‌کردن جایگاه کانال متناظر، وقتی آدرس دستور تحت حفاظت کانال متناظر <span class="en">PMP</span> باشد، دستور جاری قابل کش‌شدن است؛ توجه کنید پس از اتمام پیکربندی هنوز باید کارکرد کش دستورالعمل را روشن کنید — نوشتن صفر در بیت <span class="en">bit[1]</span> رجیستر <span class="en">CACHE_STRTG_CTLR</span> آن را فعال می‌کند.</p>
+<div class="fig" id="fig-26">
+  <div class="figbox">
+    <img src="assets/img/an03000-fig_p6_x58.jpeg" alt="شکل ۲-۶" style="max-width:600px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۶</span><span class="cap-text">رجیستر پوشش راهبرد کشِ <span class="en">PMP</span></span></div>
+</div>
+<h4 class="h3x" id="sec-2122"><span class="dm">◆</span>۲.۲.۲ نمونۀ پیکربندی برنامه</h4>
+<div class="fig" id="code-2">
+  <div class="codeblk"><span class="cm">/*Enable the cache to cache the code from _cache_beg to _cache_end */</span>
+<span class="cm">/*PMP*/</span>
+la t0, _cache_beg
+srli t0, t0, 2
+csrw pmpaddr0, t0
+
+la t0, _cache_end
+srli t0, t0, 2
+csrw pmpaddr1, t0
+
+<span class="cm">/*PMP channel 1*/</span>
+li t0, 0x10
+csrw 0xbc3, t0
+
+li t0, 0xAD00 <span class="cm">/*lock*/</span>
+csrw 0x3a0, t0
+
+<span class="cm">/* Flush Cache */</span>
+li t0, 0x4
+csrw 0xbd0, t0
+
+<span class="cm">/* Enable ICache */</span>
+li t0, 0x0F000002
+csrc 0xbc2, t0</div>
+  <div class="figcap"><span class="cap-pill">کد ۲</span><span class="cap-text">کش‌کردن کد بازۀ <span class="en">_cache_beg</span> تا <span class="en">_cache_end</span> با کانال <span class="en">PMP</span></span></div>
+</div>
+<h4 class="h3x" id="sec-2123"><span class="dm">◆</span>۲.۲.۳ خلاصۀ کاربرد راهبرد کشِ کانال <span class="en">PMP</span></h4>
+<p>در نمونۀ بخش ۲.۲.۲، مقدار برچسب‌های آدرس <span class="en">_cache_beg</span> و <span class="en">_cache_end</span> از طریق فایل <span class="en">LD</span> تعریف و گرفته می‌شود؛ این‌ها آدرس ابتدا و انتهای ناحیۀ مصرف‌شده از بخش فلش‌های تخصیص‌یافته‌اند. مثلاً در <span class="en">LD</span> ناحیۀ <span class="en">FLASH1</span> با آدرس شروع <span class="en">0x08070000</span> و اندازهٔ <span class="en">32K</span> تقسیم می‌کنیم:</p>
+<div class="fig" id="code-3">
+  <div class="codeblk">.text1 :
+{
+. = ALIGN(4);
+KEEP(*(SORT_NONE(.text1)))
+PROVIDE( _cache_beg = .);
+*(.cache);
+*(.cache.*);
+PROVIDE( _cache_end = .);
+. = ALIGN(4);
+} &gt;FLASH1 AT&gt;FLASH1</div>
+  <div class="figcap"><span class="cap-pill">کد ۳</span><span class="cap-text">تعریف بخش <span class="en">.text1</span> و برچسب‌های کش در فایل <span class="en">LD</span></span></div>
+</div>
+<p>پیش از تابع باید <span class="en">__attribute((section(".cache")))</span> اضافه شود تا پس از کامپایل در <span class="en">FLASH1</span> قرار گیرد. اگر حجم واقعی کد از <span class="en">32K</span> بیشتر شود، کامپایل خطا می‌دهد؛ کافی است اندازۀ تخصیص <span class="en">FLASH1</span> را تنظیم کنید. توجه شود که در این حالت اندازۀ ناحیۀ کش دستورالعمل از ظرفیت کل کش فراتر رفته است، پس کارایی کل کش افت می‌کند.</p>
+<p>برای نمونۀ بخش ۲.۲.۲ می‌توان برچسب‌های آدرس <span class="en">_cache_beg</span> و <span class="en">_cache_end</span> را با مقادیر واقعی آدرس فلش جایگزین کرد. مثلاً در <span class="en">LD</span> ناحیۀ <span class="en">FLASH1</span> با آدرس شروع <span class="en">0x08070000</span> و اندازهٔ <span class="en">32K</span> تقسیم شده باشد، کد چنین تغییر می‌کند:</p>
+<div class="codeblk">la t0, 0x00070000
+srli t0, t0, 2
+csrw pmpaddr0, t0
+
+la t0, 0x00078000
+srli t0, t0, 2
+csrw pmpaddr1, t0</div>
+<p>در <span class="en">LD</span> یک توصیف بخش جدید اضافه می‌کنیم تا توابع در این ناحیۀ فلش قرار گیرند؛ پیش از تابع باید <span class="en">__attribute((section(".cache1")))</span> نوشته شود:</p>
+<div class="codeblk">.text1 :
+{
+. = ALIGN(4);
+KEEP(*(SORT_NONE(.text1)))
+*(.cache1);
+*(.cache1.*);
+. = ALIGN(4);
+} &gt;FLASH1 AT&gt;FLASH1</div>
+<p>این شیوه به‌صورت پیش‌گیرانه <span class="en">32K</span> فلش برای بارگذاری دستورالعمل‌ها تخصیص می‌دهد؛ اگر حجم واقعی کد از <span class="en">32K</span> فراتر رود کامپایل خطا می‌دهد و در این حالت می‌توانید اندازۀ تخصیصی <span class="en">FLASH1</span> و مقدار رجیستر <span class="en">pmpaddr1</span> را تنظیم کنید.</p>
+
+<!-- ================= بخش ۳ ================= -->
+<div class="chapter-header" id="sec-b3">
+  <span class="sec-pill">بخش ۳</span>
+  <div class="sec-title">مقایسۀ عملکرد کش</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-311"><span class="dm">◆</span>۳.۱ مقایسۀ <span class="en">CoreMark</span> با کش در هستۀ V5</h3>
+<p>دستورالعمل‌ها در فلش ذخیره شده‌اند و نتایج اجرای <span class="en">CoreMark</span> مقایسه شده است؛ همه با استاندارد <span class="en">GCC15</span>.</p>
+<p>نتیجۀ اجرای <span class="en">CoreMark</span> با دستورالعمل‌های ذخیره‌شده در فلش: <span class="en">0.327/MHz</span></p>
+<div class="fig" id="fig-31">
+  <div class="figbox">
+    <img src="assets/img/an03000-fig_p9_x71.png" alt="شکل ۳-۱" style="max-width:440px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۳-۱</span><span class="cap-text">نتیجۀ <span class="en">CoreMark</span> با اجرا از <span class="en">FLASH</span></span></div>
+</div>
+<p>نتیجۀ اجرای <span class="en">CoreMark</span> با دستورالعمل‌های ذخیره‌شده در فلش همراه با فعال‌سازی کش: <span class="en">6.672/MHz</span></p>
+<div class="fig" id="fig-32">
+  <div class="figbox">
+    <img src="assets/img/an03000-fig_p9_x73.png" alt="شکل ۳-۲" style="max-width:440px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۳-۲</span><span class="cap-text">نتیجۀ <span class="en">CoreMark</span> با <span class="en">FLASH+Cache</span></span></div>
+</div>
+<p>نتیجۀ اجرای <span class="en">CoreMark</span> با دستورالعمل‌های ذخیره‌شده در ناحیۀ نزدیک‌جوش <span class="en">ITCM</span>: <span class="en">6.802/MHz</span></p>
+<div class="fig" id="fig-33">
+  <div class="figbox">
+    <img src="assets/img/an03000-fig_p9_x75.png" alt="شکل ۳-۳" style="max-width:440px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۳-۳</span><span class="cap-text">نتیجۀ <span class="en">CoreMark</span> در <span class="en">ITCM</span></span></div>
+</div>
+<p>از مقایسۀ نتایج، بهبود کارایی بارگذاری و اجرای دستورالعمل‌های کش‌شده از فلش با کش بسیار چشمگیر است و به ناحیۀ نزدیک‌جوش <span class="en">ITCM</span> نزدیک می‌شود. حجم کد آزمون از <span class="en">32K</span> تجاوز نکرده است؛ اگر حجم واقعی محتوای کش‌شده از <span class="en">32K</span> بیشتر شود، کارایی کش افت می‌کند.</p>
+
+<h3 class="h2x" id="sec-312"><span class="dm">◆</span>۳.۲ مقایسۀ عملکرد کش در آزمون خطی</h3>
+<p>یک تابع <span class="en">12K</span> بایتی در فلش قرار گرفته است؛ محتوای تابع با گسترش <span class="en">nop</span> و اجرای خطی بدون حلقه است.</p>
+<div class="tblwrap" id="tab-31">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">مقایسۀ عملکرد کش (زمان به میکروثانیه)</span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:34%;">تعداد اجرای تابع</th><th>اجرای از فلش، کش خاموش <span class="en">(us)</span></th><th>اجرای از فلش، کش روشن <span class="en">(us)</span></th></tr></thead>
+    <tr><td>۱</td><td><span class="en">253.35</span></td><td><span class="en">1619.32</span></td></tr>
+    <tr><td>۲</td><td><span class="en">509.26</span></td><td><span class="en">1627.05</span></td></tr>
+    <tr><td>۳</td><td><span class="en">763.28</span></td><td><span class="en">1634.77</span></td></tr>
+    <tr><td>…</td><td>…</td><td>…</td></tr>
+    <tr><td>۱۰</td><td><span class="en">2545.90</span></td><td><span class="en">1688.81</span></td></tr>
+    <tr><td>…</td><td>…</td><td>…</td></tr>
+    <tr><td>۲۰</td><td><span class="en">5093.08</span></td><td><span class="en">1766.01</span></td></tr>
+  </table>
+</div>
+<p>از داده‌های جدول می‌بینیم سرعت اجرای از فلش بسیار یکنواخت است؛ بارگذاری نخستین کش زمان طولانی‌تری می‌برد، اما سرعت اجرا ۳۰ برابرِ فلش است. اگر حجم واقعی کد از اندازۀ کل کش تجاوز نکند یا کش مکرر بارگذاری نشود، هرچه تعداد اجرا بیشتر شود، کارایی کل کش بهتر می‌شود.</p>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN03000</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/04/24</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">Icache</span></td><td class="jt">حافظۀ نهان دستورالعمل؛ حافظۀ کوچک ولی بسیار سریع درون <span class="en">CPU</span> با ظرفیت ثابت <span class="en">32K</span> در <span class="en">H417</span></td></tr>
+      <tr><td><span class="en">Cache line / Tag</span></td><td class="jt">بلوک ۶۴ بایتیِ بارگذاری‌شده در کش / برچسب آدرس برای تشخیص «برخورد» یا «خطا» در جست‌وجو</td></tr>
+      <tr><td><span class="en">CACHE_STRTG_CTLR</span></td><td class="jt">رجیستر راهبرد کش در آدرس <span class="en">0xBC2</span>؛ بیت‌های <span class="en">[24:27]</span> نواحی کش و بیت <span class="en">[1]</span> فعال‌سازی کش</td></tr>
+      <tr><td><span class="en">OPCACHE_CTLR (0xBD0)</span></td><td class="jt">رجیستر عملیات کش؛ با یک‌کردن بیت <span class="en">[2]</span> پیش از فعال‌سازی، محتوای کش پاک می‌شود</td></tr>
+      <tr><td><span class="en">PMP</span></td><td class="jt">واحد حفاظت حافظۀ فیزیکی در معماری <span class="en">RISC-V</span>؛ تعیین مجوز خواندن/نوشتن/اجرا با حداقل دقت ۴ بایت</td></tr>
+      <tr><td><span class="en">TOR / NA4 / NAPOT</span></td><td class="jt">سه حالت تطبیق آدرس <span class="en">PMP</span>: بازۀ دو آدرس / ۴ بایت ثابت / توان‌دوم هم‌تراز با پارامتر G</td></tr>
+      <tr><td><span class="en">pmpaddr / pmpcfg</span></td><td class="jt">رجیسترهای آدرس و پیکربندی کانال‌های <span class="en">PMP</span>؛ آدرس‌ها باید ۲ بیت به راست شیفت شوند</td></tr>
+      <tr><td><span class="en">CACHE_PMP_OVR</span></td><td class="jt">رجیستر پوشش راهبرد کشِ کانال‌های <span class="en">PMP</span> در <span class="en">0xBC3</span>؛ تعیین می‌کند کدام کانال کش‌شدنی است</td></tr>
+      <tr><td><span class="en">CoreMark</span></td><td class="jt">بنچمارک استاندارد <span class="en">EEMBC</span> برای سنجش کارایی <span class="en">MCU</span>؛ نتیجه بر مبنای تکرار بر ثانیه و بر مگاهرتز</td></tr>
+      <tr><td><span class="en">ITCM</span></td><td class="jt">حافظۀ نزدیک‌جوشِ دستورالعمل؛ اجرا با سرعت نزدیک به کش با دسترسی بدون انتظار</td></tr>
+      <tr><td><span class="en">csrw / csrc</span></td><td class="jt">دستورهای نوشتن/پاک‌سازی بیت در رجیسترهای <span class="en">CSR</span> هستۀ <span class="en">RISC-V</span></td></tr>
+      <tr><td><span class="en">LD file</span></td><td class="jt">اسکریپت پیوند‌دهنده؛ تعیین محل قرارگیری بخش‌های کد در حافظه و تعریف برچسب‌های <span class="en">_cache_beg/_cache_end</span></td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN03000 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۱۹</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN03000</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
