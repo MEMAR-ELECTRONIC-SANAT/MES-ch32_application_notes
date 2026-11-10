@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>راهنمای جامع وقفه‌ها در تراشۀ دولپه‌ای CH32H417 — ترجمۀ فارسی AN03001</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">راهنمای جامع</div>
+    <div class="t2">وقفه‌ها در تراشۀ دولپه‌ای</div>
+    <div class="t3"><span class="en">CH32H417</span> (<span class="en">V5F + V3F</span>)</div>
+  </div>
+  <div class="c-sub">از فعال‌سازی وقفه، خواندن وضعیت، تخصیص مجوز پردازش میان دو هسته و وقفه‌های <span class="en">VTF</span>، تا پیکربندی آستانۀ اولویت، رویدادهای خواب و بیداری درونی و میان‌هسته‌ای</div>
+  <div class="c-desc">در این جزوه، ترجمۀ فارسی سند رسمی <span class="en">AN03001</span> (نسخۀ ۱٫۰، منتشرۀ شرکت <span class="en">WCH</span>) را می‌خوانید: در تراشۀ دولپه‌ای ۴۱۷ برخی شیوه‌های استفاده از وقفه با تراشه‌های تکلپه‌ای متفاوت است؛ عمدتاً در فعال‌سازی، تخصیص مجوز و کاربرد وقفه. رجیسترهای اصلی وقفه در واحد <span class="en">PFIC</span> هستند و در تراشۀ دولپه‌ای رجیسترهای با کارکرد ویژهٔ زیادی به آنها افزوده شده است: وقفه‌های خصوصی و عمومی، رجیستر تخصیص مجوز <span class="en">IALLOCR</span>، وقفه‌های بدون‌جدول <span class="en">VTF</span>، آستانۀ اولویت و سازوکارهای خواب و بیداری دو هسته.</div>
+  <div class="c-tags">
+    <span class="c-tag">تراشۀ دولپه‌ای <span class="en">CH32H417</span></span>
+    <span class="c-tag">واحد <span class="en">PFIC</span></span>
+    <span class="c-tag">وقفه‌های خصوصی و عمومی</span>
+    <span class="c-tag">تخصیص مجوز <span class="en">IALLOCR</span></span>
+    <span class="c-tag">وقفه‌های <span class="en">VTF</span></span>
+    <span class="c-tag">آستانۀ اولویت وقفه</span>
+    <span class="c-tag">خواب و بیداری هسته</span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN03001 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | فعال‌سازی وقفه و تخصیص مجوز</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-111"><span class="s-id">1.1</span><span>فعال‌سازی وقفه و خواندن وضعیت</span><span class="s-dots"></span><span class="s-page">۳</span></a>
+    <a class="toc-sub" href="#sec-112"><span class="s-id">1.2</span><span>خواندن وضعیت در انتظار وقفه</span><span class="s-dots"></span><span class="s-page">۵</span></a>
+    <a class="toc-sub" href="#sec-113"><span class="s-id">1.3</span><span>پیکربندی وقفه و رجیستر وضعیت فراگیر</span><span class="s-dots"></span><span class="s-page">۵</span></a>
+    <a class="toc-sub" href="#sec-114"><span class="s-id">1.4</span><span>وقفه‌های <span class="en">VTF</span></span><span class="s-dots"></span><span class="s-page">۶</span></a>
+    <a class="toc-sub" href="#sec-115"><span class="s-id">1.5</span><span>پیکربندی آستانۀ اولویت وقفه</span><span class="s-dots"></span><span class="s-page">۷</span></a>
+    <a class="toc-sub" href="#sec-116"><span class="s-id">1.6</span><span>در انتظارگذاری و پاک‌سازی وضعیت وقفه</span><span class="s-dots"></span><span class="s-page">۷</span></a>
+    <a class="toc-sub" href="#sec-117"><span class="s-id">1.7</span><span>اولویت وقفه و تخصیص وقفه</span><span class="s-dots"></span><span class="s-page">۸</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | خواب و بیداری هسته‌ها</span><span class="t-dots"></span><span class="t-page">۱۱</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-211"><span class="s-id">2.1</span><span>رویدادهای بیداری هسته</span><span class="s-dots"></span><span class="s-page">۱۱</span></a>
+    <a class="toc-sub" href="#sec-212"><span class="s-id">2.2</span><span>بیداری محلی هسته</span><span class="s-dots"></span><span class="s-page">۱۲</span></a>
+    <a class="toc-sub" href="#sec-213"><span class="s-id">2.3</span><span>بیداری میان‌هسته‌ای</span><span class="s-dots"></span><span class="s-page">۱۲</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۴</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۱۳</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۵</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۱۳</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">شکل ۱-۱</span><span>رجیستر فعال‌سازی وقفه</span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۲</span><span>رجیستر وضعیت فعال‌سازی وقفه</span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۳</span><span>رجیستر پاک‌سازی فعال‌سازی وقفه</span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۴</span><span>رجیستر وضعیت در انتظار وقفه</span><span class="f-dots"></span><span class="f-page">۵</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۵</span><span>رجیستر پیکربندی وقفه</span><span class="f-dots"></span><span class="f-page">۵</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۶</span><span>رجیستر وضعیت فراگیر وقفه</span><span class="f-dots"></span><span class="f-page">۶</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۷</span><span>رجیستر وقفهٔ <span class="en">VTF</span></span><span class="f-dots"></span><span class="f-page">۶</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۸</span><span>رجیستر پیکربندی آستانۀ اولویت وقفه</span><span class="f-dots"></span><span class="f-page">۷</span></div>
+      </div>
+      <div>
+        <div class="frow"><span class="f-id">شکل ۱-۹</span><span>رجیستر در انتظارگذاری وقفه</span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۱۰</span><span>رجیستر پاک‌سازی وضعیت در انتظار وقفه</span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۱۱</span><span>رجیستر پیکربندی اولویت وقفه</span><span class="f-dots"></span><span class="f-page">۹</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۱۲</span><span>رجیستر <span class="en">INTSYSCR</span></span><span class="f-dots"></span><span class="f-page">۹</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۱۳</span><span>رجیستر تخصیص مجوز وقفه</span><span class="f-dots"></span><span class="f-page">۱۰</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۱۴</span><span>رجیستر پرس‌وجوی حکم وقفه</span><span class="f-dots"></span><span class="f-page">۱۰</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۱</span><span>رجیستر فعال‌سازی رویداد <span class="en">PFIC</span></span><span class="f-dots"></span><span class="f-page">۱۲</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۲</span><span>رجیستر <span class="en">SCTLR</span></span><span class="f-dots"></span><span class="f-page">۱۳</span></div>
+        <div class="frow"><span class="f-id">کد ۱</span><span>فراخوانی‌های کار با وقفه</span><span class="f-dots"></span><span class="f-page">۵</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> دربارۀ وقفه‌های تراشۀ دولپه‌ای ۴۱۷، برخی شیوه‌های استفاده با تراشه‌های تکلپه‌ای متفاوت است؛ عمدتاً در فعال‌سازی، تخصیص مجوز و کاربرد وقفه. وقفه‌ها با رجیسترهای <span class="en">PFIC</span> مدیریت می‌شوند و در تراشۀ دولپه‌ای رجیسترهای با کارکردهای ویژۀ فراوانی افزوده شده است.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>دربارۀ وقفه‌های تراشۀ دولپه‌ای ۴۱۷، برخی شیوه‌های استفاده با تراشه‌های تکلپه‌ای متفاوت است؛ عمدتاً در فعال‌سازی، تخصیص مجوز و کاربرد وقفه. رجیسترهای اصلی مرتبط با وقفه در واحد <span class="en">PFIC</span> هستند و در تراشۀ دولپه‌ای رجیسترهای با کارکردهای ویژۀ زیادی به آنها افزوده شده است.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>میکروکنترلرهای همگانی‌منظوره</td><td><span class="en">CH32H417</span> و مشابه</td></tr>
+  </table>
+</div>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">فعال‌سازی وقفه و تخصیص مجوز</div>
+  <div class="sec-divider"></div>
+</div>
+<p>وقفه از منظر هسته، سازوکاری برای پردازش وظایف ویژه است. در تراشۀ دولپه‌ای آنچه اهمیت دارد، فعال‌سازی و تخصیص مجوزِ وقفه است. وقفه‌ها به خصوصی و عمومی تقسیم می‌شوند: در وقفۀ خصوصی، مجوز وقفه‌های هر هسته مستقل است — مثل <span class="en">HardFault</span>؛ وقفه‌های عمومیِ جانبی‌ها برای هر دو هسته حق پردازش دارند، اما در هر لحظه فقط یک هسته می‌تواند این حق را داشته باشد.</p>
+
+<h3 class="h2x" id="sec-111"><span class="dm">◆</span>۱.۱ فعال‌سازی وقفه و خواندن وضعیت</h3>
+<p>در تراشۀ دولپه‌ای <span class="en">H417</span>، ۳۲ بیتِ پایین وقفه‌های خصوصی‌اند و به شمارۀ وقفه‌های <span class="en">0~31</span> مربوط‌اند؛ از شمارۀ ۳۲ به بعد، وقفه‌ها عمومی‌اند. رجیستر فعال‌سازی وقفه <span class="en">PFIC-&gt;IENR1</span> مطابق شکل ۱-۱ است؛ شماره‌های وقفهٔ <span class="en">0~11</span> به‌طور پیش‌فرض فعال‌اند و وقفه‌های <span class="en">12~31</span> فعال‌شدنی‌اند.</p>
+<div class="fig" id="fig-11">
+  <div class="figbox">
+    <img src="assets/img/an03001-fig_p3_x29.jpeg" alt="شکل ۱-۱" style="max-width:620px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۱</span><span class="cap-text">رجیستر فعال‌سازی وقفه</span></div>
+</div>
+<p>وضعیت فعال‌سازی وقفه با رجیستر <span class="en">PFIC-&gt;ISR1</span> خوانده می‌شود؛ مطابق شکل ۱-۲.</p>
+<div class="fig" id="fig-12">
+  <div class="figbox">
+    <img src="assets/img/an03001-fig_p3_x30.jpeg" alt="شکل ۱-۲" style="max-width:620px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۲</span><span class="cap-text">رجیستر وضعیت فعال‌سازی وقفه</span></div>
+</div>
+<p>رجیستر بستن وقفه <span class="en">PFIC-&gt;IRER1</span> مطابق شکل ۱-۳ است.</p>
+<div class="fig" id="fig-13">
+  <div class="figbox">
+    <img src="assets/img/an03001-fig_p3_x31.jpeg" alt="شکل ۱-۳" style="max-width:620px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۳</span><span class="cap-text">رجیستر پاک‌سازی فعال‌سازی وقفه</span></div>
+</div>
+<p>فراخوانی تابع فعال‌سازی وقفه، پرس‌وجوی وضعیت فعال‌سازی و بستن وقفه:</p>
+<div class="fig" id="code-1">
+  <div class="codeblk">NVIC_EnableIRQ(WWDG_IRQn);
+NVIC_GetStatusIRQ(WWDG_IRQn);
+NVIC_DisableIRQ(WWDG_IRQn);</div>
+  <div class="figcap"><span class="cap-pill">کد ۱</span><span class="cap-text">فراخوانی‌های فعال‌سازی، پرس‌وجوی وضعیت و بستن وقفه</span></div>
+</div>
+
+<h3 class="h2x" id="sec-112"><span class="dm">◆</span>۱.۲ خواندن وضعیت در انتظار وقفه</h3>
+<div class="fig" id="fig-14">
+  <div class="figbox">
+    <img src="assets/img/an03001-fig_p4_x42.jpeg" alt="شکل ۱-۴" style="max-width:620px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۴</span><span class="cap-text">رجیستر وضعیت در انتظار وقفه</span></div>
+</div>
+<p>وضعیت جاری وقفه با رجیستر وضعیتِ در انتظار وقفه خوانده می‌شود (شکل ۱-۴). فراخوانی تابع:</p>
+<div class="codeblk">NVIC_GetPendingIRQ(WWDG_IRQn);</div>
+
+<h3 class="h2x" id="sec-113"><span class="dm">◆</span>۱.۳ پیکربندی وقفه و رجیستر وضعیت فراگیر</h3>
+<div class="fig" id="fig-15">
+  <div class="figbox">
+    <img src="assets/img/an03001-fig_p4_x43.jpeg" alt="شکل ۱-۵" style="max-width:620px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۵</span><span class="cap-text">رجیستر پیکربندی وقفه</span></div>
+</div>
+<p>رجیستر <span class="en">CFGR</span> مطابق شکل ۱-۵ است؛ کارکرد اصلی آن اجرای ریست سیستم است: بیت <span class="en">bit[7]</span> یک می‌شود و هم‌زمان باید در بیت‌های <span class="en">bit[31:16]</span> کلید متناظر با مقدار <span class="en">0xBEEF</span> نوشته شود.</p>
+<div class="fig" id="fig-16">
+  <div class="figbox">
+    <img src="assets/img/an03001-fig_p4_x44.jpeg" alt="شکل ۱-۶" style="max-width:620px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۶</span><span class="cap-text">رجیستر وضعیت فراگیر وقفه</span></div>
+</div>
+<p>رجیستر <span class="en">GISR</span> مطابق شکل ۱-۶، رجیستر خصوصیِ هسته است و می‌توان با آن وضعیت اجرای هسته را در بیت‌های <span class="en">bit[15:14]</span> خواند، وضعیت قفل‌شدگی هسته را در بیت <span class="en">bit[13]</span>، وضعیت دیباگ هسته را در بیت <span class="en">bit[12]</span>، وضعیت فراگیرِ فعال‌سازی وقفه را در بیت <span class="en">bit[11]</span>، وجود وقفۀ معلق یا در حال اجرا را در بیت‌های <span class="en">bit[9:8]</span> و وضعیت تودرتویی جاری وقفه را در بیت‌های <span class="en">bit[7:0]</span> پرس‌وجو کرد.</p>
+
+<h3 class="h2x" id="sec-114"><span class="dm">◆</span>۱.۴ وقفه‌های <span class="en">VTF</span></h3>
+<p>رجیسترهای مرتبط با <span class="en">VTF</span> نیز خصوصیِ هسته‌اند؛ یعنی هر هسته می‌تواند ۴ گروه وقفۀ بدون‌جدول پیکربندی کند.</p>
+<p><span class="en">PFIC-&gt;VTFIDR</span> شمارهٔ ۴ گروه وقفه است و رجیسترهای <span class="en">PFIC-&gt;VTFADDRRx</span> (<span class="en">x=0,1,2,3</span>) آدرس تابع فراخوان‌برگشتیِ گروه وقفۀ متناظر را در بیت‌های <span class="en">bit[31:1]</span> و بیت فعال‌سازی را در بیت <span class="en">bit[0]</span> نگه می‌دارند. رجیستر <span class="en">VTFADDRR</span> مطابق شکل ۱-۷ است.</p>
+<div class="fig" id="fig-17">
+  <div class="figbox">
+    <img src="assets/img/an03001-fig_p5_x48.jpeg" alt="شکل ۱-۷" style="max-width:620px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۷</span><span class="cap-text">رجیستر وقفۀ <span class="en">VTF</span></span></div>
+</div>
+<p>فراخوانی تابع تنظیم <span class="en">VTF</span>:</p>
+<div class="codeblk">SetVTFIRQ((u32)WWDG_IRQHandler,WWDG_IRQn,0,ENABLE);</div>
+
+<h3 class="h2x" id="sec-115"><span class="dm">◆</span>۱.۵ پیکربندی آستانۀ اولویت وقفه</h3>
+<p>هنگام پیکربندی اولویت وقفه می‌توان آستانۀ بالاییِ اولویت را تنظیم کرد؛ پس از موفقیت، وقفه‌هایی با اولویت پایین‌تر از این آستانه، پس از معلق‌شدن، تابع سرویس وقفه اجرا نمی‌کنند. رجیستر متناظر مطابق شکل ۱-۸ است و رجیستر خصوصیِ هسته است. مقدار ریست رجیستر صفر است و کارکرد آستانه به‌طور پیش‌فرض خاموش است.</p>
+<div class="fig" id="fig-18">
+  <div class="figbox">
+    <img src="assets/img/an03001-fig_p5_x49.jpeg" alt="شکل ۱-۸" style="max-width:620px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۸</span><span class="cap-text">رجیستر پیکربندی آستانۀ اولویت وقفه</span></div>
+</div>
+
+<h3 class="h2x" id="sec-116"><span class="dm">◆</span>۱.۶ در انتظارگذاری و پاک‌سازی وضعیت وقفه</h3>
+<p>در انتظارگذاری وقفه با نوشتن بیت متناظر در <span class="en">IPSR</span> انجام می‌شود؛ رجیستر مطابق شکل ۱-۹ است. ۳۱ شمارۀ نخستِ وقفه خصوصی‌اند و بقیه را هر دو هسته می‌توانند پیکربندی کنند.</p>
+<div class="fig" id="fig-19">
+  <div class="figbox">
+    <img src="assets/img/an03001-fig_p5_x50.jpeg" alt="شکل ۱-۹" style="max-width:620px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۹</span><span class="cap-text">رجیستر در انتظارگذاری وقفه</span></div>
+</div>
+<p>برای پاک‌کردن وضعیت در انتظار وقفه، رجیستر <span class="en">IPRR</span> پیکربندی می‌شود؛ مطابق شکل ۱-۱۰ با یک‌کردن بیت متناظر، وضعیت در انتظارِ وقفه پاک می‌شود.</p>
+<div class="fig" id="fig-110">
+  <div class="figbox">
+    <img src="assets/img/an03001-fig_p6_x54.jpeg" alt="شکل ۱-۱۰" style="max-width:620px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۱۰</span><span class="cap-text">رجیستر پاک‌سازی وضعیت در انتظار وقفه</span></div>
+</div>
+<p>تابع در انتظارگذاری وقفه:</p>
+<div class="codeblk">NVIC_SetPendingIRQ(WWDG_IRQn);</div>
+<p>تابع پاک‌سازی وضعیت در انتظار وقفه:</p>
+<div class="codeblk">NVIC_ClearPendingIRQ(WWDG_IRQn);</div>
+
+<h3 class="h2x" id="sec-117"><span class="dm">◆</span>۱.۷ اولویت وقفه و تخصیص وقفه</h3>
+<p>اولویت وقفه با رجیسترهای <span class="en">PFIC_IPRIORx</span> (<span class="en">x=0~63</span>) پیکربندی می‌شود؛ اولویت وقفه‌های خصوصی (شمارهٔ ۰~۳۱) خصوصی است و اولویت وقفه‌های عمومیِ باقی‌مانده را هسته‌ها خودشان می‌توانند پیکربندی کنند. مطابق شکل ۱-۱۱، بسته به مقدار رجیستر <span class="en">CSR</span> (<span class="en">0x804 bit[3:1]</span>)، برای وقفه بیت‌های پیکربندی پیش‌رانش (Preempt) و پاسخ متفاوتی وجود دارد؛ رجیستر <span class="en">0x804</span> را می‌توان در فایل راه‌اندازی تغییر داد.</p>
+<div class="fig" id="fig-111">
+  <div class="figbox">
+    <img src="assets/img/an03001-fig_p6_x55.jpeg" alt="شکل ۱-۱۱" style="max-width:560px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۱۱</span><span class="cap-text">رجیستر پیکربندی اولویت وقفه</span></div>
+</div>
+<p>مطابق شکل ۱-۱۲، وقتی <span class="en">bit1</span> از <span class="en">0x804</span> صفر باشد کارکرد تودرتویی خاموش است و بیت پیکربندی پیش‌رانش تخصیص نمی‌یابد؛ بیت‌های پیکربندی پاسخ <span class="en">bit[7:4]</span> هستند. فقط وقتی کارکرد تودرتویی فعال باشد، تعداد بیت‌های پیش‌رانش معنا می‌یابد؛ مثلاً اگر تعداد بیت‌های پیش‌رانش ۲ تنظیم شود یعنی <span class="en">bit[3:2]</span> مقدار <span class="en">10b</span>، بیت‌های پیکربندی پیش‌رانشِ <span class="en">PFIC_IPRIOR</span> بیت‌های <span class="en">bit[7:6]</span> و بیت‌های باقی‌ماندهٔ <span class="en">bit[5:4]</span> بیت‌های پیکربندی پاسخ‌اند.</p>
+<div class="fig" id="fig-112">
+  <div class="figbox">
+    <img src="assets/img/an03001-fig_p6_x56.jpeg" alt="شکل ۱-۱۲" style="max-width:620px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۱۲</span><span class="cap-text">رجیستر <span class="en">INTSYSCR</span></span></div>
+</div>
+<p>مجوز وقفه نیز با رجیستر تخصیص می‌یابد. توصیف رجیستر <span class="en">IALLOCR</span> در شکل ۱-۱۳ آمده است. فیلدهای <span class="en">IALLOC_0~31</span> فقط‌خواندنی‌اند و به ۳۱ وقفۀ نخست مربوط‌اند. وقفه‌های پس از شمارۀ ۳۲ قابل پیکربندی‌اند؛ مجوز آنها همچنین می‌تواند با فعال‌سازی وقفه توسط هسته به‌طور خودکار گرفته شود و رجیستر <span class="en">IALLOC_x</span> شناسۀ هسته را به‌روز و ذخیره می‌کند. پیش از رخ‌دادن وقفه می‌توان با <span class="en">IALLOCR</span> مجوزِ فعال‌شدن را دستی تغییر داد.</p>
+<div class="fig" id="fig-113">
+  <div class="figbox">
+    <img src="assets/img/an03001-fig_p7_x64.jpeg" alt="شکل ۱-۱۳" style="max-width:620px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۱۳</span><span class="cap-text">رجیستر تخصیص مجوز وقفه</span></div>
+</div>
+<p>برای پرس‌وجوی تخصیص وقفه، از رجیستر خصوصیِ هستهٔ <span class="en">IAUTR</span> نیز می‌توان استفاده کرد؛ مطابق شکل ۱-۱۴، حکم وقفۀ جاری را برمی‌گرداند و مشخص می‌کند آیا پاسخ‌گویی به وقفه با همین هسته است یا نه.</p>
+<div class="fig" id="fig-114">
+  <div class="figbox">
+    <img src="assets/img/an03001-fig_p7_x65.jpeg" alt="شکل ۱-۱۴" style="max-width:620px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۱۴</span><span class="cap-text">رجیستر پرس‌وجوی حکم وقفه</span></div>
+</div>
+<p>تابع تنظیم اولویت وقفه:</p>
+<div class="codeblk">NVIC_SetPriority(WWDG_IRQn, 1&lt;&lt;4);</div>
+<p>تابع تنظیم مجوز وقفه:</p>
+<div class="codeblk">NVIC_SetAllocateIRQ(WWDG_IRQn, Core_ID_V3F);</div>
+<p>گرفتن مجوز جاری وقفه:</p>
+<div class="codeblk">NVIC_GetAllocateIRQ(WWDG_IRQn);</div>
+<p>تابع گرفتن حکم وقفه توسط هسته:</p>
+<div class="codeblk">NVIC_OwnCoreGetAllocateIRQ(WWDG_IRQn);</div>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">خواب و بیداری هسته‌ها</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-211"><span class="dm">◆</span>۲.۱ رویدادهای بیداری هسته</h3>
+<p>خواب و بیداری هسته‌ها به دو شکل ممکن است: خواب‌اندن هستۀ فرعی در حالی که هستۀ اصلی کار می‌کند، یا خواب هم‌زمان دو هسته؛ هدف، کاهش مصرف است و در صورت نیاز به کار، بیداریِ فعال انجام می‌شود.</p>
+<p>رویدادهای بیداری هسته با رجیستر قابل پیکربندی‌اند؛ مطابق شکل ۲-۱. بر اساس منبع بیداری، بیداری به «بیداری محلی هسته» و «بیداری میان‌هسته‌ای» تقسیم می‌شود؛ هر دو به‌طور پیش‌فرض روشن‌اند و بسته به نیاز می‌توان رویداد بیداری را بست. رویدادهای بیداری رایج: وقفۀ معلق (<span class="en">#10</span>)، دریافت هسته (<span class="en">#12</span>) و رویداد سیستم (<span class="en">#13</span>). پس از بیداری هسته می‌توان منبع بیداری را با رجیستر <span class="en">EWUPR</span> دید.</p>
+<div class="fig" id="fig-21">
+  <div class="figbox">
+    <img src="assets/img/an03001-fig_p8_x69.jpeg" alt="شکل ۲-۱" style="max-width:540px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۱</span><span class="cap-text">رجیستر فعال‌سازی رویداد <span class="en">PFIC</span></span></div>
+</div>
+
+<h3 class="h2x" id="sec-212"><span class="dm">◆</span>۲.۲ بیداری محلی هسته</h3>
+<p>در بیداری محلیِ هسته، خواب با <span class="en">WFI</span> یا <span class="en">WFE</span> انتخاب می‌شود و شرط بیداری می‌تواند وقفه یا رویداد باشد؛ اگر وقفه باشد رویداد بیداری متناظر <span class="en">#10</span> و اگر رویداد باشد <span class="en">#13</span> است. توجه شود: در بیداری رویدادی، هستۀ محلی باید شناسۀ هستۀ بیدارکننده را تنظیم کند؛ یعنی رویداد بیداری با هستۀ بیدارشونده یک‌به‌یک متناظر است تا بیداریِ جداگانه محقق شود. کد اصلی:</p>
+<div class="codeblk">__WFE_IDSET(EXTI_Line0);</div>
+
+<h3 class="h2x" id="sec-213"><span class="dm">◆</span>۲.۳ بیداری میان‌هسته‌ای</h3>
+<p>بیداری میان‌هسته‌ای فقط از مسیر <span class="en">WFE</span> وارد خواب می‌شود و شرط بیداری می‌تواند وقفه یا رویداد باشد. توجه شود: اگر بیداری با وقفه باشد، پیش از خوابِ هسته باید بیت ۴ رجیستر <span class="en">SCTLR</span> یک شود تا همهٔ وقفه‌های معلق به‌صورت رویداد سیستم را بیدار کنند؛ رجیستر مطابق شکل ۲-۲ است.</p>
+<div class="fig" id="fig-22">
+  <div class="figbox">
+    <img src="assets/img/an03001-fig_p9_x73.jpeg" alt="شکل ۲-۲" style="max-width:540px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۲</span><span class="cap-text">رجیستر <span class="en">SCTLR</span></span></div>
+</div>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN03001</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/07/15</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">PFIC</span></td><td class="jt">کنترل‌گر وقفۀ سریع برنامه‌پذیر؛ واحد مدیریت وقفه در هستۀ <span class="en">QingKe</span></td></tr>
+      <tr><td><span class="en">وقفهٔ خصوصی / عمومی</span></td><td class="jt">وقفه‌ای با مجوز مستقل هر هسته (مثل <span class="en">HardFault</span>) / وقفه‌ای که هر دو هسته حق پردازش آن را دارند ولی فقط یک هسته در هر لحظه</td></tr>
+      <tr><td><span class="en">IENR / IRER / ISR1</span></td><td class="jt">رجیستر فعال‌سازی وقفه / پاک‌سازی فعال‌سازی / وضعیت فعال‌سازی در <span class="en">PFIC</span></td></tr>
+      <tr><td><span class="en">IPSR / IPRR</span></td><td class="jt">رجیستر در انتظارگذاری وقفه / پاک‌سازی وضعیت در انتظار</td></tr>
+      <tr><td><span class="en">CFGR / GISR</span></td><td class="jt">رجیستر پیکربندی وقفه (ریست سیستم با کلید <span class="en">0xBEEF</span>) / رجیستر وضعیت فراگیرِ خصوصیِ هسته</td></tr>
+      <tr><td><span class="en">VTF</span></td><td class="jt">وقفۀ بدون‌جدول برداری؛ هر هسته می‌تواند ۴ گروه وقفۀ مستقیم با آدرس فراخوان‌برگشتی پیکربندی کند</td></tr>
+      <tr><td><span class="en">THRESHR</span></td><td class="jt">رجیستر آستانۀ اولویت وقفه؛ وقفه‌های زیر آستانه پس از معلق‌شدن، سرویس نمی‌شوند</td></tr>
+      <tr><td><span class="en">IPRIORx</span></td><td class="jt">رجیسترهای اولویت وقفه (<span class="en">x=0~63</span>)؛ بیت‌های پیش‌رانش و پاسخ بسته به <span class="en">INTSYSCR</span></td></tr>
+      <tr><td><span class="en">INTSYSCR (0x804)</span></td><td class="jt">رجیستر کنترل سیستم وقفه؛ پیکربندی تعداد بیت‌های پیش‌رانش، خاموشی/روشن‌بودن تودرتویی و آستانۀ وقفه</td></tr>
+      <tr><td><span class="en">IALLOCR / IAUTR</span></td><td class="jt">رجیستر تخصیص مجوز وقفه میان دو هسته / رجیستر پرس‌وجوی حکم (تعیین اینکه کدام هسته پاسخ‌گو است)</td></tr>
+      <tr><td><span class="en">EWUPR</span></td><td class="jt">رجیستر وضعیت بیداری؛ پس از بیداری هسته، منبع بیداری را نشان می‌دهد</td></tr>
+      <tr><td><span class="en">WFI / WFE</span></td><td class="jt">خواب با انتظار وقفه / خواب با انتظار رویداد؛ دو شیوۀ ورود هسته به خواب</td></tr>
+      <tr><td><span class="en">SCTLR</span></td><td class="jt">رجیستر کنترل سیستم؛ بیت ۴ آن در بیداری میان‌هسته‌ای، همهٔ وقفه‌های معلق را به‌صورت رویداد تفسیر می‌کند</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN03001 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۱۹</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN03001</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
