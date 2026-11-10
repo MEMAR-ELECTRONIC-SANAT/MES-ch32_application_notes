@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>راهنمای جامع دستورهای اختصاصی هسته: XW، MCPY و DLY — ترجمۀ فارسی AN03003</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">راهنمای جامع</div>
+    <div class="t2">دستورهای اختصاصی هسته:</div>
+    <div class="t3"><span class="en">XW</span>، <span class="en">MCPY</span> و <span class="en">DLY</span></div>
+  </div>
+  <div class="c-sub">از انگیزۀ طراحی، تعریف کارکرد و تعریف فیلد بیت‌ها، تا سنجش کمّی بهرۀ کارایی در الگوریتم‌های خاص و هزینه‌های سخت‌افزاری دستورهای توسعه‌یافتۀ هسته‌های <span class="en">RISC-V</span></div>
+  <div class="c-desc">در این جزوه، ترجمۀ فارسی سند رسمی <span class="en">AN03003</span> (نسخۀ ۱٫۰، منتشرۀ شرکت <span class="en">WCH</span>) را می‌خوانید: دستورهای اختصاصی هسته در تراشه‌های خودساختۀ شرکت بر پایۀ معماری <span class="en">RISC-V</span>. ان توسعۀ فشردهٔ دستورهای بایت و نیم‌کلمه (<span class="en">XW</span>)، دستور سخت‌افزاری کپی حافظه (<span class="en">MCPY</span>) با جایگزینی <span class="en">memcpy</span> و پایش آزمون عملکرد، و دستور تأخیر دقیق (<span class="en">DLY</span>) با کنترل خط لوله و رجیسترهای <span class="en">CSR</span> همراه تعریف فیلد بیت‌ها، نحوۀ مونتاژ و نکات استفاده بررسی می‌شود.</div>
+  <div class="c-tags">
+    <span class="c-tag">توسعۀ دستورهای فشردهٔ <span class="en">XW</span></span>
+    <span class="c-tag">کپی سخت‌افزاری <span class="en">MCPY</span></span>
+    <span class="c-tag">تأخیر دقیق <span class="en">DLY</span></span>
+    <span class="c-tag">تعریف فیلد بیت‌ها</span>
+    <span class="c-tag">رجیسترهای <span class="en">CSR</span></span>
+    <span class="c-tag">کنترل خط لوله</span>
+    <span class="c-tag">ابزار زنجیرۀ <span class="en">WCH</span></span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN03003 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | دستورهای فشردهٔ توسعه‌یافته XW</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | انتقال سخت‌افزاری MCPY</span><span class="t-dots"></span><span class="t-page">۵</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-211"><span class="s-id">2.1</span><span>معرفی</span><span class="s-dots"></span><span class="s-page">۵</span></a>
+    <a class="toc-sub" href="#sec-212"><span class="s-id">2.2</span><span>آزمون عملکرد</span><span class="s-dots"></span><span class="s-page">۶</span></a>
+    <a class="toc-sub" href="#sec-213"><span class="s-id">2.3</span><span>استفاده و نکات</span><span class="s-dots"></span><span class="s-page">۷</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b3"><span class="t-num">۴</span><span class="t-title">بخش ۳ | تأخیر دقیق DLY</span><span class="t-dots"></span><span class="t-page">۸</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-311"><span class="s-id">3.1</span><span>معرفی</span><span class="s-dots"></span><span class="s-page">۸</span></a>
+    <a class="toc-sub" href="#sec-312"><span class="s-id">3.2</span><span>ویژگی‌ها</span><span class="s-dots"></span><span class="s-page">۹</span></a>
+    <a class="toc-sub" href="#sec-313"><span class="s-id">3.3</span><span>استفاده</span><span class="s-dots"></span><span class="s-page">۱۰</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۵</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۱۲</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۶</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۱۲</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">جدول ۱-۱</span><span>مرور دستورهای فشردهٔ توسعۀ <span class="en">XW</span></span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">جدول ۲-۱</span><span>تعریف فیلد بیت‌های دستور <span class="en">MCPY</span></span><span class="f-dots"></span><span class="f-page">۵</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۱</span><span>مقایسه با انتقال سنتی <span class="en">memcpy</span></span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">جدول ۳-۱</span><span>تعریف فیلد بیت‌های دستور تأخیر دقیق <span class="en">DLY</span></span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">جدول ۳-۲</span><span>رجیسترهای <span class="en">CSR</span> همراهِ <span class="en">DLY</span></span><span class="f-dots"></span><span class="f-page">۹</span></div>
+        <div class="frow"><span class="f-id">جدول ۳-۳</span><span>رابط‌های قابل فراخوانی در کتابخانهٔ رسمی فعلی</span><span class="f-dots"></span><span class="f-page">۱۰</span></div>
+        <div class="frow"><span class="f-id">کد ۱</span><span>کد آزمون سنجش عملکرد با <span class="en">ucycle</span></span><span class="f-dots"></span><span class="f-page">۶</span></div>
+        <div class="frow"><span class="f-id">کد ۲</span><span>نمونۀ ساده استفاده از <span class="en">DLY</span></span><span class="f-dots"></span><span class="f-page">۱۱</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> این سند به بیان منظّم مجموعه دستورهای ویژهٔ هسته‌ای می‌پردازد که شرکت در تراشه‌های خودساختۀ مبتنی بر معماری <span class="en">RISC-V</span> تعبیه کرده است: انگیزۀ طراحی ریزمعماری، تعریف کارکرد و تحلیل کمّی بهرۀ کارایی در سناریوهای الگوریتمی خاص و هزینه‌های سخت‌افزاری، برای ارزش‌گذاری کامل از ارزش هسته‌ای این دستورها در بهبود نسبت کارایی به توان پردازنده.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>این سند به بیان منظّم مجموعه‌ای از دستورهای ویژهٔ هسته می‌پردازد که شرکت در تراشه‌های خودساختۀ مبتنی بر معماری <span class="en">RISC-V</span> تعبیه کرده است. محتوا انگیزۀ طراحی ریزمعماری و تعریف کارکرد این دستورها را در بر می‌گیرد و بهرهٔ کارایی در سناریوهای الگوریتمی خاص و هزینه‌های سخت‌افزاری را به‌صورت کمّی تحلیل می‌کند تا ارزش هسته‌ای آنها در ارتقای نسبت کارایی به توانِ پردازنده به‌طور کامل ارزیابی شود.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>میکروکنترلرهای همگانی‌منظوره</td><td><span class="en">CH32</span></td></tr>
+  </table>
+</div>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">دستورهای فشردهٔ توسعه‌یافته (XW)</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-111"><span class="dm">◆</span>۱.۱ تعریف فیلد بیت‌ها</h3>
+<p>توسعۀ دستورهای فشردهٔ استاندارد <span class="en">RISC-V</span> (توسعۀ <span class="en">C</span>) عمدتاً عملیات بارگذاری و ذخیرهٔ کلمه و کلمۀ مضاعف (<span class="en">RV64C</span>) را فشرده کرده است؛ اما در توسعهٔ واقعیِ نهفته، عملیات بایت (<span class="en">Byte</span>) و نیم‌کلمه (<span class="en">Half-Word</span>) نیز بسیار پرتکرارند. توسعۀ <span class="en">XW</span> دقیقاً برای پرکردن همین خلأ پدید آمده است: ۸ دستور فشردهٔ ۱۶ بیتی جدید که ویژهٔ بهینه‌سازی عملیات بایت و نیم‌کلمه‌اند و حجم نهایی فایل دودویی را به‌طور مؤثر کم می‌کنند؛ برای <span class="en">MCU</span>هایی که فلش و <span class="en">SRAM</span> آنها معمولاً بزرگ نیست، این موضوع معنای ویژه‌ای دارد.</p>
+<div class="tblwrap" id="tab-11">
+  <div class="tblcap"><span class="cap-pill">جدول ۱-۱</span><span class="cap-text">مرور دستورهای فشردهٔ توسعۀ <span class="en">XW</span> (چیدمان بیت‌های ۱۵ تا ۰)</span></div>
+  <table class="tbl" style="font-size:11px;">
+    <thead><tr><th style="width:26%;">استاندارد <span class="en">RISC-V</span></th><th style="width:14%;"><span class="en">XW</span></th><th class="en-cell">بیت‌های <span class="en">[15:0]</span></th></tr></thead>
+    <tr><td class="en-cell"><span class="en">c.fld / c.lq</span></td><td><span class="en">c.lbu</span></td><td class="en-cell"><span class="en">001 uimm[0|4:3] rs1' uimm[2:1] rd' 00</span></td></tr>
+    <tr><td class="en-cell"><span class="en">c.fldsp / c.lqsp</span></td><td><span class="en">c.lhu</span></td><td class="en-cell"><span class="en">001 uimm[5|4:3] rs1' uimm[2:1] rd' 10</span></td></tr>
+    <tr><td class="en-cell"><span class="en">c.fsd / c.sq</span></td><td><span class="en">c.sb</span></td><td class="en-cell"><span class="en">101 uimm[0|4:3] rs1' uimm[2:1] rs2' 00</span></td></tr>
+    <tr><td class="en-cell"><span class="en">c.fsdsp / c.sqsp</span></td><td><span class="en">c.sh</span></td><td class="en-cell"><span class="en">101 uimm[5|4:3] rs1' uimm[2:1] rs2' 10</span></td></tr>
+    <tr><td class="en-cell"><span class="en">c.lw</span></td><td><span class="en">c.lw</span></td><td class="en-cell"><span class="en">010 uimm[5:3] rs1' uimm[2|6] rd' 00</span></td></tr>
+    <tr><td class="en-cell"><span class="en">c.sw</span></td><td><span class="en">c.sw</span></td><td class="en-cell"><span class="en">110 uimm[5:3] rs1' uimm[2|6] rs2' 00</span></td></tr>
+    <tr><td class="en-cell"><span class="en">Reserved</span></td><td><span class="en">c.lbusp</span></td><td class="en-cell"><span class="en">100 00 uimm[3:0] 00 rd' 00</span></td></tr>
+    <tr><td class="en-cell"><span class="en">Reserved</span></td><td><span class="en">c.lhusp</span></td><td class="en-cell"><span class="en">100 00 uimm[3:1|4] 01 rd' 00</span></td></tr>
+    <tr><td class="en-cell"><span class="en">Reserved</span></td><td><span class="en">c.sbsp</span></td><td class="en-cell"><span class="en">100 00 uimm[3:0] 10 rs2' 00</span></td></tr>
+    <tr><td class="en-cell"><span class="en">Reserved</span></td><td><span class="en">c.shsp</span></td><td class="en-cell"><span class="en">100 00 uimm[3:1|4] 11 rs2' 00</span></td></tr>
+    <tr><td class="en-cell"><span class="en">c.lwsp</span></td><td><span class="en">c.lwsp</span></td><td class="en-cell"><span class="en">010 uimm[5] rd != 0 uimm[4:2|7:6] 10</span></td></tr>
+    <tr><td class="en-cell"><span class="en">c.swsp</span></td><td><span class="en">c.swsp</span></td><td class="en-cell"><span class="en">110 uimm[5:2|7:6] rs2 10</span></td></tr>
+  </table>
+</div>
+<p>هسته‌های این سری، ۸ دستور فشردهٔ خواندن/نوشتن سفارشی را پیاده‌سازی کرده‌اند؛ کارکردشان با مراجعه به جفت‌دستورهای <span class="en">c.lw/c.sw/c.lwsp/c.swsp</span>، عملیات دادهٔ نیم‌کلمه و بایت را تکمیل می‌کند. دستورهای <span class="en">c.lbu/c.lhu/c.sb/c.sh</span> فضای کدگذاری دستورهای فشردهٔ ممیز شناور دودویی را اشغال کرده‌اند و وضعیت تعارض مطابق جدول بالا است.</p>
+<div class="note"><span class="lbl">شرایط استفاده از دستورهای فشردهٔ توسعۀ XW:</span> توسعۀ <span class="en">XW</span> مجموعه دستوری سفارشیِ <span class="en">WCH</span> بر پایۀ معماری استاندارد <span class="en">RISC-V</span> است و دستورهای فشردهٔ آن فقط در محیط زنجیرۀ ابزار مشخصی کامپایل و اجرا می‌شوند. الزامات: <b>۱) الزام زنجیرۀ ابزار</b> — باید از زنجیرۀ ابزار رسمی <span class="en">RISC-V</span> شرکت <span class="en">WCH</span> استفاده شود؛ زنجیرۀ ابزار متنباز استاندارد <span class="en">RISC-V</span> (مثل نسخۀ رسمی <span class="en">GNU</span>) به‌طور پیش‌فرض پشتیبانی توسعۀ <span class="en">XW</span> را ندارد و دستورهای مرتبط را تشخیص نمی‌دهد یا تولید نمی‌کند. <b>۲) الزام پارامتر کامپایل</b> — هنگام کامپایل باید در پارامتر <span class="en">-march</span> شناسۀ توسعۀ <span class="en">xw</span> صراحتاً اضافه شود تا کامپایلر مطلع شود پشتیبانی توسعۀ <span class="en">XW</span> را فعال کند.</div>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">انتقال سخت‌افزاری MCPY</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-211"><span class="dm">◆</span>۲.۱ معرفی</h3>
+<p>این دستور کپی پیوستۀ بایت‌های حافظه از آدرس مبدأ به آدرس مقصد را سخت‌افزاری انجام می‌دهد: <span class="en">rs1</span> آدرس پایان کپی (خود آن آدرس شامل نمی‌شود)، <span class="en">rs2</span> آدرس آغاز کپی و <span class="en">rd</span> آدرس آغاز مقصد است. در طول اجرای دستور، سخت‌افزار به‌طور خودکار از آدرس آغاز مبدأ بایت‌به‌بایت می‌خواند و در آدرس آغاز مقصد می‌نویسد، تا وقتی آدرس مبدأ به آدرس پایان برسد. این دستور جانشین تابع <span class="en">memcpy</span> است و انتقال پیوستۀ حافظه را انجام می‌دهد؛ رجیسترهای دستور اطلاعات آدرسِ آغاز، مقصد و پایان را نگه می‌دارند و هیچ‌یک از آدرس‌ها الزام هم‌ترازی ندارند.</p>
+<h4 class="h3x" id="sec-2111"><span class="dm">◆</span>۲.۱.۱ اطلاعات دستور</h4>
+<p>تعریف فیلد بیت‌ها (<span class="en">Format</span>):</p>
+<div class="tblwrap" id="tab-21">
+  <div class="tblcap"><span class="cap-pill">جدول ۲-۱</span><span class="cap-text">تعریف فیلد بیت‌های دستور <span class="en">MCPY</span></span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:16%;">نام</th><th style="width:16%;">بیت</th><th>کارکرد</th></tr></thead>
+    <tr><td class="en-cell"><span class="en">rs3</span></td><td class="en-cell"><span class="en">31:27</span></td><td class="jt">کد رجیستر آدرس پایان</td></tr>
+    <tr><td class="en-cell"><span class="en">RSV</span></td><td class="en-cell"><span class="en">26:25</span></td><td class="jt">مقدار ثابت <span class="en">00</span></td></tr>
+    <tr><td class="en-cell"><span class="en">rs2</span></td><td class="en-cell"><span class="en">24:20</span></td><td class="jt">کد رجیستر آدرس آغاز</td></tr>
+    <tr><td class="en-cell"><span class="en">rs1</span></td><td class="en-cell"><span class="en">19:15</span></td><td class="jt">کد رجیستر آدرس مقصد</td></tr>
+    <tr><td class="en-cell"><span class="en">fun3</span></td><td class="en-cell"><span class="en">14:12</span></td><td class="jt">مقدار ثابت <span class="en">111</span></td></tr>
+    <tr><td class="en-cell"><span class="en">fun5</span></td><td class="en-cell"><span class="en">11:7</span></td><td class="jt">مقدار ثابت <span class="en">00000</span></td></tr>
+    <tr><td class="en-cell"><span class="en">fun7</span></td><td class="en-cell"><span class="en">6:0</span></td><td class="jt">مقدار ثابت <span class="en">0001111</span></td></tr>
+  </table>
+</div>
+<p>نحوۀ مونتاژ (<span class="en">Syntax</span>):</p>
+<div class="codeblk">mcpy rs1, rs2, rs3</div>
+<p>منطق اجرا (<span class="en">Pseudocode</span>):</p>
+<div class="codeblk">while (rs2 &lt; rs1) {
+mem[rs3] = mem[rs2];
+rs2 = rs2 + 1;
+rs3 = rs3 + 1;
+}</div>
+<p><b>پاسخ وقفه:</b> این دستور قابل وقفه است. در طول اجرای <span class="en">mcpy</span> اگر درخواست وقفۀ معتبر شناسایی شود، سخت‌افزار پس از اتمام انتقال بایت جاری (یا در مرز دور دستور بعدی) اجرا را موقتاً متوقف می‌کند. پس از بازگشت وقفه، دستور ادامه می‌یابد و روند کپی با حالتِ بدون وقفه، نتیجۀ نهایی یکسان دارد. این سازوکار توان پاسخ‌گویی لحظه‌ای سیستم را در سناریوهای انتقال بلوک دادهٔ بزرگ تضمین می‌کند.</p>
+
+<h3 class="h2x" id="sec-212"><span class="dm">◆</span>۲.۲ آزمون عملکرد</h3>
+<p><b>روش ارزیابی عملکرد:</b> برای کمّی‌کردن کارایی اجرای شیوه‌های مختلف انتقال داده در حالت غیرممتاز، این آزمون از رجیستر <span class="en">ucycle</span> هستۀ <span class="en">RISC-V</span> (آدرس <span class="en">0xC00</span>) برای شمارش دقیق دورها استفاده می‌کند. سطح بهینه‌سازی <span class="en">-OFast</span> است تا بیشترین کارایی کتابخانه حاصل شود.</p>
+<p>روند آزمون به این شکل است:</p>
+<div class="steps">
+  <li data-n="۱">با دستور مونتاژ درون‌خطی <span class="en">csrr</span> تعداد دور ماشین جاری خوانده و به‌عنوان نشانِ زمان آغاز (<span class="en">starttime</span>) ثبت می‌شود.</li>
+  <li data-n="۲">تابع انتقال دادهٔ تحت آزمون <span class="en">CopyMethod(Adapter, mydata, range)</span> فراخوانی می‌شود.</li>
+  <li data-n="۳">پس از پایان انتقال، رجیستر <span class="en">ucycle</span> دوباره خوانده می‌شود و نشانِ زمان پایان (<span class="en">stoptime</span>) به دست می‌آید.</li>
+</div>
+<p>کد آزمون به این شکل است:</p>
+<div class="fig" id="code-1">
+  <div class="codeblk">__asm volatile("csrr %0,"
+"0xC00"
+: "=r"(starttime)
+:);
+CopyMethod(Adapter, mydata, range);
+__asm volatile("csrr %0,"
+"0xC00"
+: "=r"(stoptime)
+:);</div>
+  <div class="figcap"><span class="cap-pill">کد ۱</span><span class="cap-text">شمارش دورهای مصرفی با رجیستر <span class="en">ucycle</span></span></div>
+</div>
+<p>در این آزمون در بازۀ <span class="en">range = 1~2048</span> بایت، مصرف دور ساعت دو شیوۀ انتقال داده نقطه‌به‌نقطه آماری شده و بر این اساس منحنی عملکرد رسم شده است (شکل زیر). نتایج آزمایش نشان می‌دهد در کل بازۀ آزمون، هزینهٔ دور ساعتِ هر دو شیوۀ انتقال با حجم دادهٔ منتقل‌شده رابطۀ خطی تقریباً مثبت دارد.</p>
+<div class="fig" id="fig-21">
+  <div class="figbox">
+    <img src="assets/img/an03003-fig21.png" alt="شکل ۲-۱" style="max-width:620px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۱</span><span class="cap-text">مقایسه با انتقال سنتی <span class="en">memcpy</span></span></div>
+</div>
+<p>با برازش خطی روی داده‌های اندازه‌گیری‌شده، عبارت‌های برازش دو روش عبارت‌اند از: <span class="en">y = 1.3716x &minus; 23.547</span> (برای <span class="en">memcpy</span>) و <span class="en">y = 0.75x + 5.6341</span> (برای <span class="en">MCPY</span>). از نتیجۀ برازش و مقایسۀ شیب منحنی‌ها روشن است که روش <span class="en">MCPY</span> در کارایی انتقال تک‌بایت به‌طور چشمگیر بر روش متعارف <span class="en">memcpy</span> برتری دارد؛ به‌ویژه وقتی حجم دادهٔ منتقل‌شده بزرگ‌تر می‌شود، صرفه‌جویی تجمعی دورهای <span class="en">MCPY</span> چشمگیرتر است و زمان اشغال <span class="en">CPU</span> در وظایف انتقال داده را به‌طور مؤثر کم می‌کند و توان عملیاتی کل سیستم را بالا می‌برد.</p>
+
+<h3 class="h2x" id="sec-213"><span class="dm">◆</span>۲.۳ استفاده و نکات</h3>
+<p><b>شیوۀ فراخوانی:</b> نحوۀ مونتاژ دستور <span class="en">MCPY</span> را بخش ۱ همین فصل شرح داده است. در محیط کتابخانهٔ رسمی توسعهٔ نرم‌افزار (<span class="en">SDK</span>) کاربر می‌تواند مستقیماً رابط کپسول‌شدهٔ <span class="en">ASM_MCPY()</span> را برای استفاده از این دستور فراخوانی کند.</p>
+<p><b>نکات:</b></p>
+<div class="steps">
+  <li data-n="۱"><b>محدودیت هم‌ترازی و هم‌پوشانی آدرس‌ها:</b> دستور <span class="en">MCPY</span> انتقال داده را به‌صورت ترتیبی از آدرس پایین به آدرس بالا انجام می‌دهد. استفاده از این دستور وقتی انتهای ناحیۀ دادهٔ مبدأ و آغاز ناحیۀ دادهٔ مقصد هم‌پوشانی دارند به‌سختی ممنوع است؛ در چنین هم‌پوشانی، دادهٔ مبدأ پیش از خوانده‌شدن، توسط عمل نوشتن مقصد بازنویسی می‌شود و نتیجۀ انتقال به خطا می‌رود.</li>
+  <li data-n="۲"><b>رفتار پاسخ وقفه:</b> در طول اجرای دستور <span class="en">MCPY</span> پاسخ به وقفه مجاز است. پس از پایان اجرای تابع سرویس وقفه، دستور به‌طور خودکار ادامه می‌یابد و نیازی به اقدام اضافی نرم‌افزار نیست. درخواست دیباگ (شامل تک‌قدمی) پس از اتمام کامل اجرای دستور جاری <span class="en">MCPY</span> پاسخ می‌گیرد و روند انتقال را قطع نمی‌کند.</li>
+  <li data-n="۳"><b>مدیریت استثنا:</b> اگر آدرس مبدأ یا مقصد دستور <span class="en">MCPY</span> سازوکارهای حفاظتی زیر را فعال کند، استثنای غیرقابل بازیابی رخ می‌دهد و سیستم باید ریست سطح بالا یا مدیریت خطا انجام دهد: محدودیت مجوز دسترسی حفاظت حافظۀ فیزیکی (<span class="en">PMP</span>)؛ برخورد با نقطۀ شکست سخت‌افزاری (<span class="en">Hardware Breakpoint</span>).</li>
+  <li data-n="۴"><b>اثر جانبی رجیسترها:</b> در طول اجرای دستور <span class="en">MCPY</span>، رجیستر آدرس مبدأ (<span class="en">rs2</span>) و رجیستر آدرس مقصد (<span class="en">rs3</span>) همراه با پیشرفت انتقال به‌طور افزایشی به‌روز می‌شوند. پس از پایان دستور، مقدار نهایی <span class="en">rs2</span> و <span class="en">rs3</span> به موقعیت آدرس در لحظۀ پایانِ انتقال وابسته و غیرقابل پیش‌بینی است؛ کاربر نباید در برنامه‌نویسی به مقدارهای بعدی آنها تکیه کند.</li>
+</div>
+
+<!-- ================= بخش ۳ ================= -->
+<div class="chapter-header" id="sec-b3">
+  <span class="sec-pill">بخش ۳</span>
+  <div class="sec-title">تأخیر دقیق DLY</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-311"><span class="dm">◆</span>۳.۱ معرفی</h3>
+<p>دستور تأخیر سفارشی، یک دستور تأخیر با دقت بالا است که بهای آن فقط هزینهٔ یک دستور است. این دستور کنترل تأخیر را تا سطح تک‌دور ساعت دقیق می‌کند و به‌طور مؤثر از مشکلات عدم‌قطعیت زمان‌بندیِ روش‌های سنتی تأخیر (تایمر یا حلقهٔ نرم‌افزاری) ناشی از پرش دستور، خالی‌شدن خط لوله و شکست پیش‌بینی انشعاب جلوگیری می‌کند.</p>
+<h4 class="h3x" id="sec-3111"><span class="dm">◆</span>۳.۱.۱ اطلاعات دستور</h4>
+<div class="tblwrap" id="tab-31">
+  <div class="tblcap"><span class="cap-pill">جدول ۳-۱</span><span class="cap-text">تعریف فیلد بیت‌های دستور تأخیر دقیق <span class="en">DLY</span></span></div>
+  <table class="tbl" style="font-size:11.5px;">
+    <thead><tr><th style="width:16%;">نام</th><th style="width:14%;">بیت</th><th>کارکرد</th></tr></thead>
+    <tr><td class="en-cell"><span class="en">imm</span></td><td class="en-cell"><span class="en">31:20</span></td><td class="jt">عدد تأخیر؛ بسته به پیکربندی، تعداد دورهای ساعت تأخیر یا تعداد دورهای پس از تقسیم فرکانس را نشان می‌دهد.</td></tr>
+    <tr><td class="en-cell"><span class="en">rs1</span></td><td class="en-cell"><span class="en">19:15</span></td><td class="jt">کد رجیسترِ <span class="en">rs1</span> متناظر برای تطبیق.</td></tr>
+    <tr><td class="en-cell"><span class="en">func3</span></td><td class="en-cell"><span class="en">14:12</span></td><td class="jt"><span class="en">001b</span>.</td></tr>
+    <tr><td class="en-cell"><span class="en">match</span></td><td class="en-cell"><span class="en">11:9</span></td><td class="jt">نوع دستورِ تطبیق‌شده؛ تا پایان تأخیر، نوع دستورِ تطبیق‌شده اجرا نمی‌شود: <span class="en">000</span>: محفوظ؛ <span class="en">001</span>: تطبیق دستور <span class="en">load</span>؛ <span class="en">010</span>: تطبیق دستور <span class="en">store</span>؛ <span class="en">011</span>: تطبیق دستور <span class="en">load/store</span>؛ <span class="en">100</span>: تطبیق دستور <span class="en">delay</span>؛ <span class="en">101</span>: محفوظ؛ <span class="en">110</span>: تطبیق همهٔ دستورها (تعلیق خط لوله)؛ <span class="en">111</span>: تطبیق دستور با <span class="en">func3</span> و <span class="en">opcode</span> مشخص (مقدار تطبیق با رجیستر <span class="en">csr</span> پیکربندی می‌شود).</td></tr>
+    <tr><td class="en-cell"><span class="en">div</span></td><td class="en-cell"><span class="en">8</span></td><td class="jt">شمارش با ساعت اصلی یا ساعت تقسیم‌شده. <span class="en">1</span>: شمارش با دور پس از تقسیم (ضریب تقسیم با رجیستر <span class="en">csr</span> پیکربندی می‌شود)؛ <span class="en">0</span>: شمارش با دورِ ساعت اصلی.</td></tr>
+    <tr><td class="en-cell"><span class="en">sel</span></td><td class="en-cell"><span class="en">7</span></td><td class="jt">انتخاب مقدار تأخیر: <span class="en">1</span>: <span class="en">rs1 + rs2</span>؛ <span class="en">0</span>: <span class="en">rs1 + imm</span>.</td></tr>
+    <tr><td class="en-cell"><span class="en">fun7</span></td><td class="en-cell"><span class="en">6:0</span></td><td class="jt"><span class="en">0001011b</span></td></tr>
+  </table>
+</div>
+<h4 class="h3x" id="sec-3112"><span class="dm">◆</span>۳.۱.۲ رجیسترهای CSR مرتبط</h4>
+<p>این رجیستر <span class="en">CSR</span> ویژۀ دستور تأخیر سفارشی <span class="en">DLY</span> طراحی شده و هستۀ کنترل و وضعیتِ کارکرد تأخیر است. کارکردهای اصلی:</p>
+<div class="bl"><b>خواندن:</b> وضعیت جاری شمارندهٔ تأخیر (مانند مقدار شمارش و فلگ سرریز) را می‌خواند تا نرم‌افزار پیشرفت تأخیر را پرس‌وجو کند یا اتمام تأخیر را تشخیص دهد.</div>
+<div class="bl"><b>نوشتن:</b> پارامترهای تأخیر (مثل تعداد دورهای تأخیر و ضریب تقسیم ساعت) را پیکربندی می‌کند و پیکربندی لازم برای اجرای دستور <span class="en">DLY</span> را فراهم می‌سازد.</div>
+<p>رجیستر کنترل دستور تأخیر (<span class="en">U_NONS_DLY_0</span>: <span class="en">0x8C0</span>):</p>
+<div class="tblwrap" id="tab-32">
+  <div class="tblcap"><span class="cap-pill">جدول ۳-۲</span><span class="cap-text">رجیسترهای <span class="en">CSR</span> همراهِ <span class="en">DLY</span></span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:22%;">نام</th><th style="width:14%;">بیت</th><th>کارکرد</th></tr></thead>
+    <tr><td class="en-cell"><span class="en">dly_mask</span></td><td class="en-cell"><span class="en">31:24</span></td><td class="jt">ماسک پارامتر دستورِ تطبیق‌شده وقتی <span class="en">match=111</span> دستور <span class="en">dly</span> است.</td></tr>
+    <tr><td class="en-cell"><span class="en">dly_data</span></td><td class="en-cell"><span class="en">23:16</span></td><td class="jt">مقدار <span class="en">{func، opcode}</span> تطبیق‌شده وقتی <span class="en">match=111</span> دستور <span class="en">dly</span> است.</td></tr>
+    <tr><td class="en-cell"><span class="en">CPU_dly_busy_sta</span></td><td class="en-cell"><span class="en">15</span></td><td class="jt">فلگ مشغول‌بودن هسته در وضعیت تأخیر.</td></tr>
+    <tr><td class="en-cell"><span class="en">dly_tout</span></td><td class="en-cell"><span class="en">14</span></td><td class="jt">اطلاعات اتمام‌وقت: در بازۀ تأخیر هیچ درخواست دستورِ تطبیقی دریافت نشده است.</td></tr>
+    <tr><td class="en-cell"><span class="en">dly_ie</span></td><td class="en-cell"><span class="en">13</span></td><td class="jt">درخواست وقفۀ تأخیر؛ پس از فعال‌سازی، اگر وضعیت اتمام‌وقت رخ دهد یک درخواست وقفۀ نرم‌افزاری تولید می‌شود.</td></tr>
+    <tr><td class="en-cell"><span class="en">dly_priv</span></td><td class="en-cell"><span class="en">12</span></td><td class="jt"><span class="en">1</span>: هم حالت ماشین و هم حالت کاربر مجاز به تطبیق‌اند؛ <span class="en">0</span>: عملیات <span class="en">delay</span> اجراشده در حالت کاربر، دستورهای حالت ماشین را تطبیق نمی‌دهد.</td></tr>
+    <tr><td class="en-cell"><span class="en">Reserved</span></td><td class="en-cell"><span class="en">11:10</span></td><td class="jt">محفوظ.</td></tr>
+    <tr><td class="en-cell"><span class="en">dly_freq</span></td><td class="en-cell"><span class="en">9:0</span></td><td class="jt">پیکربندی ضریب تقسیم فرکانس شمارش تأخیر؛ اگر با فرکانس ساعت اصلی پیکربندی شود، تأخیر با واحد میکروثانیه تحقق می‌یابد.</td></tr>
+  </table>
+</div>
+
+<h3 class="h2x" id="sec-312"><span class="dm">◆</span>۳.۲ ویژگی‌ها</h3>
+<h4 class="h3x" id="sec-3121"><span class="dm">◆</span>۳.۲.۱ پیکربندی منبع تأخیر</h4>
+<div class="bl"><b>انتخاب میان دو منبع ساعت:</b> با بیت <span class="en">div</span> شمارش با ساعت اصلی یا ساعت تقسیم‌شده انتخاب می‌شود.</div>
+<div class="bl"><b>محاسبۀ پویای تأخیر:</b> با بیت <span class="en">sel</span> انتخاب می‌شود که مقدار تأخیر <span class="en">rs1 + imm</span> (عدد ثابت) باشد یا <span class="en">rs1 + rs2</span> (مقدار رجیستر)؛ در نتیجه طول تأخیر در زمان اجرا به‌صورت پویا قابل تنظیم است.</div>
+<div class="bl"><b>پیکربندی تقسیم فرکانس:</b> با فیلد <span class="en">dly_freq</span> در رجیستر <span class="en">U_NONS_DLY_0</span> ضریب تقسیم پیکربندی می‌شود؛ حتی می‌توان تأخیر را با واحد میکروثانیه (و ریزتر از آن) تنظیم کرد.</div>
+<h4 class="h3x" id="sec-3122"><span class="dm">◆</span>۳.۲.۲ کنترل خط لوله</h4>
+<p>با فیلد <span class="en">match</span> این دستور تعیین می‌کند در طول تأخیر «چه چیزی» مسدود شود:</p>
+<div class="bl"><b>مسدودسازی دقیق:</b> می‌توان فقط دستورهای <span class="en">Load</span>، <span class="en">Store</span> یا <span class="en">Load/Store</span> را مسدود کرد.</div>
+<div class="bl"><b>حالت مسدودسازی کامل:</b> با <span class="en">match=110</span> همهٔ دستورها مسدود می‌شوند که معادل تعلیق کامل خط لوله است.</div>
+<div class="bl"><b>مسدودسازی هوشمند:</b> با <span class="en">match=111</span> و پیکربندی رجیستر <span class="en">CSR</span>، دستور با <span class="en">func3</span> و <span class="en">opcode</span> مشخص تطبیق می‌یابد و دستورهای کارکردی خاص رهگیری می‌شوند.</div>
+<h4 class="h3x" id="sec-3123"><span class="dm">◆</span>۳.۲.۳ سازوکار بازخورد</h4>
+<p>رجیستر <span class="en">U_NONS_DLY_0</span> پایش وضعیت را فراهم می‌کند:</p>
+<div class="bl"><b>فلگ وضعیت:</b> <span class="en">CPU_dly_busy_sta</span> نشان می‌دهد هسته در وضعیت تأخیر است یا نه.</div>
+<div class="bl"><b>تشخیص اتمام‌وقت:</b> <span class="en">dly_tout</span> ثبت می‌کند که آیا در طول تأخیر درخواست دستورِ غیرمنتظره‌ای رخ داده است (یعنی دستوری که نبودنش درست بود، رخ داده است).</div>
+<div class="bl"><b>سازوکار وقفه:</b> پس از فعال‌شدن <span class="en">dly_ie</span>، در صورت وقوع اتمام‌وقت می‌توان وقفۀ نرم‌افزاری را برای دیباگ یا مدیریت استثنا فعال کرد.</div>
+
+<h3 class="h2x" id="sec-313"><span class="dm">◆</span>۳.۳ استفاده</h3>
+<p>نسخۀ جاری زنجیرۀ ابزار هنوز پشتیبانی مونتاژگر دستور تأخیر سفارشی <span class="en">DLY</span> را در خود ندارد. برای آنکه کاربر بتواند در محیط توسعهٔ موجود از کارکرد این دستور استفاده کند، کتابخانهٔ رسمی نرم‌افزار (<span class="en">SDK</span>) مجموعه‌ای از توابع درون‌خطی (<span class="en">Intrinsic</span>) به‌عنوان رابط جایگزین ارائه می‌کند:</p>
+<div class="tblwrap" id="tab-33">
+  <div class="tblcap"><span class="cap-pill">جدول ۳-۳</span><span class="cap-text">رابط‌های قابل فراخوانی در کتابخانهٔ رسمی فعلی</span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:42%;">رابط تابع</th><th>شرح کارکرد</th></tr></thead>
+    <tr><td class="en-cell"><span class="en">DelayIntrinsic()</span></td><td class="jt">ورودی اصلی کارکرد تأخیر؛ اجرای تأخیر دقیق با تعداد دور مشخص</td></tr>
+    <tr><td class="en-cell"><span class="en">__set_DLY(value)</span></td><td class="jt">پیکربندی رجیستر تعداد دورهای تأخیر (نوشتن مقدار شمارش تأخیر)</td></tr>
+    <tr><td class="en-cell"><span class="en">__get_DLY()</span></td><td class="jt">خواندن مقدار جاری شمارندهٔ تأخیر</td></tr>
+    <tr><td class="en-cell"><span class="en">__clear_DLY_OV()</span></td><td class="jt">پاک‌کردن فلگ وضعیت سرریز تأخیر (<span class="en">Overflow</span>)</td></tr>
+  </table>
+</div>
+<p>نمونۀ ساده:</p>
+<div class="fig" id="code-2">
+  <div class="codeblk">__asm("nop");
+
+__set_DLY(0, 0, ENABLE, ENABLE, 10);
+
+DelayIntrisic(DLY_SRC_HCLK, DLY_Match_Load_Store, 0, 10);
+
+__asm("nop");
+__asm("nop");
+__asm("nop");
+__asm("nop");
+__asm("nop");
+__asm("nop");
+__asm("nop");
+__asm("nop");
+__asm("nop");
+
+__asm("lw x0, 0x00(x0)");</div>
+  <div class="figcap"><span class="cap-pill">کد ۲</span><span class="cap-text">نمونۀ استفاده از توابع درون‌خطی <span class="en">DLY</span></span></div>
+</div>
+<p><b>۱. آغاز زمان‌سنجی:</b> پس از فراخوانی <span class="en">DelayIntrinsic</span>، ماژول <span class="en">DLY</span> بلافاصله پایش و زمان‌سنجی دستورها را در بازۀ مشخص آغاز می‌کند.</p>
+<p><b>۲. نتیجۀ تطبیق دستور:</b></p>
+<div class="bl"><b>تطبیق موفق</b> (در بازۀ دورهای مشخص دستور <span class="en">Load/Store</span> شناسایی شد): ماژول <span class="en">DLY</span> بلافاصله اجرای <span class="en">CPU</span> را معلق و وارد وضعیت تأخیر دقیق می‌شود. پس از رسیدن به تعداد دورهای تأخیرِ تنظیم‌شده، تعلیق به‌طور خودکار برداشته می‌شود و <span class="en">CPU</span> از دستور بعد از دستورِ تطبیق‌شده ادامه می‌دهد.</div>
+<div class="bl"><b>شکست تطبیق</b> (در بازۀ دورهای مشخص هیچ دستور <span class="en">Load/Store</span> شناسایی نشد): وقفۀ نرم‌افزاری فعال می‌شود و به نرم‌افزار اطلاع می‌دهد که دستور هدف در بازۀ مورد انتظار گرفته نشده است؛ در این حالت وضعیت تعلیقِ تأخیر رخ نمی‌دهد و تابع سرویس وقفه باید پردازش متناظر را انجام دهد.</div>
+<p><b>۳. کاربرد تأخیر با تعداد دور ثابت (تطبیق دستور با خودش):</b> اگر سناریوی کاربرد به تأخیر ثابت دور ساعت نیاز دارد، می‌توان نوع تطبیق را روی <span class="en">DLY_Match_Delay</span> تنظیم کرد تا دستور <span class="en">DLY</span> خودش را تطبیق دهد. در این حالت نیازی به دستور هدف اضافی نیست؛ پس از فراخوانی، ماژول <span class="en">DLY</span> مستقیماً <span class="en">CPU</span> را معلق و پس از تأخیرِ تعداد دور مشخص به‌طور خودکار ادامه می‌دهد. به شکل زیر:</p>
+<div class="codeblk long">while (1)
+{
+<span class="cm">/* Perform intrinsic delay operation */</span>
+DelayIntrisic(DLY_SRC_HCLK, DLY_Match_Delay, 0, 100);
+<span class="cm">/* Toggle GPIOA pin 1 output state */</span>
+GPIOA-&gt;OUTDR ^= GPIO_Pin_1;
+}</div>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN03003</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/08/06</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">XW</span></td><td class="jt">توسعۀ فشردهٔ سفارشی <span class="en">WCH</span>؛ ۸ دستور ۱۶ بیتی برای بهینه‌سازی عملیات بایت و نیم‌کلمه</td></tr>
+      <tr><td><span class="en">c.lbu / c.lhu / c.sb / c.sh</span></td><td class="jt">دستورهای فشردهٔ خواندن/نوشتن بایت و نیم‌کلمه در توسعۀ <span class="en">XW</span>؛ از فضای کدگذاری فشردهٔ ممیز شناور دودویی استفاده می‌کنند</td></tr>
+      <tr><td><span class="en">-march=rv32imacxw</span></td><td class="jt">پارامتر کامپایل؛ باید شناسۀ توسعۀ <span class="en">xw</span> صراحتاً اضافه شود تا کامپایلر پشتیبانی <span class="en">XW</span> را فعال کند</td></tr>
+      <tr><td><span class="en">MCPY</span></td><td class="jt">دستور سخت‌افزاری کپی پیوستۀ بایت‌ها از آدرس مبدأ به مقصد؛ جایگزین <span class="en">memcpy</span> بدون الزام هم‌ترازی</td></tr>
+      <tr><td><span class="en">ucycle (0xC00)</span></td><td class="jt">رجیستر شمارش دور ماشین <span class="en">RISC-V</span>؛ برای شمارش دقیق دورها در سنجش عملکرد</td></tr>
+      <tr><td><span class="en">DLY</span></td><td class="jt">دستور تأخیر دقیق با دقت تک‌دوری؛ حذف عدم‌قطعیت زمان‌بندیِ حلقه‌های نرم‌افزاری</td></tr>
+      <tr><td><span class="en">match</span></td><td class="jt">فیلد تطبیق نوع دستور در <span class="en">DLY</span>؛ تعیین می‌کند در طول تأخیر «چه چیزی» مسدود شود</td></tr>
+      <tr><td><span class="en">U_NONS_DLY_0 (0x8C0)</span></td><td class="jt">رجیستر <span class="en">CSR</span> کنترل تأخیر؛ ماسک تطبیق، وضعیت مشغول‌بودن، اطلاعات اتمام‌وقت و ضریب تقسیم فرکانس</td></tr>
+      <tr><td><span class="en">div / sel</span></td><td class="jt">انتخاب شمارش با ساعت اصلی یا تقسیم‌شده / انتخاب منبع مقدار تأخیر (imm یا rs2)</td></tr>
+      <tr><td><span class="en">Intrinsic</span></td><td class="jt">توابع درون‌خطی کتابخانه (<span class="en">DelayIntrinsic()</span> و…) برای استفاده از <span class="en">DLY</span> در نبود پشتیبانی مونتاژگر</td></tr>
+      <tr><td><span class="en">PMP</span></td><td class="jt">حفاظت حافظۀ فیزیکی؛ نقض مجوز در اجرای <span class="en">MCPY</span> استثنای غیرقابل بازیابی می‌دهد</td></tr>
+      <tr><td><span class="en">Hardware Breakpoint</span></td><td class="jt">نقطۀ شکست سخت‌افزاری؛ برخورد در طول <span class="en">MCPY</span> استثنا می‌دهد</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN03003 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۱۹</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN03003</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
