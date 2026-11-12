@@ -1,5 +1,9 @@
 # معرفی
 
+<p align="center">
+  <img src="Images/GitHub-Assets/MES-Hero-Banner.svg" width="100%" alt="MEMAR ELECTRONIC SANAT — MES">
+</p>
+
 [🇮🇷 فارسی](README.md) | [🇬🇧 English](README_EN.md) | [🇨🇳 中文](README_zh.md)
 
 این مجموعه یادداشت‌های کاربردی (Application Note) بر کاربردهای اصلی و پیاده‌سازی در سناریوهای رایج میکروکنترلرهای سری CH32 تمرکز دارد. این راهنماها جزئیات عملی «چگونگی استفاده از قابلیت‌ها و حل مشکلات» را که معمولاً در دیتاشیت‌ها به‌صورت کامل پوشش داده نمی‌شوند، ارائه می‌کنند و راهکارهایی قابل استفاده مجدد و بررسی‌پذیر برای کاهش زمان توسعه پروژه در اختیار مهندسان قرار می‌دهند.
@@ -11,6 +15,16 @@
 - در صورت وجود پرسش فنی یا مشاهده نقص در محتوا، از بخش Issue مخزن بازخورد ارسال کنید یا در [انجمن رسمی WCH](https://www.wch.cn/bbs/forum-106-1.html) درخواست راهنمایی کنید.
 
 :raised_hand: **این مجموعه یادداشت‌های کاربردی به‌طور مستمر به‌روزرسانی خواهد شد.**
+
+
+<p align="center">
+  <img src="Images/GitHub-Assets/MES-Section-Header.svg" width="100%" alt="CH32 Application Notes and Technical Guides">
+</p>
+
+
+<p align="center">
+  <img src="Images/GitHub-Assets/MES-Project-Card.svg" width="100%" alt="CH32 Application Notes — Practical Engineering Resources">
+</p>
 
 ## فهرست یادداشت‌های کاربردی
 
@@ -68,6 +82,11 @@
 
 ![MES Divider](Images/MES-Divider.svg)
 
+
+<p align="center">
+  <img src="Images/GitHub-Assets/MES-Status-Strip.svg" width="100%" alt="MES Embedded Engineering Resources">
+</p>
+
 ## تهیه و تدوین
 
 **معمار الکترونیک صنعت**\
@@ -80,3 +99,8 @@
 - کانال تلگرام: [https://t.me/Memar_Electronic](https://t.me/Memar_Electronic)
 - پیج اینستاگرام: [https://www.instagram.com/Memar.Electronic](https://www.instagram.com/Memar.Electronic)
 - GitHub: [MEMAR-ELECTRONIC-SANAT](https://github.com/MEMAR-ELECTRONIC-SANAT)
+
+
+<p align="center">
+  <img src="Images/GitHub-Assets/MES-Thank-You-Footer.svg" width="100%" alt="Thank you for visiting MES">
+</p>
