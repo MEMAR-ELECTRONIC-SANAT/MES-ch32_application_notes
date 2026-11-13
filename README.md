@@ -80,7 +80,9 @@
 | انتقال فایل‌سیستم FatFS به MRS | [AN90003](zh/AN90003/AN90003.md) |
 | انتقال LVGL به V467 و راهکار راه‌اندازی نمایشگر با PSRAM | [AN36002](zh/AN36002/AN36002.md) |
 
-![MES Divider](Images/MES-Divider.svg)
+<p align="center">
+  <img src="Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider">
+</p>
 
 
 <p align="center">
