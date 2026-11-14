@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>رابط‌های <span class="en">SPI</span> و <span class="en">QSPI</span> روی میکروکنترلرهای سری <span class="en">CH32</span> — ترجمۀ فارسی AN26001</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">رابط‌های <span class="en">SPI</span> و <span class="en">QSPI</span></div>
+    <div class="t2">روی میکروکنترلرهای سری <span class="en">CH32</span></div>
+    <div class="t3">با نمونۀ عملی راه‌اندازی حافظۀ فلش</div>
+  </div>
+  <div class="c-sub">از معرفی رابط سریال هم‌زمان <span class="en">SPI</span> و قاب فرمان برنامه‌پذیر <span class="en">QSPI</span> و حالت‌های کارکرد آن، تا قابلیت اجرای درجا (<span class="en">XIP</span>)، مقایسۀ کامل دو رابط و کد عملی مقداردهی، خواندن، نوشتن و پرس‌وجوی خودکار وضعیت فلش با <span class="en">DMA</span></div>
+  <div class="c-desc">در این جزوه، ترجمۀ فارسی سند رسمی <span class="en">AN26001</span> (نسخۀ ۱٫۰، منتشرۀ شرکت <span class="en">WCH</span>) را می‌خوانید: معرفی کامل رابط‌های <span class="en">SPI</span> و <span class="en">QSPI</span>، پنج مرحلۀ قاب فرمان برنامه‌پذیر، حالت‌های غیرمستقیم، پرس‌وجوی خودکار و نگاشت حافظه، قابلیت اجرای درجا (<span class="en">XIP</span>)، جدول مقایسۀ دو رابط و نمونۀ کامل خواندن، نوشتن و پرس‌وجوی وضعیت فلش همراه با کد واقعی و مسیر <span class="en">DMA</span>.</div>
+  <div class="c-tags">
+    <span class="c-tag">میکروکنترلر <span class="en">CH32</span></span>
+    <span class="c-tag">رابط سریال هم‌زمان <span class="en">SPI</span></span>
+    <span class="c-tag">رابط <span class="en">QSPI</span> چهارخطی</span>
+    <span class="c-tag">قاب فرمان برنامه‌پذیر</span>
+    <span class="c-tag">حالت نگاشت حافظه و <span class="en">XIP</span></span>
+    <span class="c-tag">انتقال داده با <span class="en">DMA</span></span>
+    <span class="c-tag">انتخاب قطعه <span class="en">nCS</span></span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN26001 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | رابط‌های <span class="en">SPI</span> و <span class="en">QSPI</span></span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-111"><span class="s-id">1.1</span><span>معرفی <span class="en">SPI</span></span><span class="s-dots"></span><span class="s-page">۳</span></a>
+    <a class="toc-sub" href="#sec-112"><span class="s-id">1.2</span><span>معرفی <span class="en">QSPI</span></span><span class="s-dots"></span><span class="s-page">۳</span></a>
+    <a class="toc-sub" href="#sec-1121"><span class="s-id">1.2.1</span><span>قاب فرمان برنامه‌پذیر</span><span class="s-dots"></span><span class="s-page">۴</span></a>
+    <a class="toc-sub" href="#sec-1122"><span class="s-id">1.2.2</span><span>حالت‌های کارکرد</span><span class="s-dots"></span><span class="s-page">۴</span></a>
+    <a class="toc-sub" href="#sec-1123"><span class="s-id">1.2.3</span><span>قابلیت <span class="en">XIP</span></span><span class="s-dots"></span><span class="s-page">۵</span></a>
+    <a class="toc-sub" href="#sec-1124"><span class="s-id">1.2.4</span><span>دیاگرام بلوکی <span class="en">QSPI</span></span><span class="s-dots"></span><span class="s-page">۶</span></a>
+    <a class="toc-sub" href="#sec-113"><span class="s-id">1.3</span><span>مقایسۀ <span class="en">SPI</span> و <span class="en">QSPI</span></span><span class="s-dots"></span><span class="s-page">۷</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | نمونۀ خواندن و نوشتن فلش با <span class="en">QSPI</span></span><span class="t-dots"></span><span class="t-page">۷</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-211"><span class="s-id">2.1</span><span>مقداردهی اولیۀ <span class="en">QSPI</span></span><span class="s-dots"></span><span class="s-page">۷</span></a>
+    <a class="toc-sub" href="#sec-212"><span class="s-id">2.2</span><span>خواندن فلش با <span class="en">QSPI</span></span><span class="s-dots"></span><span class="s-page">۸</span></a>
+    <a class="toc-sub" href="#sec-213"><span class="s-id">2.3</span><span>نوشتن در فلش با <span class="en">QSPI</span></span><span class="s-dots"></span><span class="s-page">۹</span></a>
+    <a class="toc-sub" href="#sec-214"><span class="s-id">2.4</span><span>پرس‌وجوی وضعیت</span><span class="s-dots"></span><span class="s-page">۱۰</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۴</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۱۲</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۵</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۱۲</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">شکل ۱-۱</span><span>دیاگرام بلوکی <span class="en">QSPI</span></span><span class="f-dots"></span><span class="f-page">۶</span></div>
+        <div class="frow"><span class="f-id">جدول ۱</span><span>دامنۀ کاربرد سند</span><span class="f-dots"></span><span class="f-page">۳</span></div>
+        <div class="frow"><span class="f-id">جدول ۱-۱</span><span>پیکربندی مراحل قاب فرمان</span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">جدول ۱-۲</span><span>مقایسۀ <span class="en">SPI</span> و <span class="en">QSPI</span></span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">کد ۱</span><span>مقداردهی اولیۀ <span class="en">QSPI</span></span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">کد ۲</span><span>خواندن فلش با <span class="en">QSPI</span> در حالت تک‌خط</span><span class="f-dots"></span><span class="f-page">۸</span></div>
+      </div>
+      <div>
+        <div class="frow"><span class="f-id">کد ۳</span><span>خواندن معادل با <span class="en">SPI</span></span><span class="f-dots"></span><span class="f-page">۹</span></div>
+        <div class="frow"><span class="f-id">کد ۴</span><span>نوشتن در فلش با <span class="en">QSPI</span> در حالت تک‌خط</span><span class="f-dots"></span><span class="f-page">۹</span></div>
+        <div class="frow"><span class="f-id">کد ۵</span><span>نوشتن معادل با <span class="en">SPI</span></span><span class="f-dots"></span><span class="f-page">۱۰</span></div>
+        <div class="frow"><span class="f-id">کد ۶</span><span>پرس‌وجوی وضعیت با <span class="en">SPI</span></span><span class="f-dots"></span><span class="f-page">۱۱</span></div>
+        <div class="frow"><span class="f-id">کد ۷</span><span>پرس‌وجوی خودکار وضعیت با <span class="en">QSPI</span></span><span class="f-dots"></span><span class="f-page">۱۱</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> <p>رابط <span class="en">SPI</span> (Serial Peripheral Interface) پروتکل سریال هم‌زمانِ چهارخطیِ معرفی‌شده از سوی <span class="en">MOTOROLA</span> است که به‌طور گسترده برای اتصال نمایشگرهای <span class="en">LCD</span>، حافظه‌های <span class="en">FLASH</span>، مبدل‌های <span class="en">ADC</span> و دیگر جانبی‌ها به کار می‌رود. جانبیِ <span class="en">SPI</span> برای اجرای این پروتکل طراحی شده و با سرعت و انعطاف‌پذیری بالا شناخته می‌شود؛ جانبیِ <span class="en">QSPI</span> اما یک جانبیِ تقویت‌شده است که برای سازگاری با اتصال حافظه‌های فلشِ پشتیبانِ حالت انتقال چهارخطی (<span class="en">Quad</span>) — مانند <span class="en">Quad-SPI NOR Flash</span> — ساخته شده است.</p><p style="margin:2px 0 0 0; line-height:1.55">در این سند ابتدا ساختار و کارکرد دو رابط معرفی و با هم مقایسه می‌شوند و سپس با یک نمونۀ عملی، خواندن، نوشتن و پرس‌وجوی وضعیت حافظۀ فلش با <span class="en">QSPI</span> و کد معادل <span class="en">SPI</span> گام‌به‌گام بررسی می‌شود.</p></div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>رابط <span class="en">SPI</span> (Serial Peripheral Interface) پروتکل سریال هم‌زمانِ چهارخطیِ معرفی‌شده از سوی <span class="en">MOTOROLA</span> است که به‌طور گسترده برای اتصال نمایشگرهای <span class="en">LCD</span>، حافظه‌های <span class="en">FLASH</span>، مبدل‌های <span class="en">ADC</span> و دیگر جانبی‌ها به کار می‌رود. جانبیِ <span class="en">SPI</span> برای اجرای این پروتکل طراحی شده و با سرعت و انعطاف‌پذیری بالا شناخته می‌شود؛ جانبیِ <span class="en">QSPI</span> اما یک جانبیِ تقویت‌شده است که برای سازگاری با اتصال حافظه‌های فلشِ پشتیبانِ حالت انتقال چهارخطی (<span class="en">Quad</span>) — مانند <span class="en">Quad-SPI NOR Flash</span> — ساخته شده است.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>میکروکنترلرهای همگانی‌منظوره</td><td><span class="en">CH32H417 · CH32V205</span> و دیگر تراشه‌های این خانواده</td></tr>
+  </table>
+</div>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">رابط‌های <span class="en">SPI</span> و <span class="en">QSPI</span></div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-111"><span class="dm">◆</span>۱.۱ معرفی <span class="en">SPI</span></h3>
+<p><span class="en">SPI</span> یک پروتکل سریال هم‌زمانِ چهارخطی است و به پایه‌های <span class="en">MISO</span>، <span class="en">MOSI</span>، <span class="en">SCK</span> و <span class="en">NSS</span> نیاز دارد. ساعت (<span class="en">SCK</span>) همیشه توسط میزبان تولید می‌شود و داده به‌صورت دودورکس کامل و هم‌لحظه روی <span class="en">MOSI/MISO</span> ردوبدل می‌شود؛ جهت <span class="en">MISO/MOSI</span> در حالت میزبان و دستگاه پیرو جابه‌جا است (در حالت میزبان، <span class="en">MOSI</span> خروجی و <span class="en">MISO</span> ورودی است و در دستگاه پیرو برعکس).</p>
+<p>به‌طور کلی استفاده از جانبیِ <span class="en">SPI</span> انعطاف‌پذیری بالایی دارد: کاربر می‌تواند طول کلمهٔ داده (۸ یا ۱۶ بیت)، ترتیب بیت‌ها (<span class="en">MSB</span> یا <span class="en">LSB</span> در پیش) و یکی از چهار حالت ساعت را انتخاب کند که برآیندِ قطبیت ساعت <span class="en">CPOL</span> و فاز ساعت <span class="en">CPHA</span> است. در مدیریت انتخاب قطعه نیز هم کنترل چند دستگاه پیرو به‌صورت انعطاف‌پذیر با کمک نرم‌افزار و <span class="en">GPIO</span> پشتیبانی می‌شود و هم مدیریت خودکار <span class="en">NSS</span> به‌صورت سخت‌افزاری در دسترس است.</p>
+<p>همین انعطاف باعث می‌شود جانبیِ <span class="en">SPI</span> نیازِ تقریباً همهٔ دستگاه‌های منطبق با پروتکل <span class="en">SPI</span> را برآورده کند.</p>
+
+<h3 class="h2x" id="sec-112"><span class="dm">◆</span>۱.۲ معرفی <span class="en">QSPI</span></h3>
+<p><span class="en">QSPI</span> (Quad-SPI) کنترل‌کننده‌ای است که هدف اصلی آن اتصال رسانه‌های حافظۀ فلشِ <span class="en">SPI</span> است؛ اما می‌تواند به دستگاه‌های سازگار با پروتکل آن، مانند <span class="en">PSRAM</span> یا نمایشگرهای <span class="en">LCD</span> نیز متصل شود. نسبت به جانبیِ <span class="en">SPI</span>، انعطاف <span class="en">QSPI</span> کمتر است، ولی چون در انتقال به‌طور هم‌زمان از چند خط <span class="en">IO</span> استفاده می‌کند، پهنای باند بالاتری به دست می‌دهد.</p>
+<p>پایه‌های به‌کاررفته در <span class="en">QSPI</span> عبارت‌اند از <span class="en">SCK</span>، <span class="en">SCSN</span> و <span class="en">SIO0/SIO1/SIO2/SIO3</span>؛ چهار خط <span class="en">SIO0-SIO3</span> خطوط دادۀ دوطرفۀ چندگذره هستند، به‌صورت مستقل در حالت ۱، ۲ یا ۴ خطی گروه‌بندی می‌شوند و پایه‌هایی که در حالت ۴ خطی استفاده نمی‌شوند، برای سایر کاربردها آزاد می‌مانند.</p>
+
+<h4 class="h3x" id="sec-1121"><span class="dm">◆</span>۱.۲.۱ قاب فرمان برنامه‌پذیر</h4>
+<p>در ارتباط <span class="en">QSPI</span> هر تعامل یک فرمان است که از حداکثر پنج مرحله تشکیل می‌شود؛ از هر مرحله می‌توان صرف‌نظر کرد، اما دست‌کم یک مرحله باید باقی بماند و تعداد خطوط (۱، ۲ یا ۴) هر مرحله مستقل پیکربندی می‌شود. توالی قاب به این شکل است:</p>
+<p class="jt" style="text-align:center; direction:ltr;"><b><span class="en">nCS↓ | INSTRUCTION | ADDRESS | ALTERNATE BYTE | DUMMY CYCLES | DATA | nCS↑</span></b></p>
+<p>مراحل قاب با فیلدهای رجیستر <span class="en">CCR</span> متناظر هستند:</p>
+<div class="tblwrap" id="tab-11">
+  <div class="tblcap"><span class="cap-pill">جدول ۱-۱</span><span class="cap-text">پیکربندی مراحل قاب فرمان</span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:18%;">مرحله</th><th style="width:36%;">فیلد متناظر</th><th>محتوای قابل پیکربندی</th></tr></thead>
+    <tr><td>فرمان</td><td><span class="en">INSTRUCTION · IMODE</span></td><td class="jt">کد عملیات ۸ بیتی (مانند <span class="en">0x03</span> خواندن و <span class="en">0x02</span> نوشتن صفحه)؛ خطوط ۱/۲/۴</td></tr>
+    <tr><td>آدرس</td><td><span class="en">AR.ADDRESS · ADSIZE · ADMODE</span></td><td class="jt">آدرس ۱ تا ۴ بایتی؛ خطوط ۱/۲/۴ یا بدون مرحلۀ آدرس</td></tr>
+    <tr><td>بایت جایگزین</td><td><span class="en">ABR.ALTERNATE · ABSIZE · ABMODE</span></td><td class="jt">بایت کنترلیِ پس از آدرس (کم‌کاربرد)؛ خطوط ۱/۲/۴</td></tr>
+    <tr><td>چرخه‌های انتظار</td><td><span class="en">DCYC</span></td><td class="jt">دوره‌های خالی <span class="en">SCK</span> تا دستگاه داده را آماده کند</td></tr>
+    <tr><td>داده</td><td><span class="en">DR/DLR · DMODE[1:0]</span></td><td class="jt">داده با طول دلخواه، ردوبدل‌شده از مسیر <span class="en">FIFO</span> سی‌ودوبایتی؛ خطوط ۱/۲/۴ یا بدون مرحلۀ داده</td></tr>
+  </table>
+</div>
+<p>قرار دادن مقدار <span class="en">00b</span> در <span class="en">IMODE/ADMODE/ABMODE/DMODE</span> به معنای صرف‌نظرکردن از مرحلۀ متناظر است و <span class="en">DummyCycles = 0</span> مرحلۀ چرخه‌های انتظار را حذف می‌کند. ساخت کامل قاب بر عهدۀ سخت‌افزار است و نرم‌افزار تنها کافی است رجیسترهای سازنده‌های قاب را بنویسد و با مقداردهی آخرین مورد، فرمان را آغاز کند.</p>
+
+<h4 class="h3x" id="sec-1122"><span class="dm">◆</span>۱.۲.۲ حالت‌های کارکرد</h4>
+<p>در پیکربندی هر فرمان، <span class="en">QSPI</span> چند حالت کارکرد مختلف را پیش روی کاربر می‌گذارد:</p>
+<div class="bl"><b>حالت غیرمستقیم</b> (کد ۰۰ نوشتن / ۰۱ خواندن): داده از مسیر رجیستر <span class="en">DR</span> و میان‌گیر <span class="en">FIFO</span> سی‌ودوبایتی، به‌صورت دستی یا با <span class="en">DMA</span> جابه‌جا می‌شود و رجیستر <span class="en">DLR</span> تعداد بایت‌ها را مشخص می‌کند. این حالت برای خواندن و نوشتن‌های پرتکرار مناسب است.</div>
+<div class="bl"><b>حالت پرس‌وجوی خودکار</b> (کد ۱۰): سخت‌افزار به‌طور دوره‌ای فرمان خواندن رجیستر وضعیت فلش را راه می‌اندازد، نتیجه را با ماسک <span class="en">PSMKR</span> پالایش و با مقدار <span class="en">PSMAR</span> تطبیق می‌دهد و در صورت برخورد، پرچم <span class="en">SMF</span> را قرار می‌دهد و در صورت تمایل وقفه تولید می‌کند. در عمل، برای «انتظار برای پایان پاک‌سازی یا چرخۀ نوشتن» به‌جای حلقۀ نرم‌افزاریِ خواندن رجیستر وضعیت به کار می‌رود.</div>
+<div class="bl"><b>حالت نگاشت حافظه</b> (کد ۱۱): فلش در فضای آدرس <span class="en">CPU</span> نگاشت می‌شود و مانند حافظۀ داخلی مستقیم خوانده می‌شود (از جمله واکشی دستورها در <span class="en">XIP</span>)؛ <span class="en">FIFO</span> نقش میان‌گیر پیش‌واکشی را دارد و با فعال‌کردن <span class="en">TCEN</span> می‌توان پس از بیکاری <span class="en">nCS</span> را رها کرد و توان مصرفی را کاهش داد. این حالت فقط از خواندن پشتیبانی می‌کند.</div>
+
+<h4 class="h3x" id="sec-1123"><span class="dm">◆</span>۱.۲.۳ قابلیت <span class="en">XIP</span></h4>
+<p><span class="en">QSPI</span> با تنظیم فیلد <span class="en">CCR.FMODE = 11b</span> حالت نگاشت حافظه را فعال می‌کند. در این حالتِ <span class="en">XIP</span>، سخت‌افزارِ <span class="en">QSPI</span> ناحیه‌ای از فضای آدرس گذرگاه را به خود اختصاص می‌دهد؛ به‌محض آنکه دسترسی گذرگاه داخلی به این ناحیه برخورد کند، <span class="en">QSPI</span> به‌طور خودکار یک قاب خواندن از فلشِ <span class="en">SPI</span> آغاز می‌کند و پایین‌کشیدن انتخاب قطعه، ارسال آدرس، چرخه‌های انتظار و خواندنِ به‌هنگامِ داده، همگی به‌صورت سخت‌افزاری و درون‌ساختِ همان قاب انجام می‌شود؛ نرم‌افزار لازم نیست رجیسترها را بایت‌به‌بایت بنویسد و کافی است این ناحیه را مانند حافظۀ فقط‌خواندنی معمولی مستقیم بخواند. میان‌گیر <span class="en">FIFO</span> سی‌ودوبایتی داخلی نقش پیش‌واکشی را دارد تا توان خواندن‌های پیوسته را جذب کند و می‌توان با تنظیم <span class="en">TCEN</span> پس از وقفۀ بیکاری، <span class="en">nCS</span> را به‌طور خودکار بالا برد تا توان مصرفی کاهش یابد.</p>
+<p>با این حال باید به چند نکته توجه کرد:</p>
+<div class="bl"><b>فقط خواندن:</b> در حالت <span class="en">XIP</span> و نگاشت حافظه، فلش فقط به‌صورت ناحیۀ فقط‌خواندنی مستقیم خوانده می‌شود؛ عملیات نوشتن و پاک‌سازی همچنان نیازمند بازگشت به حالت غیرمستقیم (<span class="en">FMODE = 00/01</span>) است.</div>
+<div class="bl"><b>زمان‌بندی کاملاً سخت‌افزاری:</b> پس از یک‌بار پیکربندی <span class="en">CCR</span> (فرمان/تعداد خطوط)، <span class="en">AR</span> (آدرس)، <span class="en">DCYC</span> (چرخه‌های انتظار) و آستانۀ <span class="en">FIFO</span>، همهٔ برخوردهای بعدی با همان قابِ ثابت به‌صورت خودکار اجرا می‌شوند.</div>
+<div class="bl"><b>پیش‌نیاز پیکربندی:</b> محدودۀ ظرفیتی که <span class="en">DCR.FSIZE</span> اعلام می‌کند باید آدرس‌های مورد دسترسی را پوشش دهد؛ در غیر این صورت برخورد با آدرس بیرون از محدوده، پرچم <span class="en">TEF</span> را قرار می‌دهد.</div>
+
+<h4 class="h3x" id="sec-1124"><span class="dm">◆</span>۱.۲.۴ دیاگرام بلوکی <span class="en">QSPI</span></h4>
+<div class="fig" id="fig-11">
+  <div class="figbox">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 340" style="width:100%; max-width:640px; direction:ltr;">
+      <rect x="40" y="55" width="165" height="72" rx="10" fill="#1b2a41"/>
+      <text x="122" y="86" text-anchor="middle" font-size="13.5" font-weight="700" fill="#ffffff">Registers/</text>
+      <text x="122" y="106" text-anchor="middle" font-size="13.5" font-weight="700" fill="#ffffff">control</text>
+      <rect x="40" y="165" width="165" height="115" rx="10" fill="#1b2a41"/>
+      <text x="122" y="228" text-anchor="middle" font-size="15" font-weight="700" fill="#ffffff">FIFO</text>
+      <line x1="122" y1="127" x2="122" y2="165" stroke="#51617a" stroke-width="2"/>
+      <rect x="255" y="55" width="165" height="72" rx="10" fill="#1b2a41"/>
+      <text x="337" y="86" text-anchor="middle" font-size="13.5" font-weight="700" fill="#ffffff">Clock</text>
+      <text x="337" y="106" text-anchor="middle" font-size="13.5" font-weight="700" fill="#ffffff">management</text>
+      <rect x="255" y="165" width="165" height="115" rx="10" fill="#1b2a41"/>
+      <text x="337" y="217" text-anchor="middle" font-size="13.5" font-weight="700" fill="#ffffff">Shift</text>
+      <text x="337" y="237" text-anchor="middle" font-size="13.5" font-weight="700" fill="#ffffff">register</text>
+      <line x1="337" y1="127" x2="337" y2="165" stroke="#51617a" stroke-width="2"/>
+      <line x1="205" y1="222" x2="255" y2="222" stroke="#51617a" stroke-width="2"/>
+      <text x="240" y="36" text-anchor="middle" font-size="14" font-weight="700" fill="#e08038">QSPI</text>
+      <path d="M455,42 L465,42 L465,292 L455,292" fill="none" stroke="#e08038" stroke-width="2"/>
+      <polygon points="417,74 437,81 417,88" fill="#e08038"/>
+      <line x1="420" y1="81" x2="447" y2="81" stroke="#e08038" stroke-width="2"/>
+      <polygon points="417,104 437,111 417,118" fill="#e08038"/>
+      <line x1="420" y1="111" x2="447" y2="111" stroke="#e08038" stroke-width="2"/>
+      <line x1="420" y1="81" x2="447" y2="81" stroke="#e08038" stroke-width="2"/>
+      <line x1="420" y1="140" x2="465" y2="140" stroke="#e08038" stroke-width="2"/>
+      <line x1="465" y1="140" x2="465" y2="292" stroke="#51617a" stroke-width="2"/>
+      <line x1="420" y1="81" x2="465" y2="81" stroke="#51617a" stroke-width="2"/>
+      <line x1="465" y1="81" x2="620" y2="81" stroke="#51617a" stroke-width="2"/>
+      <rect x="461" y="77" width="8" height="8" fill="#1b2a41"/>
+      <rect x="616" y="77" width="8" height="8" fill="#1b2a41"/>
+      <line x1="420" y1="120" x2="620" y2="120" stroke="#51617a" stroke-width="2"/>
+      <rect x="461" y="116" width="8" height="8" fill="#1b2a41"/>
+      <rect x="616" y="116" width="8" height="8" fill="#1b2a41"/>
+      <line x1="420" y1="155" x2="620" y2="155" stroke="#51617a" stroke-width="2"/>
+      <rect x="461" y="151" width="8" height="8" fill="#1b2a41"/>
+      <rect x="616" y="151" width="8" height="8" fill="#1b2a41"/>
+      <line x1="420" y1="190" x2="620" y2="190" stroke="#51617a" stroke-width="2"/>
+      <rect x="461" y="186" width="8" height="8" fill="#1b2a41"/>
+      <rect x="616" y="186" width="8" height="8" fill="#1b2a41"/>
+      <line x1="420" y1="225" x2="620" y2="225" stroke="#51617a" stroke-width="2"/>
+      <rect x="461" y="221" width="8" height="8" fill="#1b2a41"/>
+      <rect x="616" y="221" width="8" height="8" fill="#1b2a41"/>
+      <line x1="420" y1="260" x2="620" y2="260" stroke="#51617a" stroke-width="2"/>
+      <rect x="461" y="256" width="8" height="8" fill="#1b2a41"/>
+      <rect x="616" y="256" width="8" height="8" fill="#1b2a41"/>
+      <line x1="337" y1="280" x2="337" y2="260" stroke="#51617a" stroke-width="2"/>
+      <line x1="337" y1="260" x2="420" y2="260" stroke="#51617a" stroke-width="2"/>
+      <text x="543" y="72" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1b2a41">SCK</text>
+      <text x="543" y="111" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1b2a41">SIO0</text>
+      <text x="543" y="146" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1b2a41">SIO1</text>
+      <text x="543" y="181" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1b2a41">SIO2</text>
+      <text x="543" y="216" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1b2a41">SIO3</text>
+      <text x="543" y="251" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1b2a41">SCSN</text>
+      <rect x="620" y="48" width="120" height="240" rx="10" fill="#1b2a41"/>
+      <text x="680" y="76" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">SPI FLASH</text>
+      <text x="680" y="98" text-anchor="middle" font-size="12" fill="#e08038">CLK</text>
+      <text x="680" y="133" text-anchor="middle" font-size="12" fill="#e08038">D0/DI</text>
+      <text x="680" y="168" text-anchor="middle" font-size="12" fill="#e08038">D1/DO</text>
+      <text x="680" y="203" text-anchor="middle" font-size="12" fill="#e08038">D2/WP</text>
+      <line x1="667" y1="192" x2="693" y2="192" stroke="#e08038" stroke-width="1.2"/>
+      <text x="680" y="238" text-anchor="middle" font-size="12" fill="#e08038">D3/HOLD</text>
+      <line x1="660" y1="227" x2="700" y2="227" stroke="#e08038" stroke-width="1.2"/>
+      <text x="680" y="273" text-anchor="middle" font-size="12" fill="#e08038">CS</text>
+      <line x1="672" y1="262" x2="688" y2="262" stroke="#e08038" stroke-width="1.2"/>
+      <text x="380" y="320" text-anchor="middle" font-size="12.5" fill="#8d857c">خطوط SIO0-SIO3 دوطرفه‌اند و هر مرحله از قاب فرمان می‌تواند ۱، ۲ یا ۴ خطی باشد</text>
+    </svg>
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۱</span><span class="cap-text">دیاگرام بلوکی <span class="en">QSPI</span></span></div>
+</div>
+
+<h3 class="h2x" id="sec-113"><span class="dm">◆</span>۱.۳ مقایسۀ <span class="en">SPI</span> و <span class="en">QSPI</span></h3>
+<div class="tblwrap" id="tab-12">
+  <div class="tblcap"><span class="cap-pill">جدول ۱-۲</span><span class="cap-text">مقایسۀ <span class="en">SPI</span> و <span class="en">QSPI</span></span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:20%;">ویژگی</th><th style="width:36%;"><span class="en">SPI</span></th><th><span class="en">QSPI</span></th></tr></thead>
+    <tr><td>پیکربندی میزبان و دستگاه پیرو</td><td class="jt">فرستنده‌وگیرندۀ همه‌منظوره؛ هم میزبان و هم دستگاه پیرو</td><td class="jt">فقط میزبان؛ متمرکز بر رسانه‌های حافظۀ فلش <span class="en">SPI</span></td></tr>
+    <tr><td>خطوط داده</td><td class="jt">جهتِ <span class="en">MISO/MOSI</span> ثابت است</td><td class="jt"><span class="en">SIO0-SIO3</span> دوطرفۀ چندگذره؛ قابل پیکربندی در ۱/۲/۴ خط</td></tr>
+    <tr><td>دودورکس کامل</td><td class="jt">پشتیبانی می‌شود</td><td class="jt">خیر؛ خواندن و نوشتن در زمان‌های جدا انجام می‌شود</td></tr>
+    <tr><td>ساختار قاب</td><td class="jt">به‌صورت دلخواه توسط کاربر تعریف می‌شود</td><td class="jt">پنج مرحلۀ کاملاً برنامه‌پذیر (فرمان/آدرس/بایت جایگزین/چرخه انتظار/داده) با آدرس و چرخه انتظارِ درون‌ساخت</td></tr>
+    <tr><td><span class="en">nCS</span></td><td class="jt"><span class="en">GPIO</span> نرم‌افزاری یا <span class="en">NSS</span> سخت‌افزاری؛ پشتیبانی از چند دستگاه پیرو</td><td class="jt">انتخاب قطعه سخت‌افزاری</td></tr>
+    <tr><td>حالت‌های ساعت</td><td class="jt">چهار حالت <span class="en">CPOL/CPHA</span></td><td class="jt">فقط حالت ۰ / حالت ۳ (<span class="en">CKMODE</span>)؛ معادل حالت‌های ۰ و ۳ در <span class="en">SPI</span></td></tr>
+    <tr><td>انتظار وضعیت</td><td class="jt">حلقۀ نرم‌افزاری و خواندن رجیستر وضعیت برای بررسی <span class="en">BUSY</span></td><td class="jt">پرس‌وجوی خودکار سخت‌افزاری؛ ماسک + تطبیق و گذاشتن پرچم <span class="en">SMF</span> یا تولید وقفه</td></tr>
+    <tr><td>نگاشت حافظه</td><td class="jt">ندارد</td><td class="jt">پشتیبانی می‌شود؛ فلش در فضای آدرس نگاشت و مستقیم خوانده می‌شود / <span class="en">XIP</span></td></tr>
+    <tr><td>حداکثر توان خواندن</td><td class="jt"><span class="en">1 × SCK</span></td><td class="jt">تک‌خط مانند <span class="en">SPI</span>؛ چهارخط <span class="en">= 4 × SCK</span></td></tr>
+    <tr><td>دو-فلش</td><td class="jt">ندارد</td><td class="jt"><span class="en">DFM</span> با دو تراشۀ موازی؛ دوبرابر شدن توان و ظرفیت</td></tr>
+    <tr><td>بار متداول</td><td class="jt">سنسورها، <span class="en">ADC/DAC</span>، حافظه‌های کم‌ظرفیت</td><td class="jt"><span class="en">NOR/NAND</span> پرظرفیت، حافظۀ کد و <span class="en">XIP</span></td></tr>
+  </table>
+</div>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">نمونۀ خواندن و نوشتن فلش با <span class="en">QSPI</span></div>
+  <div class="sec-divider"></div>
+</div>
+<p>در این بخش نشان می‌دهیم چگونه می‌توان به‌جای <span class="en">SPI</span> از <span class="en">QSPI</span> برای کار با حافظۀ فلش استفاده کرد.</p>
+
+<h3 class="h2x" id="sec-211"><span class="dm">◆</span>۲.۱ مقداردهی اولیۀ <span class="en">QSPI</span></h3>
+<p>در این گام جانبیِ <span class="en">QSPI</span> پیکربندی و مقداردهی اولیه می‌شود: ضریب تقسیم ساعت روی ۲ تنظیم می‌شود، در حالت <span class="en">Mode3</span> سطح سکونِ <span class="en">SCK</span> در بیکاری بالا قرار می‌گیرد، زمان نگه‌داشتن انتخاب قطعه دست‌کم ۸ دورۀ <span class="en">SCK</span> در نظر گرفته می‌شود و اندازۀ فلش روی ۲۲ تنظیم می‌شود (متناظر با ظرفیت <span class="en">2^23 = 8MB</span>)؛ در ادامه فلشِ تکی <span class="en">FLASH1</span> انتخاب و حالت دو-فلش غیرفعال می‌شود و در پایان تابع مقداردهی فراخوانی و آستانۀ <span class="en">FIFO</span> روی ۴ بایت تنظیم می‌شود:</p>
+<div class="fig" id="code-1">
+  <div class="codeblk">QSPI_InitStructure.QSPI_Prescaler = 1;            <span class="cm">/* مقدار تقسیم = ارزش+1 : FSCK = FHCLK/2 */</span>
+QSPI_InitStructure.QSPI_CKMode    = QSPI_CKMode_Mode3; <span class="cm">/* CKMODE=1 ؛ سطح سکون SCK در بیکاری بالا */</span>
+QSPI_InitStructure.QSPI_CSHTime   = QSPI_CSHTime_7Cycle; <span class="cm">/* سطح بالای nCS میان فرمان‌ها &gt;= 8 دورهٔ SCK */</span>
+<span class="cm">/* ظرفیت خارجی 2^(FSIZE+1)=2^23=8MB ؛ آدرس بیرون از محدوده ← پرچم TEF */</span>
+QSPI_InitStructure.QSPI_FSize     = 22;
+
+QSPI_InitStructure.QSPI_FSelect  = QSPI_FSelect_1;    <span class="cm">/* انتخاب فلش تکی FLASH1 */</span>
+QSPI_InitStructure.QSPI_DFlash   = QSPI_DFlash_Disable; <span class="cm">/* DFM=0 ؛ بدون حالت دو-فلش */</span>
+QSPI_Init(QSPI1, &amp;QSPI_InitStructure);
+QSPI_SetFIFOThreshold(QSPI1, 4);  <span class="cm">/* FTHRES : بایت‌های معتبر FIFO */</span></div>
+  <div class="figcap"><span class="cap-pill">کد ۱</span><span class="cap-text">مقداردهی اولیۀ <span class="en">QSPI</span></span></div>
+</div>
+
+<h3 class="h2x" id="sec-212"><span class="dm">◆</span>۲.۲ خواندن فلش با <span class="en">QSPI</span></h3>
+<p>کد زیر داده‌ها را با <span class="en">QSPI</span> در حالت تک‌خط از فلش می‌خواند و اثر آن با خواندنِ <span class="en">SPI</span> که در ادامه می‌آید یکسان است:</p>
+<div class="fig" id="code-2" style="break-inside:auto;">
+  <div class="codeblk long" style="font-size:10px;">/* فرمان و آدرس تک‌خط، داده تک‌خط؛ FastRead(0x0B) با 8 دورهٔ چرخهٔ انتظار (DCYC=8)
+ * تا در نرخ‌های متوسط و بالا، به فلش فرصت پایدارشدن خروجی داده داده شود؛
+ * با خواندن معمولی 0x03 کاملاً یکسان نیست. */
+QSPI_ComConfig_InitStructure.QSPI_ComConfig_IMode  = QSPI_ComConfig_IMode_1Line;
+QSPI_ComConfig_InitStructure.QSPI_ComConfig_ADMode = QSPI_ComConfig_ADMode_1Line;
+QSPI_ComConfig_InitStructure.QSPI_ComConfig_DMode  = QSPI_ComConfig_DMode_1Line;
+QSPI_ComConfig_InitStructure.QSPI_ComConfig_FMode  = QSPI_ComConfig_FMode_Indirect_Read; <span class="cm">/* حالت خواندن غیرمستقیم */</span>
+QSPI_ComConfig_InitStructure.QSPI_ComConfig_ADSize = QSPI_ComConfig_ADSize_24bit; <span class="cm">/* پهنای آدرس 24 بیت */</span>
+QSPI_ComConfig_InitStructure.QSPI_ComConfig_Ins    = FLASH_CMD_FastRead; <span class="cm">/* 0x0B */</span>
+QSPI_ComConfig_InitStructure.QSPI_ComConfig_DummyCycles = 8; <span class="cm">/* دوره‌های چرخهٔ انتظار = 8 */</span>
+QSPI_ComConfig_Init(QSPI1, &amp;QSPI_ComConfig_InitStructure);
+QSPI_SetAddress(QSPI1, addr);           <span class="cm">/* ADDRESS : آدرس هدف 24 بیتی */</span>
+QSPI_SetDataLength(QSPI1, len);         <span class="cm">/* DLR : تعداد بایت‌های در انتظار خواندن */</span>
+QSPI_Rx_DMA(data, len);                 <span class="cm">/* DMA ؛ انتقال len بایت از مسیر DR */</span>
+QSPI_DMACmd(QSPI1, ENABLE);             <span class="cm">/* DMAEN */</span>
+QSPI_Start(QSPI1);
+DMA_Cmd(DMA2_Channel1, ENABLE);
+
+while (DMA_GetFlagStatus(DMA2, DMA_FLAG_TC1) == RESET) <span class="cm">/* انتظار برای پایان انتقال DMA */</span>
+    ;</div>
+  <div class="figcap"><span class="cap-pill">کد ۲</span><span class="cap-text">خواندن فلش با <span class="en">QSPI</span> در حالت تک‌خط</span></div>
+</div>
+<p>پارامترهای ارتباطی <span class="en">QSPI</span> به‌گونه‌ای پیکربندی می‌شود که فرمان، آدرس و داده همگی در حالت تک‌خط باشند؛ از فرمان خواندن سریع <span class="en">0x0B</span> با ۸ دورهٔ چرخهٔ انتظار برای پایدارشدن خروجی داده استفاده می‌شود. پس از فراخوانی تابع مقداردهی پیکربندی ارتباط، آدرس هدف و طول دادهٔ در انتظار خواندن تنظیم و انتقال <span class="en">DMA</span> آغاز می‌شود تا داده از رجیستر دادهٔ <span class="en">QSPI</span> به حافظه منتقل شود؛ سپس قابلیت <span class="en">DMA</span> در <span class="en">QSPI</span> فعال، انتقال <span class="en">QSPI</span> آغاز و هم‌زمان کانال <span class="en">DMA</span> روشن می‌شود تا پرچم پایان انتقال <span class="en">DMA</span> گذاشته شود. بدین ترتیب یک عملیات خواندن کامل می‌شود.</p>
+<p>کد زیر با <span class="en">SPI</span> اثر مشابهی دارد:</p>
+<div class="fig" id="code-3">
+  <div class="codeblk">GPIO_WriteBit(GPIOA, GPIO_Pin_2, 0);  <span class="cm">/* پایین‌کشیدن انتخاب قطعه (nCS) ؛ انتخاب دستگاه فلش و آغاز ارتباط */</span>
+SPI1_ReadWriteByte(FLASH_CMD_FastRead);  <span class="cm">/* ارسال فرمان خواندن سریع (0x0B) */</span>
+SPI1_ReadWriteByte((u8)((ReadAddr) &gt;&gt; 16));  <span class="cm">/* ارسال 8 بیت بالای آدرس 24 بیتی */</span>
+SPI1_ReadWriteByte((u8)((ReadAddr) &gt;&gt; 8));   <span class="cm">/* ارسال 8 بیت میانی آدرس 24 بیتی */</span>
+SPI1_ReadWriteByte((u8)ReadAddr);            <span class="cm">/* ارسال 8 بیت پایین آدرس 24 بیتی */</span>
+SPI1_ReadWriteByte((u8)DUMMY_BYTE);          <span class="cm">/* ارسال یک بایت انتظار (Dummy Byte) */</span>
+
+for (i = 0; i &lt; size; i++)  <span class="cm">/* خواندن داده در حلقه */</span>
+{
+    pBuffer[i] = SPI1_ReadWriteByte(0XFF);  <span class="cm">/* ارسال 0xFF (تولید ساعت SCK) و هم‌زمان خواندن یک بایت و ذخیره در میان‌گیر */</span>
+}
+
+GPIO_WriteBit(GPIOA, GPIO_Pin_2, 1);  <span class="cm">/* بالا‌کشیدن انتخاب قطعه ؛ پایان این ارتباط */</span></div>
+  <div class="figcap"><span class="cap-pill">کد ۳</span><span class="cap-text">خواندن معادل با <span class="en">SPI</span></span></div>
+</div>
+
+<h3 class="h2x" id="sec-213"><span class="dm">◆</span>۲.۳ نوشتن در فلش با <span class="en">QSPI</span></h3>
+<p>کد زیر داده‌ها را با <span class="en">QSPI</span> در حالت تک‌خط در فلش می‌نویسد و اثر آن با نوشتنِ <span class="en">SPI</span> که در ادامه می‌آید یکسان است:</p>
+<div class="fig" id="code-4" style="break-inside:auto;">
+  <div class="codeblk long" style="font-size:10px;">/* پیکربندی پارامترهای ارتباطی QSPI : فرمان، آدرس و داده همگی تک‌خط */
+QSPI_ComConfig_InitStructure.QSPI_ComConfig_IMode  = QSPI_ComConfig_IMode_1Line;
+QSPI_ComConfig_InitStructure.QSPI_ComConfig_ADMode = QSPI_ComConfig_ADMode_1Line;
+QSPI_ComConfig_InitStructure.QSPI_ComConfig_DMode  = QSPI_ComConfig_DMode_1Line;
+QSPI_ComConfig_InitStructure.QSPI_ComConfig_FMode = QSPI_ComConfig_FMode_Indirect_Write;  <span class="cm">/* حالت نوشتن غیرمستقیم */</span>
+QSPI_ComConfig_InitStructure.QSPI_ComConfig_ADSize = QSPI_ComConfig_ADSize_24bit; <span class="cm">/* پهنای آدرس 24 بیت */</span>
+QSPI_ComConfig_InitStructure.QSPI_ComConfig_Ins = FLASH_CMD_PageProgram; <span class="cm">/* فرمان برنامه‌ریزی صفحه (0x02) */</span>
+QSPI_ComConfig_InitStructure.QSPI_ComConfig_DummyCycles = 0; <span class="cm">/* بدون دورهٔ چرخهٔ انتظار */</span>
+QSPI_ComConfig_Init(QSPI1, &amp;QSPI_ComConfig_InitStructure);
+
+QSPI_SetAddress(QSPI1, addr);  <span class="cm">/* تنظیم آدرس آغاز هدف 24 بیتی */</span>
+QSPI_SetDataLength(QSPI1, len); <span class="cm">/* تنظیم طول دادهٔ در انتظار نوشتن */</span>
+
+QSPI_DMACmd(QSPI1, ENABLE);    <span class="cm">/* فعال‌سازی قابلیت DMA در QSPI */</span>
+QSPI_Tx_DMA(data, len);        <span class="cm">/* پیکربندی DMA برای انتقال len بایت داده از حافظه به رجیستر ارسال QSPI */</span>
+DMA_Cmd(DMA2_Channel1, ENABLE); <span class="cm">/* فعال‌سازی کانال DMA و آغاز انتقال */</span>
+
+QSPI_Start(QSPI1);             <span class="cm">/* آغاز ارتباط QSPI و ارسال فرمان + آدرس + داده */</span>
+
+while (DMA_GetFlagStatus(DMA2, DMA_FLAG_TC1) == RESET) <span class="cm">/* انتظار برای پرچم پایان انتقال DMA */</span>
+{
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۴</span><span class="cap-text">نوشتن در فلش با <span class="en">QSPI</span> در حالت تک‌خط</span></div>
+</div>
+<p>کد بالا <span class="en">QSPI</span> را در حالت تک‌خط و حالت نوشتن غیرمستقیم پیکربندی می‌کند؛ از آدرس ۲۴ بیتی و فرمان برنامه‌ریزی صفحه (<span class="en">0x02</span>) استفاده می‌شود و بایت جایگزین و دورهٔ چرخهٔ انتظاری وجود ندارد. پس از مقداردهی اولیه، آدرس هدف و طول داده تنظیم، قابلیت <span class="en">DMA</span> در <span class="en">QSPI</span> فعال و دادهٔ حافظه با <span class="en">DMA</span> به رجیستر ارسال منتقل می‌شود؛ در ادامه انتقال <span class="en">QSPI</span> آغاز می‌شود و در حلقه تا گذاشتن پرچم پایان انتقال <span class="en">DMA</span> منتظر می‌مانیم تا از ارسال کامل داده مطمئن شویم.</p>
+<p>کد زیر با <span class="en">SPI</span> اثر مشابهی دارد:</p>
+<div class="fig" id="code-5">
+  <div class="codeblk">GPIO_WriteBit(GPIOA, GPIO_Pin_2, 0);  <span class="cm">/* پایین‌کشیدن انتخاب قطعه (nCS) */</span>
+SPI1_ReadWriteByte(FLASH_CMD_PageProgram); <span class="cm">/* ارسال فرمان برنامه‌ریزی صفحه (0x02) */</span>
+SPI1_ReadWriteByte((u8)((WriteAddr) &gt;&gt; 16)); <span class="cm">/* ارسال 8 بیت بالای آدرس هدف 24 بیتی */</span>
+SPI1_ReadWriteByte((u8)((WriteAddr) &gt;&gt; 8));  <span class="cm">/* ارسال 8 بیت میانی آدرس هدف 24 بیتی */</span>
+SPI1_ReadWriteByte((u8)WriteAddr);           <span class="cm">/* ارسال 8 بیت پایین آدرس هدف 24 بیتی */</span>
+
+for (i = 0; i &lt; size; i++)  <span class="cm">/* نوشتن داده در حلقه */</span>
+{
+    SPI1_ReadWriteByte(pBuffer[i]);  <span class="cm">/* ارسال بایت‌به‌بایت دادهٔ در انتظار نوشتن به فلش */</span>
+}
+
+GPIO_WriteBit(GPIOA, GPIO_Pin_2, 1);  <span class="cm">/* بالا‌کشیدن انتخاب قطعه ؛ پایان ارتباط و آغاز اجرای برنامه‌ریزی درونی فلش */</span></div>
+  <div class="figcap"><span class="cap-pill">کد ۵</span><span class="cap-text">نوشتن معادل با <span class="en">SPI</span></span></div>
+</div>
+
+<h3 class="h2x" id="sec-214"><span class="dm">◆</span>۲.۴ پرس‌وجوی وضعیت</h3>
+<p>در کار عملی با <span class="en">SPI</span>، اغلب از پرس‌وجو برای بررسی وضعیت جانبی استفاده می‌شود؛ رایج‌ترین نمونه آن است که پس از پاک‌سازی یا نوشتنِ صفحه در فلش <span class="en">SPI</span>، رجیستر وضعیت بارها خوانده شود تا مشخص شود انتظارِ مشغولیت (<span class="en">BUSY</span>) به پایان رسیده است یا نه:</p>
+<div class="fig" id="code-6">
+  <div class="codeblk">uint8_t sr = 0;  <span class="cm">/* تعریف متغیر رجیستر وضعیت */</span>
+do
+{
+    Delay_Ms(1);  <span class="cm">/* تأخیر 1ms */</span>
+    GPIO_WriteBit(GPIOA, GPIO_Pin_2, 0);  <span class="cm">/* پایین‌کشیدن انتخاب قطعه */</span>
+    SPI1_ReadWriteByte(FLASH_CMD_ReadStatus_REG1);  <span class="cm">/* ارسال فرمان خواندن رجیستر وضعیت 1 (0x05) */</span>
+    sr = SPI1_ReadWriteByte(0Xff);  <span class="cm">/* ارسال 0xFF برای تولید ساعت و هم‌زمان خواندن رجیستر وضعیت 1 */</span>
+    GPIO_WriteBit(GPIOA, GPIO_Pin_2, 1);  <span class="cm">/* بالا‌کشیدن انتخاب قطعه */</span>
+} while ((sr &amp; 0x01) == 0x01);  <span class="cm">/* بررسی کم‌ارزش‌ترین بیت رجیستر وضعیت (BUSY) ؛ مقدار 1 یعنی فلش مشغول است و حلقه ادامه می‌یابد */</span></div>
+  <div class="figcap"><span class="cap-pill">کد ۶</span><span class="cap-text">پرس‌وجوی وضعیت با <span class="en">SPI</span></span></div>
+</div>
+<p>این شیوه در هر دور، <span class="en">CPU</span> را درگیر می‌کند. حالت پرس‌وجوی خودکار (<span class="en">Auto-polling Mode</span>) در <span class="en">QSPI</span> دقیقاً برای همین طراحی شده است: نرم‌افزار تنها یک‌بار پیکربندی می‌کند که «کدام فرمان وضعیت خوانده شود، کدام بیت‌ها بررسی شوند و تطبیق با چه مقداری به معنای پایان کار باشد»؛ از آن پس سخت‌افزار <span class="en">QSPI</span> با فاصلۀ زمانی تنظیم‌شده به‌طور خودکار قاب خواندن را می‌فرستد، بیت‌ها را خودش می‌سنجد و در صورت برخورد پرچم <span class="en">SMF</span> را می‌گذارد (با وقفۀ اختیاری) و در کل این فرایند نیازی به مداخلۀ مکرر <span class="en">CPU</span> نیست:</p>
+<div class="fig" id="code-7">
+  <div class="codeblk">/* خواندن SR1 (0x05 تک‌خط) ؛ ماسک 0x01 تنها بیت BUSY را می‌نگرد (PSMKR)
+ * و مقدار مطلوب تطبیق 0x00 یعنی پایان مشغولیت (PSMAR) با تطبیق همه‌بیتیِ PMM_AND ؛ برخورد ← پرچم SMF. */
+QSPI_AutoPollingMode_Config(QSPI1, 0x0000, 0x01, QSPI_PMM_AND);
+QSPI_AutoPollingModeStopCmd(QSPI1, ENABLE);      <span class="cm">/* APMS : توقف به‌محض برخورد */</span>
+QSPI_AutoPollingMode_SetInterval(QSPI1, 2500);   <span class="cm">/* فاصلهٔ پرس‌وجو */</span>
+QSPI_ComConfig_InitStructure.QSPI_ComConfig_Ins = FLASH_CMD_ReadStatus_REG1; <span class="cm">/* 0x05 */</span>
+QSPI_ComConfig_InitStructure.QSPI_ComConfig_FMode = QSPI_ComConfig_FMode_Auto_Polling;
+QSPI_Start(QSPI1);
+
+while (QSPI_GetFlagStatus(QSPI1, QSPI_FLAG_SM) == RESET) <span class="cm">/* انتظار برای تطابق وضعیت */</span>
+    ;</div>
+  <div class="figcap"><span class="cap-pill">کد ۷</span><span class="cap-text">پرس‌وجوی خودکار وضعیت با <span class="en">QSPI</span></span></div>
+</div>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN26001</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/07/08</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">SPI</span></td><td class="jt">رابط جانبی سریال هم‌زمان چهارخطیِ معرفی‌شدۀ <span class="en">MOTOROLA</span> با خطوط <span class="en">MISO</span>، <span class="en">MOSI</span>، <span class="en">SCK</span> و <span class="en">NSS</span>؛ ساعت همیشه از میزبان تأمین می‌شود و داده به‌صورت دودورکس کامل ردوبدل می‌شود</td></tr>
+      <tr><td><span class="en">QSPI</span></td><td class="jt">جانبیِ تقویت‌شدۀ ویژۀ اتصال حافظه‌های فلش <span class="en">SPI</span>؛ با خطوط دوطرفۀ <span class="en">SIO0-SIO3</span> و انتقال ۱، ۲ یا ۴ خطی، پهنای باند بالاتری می‌دهد</td></tr>
+      <tr><td><span class="en">Command Frame</span></td><td class="jt">قاب فرمانِ هر تعامل <span class="en">QSPI</span> با حداکثر پنج مرحله: فرمان، آدرس، بایت جایگزین، چرخه‌های انتظار و داده؛ هر مرحله قابل صرف‌نظر کردن است و تعداد خطوط آن مستقل پیکربندی می‌شود</td></tr>
+      <tr><td><span class="en">CCR</span></td><td class="jt">رجیستر پیکربندی فرمان؛ فیلدهای <span class="en">INSTRUCTION</span>، <span class="en">IMODE</span>، <span class="en">ADSIZE</span>، <span class="en">ADMODE</span>، <span class="en">ABMODE</span>، <span class="en">DMODE</span> و <span class="en">FMODE</span> ساختار قاب را تعیین می‌کنند</td></tr>
+      <tr><td><span class="en">Indirect Mode</span></td><td class="jt">حالت غیرمستقیم (کد ۰۰ نوشتن / ۰۱ خواندن)؛ داده از مسیر رجیستر <span class="en">DR</span> و میان‌گیر <span class="en">FIFO</span> سی‌ودوبایتی به‌صورت دستی یا با <span class="en">DMA</span> جابه‌جا می‌شود و <span class="en">DLR</span> طول آن را تعیین می‌کند</td></tr>
+      <tr><td><span class="en">Auto-polling Mode</span></td><td class="jt">حالت پرس‌وجوی خودکار (کد ۱۰)؛ سخت‌افزار به‌طور دوره‌ای فرمان خواندن وضعیت را می‌فرستد، با ماسک <span class="en">PSMKR</span> و مقدار تطبیق <span class="en">PSMAR</span> مقایسه می‌کند و برخورد، پرچم <span class="en">SMF</span> (و اختیاری وقفه) را می‌گذارد</td></tr>
+      <tr><td><span class="en">Memory-mapped Mode</span></td><td class="jt">حالت نگاشت حافظه (کد ۱۱)؛ فلش در فضای آدرس <span class="en">CPU</span> نگاشت می‌شود و مانند حافظۀ داخلی مستقیم خوانده می‌شود؛ فقط خواندن است و <span class="en">FIFO</span> نقش میان‌گیر پیش‌واکشی را دارد</td></tr>
+      <tr><td><span class="en">XIP</span></td><td class="jt">اجرای درجا؛ خواندن مستقیم کد و داده از فلشِ نگاشت‌شده در فضای آدرس، بدون عملیات رجیستری؛ کل فرایند گروه‌بندی قاب به سخت‌افزار سپرده می‌شود</td></tr>
+      <tr><td><span class="en">Dummy Cycles</span></td><td class="jt">چرخه‌های انتظار؛ دوره‌های خالی <span class="en">SCK</span> پیش از فاز داده تا دستگاه فرصت آماده‌سازی خروجی پیدا کند؛ با فیلد <span class="en">DCYC</span> تنظیم می‌شود و مقدار صفر یعنی صرف‌نظر از این مرحله</td></tr>
+      <tr><td><span class="en">DR / DLR</span></td><td class="jt">رجیستر داده / رجیستر طول داده؛ در حالت غیرمستقیم، داده از این مسیر و با طول تعیین‌شدۀ <span class="en">DLR</span> جابه‌جا می‌شود</td></tr>
+      <tr><td><span class="en">FTHRES</span></td><td class="jt">آستانۀ <span class="en">FIFO</span>؛ تعداد بایت‌های معتبر میان‌گیر <span class="en">FIFO</span> سی‌ودوبایتی <span class="en">QSPI</span> که در نمونۀ این سند ۴ بایت تنظیم شده است</td></tr>
+      <tr><td><span class="en">FSIZE (DCR)</span></td><td class="jt">اعلام ظرفیت فلش در رجیستر <span class="en">DCR</span>؛ ظرفیت برابر <span class="en">2^(FSIZE+1)</span> است و آدرس‌دهی بیرون از این محدوده پرچم <span class="en">TEF</span> را می‌گذارد</td></tr>
+      <tr><td><span class="en">CKMODE</span></td><td class="jt">فیلد انتخاب حالت ساعت؛ <span class="en">QSPI</span> فقط حالت‌های ۰ و ۳ (معادل <span class="en">CPOL/CPHA</span>) را پشتیبانی می‌کند</td></tr>
+      <tr><td><span class="en">DFM</span></td><td class="jt">حالت دو-فلشِ موازی؛ دو تراشۀ فلش هم‌زمان با ظرفیت و توان انتقال دوبرابر؛ در نمونۀ این سند غیرفعال است</td></tr>
+      <tr><td><span class="en">SMF / TEF</span></td><td class="jt">پرچم تطابق وضعیت در پرس‌وجوی خودکار / پرچم خطای آستانۀ زمان‌بندی به‌هنگام آدرس‌دهی بیرون از محدۀ ظرفیت اعلام‌شده</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN26001 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۲۳</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN26001</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
