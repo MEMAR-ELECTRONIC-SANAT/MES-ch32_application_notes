@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>راهنمای تایمر ساده‌شده (SLTM) در CH32V006/CH32M007 — ترجمۀ فارسی AN11001</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">معرفی و کاربرد</div>
+    <div class="t2">تایمر ساده‌شده <span class="en">SLTM</span></div>
+    <div class="t3">در <span class="en">CH32V006 / CH32M007</span></div>
+  </div>
+  <div class="c-sub">از ساختار داخلی و منابع ساعت تا حالت خروجی مقایسه و هم‌گامی با <span class="en">TIM1</span>، مقایسۀ کارکردی با تایمرهای پیشرفته و همگانی‌منظوره، تریگر <span class="en">DMA</span> و <span class="en">ADC</span> و گام‌به‌گام پیکربندی با نمونۀ کد</div>
+  <div class="c-desc">در این جزوه، ترجمۀ فارسی سند رسمی <span class="en">AN11001</span> (نسخۀ ۱٫۰، منتشرۀ شرکت <span class="en">WCH</span>) را می‌خوانید: تایمر ساده‌شده (<span class="en">SLTM</span>) جانبۀ ممتاز <span class="en">CH32V006/CH32M007</span> است که به‌جای خروجی <span class="en">PWM</span> بر تریگر داخلی و تولید پالس تمرکز دارد. ساختار داخلی و منابع ساعت، حالت مقایسه و هم‌گامی، جدول مقایسۀ تایمرها، تفاوت کانال‌های <span class="en">DMA</span> میان مدل‌ها و دو نمونۀ کد برای تریگر <span class="en">DMA</span> و <span class="en">ADC</span> مرور می‌شود.</div>
+  <div class="c-tags">
+    <span class="c-tag">میکروکنترلر <span class="en">CH32V006</span></span>
+    <span class="c-tag"><span class="en">CH32M007</span> صنعتی</span>
+    <span class="c-tag">تایمر ساده‌شده <span class="en">SLTM</span></span>
+    <span class="c-tag">تریگر <span class="en">ADC / DMA</span></span>
+    <span class="c-tag">هم‌گامی با <span class="en">TIM1</span></span>
+    <span class="c-tag">شمارندۀ ۱۶بیتی</span>
+    <span class="c-tag">نمونۀ کد <span class="en">EVT</span></span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN11001 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | معرفی تایمر ساده‌شده</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-111"><span class="s-id">1.1</span><span>ساختار داخلی <span class="en">SLTM</span></span><span class="s-dots"></span><span class="s-page">۳</span></a>
+    <a class="toc-sub" href="#sec-112"><span class="s-id">1.2</span><span>مقایسۀ <span class="en">SLTM</span> با <span class="en">TIM</span></span><span class="s-dots"></span><span class="s-page">۵</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | پیکربندی و استفاده از <span class="en">SLTM</span></span><span class="t-dots"></span><span class="t-page">۶</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-211"><span class="s-id">2.1</span><span>روند پیکربندی</span><span class="s-dots"></span><span class="s-page">۶</span></a>
+    <a class="toc-sub" href="#sec-212"><span class="s-id">2.2</span><span>تریگر <span class="en">DMA</span> با <span class="en">SLTM</span></span><span class="s-dots"></span><span class="s-page">۶</span></a>
+    <a class="toc-sub" href="#sec-213"><span class="s-id">2.3</span><span>تریگر <span class="en">ADC</span> با <span class="en">SLTM</span></span><span class="s-dots"></span><span class="s-page">۷</span></a>
+    <a class="toc-sub" href="#sec-214"><span class="s-id">2.4</span><span>جمع‌بندی</span><span class="s-dots"></span><span class="s-page">۸</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۴</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۸</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۵</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۹</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">جدول ۱-۱</span><span>اتصال تریگر داخلی تایمرها</span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">جدول ۱-۲</span><span>مقایسۀ تایمرها</span><span class="f-dots"></span><span class="f-page">۵</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۱</span><span>تریگر <span class="en">DMA</span> با <span class="en">SLTM</span></span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۲</span><span>تریگر <span class="en">ADC</span> با <span class="en">SLTM</span></span><span class="f-dots"></span><span class="f-page">۸</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> سری <span class="en">CH32V006/CH32M007</span> میکروکنترلرهای همگانی‌منظورۀ صنعتی مبتنی بر هستۀ <span class="en">RISC-V</span> کینگ‌که (<span class="en">QingKe</span>) از شرکت <span class="en">WCH</span> با منابع جانبی غنی هستند و تایمر ساده‌شده (<span class="en">SLTM</span>) یکی از جانبه‌های ممتازی است که این دو تراشه را از دیگر میکروکنترلرهای همگانی‌منظوره متمایز می‌کند. <span class="en">SLTM</span> برخلاف تایمرهای پیشرفته و همگانی‌منظوره شکل موجی به بیرون نمی‌دهد و بر تریگر زمانی داخلی و تولید پالس تمرکز دارد؛ همین طراحی «حذفی» آن را در سناریوهایی مانند تریگر زمانی <span class="en">ADC</span> و شمارش رویداد به گزینۀ بهینه بدل می‌کند. این سند اصول کار، ساختار داخلی، مقایسۀ کارکردی با سایر تایمرها و شیوۀ پیکربندی <span class="en">SLTM</span> را همراه با نمونه‌های کد پوشش می‌دهد.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>سری <span class="en">CH32V006/CH32M007</span> میکروکنترلرهای همگانی‌منظورۀ صنعتی شرکت نانجینگ چی‌هنغ (<span class="en">WCH</span>) هستند که بر پایۀ هستۀ <span class="en">RISC-V</span> کینگ‌که (<span class="en">QingKe</span>) طراحی شده‌اند. این دو میکروکنترلر منابع جانبی غنی‌ای در اختیار می‌گذارند و تایمر ساده‌شده یکی از جانبه‌های ممتازی است که <span class="en">CH32V006/CH32M007</span> را از دیگر میکروکنترلرهای همگانی‌منظوره متمایز می‌کند. این سند با محوریت تایمر ساده‌شده، اصول کار، سناریوهای کاربرد و شیوۀ پیکربندی آن را به‌صورت ژرف و گام‌به‌گام معرفی می‌کند.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>میکروکنترلرهای همگانی‌منظوره</td><td><span class="en">CH32V006 / CH32M007</span> و مشابه</td></tr>
+  </table>
+</div>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">معرفی تایمر ساده‌شده</div>
+  <div class="sec-divider"></div>
+</div>
+<p>تایمر ساده‌شده (<span class="en">SLTM</span>) یک ماژول تایمر ۱۶بیتی در <span class="en">CH32V006</span> است. در مقایسه با تایمر پیشرفته و تایمر همگانی‌منظوره، جایگاه کارکردی تایمر ساده‌شده متمرکزتر است — این تایمر مستقیماً شکل موج <span class="en">PWM</span> به بیرون نمی‌دهد، بلکه بر تریگر زمانی داخلی و کارکرد تولید پالس تمرکز دارد.</p>
+<p>انگیزۀ اصلی طراحی تایمر ساده‌شده آن بود که با فرض برآورده‌شدن سناریوهای کاربرد مشخص (مانند تریگر زمانی <span class="en">ADC</span> و شمارش رویداد)، کارکرد زمان‌بندی با کمترین منطق سخت‌افزاری پیاده‌سازی شود تا مصرف توان و مساحت تراشه کاهش یابد.</p>
+
+<h3 class="h2x" id="sec-111"><span class="dm">◆</span>۱.۱ ساختار داخلی <span class="en">SLTM</span></h3>
+
+<h4 class="h3x" id="sec-1111"><span class="dm">◆</span>۱.۱.۱ کارکرد</h4>
+<p>ماژول‌های کارکردی هستۀ تایمر ساده‌شده عبارت‌اند از:</p>
+<div class="bl">۱. شمارندۀ ۱۶بیتی (<span class="en">CNT</span>): هستۀ تایمر؛ با محوریت ساعت به‌صورت افزایشی می‌شمارد.</div>
+<div class="bl">۲. رجیستر بارگذاری مجدد خودکار (<span class="en">ATRLR</span>): سقف شمارش را تعیین می‌کند؛ هنگامی که <span class="en">CNT</span> به مقدار <span class="en">ARR</span> برسد، رویداد سرریز تولید می‌شود.</div>
+<div class="bl">۳. رجیستر کنترل (<span class="en">CTLR</span>): فعال‌سازی تایمر، جهت شمارش، مجازسازی رویداد به‌روزرسانی و مواردی از این دست را کنترل می‌کند.</div>
+<div class="bl">۴. رجیستر وضعیت (<span class="en">DMAINTENR</span>): مجازسازی <span class="en">DMA</span> و مجازسازی پیش‌بارگذاری رجیستر مقایسه.</div>
+<div class="bl">۵. رجیستر مقایسه (<span class="en">CHxCVR</span>): مقدار رجیستر مقایسۀ کانال x.</div>
+
+<h4 class="h3x" id="sec-1112"><span class="dm">◆</span>۱.۱.۲ منبع ساعت</h4>
+<p>ساعت تایمر ساده‌شده می‌تواند از ساعت گذرگاه <span class="en">HB</span> تأمین شود (در <span class="en">CH32V006/CH32M007</span>، گذرگاه <span class="en">HB</span> حداکثر <span class="en">48MHz</span> است). ساعت تایمر ساده‌شده همچنین می‌تواند از تایمرهای دیگری که قابلیت خروجی ساعت دارند تأمین شود (<span class="en">ITR1</span>). سیگنال‌های ساعت ورودی پس از عملیات پالایش از پیش تعیین‌شده به ساعت <span class="en">CK_PSC</span> تبدیل می‌شوند و به بخش شمارندۀ هسته داده می‌شوند. هستۀ تایمر ساده‌شده یک شمارندۀ ۱۶بیتی (<span class="en">CNT</span>) است. ساعت <span class="en">CK_PSC</span> بدون تقسیم فرکانس مستقیماً به <span class="en">CNT</span> داده می‌شود؛ <span class="en">CNT</span> از حالت شمارش افزایشی، حالت شمارش کاهشی و حالت شمارش افزایشی-کاهشی پشتیبانی می‌کند و یک رجیستر بارگذاری مجدد خودکار (<span class="en">ATRLR</span>) دارد که در پایان هر دورۀ شمارش، مقدار اولیه را برای <span class="en">CNT</span> بازبارگذاری می‌کند. (تایمر <span class="en">SLTM</span> پیش‌تقسیم‌کننده ندارد و قابلیت پیش‌تقسیم فراهم نیست.)</p>
+
+<h4 class="h3x" id="sec-1113"><span class="dm">◆</span>۱.۱.۳ حالت خروجی مقایسه</h4>
+<p>حالت خروجی مقایسه یکی از کارکردهای پایۀ تایمر است. اصل این حالت آن است که هنگامی که مقدار شمارندۀ هسته (<span class="en">CNT</span>) با مقدار رجیستر مقایسه برابر شود، کانال‌های ۱ و ۲ رویداد تریگر <span class="en">ADC</span> را صادر می‌کنند. کانال‌های ۳ و ۴ نیز هنگام تولید رویداد برابری مقایسه، اگر بیت <span class="en">CCxDE</span> از پیش تنظیم شده باشد، یک درخواست <span class="en">DMA</span> تولید می‌کنند. تایمر <span class="en">SLTM</span> نمی‌تواند مستقیماً شکل موج خروجی بدهد.</p>
+<p>گام‌های پیکربندی در حالت خروجی مقایسه به این ترتیب است:</p>
+<div class="bl">۱) منبع ساعت شمارندۀ هسته (<span class="en">CNT</span>) و مقدار بارگذاری مجدد خودکار را پیکربندی کنید؛</div>
+<div class="bl">۲) مقدار شمارش موردنظر برای مقایسه را در رجیستر مقایسه (<span class="en">R16_TIMx_CHxCVR</span>) تنظیم کنید؛</div>
+<div class="bl">۳) بیت <span class="en">OCxPE</span> را صفر نگه دارید تا رجیستر پیش‌بارگذاریِ رجیستر مقایسه غیرفعال بماند؛</div>
+<div class="bl">۴) بیت <span class="en">CEN</span> را یک کنید تا تایمر راه بیفتد.</div>
+
+<h4 class="h3x" id="sec-1114"><span class="dm">◆</span>۱.۱.۴ حالت هم‌گامی</h4>
+<p>برای ساعت <span class="en">SLTM</span> دو انتخاب وجود دارد: یکی مسیر مستقیم از گذرگاه <span class="en">HB</span> و دیگری از طریق <span class="en">TIM1</span> (حالت هم‌گامی). تایمر ساده‌شده تنها ورودی تایمر ۱ را می‌پذیرد (<span class="en">ITRx</span>). اتصال تریگر داخلی تایمرها در جدول آمده است.</p>
+<div class="tblwrap" id="tab-11">
+  <div class="tblcap"><span class="cap-pill">جدول ۱-۱</span><span class="cap-text">اتصال تریگر داخلی تایمرها</span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:26%;">تایمر مقصد (اسلیو)</th><th><span class="en">ITR0</span> (<span class="en">TS=000</span>)</th><th><span class="en">ITR1</span> (<span class="en">TS=001</span>)</th><th><span class="en">ITR2</span> (<span class="en">TS=010</span>)</th><th><span class="en">ITR3</span> (<span class="en">TS=011</span>)</th></tr></thead>
+    <tr><td><span class="en">SLTM</span></td><td><span class="en">TIM1</span></td><td><span class="en">-</span></td><td><span class="en">-</span></td><td><span class="en">-</span></td></tr>
+  </table>
+</div>
+
+<h3 class="h2x" id="sec-112"><span class="dm">◆</span>۱.۲ مقایسۀ <span class="en">SLTM</span> با <span class="en">TIM</span></h3>
+<p>برای درک بهتر جایگاه تایمر ساده‌شده، در ادامه از دید کارکردی، تایمر پیشرفته / تایمر همگانی‌منظوره / تایمر ساده‌شده با یکدیگر مقایسه می‌شوند:</p>
+<div class="tblwrap" id="tab-12">
+  <div class="tblcap"><span class="cap-pill">جدول ۱-۲</span><span class="cap-text">مقایسۀ تایمرها</span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:28%;">ویژگی کارکردی</th><th style="width:24%;">تایمر پیشرفته</th><th style="width:24%;">تایمر همگانی‌منظوره</th><th>تایمر ساده‌شده</th></tr></thead>
+    <tr><td>پهنای بیت</td><td><span class="en">16 bit</span></td><td><span class="en">16 bit</span></td><td><span class="en">16 bit</span></td></tr>
+    <tr><td>بارگذاری مجدد خودکار</td><td>پشتیبانی می‌شود</td><td>پشتیبانی می‌شود</td><td>پشتیبانی می‌شود</td></tr>
+    <tr><td>خروجی شکل موج</td><td>پشتیبانی می‌شود</td><td>پشتیبانی می‌شود</td><td>پشتیبانی نمی‌شود</td></tr>
+    <tr><td>کنترل ناحیۀ مرده</td><td>پشتیبانی می‌شود</td><td>پشتیبانی نمی‌شود</td><td>پشتیبانی نمی‌شود</td></tr>
+    <tr><td>کارکرد ترمز</td><td>پشتیبانی می‌شود</td><td>پشتیبانی نمی‌شود</td><td>پشتیبانی نمی‌شود</td></tr>
+    <tr><td>تصاحب ورودی</td><td>پشتیبانی می‌شود</td><td>پشتیبانی می‌شود</td><td>پشتیبانی نمی‌شود</td></tr>
+    <tr><td>انکودر</td><td>پشتیبانی می‌شود</td><td>پشتیبانی می‌شود</td><td>پشتیبانی نمی‌شود</td></tr>
+    <tr><td>وقفۀ زمان‌بندی</td><td>پشتیبانی می‌شود</td><td>پشتیبانی می‌شود</td><td>پشتیبانی نمی‌شود</td></tr>
+    <tr><td><span class="en">DMA</span></td><td>پشتیبانی می‌شود</td><td>پشتیبانی می‌شود</td><td>پشتیبانی می‌شود</td></tr>
+  </table>
+</div>
+<p>از جدول بالا به‌روشنی دیده می‌شود که تایمر ساده‌شده هستۀ اصلی کارکرد یعنی شمارش زمانی را نگه داشته و کارکردهای پیچیده‌ای مانند خروجی شکل موج و تصاحب سیگنال را کنار گذاشته است. همین طراحی «حذفی» آن را در سناریوهای خاص به گزینۀ بهینه‌تری تبدیل می‌کند.</p>
+<p>در پروژه‌های واقعی معمولاً چند تایمر باید با یکدیگر همکاری کنند. در این میان برای خروجی <span class="en">PWM</span> و کنترل موتور عمدتاً تایمر پیشرفته انتخاب می‌شود؛ برای تصاحب ورودی، اندازه‌گیری پالس و انکودر عمدتاً تایمر همگانی‌منظوره؛ و برای تریگر <span class="en">ADC</span> و تریگر <span class="en">DMA</span> می‌توان تایمر ساده‌شده را برگزید.</p>
+
+<h4 class="h3x" id="sec-1121"><span class="dm">◆</span>۱.۲.۱ نمونۀ کاربرد</h4>
+<p>در کاربرد کنترل موتور، تایمر پیشرفته (<span class="en">TIM1</span>) سیگنال محرک <span class="en">PWM</span> تولید می‌کند و تایمر ساده‌شده (<span class="en">TIM3</span>) مسئول تریگر دوره‌ای <span class="en">ADC</span> برای برداشت سیگنال بازخورد جریان/ولتاژ است. همکاری این دو، یک حلقهٔ کنترل کامل را محقق می‌کند:</p>
+<div class="bl"><span class="en">TIM1</span> سیگنال <span class="en">PWM</span> مکمل تولید می‌کند و ادوات قدرت را محرک می‌کند؛</div>
+<div class="bl"><span class="en">TIM3</span> با فرکانس ثابت (مثلاً <span class="en">20kHz</span>) نمونه‌برداری <span class="en">ADC</span> را تریگر می‌کند؛</div>
+<div class="bl">مقادیر نمونۀ <span class="en">ADC</span> به‌طور خودکار با <span class="en">DMA</span> در بافر ذخیره می‌شوند؛</div>
+<div class="bl"><span class="en">CPU</span> در وقفۀ <span class="en">TIM3</span> آخرین مقادیر نمونه را می‌خواند و الگوریتم کنترل را اجرا می‌کند؛</div>
+<div class="bl">نتیجۀ الگوریتم کنترل، نسبت روشنایی <span class="en">PWM</span> تایمر <span class="en">TIM1</span> را به‌روز می‌کند.</div>
+<p>در این معماری، تایمر ساده‌شده نقش «ساعت نمونه‌برداری» را ایفا می‌کند و بی‌درنگی و قطعیت حلقهٔ کنترل را تضمین می‌کند.</p>
+
+<h4 class="h3x" id="sec-1122"><span class="dm">◆</span>۱.۲.۲ پرسش‌های رایج</h4>
+<div class="bl">۱. تایمر ساده‌شده از کارکرد خروجی شکل موج پشتیبانی نمی‌کند. اگر به خروجی <span class="en">PWM</span> نیاز دارید، باید از تایمر پیشرفته (<span class="en">TIM1</span>) یا تایمر همگانی‌منظوره (<span class="en">TIM2</span>) استفاده کنید.</div>
+<div class="bl">۲. برای دستیابی به دورۀ زمان‌بندی طولانی‌تر می‌توان از حالت هم‌گامی بهره گرفت (تایمر <span class="en">SLTM</span> رجیستر تقسیم فرکانس ندارد و از پیکربندی تقسیم فرکانس پشتیبانی نمی‌کند).</div>
+<div class="bl">۳. تایمر <span class="en">SLTM</span> از وقفه پشتیبانی نمی‌کند؛ وقفۀ به‌روزرسانی و دیگر وقفه‌ها را ندارد.</div>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">پیکربندی و استفاده از <span class="en">SLTM</span></div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-211"><span class="dm">◆</span>۲.۱ روند پیکربندی</h3>
+<p>روند پایۀ استفاده از تایمر ساده‌شده به این شکل است:</p>
+<div class="bl"><b>گام ۱ — فعال‌سازی ساعت تایمر:</b> پیش از استفاده از هر جانبه، نخست باید ساعت آن فعال شود. فعال‌سازی ساعت تایمر ساده‌شده از طریق رجیسترهای مربوط ماژول <span class="en">RCC</span> (ریست و کنترل ساعت) پیکربندی می‌شود.</div>
+<div class="bl"><b>گام ۲ — تعیین حالت شمارش <span class="en">SLTM</span>:</b> با پیکربندی <span class="en">TIM3->CTLR</span> شیوۀ شمارش <span class="en">SLTM</span> مشخص می‌شود.</div>
+<div class="bl"><b>گام ۳ — پیکربندی مقدار بارگذاری مجدد خودکار:</b> مقدار <span class="en">ARR</span> را بر اساس دورۀ زمان‌بندی موردنیاز محاسبه و در رجیستر <span class="en">TIM3->ARR</span> بنویسید.</div>
+<div class="bl"><b>گام ۴ — فعال‌سازی <span class="en">DMA</span>:</b> اگر می‌خواهید <span class="en">SLTM</span> تریگر <span class="en">DMA</span> باشد، باید رجیستر <span class="en">TIM3->DMAINTENR</span> پیکربندی شود.</div>
+<div class="bl"><b>گام ۵ — فعال‌سازی تایمر:</b> بیت فعال‌سازی (<span class="en">CEN</span>) را در رجیستر <span class="en">TIM3->CTLR</span> تنظیم کنید تا تایمر راه بیفتد.</div>
+
+<h3 class="h2x" id="sec-212"><span class="dm">◆</span>۲.۲ تریگر <span class="en">DMA</span> با <span class="en">SLTM</span></h3>
+<p>رویدادهای مقایسۀ کانال ۳ و کانال ۴ تایمر <span class="en">SLTM</span> می‌توانند تریگر <span class="en">DMA</span> باشند. برای تریگر <span class="en">DMA</span> باید بیت <span class="en">CCxDE</span> رجیستر <span class="en">DMAINTENR</span> پیکربندی شود.</p>
+<p><span class="en">CH32V007</span>، <span class="en">CH32V006</span> و <span class="en">CH32M007</span> همگی صاحب تایمر <span class="en">SLTM</span> (<span class="en">TIM3</span>) هستند و همگی می‌توانند از طریق کانال ۳ و کانال ۴ تایمر <span class="en">SLTM</span> تریگر <span class="en">DMA</span> بدهند؛ اما از نظر تعداد کانال‌ها، میان <span class="en">CH32V007</span>/<span class="en">CH32V006</span> و <span class="en">CH32M007</span> تفاوتی وجود دارد.</p>
+<p>در <span class="en">CH32M007</span>، یک رویداد <span class="en">CH3</span> از <span class="en">TIM3</span> می‌تواند کانال‌های ۱، ۲ و ۳ واحد <span class="en">DMA1</span> را تریگر کند؛ و یک رویداد <span class="en">CH4</span> از <span class="en">TIM3</span> می‌تواند کانال‌های ۴، ۵ و ۶ واحد <span class="en">DMA1</span> را تریگر کند.</p>
+<p>در <span class="en">CH32V006</span> و <span class="en">CH32V007</span>، یک رویداد <span class="en">CH3</span> از <span class="en">TIM3</span> تنها می‌تواند کانال ۱ واحد <span class="en">DMA1</span> را تریگر کند؛ و یک رویداد <span class="en">CH4</span> از <span class="en">TIM3</span> تنها می‌تواند کانال ۴ را تریگر کند.</p>
+<div class="fig" id="fig-21">
+  <div class="figbox">
+    <img src="assets/img/an11001-fig_p6_x56.png" alt="شکل ۲-۱" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۱</span><span class="cap-text">تریگر <span class="en">DMA</span> با <span class="en">SLTM</span></span></div>
+</div>
+<p><span class="en">CH32V007</span>، <span class="en">CH32V006</span> و <span class="en">CH32M007</span> از یک <span class="en">EVT</span> مشترک استفاده می‌کنند: <span class="en">https://www.wch.cn/downloads/CH32V006EVT_ZIP.html</span>. در نمونۀ <span class="en">SLTM_DMA</span> آن، تعداد کانال‌های <span class="en">DMA</span> بر اساس مدل تراشه پیکربندی شده است.</p>
+
+<h3 class="h2x" id="sec-213"><span class="dm">◆</span>۲.۳ تریگر <span class="en">ADC</span> با <span class="en">SLTM</span></h3>
+<p>رویدادهای مقایسۀ کانال ۱ و کانال ۲ تایمر <span class="en">SLTM</span> می‌توانند تریگر <span class="en">ADC</span> باشند.</p>
+<div class="fig" id="fig-22">
+  <div class="figbox">
+    <img src="assets/img/an11001-fig_p6_x58.png" alt="شکل ۲-۲" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۲</span><span class="cap-text">تریگر <span class="en">ADC</span> با <span class="en">SLTM</span></span></div>
+</div>
+<p>تایمر <span class="en">SLTM</span> رویداد به‌روزرسانی ندارد؛ برای طولانی‌ترکردن رویداد زمان‌بندی می‌توان مقدار رجیستر مقایسه را بزرگ‌تر کرد یا از طریق آبشارکردن تایمرها به این هدف رسید.</p>
+
+<h3 class="h2x" id="sec-214"><span class="dm">◆</span>۲.۴ جمع‌بندی</h3>
+<p>تایمر ساده‌شدۀ <span class="en">CH32V006</span> یک ماژول تایمر ۱۶بیتی است؛ اگرچه کارکردهایش ساده‌سازی شده (از خروجی <span class="en">PWM</span> و تصاحب ورودی پشتیبانی نمی‌کند)، در سناریوهای زمان‌بندی پایه عملکرد درخشانی دارد. وجود این جانبه باعث می‌شود <span class="en">CH32V006</span> در کنار حفظ همۀ کارکردهای تایمر پیشرفته و تایمر همگانی‌منظوره، یک منبع زمان‌بندی مستقل اضافه نیز به دست آورد.</p>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN11001</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/07/08</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">CH32V006 / CH32M007</span></td><td class="jt">میکروکنترلرهای همگانی‌منظورۀ صنعتی شرکت <span class="en">WCH</span> مبتنی بر هستۀ <span class="en">RISC-V</span> کینگ‌که (<span class="en">QingKe</span>)، مجهز به تایمر ساده‌شده</td></tr>
+      <tr><td><span class="en">SLTM</span></td><td class="jt">نام جانبۀ تایمر ساده‌شده در این تراشه‌ها؛ شمارندۀ ۱۶بیتی که به‌جای خروجی <span class="en">PWM</span> بر تریگر داخلی و تولید پالس تمرکز دارد و در سند با نمونۀ <span class="en">TIM3</span> پیکربندی می‌شود</td></tr>
+      <tr><td><span class="en">CNT</span></td><td class="jt">شمارندۀ هستۀ تایمر؛ با محوریت ساعت شمرده می‌شود و حالت‌های افزایشی، کاهشی و افزایشی-کاهشی دارد</td></tr>
+      <tr><td><span class="en">ATRLR</span></td><td class="jt">رجیستر بارگذاری مجدد خودکار؛ سقف شمارش را تعیین می‌کند و رسیدن <span class="en">CNT</span> به مقدار <span class="en">ARR</span> رویداد سرریز تولید می‌شود</td></tr>
+      <tr><td><span class="en">CTLR</span></td><td class="jt">رجیستر کنترل تایمر؛ فعال‌سازی، جهت شمارش و مجازسازی رویداد به‌روزرسانی و… از این‌جا تنظیم می‌شود</td></tr>
+      <tr><td><span class="en">DMAINTENR</span></td><td class="jt">رجیستر مجازسازی <span class="en">DMA</span> و وقفه؛ مجازسازی <span class="en">DMA</span> و مجازسازی پیش‌بارگذاری رجیستر مقایسه در آن قرار دارد</td></tr>
+      <tr><td><span class="en">CHxCVR</span></td><td class="jt">رجیستر مقایسۀ کانال x؛ مقداری که با شمارندۀ هسته مقایسه می‌شود و رویداد برابری می‌سازد</td></tr>
+      <tr><td><span class="en">CK_PSC</span></td><td class="jt">ساعت ورودی شمارندۀ هسته؛ حاصل سیگنال ساعت منبع پس از عملیات پالایش تعیین‌شده</td></tr>
+      <tr><td><span class="en">ITRx</span></td><td class="jt">ورودی تریگر داخلی از تایمر دیگر؛ تایمر ساده‌شده تنها ورودی تایمر ۱ (<span class="en">TIM1</span>) را می‌پذیرد</td></tr>
+      <tr><td><span class="en">CCxDE</span></td><td class="jt">بیت مجازسازی درخواست <span class="en">DMA</span> برای رویداد مقایسه در رجیستر <span class="en">DMAINTENR</span>؛ شرط تریگر <span class="en">DMA</span> از کانال‌های ۳ و ۴</td></tr>
+      <tr><td><span class="en">OCxPE</span></td><td class="jt">بیت مجازسازی پیش‌بارگذاری مقایسه/خروجی؛ در حالت خروجی مقایسۀ تایمر ساده‌شده باید صفر بماند</td></tr>
+      <tr><td><span class="en">CEN</span></td><td class="jt">بیت فعال‌سازی شمارنده در رجیستر <span class="en">CTLR</span>؛ با یک‌کردن آن تایمر راه می‌افتد</td></tr>
+      <tr><td><span class="en">EVT</span></td><td class="jt">بستۀ برد ارزیابی <span class="en">WCH</span>؛ نمونۀ <span class="en">SLTM_DMA</span> آن تعداد کانال‌های <span class="en">DMA</span> را بر اساس مدل تراشه پیکربندی می‌کند</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN11001 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۲۳</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN11001</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
