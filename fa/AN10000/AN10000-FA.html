@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>اصول تشخیص کلید لمسی خازنی و طراحی PCB در میکروکنترلرهای CH32 — ترجمۀ فارسی AN10000</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">اصول تشخیص کلید لمسی خازنی</div>
+    <div class="t2">مقایسۀ طرح‌ها و طراحی <span class="en">PCB</span></div>
+    <div class="t3">برای میکروکنترلرهای همگانی‌منظورۀ <span class="en">CH32</span></div>
+  </div>
+  <div class="c-sub">از مدل خازنی کلید لمسی و شارژ با منبع جریان ثابت و شیلد فعال تا انتقال بار در <span class="en">CH32V205</span>، و از مسیرکشی کانال‌ها و انتخاب <span class="en">Pad</span> تا حفاظت <span class="en">EMC</span> تغذیه و خازن‌های نبایُس</div>
+  <div class="c-desc">در این جزوه، ترجمۀ فارسی سند رسمی <span class="en">AN10000</span> (نسخۀ ۱٫۰، منتشرۀ شرکت <span class="en">WCH</span>) را می‌خوانید: کلید لمسی با «سیگنال زمین» پیرامون خود یک خازن حس‌گر می‌سازد و نزدیک‌شدن انگشت، ظرفیت انگاری را تغییر می‌دهد؛ تغییر ولتاژ حاصل با <span class="en">ADC</span> سنجیده می‌شود و مبنای تشخیص فشردن کلید است. سه طرح تشخیص (شارژ با منبع جریان ثابت، شیلد فعال برای حذف اثر قطرۀ آب و تداخل زمین، و انتقال بار برای الکترودهای با ظرفیت بزرگ‌تر)، مسیرکشی کانال‌ها، انتخاب <span class="en">Pad</span>، پورۀ زمین شبکه‌ای، حفاظت <span class="en">EMC</span> تغذیه و جدول پشتیبانی تراشه‌های سری <span class="en">CH32</span> گام‌به‌گام مرور می‌شود.</div>
+  <div class="c-tags">
+    <span class="c-tag">میکروکنترلرهای <span class="en">CH32</span></span>
+    <span class="c-tag">کلید لمسی خازنی (<span class="en">Touch Key</span>)</span>
+    <span class="c-tag">شارژ با منبع جریان ثابت</span>
+    <span class="c-tag">شیلد فعال (<span class="en">Active Shield</span>)</span>
+    <span class="c-tag">انتقال بار (<span class="en">Charge Transfer</span>)</span>
+    <span class="c-tag">مسیرکشی و پورۀ زمین شبکه‌ای</span>
+    <span class="c-tag">حفاظت <span class="en">EMC</span> تغذیه</span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN10000 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | اصل کار کلید لمسی و طرح‌های تشخیص</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-111"><span class="s-id">1.1</span><span>اصل کار کلید لمسی</span><span class="s-dots"></span><span class="s-page">۳</span></a>
+    <a class="toc-sub" href="#sec-112"><span class="s-id">1.2</span><span>طرح‌های تشخیص کلید لمسی</span><span class="s-dots"></span><span class="s-page">۴</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | طراحی <span class="en">PCB</span> کلید لمسی</span><span class="t-dots"></span><span class="t-page">۷</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-211"><span class="s-id">2.1</span><span>طراحی <span class="en">PCB</span> کلید لمسی</span><span class="s-dots"></span><span class="s-page">۷</span></a>
+    <a class="toc-sub" href="#sec-212"><span class="s-id">2.2</span><span>حفاظت <span class="en">EMC</span> کلید لمسی</span><span class="s-dots"></span><span class="s-page">۱۱</span></a>
+  </div>
+  <a class="toc-row" href="#sec-app"><span class="t-num">۴</span><span class="t-title">پیوست | جدول پشتیبانی تراشه‌های سری <span class="en">CH32</span></span><span class="t-dots"></span><span class="t-page">۱۳</span></a>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۵</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۱۴</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۶</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۱۴</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">شکل ۱-۱</span><span>مدل ساده‌شدۀ صفحۀ لمسی</span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۲</span><span>توالی زمانی شارژ با منبع جریان ثابت</span><span class="f-dots"></span><span class="f-page">۵</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۳</span><span>نمودار کارکرد شیلد فعال</span><span class="f-dots"></span><span class="f-page">۶</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۴</span><span>توالی زمانی کارکرد انتقال بار</span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۱</span><span>مسیرکشی کانال‌های لمسی</span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۲</span><span>مسیرکشی پیشنهادی خطوط ارتباطی و کلید لمسی</span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۳</span><span>نمونۀ پورۀ زمین شبکه‌ای</span><span class="f-dots"></span><span class="f-page">۹</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۴</span><span>نمونۀ شکل‌های گوناگون کلید لمسی</span><span class="f-dots"></span><span class="f-page">۱۰</span></div>
+      </div>
+      <div>
+        <div class="frow"><span class="f-id">شکل ۲-۵</span><span>فاصلۀ کلید لمسی تا شبکۀ زمین</span><span class="f-dots"></span><span class="f-page">۱۱</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۶</span><span>مسیرکشی پیشنهادی خازن‌های نبایُس</span><span class="f-dots"></span><span class="f-page">۱۲</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۷</span><span>استفاده از مقاومت سری</span><span class="f-dots"></span><span class="f-page">۱۳</span></div>
+        <div class="frow"><span class="f-id">جدول ۲-۱</span><span>جدول ثابت دی‌الکتریک نسبی</span><span class="f-dots"></span><span class="f-page">۱۰</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> کلید لمسی خازنی با تشکیل یک خازن حس‌گر میان الکترود و سیگنال زمین پیرامون کار می‌کند؛ نزدیک‌شدن یا تماس انگشت میدان الکتریکی را مختل می‌کند، ظرفیت انگاری <span class="en">Cp</span> به <span class="en">Cp+CF</span> تغییر می‌کند و این تغییر با <span class="en">ADC</span> سنجیده می‌شود. سند <span class="en">AN10000</span> سه راه تشخیص را مرور می‌کند: شارژ با منبع جریان ثابت (جریان قابل پیکربندی <span class="en">35/17.5uA</span> و ولتاژ تشخیصِ تختهٔ خالی در حوالی <span class="en">VDD*3/4</span>)، شیلد فعال برای خنثی‌کردن اثر قطرۀ آب و تداخل زمین به کمک الکترود شیلدِ هم‌پتانسیل، و روش انتقال بار در <span class="en">CH32V205</span> با خازن مرجع خارجی در مرتبۀ <span class="en">nF</span> برای الکترودهای با ظرفیت بزرگ‌تر. در زمینۀ طراحی <span class="en">PCB</span> نیز مسیرکشی کوتاه و هم‌فاصلۀ کانال‌ها، مسیر عمودی نسبت به خطوط سیگنال، پورۀ زمین شبکه‌ای به‌جای زمین توپُر، انتخاب <span class="en">Pad</span> بدون گوشۀ تیز با ثابت دی‌الکتریک <span class="en">1.5~4</span> و فاصلۀ حدود <span class="en">1.5mm</span> تا شبکۀ زمین، به‌همراه حفاظت <span class="en">EMC</span> تغذیه (مغناطی‌زد پس از <span class="en">LDO</span>، خازن تانتالیوم، خازن‌های نبایُس نزدیک پایه‌ها و مقاومت سری حدود <span class="en">500Ω</span>) بررسی می‌شود.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>این راهنما، اصل تشخیص کلیدهای لمسی در سری همگانی‌منظورۀ شرکت <span class="en">WCH</span> و مقایسۀ انواع گوناگون آن را معرفی می‌کند و اصول طراحی <span class="en">PCB</span> را بیان می‌دارد. عادت درست در چیدمان برد، پیاده‌سازی نرم‌افزار در مراحل بعدی را بسیار ساده‌تر می‌کند و در جریان توسعه، رعایت اصول طراحی <span class="en">PCB</span> الزامی است. مطالعۀ این یادداشت به بهبود کیفیت کاربردهای لمسی کمک می‌کند.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>میکروکنترلرهای همگانی‌منظوره</td><td>سری همگانی‌منظورۀ <span class="en">CH32</span></td></tr>
+  </table>
+</div>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">اصل کار کلید لمسی و طرح‌های تشخیص</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-111"><span class="dm">◆</span>۱.۱ اصل کار کلید لمسی</h3>
+<p>اساس تشخیص کلید لمسی آن است که کلید با «سیگنال زمین» پیرامون خود یک خازن حس‌گر تشکیل می‌دهد؛ هنگامی که انگشت به ناحیۀ بالای این خازن نزدیک می‌شود، میدان الکتریکی را مختل می‌کند و در نتیجه ظرفیت انگاری تغییر می‌کند. بر پایۀ همین تغییر ظرفیت می‌توان تشخیص داد که آیا بدن انسان به کلید لمسی نزدیک شده یا با آن تماس گرفته است. در کاربردهای معمول، مدل خازنیِ «انگشت و صفحۀ لمسی» جایگزین ساده‌شدۀ مدل خازنیِ «بدن انسان و صفحۀ لمسی» می‌شود؛ مانند شکل ۱-۱.</p>
+<div class="fig" id="fig-11">
+  <div class="figbox">
+    <img src="assets/img/an10000-fig_p3_x34.jpeg" alt="شکل ۱-۱" style="max-width:620px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۱</span><span class="cap-text">مدل ساده‌شدۀ صفحۀ لمسی</span></div>
+</div>
+<p>وقتی کلید لمسی لمس نشده است، <span class="en">Pad</span> لمسی روی <span class="en">PCB</span> (همان کلید لمسی) با زمینِ نزدیک، ظرفیت انگاری <span class="en">Cp</span> را می‌سازد. هنگامی که انگشت کلید را لمس می‌کند، ظرفیت اضافی <span class="en">CF</span> را وارد مدار می‌کند که با ظرفیت انگاری موازی است و ظرفیت کل به <span class="en">C<sub>x</sub>=C<sub>p</sub>+C<sub>F</sub></span> تغییر می‌یابد. همین افزایش ظرفیتِ ناشی از انگشت، در مدهای تشخیص گوناگون می‌تواند تغییر ولتاژ ایجاد کند؛ با سنجش این تغییر ولتاژ توسط <span class="en">ADC</span> تشخیص می‌دهیم که آیا کلید لمسی فشرده شده است یا نه.</p>
+
+<h3 class="h2x" id="sec-112"><span class="dm">◆</span>۱.۲ طرح‌های تشخیص کلید لمسی</h3>
+<p>در ادامه، طرح‌های تشخیص کلید لمسی بررسی می‌شود: نخست شارژ با منبع جریان ثابت، سپس شیلد فعال برای حذف اثر ظرفیت‌های افزوده و در پایان روش انتقال بار که در <span class="en">CH32V205</span> پشتیبانی می‌شود.</p>
+
+<h4 class="h3x" id="sec-1121"><span class="dm">◆</span>۱.۲.۱ شارژ با منبع جریان ثابت</h4>
+<p>در طرح شارژ با منبع جریان، یک <span class="en">GPIO</span> ثابت از تراشه به‌صورت منبع جریان در نظر گرفته می‌شود و خازن بیرونی را شارژ می‌کند. برای سری همگانی‌منظوره که از شارژ با منبع جریان ثابت پشتیبانی می‌کند، شیوۀ کار به این ترتیب است:</p>
+<div class="fig" id="fig-12">
+  <div class="figbox">
+    <img src="assets/img/an10000-fig_p3_x35.png" alt="شکل ۱-۲" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۲</span><span class="cap-text">توالی زمانی شارژ با منبع جریان ثابت</span></div>
+</div>
+<div class="bl"><b>۱.</b> هنگام استفاده از کلید لمسی باید مطمئن شوید <span class="en">ADC</span> در مود کاری عادی قرار دارد؛ پس از فعال‌شدن کلید لمسی، نخست کلید تخلیه می‌شود تا در هر دور تشخیص، سطح ولتاژ پایۀ خارجی از <span class="en">0V</span> آغاز شود.</div>
+<div class="bl"><b>۲.</b> کلید لمسی با منبع جریان ثابت شارژ می‌شود؛ اندازۀ جریان منبع جریان طبق پیکربندی رجیستر <span class="en">35/17.5uA</span> انتخاب می‌شود. با تنظیم مدت‌زمان‌های گوناگون شارژ، پیشنهاد می‌شود ولتاژ تشخیصِ تختهٔ خالی (بدون لمس) در حوالی <span class="en">VDD*3/4</span> قرار گیرد تا تشخیص فشردن انگشت آسان‌تر شود.</div>
+<div class="bl"><b>۳.</b> پس از پایان شارژ، <span class="en">ADC</span> تبدیلِ تحریک‌شده را انجام می‌دهد و مقدار ولتاژ پایه را می‌سنجد. پس از اتمام تبدیل <span class="en">ADC</span>، عملیات گام‌های ۱ و ۲ تکرار می‌شود تا کلید لمسی به‌طور پیوسته به کار خود ادامه دهد.</div>
+<p>اصل کاری اصلیِ روش لمسی با منبع جریان ثابت آن است که منبع جریان، خازن را شارژ می‌کند و ولتاژ شارژ از رابطۀ زیر به دست می‌آید:</p>
+<div class="formula">V = I * t / C</div>
+<p>که در آن <span class="en">I</span>: جریان منبع جریان ثابت داخلی؛ <span class="en">t</span>: مدت‌زمان شارژ ثابت؛ <span class="en">C</span>: ظرفیت کل کلید.</p>
+
+<h4 class="h3x" id="sec-1122"><span class="dm">◆</span>۱.۲.۲ شیلد فعال</h4>
+<p>همان‌طور که دیده می‌شود، فشردن انگشت ظرفیت انگاری را افزایش می‌دهد و ولتاژ پیش و پس از لمس را تغییر می‌دهد؛ از همین راه تشخیص می‌دهیم که کلید لمسی فشرده شده است. اما در برخی سناریوها ممکن است عوامل بیرونی باعث بزرگ‌شدن ظرفیت انگاریِ مادۀ بیرونی شوند؛ مانند چکیدن قطرۀ آب که می‌تواند به تشخیص اشتباهِ فشردن کلید بینجامد. برای حذف اثر این ظرفیت افزوده می‌توان از قابلیت شیلد فعال استفاده کرد.</p>
+<p>پس از روشن‌کردن قابلیت شیلد فعال در <span class="en">MCU</span>، الکترود شیلد الکترود لمسی را احاطه می‌کند؛ این الکترود با <span class="en">MCU</span> رانده می‌شود و ولتاژ آن همیشه با ولتاژ الکترود لمسی برابر است. با حفاظت الکترود شیلد، تداخل مخرب <span class="en">GND</span> نخست از مسیر ظرفیت انگاری <span class="en">Cp2</span> به الکترود شیلد می‌رسد و در آن‌جا جذب می‌شود و از این راه اثر تداخل <span class="en">GND</span> بر الکترود لمسی تضعیف می‌گردد. چون میان الکترود لمسی و الکترود شیلد اختلاف ولتاژی وجود ندارد، ظرفیت انگاری <span class="en">Cp1</span> میان این دو در انتقال تداخل مخرب شرکت نمی‌کند؛ در نتیجه اثر تداخل بیرونی بر کلید لمسی کم می‌شود و قابلیت اطمینان کلید بالا می‌رود. هنگامی که قطره‌ای آب روی برد <span class="en">PCB</span> می‌چکد، قطره روی کلید به ظرفیت انگاریِ میان الکترود لمسی و الکترود شیلد افزایش بزرگی می‌دهد؛ اما پس از روشن‌شدن شیلد فعال، چون ولتاژ الکترود لمسی و الکترود شیلد همیشه برابر است، این افزایش ظرفیتِ ناشی از قطره در فرایند شارژ و تخلیه شرکت نمی‌کند و بر تشخیص اثری نمی‌گذارد.</p>
+<div class="fig" id="fig-13">
+  <div class="figbox">
+    <img src="assets/img/an10000-fig_p4_x47.jpeg" alt="شکل ۱-۳" style="max-width:420px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۳</span><span class="cap-text">نمودار کارکرد شیلد فعال</span></div>
+</div>
+<p>برای روشن‌کردن شیلد فعال تنها کافی است بیت فعال‌سازی شیلد فعال را روشن کنید و بیت شیلد فعالِ کانال تبدیل موردنیاز را انتخاب کنید؛ اگر کلیدهای لمسی موردنظر کانال ۲ و کانال ۳ باشند، پیکربندی با توابع کتابخانه‌ای چنین است:</p>
+<div class="codeblk">ADC_TKey_MulShieldCmd(ADC1, ENABLE);                        <span class="cm">// روشن‌کردن شیلد فعال</span>
+ADC_TKey_ChannelxMulShieldCmd(ADC1, ADC_Channel_2, ENABLE); <span class="cm">// انتخاب کانال ۲ برای شیلد فعال</span>
+ADC_TKey_ChannelxMulShieldCmd(ADC1, ADC_Channel_3, ENABLE); <span class="cm">// انتخاب کانال ۳ برای شیلد فعال</span></div>
+
+<h4 class="h3x" id="sec-1123"><span class="dm">◆</span>۱.۲.۳ انتقال بار</h4>
+<p>در تراشۀ <span class="en">CH32V205</span>، کلید لمسی از روش انتقال بار پشتیبانی می‌کند. در مقایسه با روش شارژ با منبع جریان ثابت، با جابه‌جایی چندبارۀ بار می‌تواند با ظرفیت انگاری بزرگ‌ترِ الکترود سازگار شود؛ تنها تعداد دور تکرار افزایش می‌یابد و «انفجار زمان شارژ تک‌مرحله‌ای» رخ نمی‌دهد؛ بنابراین تحملِ ظرفیت انگاریِ ناشی از مسیرکشی <span class="en">PCB</span> بالاتر است، تحمل تداخل محیطی بیشتر است و کار پایدارتری انجام می‌شود.</p>
+<p>در روش انتقال بار به خازن مرجع خارجی <span class="en">Cx</span> نیاز است که به یک <span class="en">GPIO</span> ثابت از تراشه متصل می‌شود؛ مقدار ظرفیت آن در مرتبۀ <span class="en">nF</span> است و از سمت قطعۀ ظرفیت کلید لمسی <span class="en">Cs</span> شارژ می‌شود. فرایند کار چنین است:</p>
+<div class="bl"><b>۱.</b> کانال خازن مرجع خارجی <span class="en">Cx</span> (یک کانال) و کانال قطعۀ ظرفیت کلید لمسی <span class="en">Cs</span> را پیکربندی کنید. نخست کلید لمسی تخلیه می‌شود تا در هر دور تشخیص، سطح ولتاژ پایۀ خارجی از <span class="en">0V</span> آغاز شود.</div>
+<div class="bl"><b>۲.</b> زمان تعویض کلید شارژ <span class="en">Cx</span> توسط <span class="en">TKEY</span> و زمان تعویض کلید شارژ کانال <span class="en">Cs</span> را تنظیم کنید. کلید به سمت <span class="en">Cs</span> تغییر می‌کند و با تنظیم دورۀ <span class="en">t2</span>، شارژ خازنیِ کلید لمسی برای انتقال به سمت خازن مرجع کامل می‌شود.</div>
+<div class="bl"><b>۳.</b> کلید به سمت <span class="en">Cx</span> تغییر می‌کند و با تنظیم دورۀ <span class="en">t4</span>، انتقال بار از قطعۀ <span class="en">Cs</span> به کانال <span class="en">Cx</span> انجام می‌شود و ولتاژ سمت <span class="en">Cx</span> به‌تدریج بالا می‌رود.</div>
+<div class="bl"><b>۴.</b> با تنظیم تعداد دورهای جابه‌جایی در مود جابه‌جایی بار، گام‌های ۲ و ۳ تکرار می‌شوند تا ولتاژ سمت <span class="en">Cx</span> به مقدار مناسبی برسد.</div>
+<div class="fig" id="fig-14">
+  <div class="figbox">
+    <img src="assets/img/an10000-fig_p5_x71.png" alt="شکل ۱-۴" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۴</span><span class="cap-text">توالی زمانی کارکرد انتقال بار</span></div>
+</div>
+<p>با پیشرفت شارژ <span class="en">Cx</span> و افزایش تعداد دفعاتِ تخلیۀ <span class="en">Cs</span> به <span class="en">Cx</span>، سطح ولتاژ روی <span class="en">Cx</span> پیوسته بالا می‌رود. هنگامی که انگشت کلید را لمس می‌کند، ظرفیت انگاریِ محیط پیرامون بزرگ‌تر می‌شود؛ از <span class="en">Cp</span> به <span class="en">Cp+Cf</span>؛ در نتیجه با همان تعداد شارژ و همان مدت‌زمان در سمت <span class="en">Cs</span>، ولتاژ <span class="en">Cx</span> بالا می‌رود و از همین راه تشخیص می‌دهیم که کلید فشرده شده است. هنگام استفاده از مود پیوستۀ جابه‌جایی بارِ چندکاناله، برای اثرگذاری شیلد فعال باید همهٔ کانال‌ها روشن شده باشند.</p>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">طراحی <span class="en">PCB</span> کلید لمسی</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-211"><span class="dm">◆</span>۲.۱ طراحی <span class="en">PCB</span> کلید لمسی</h3>
+<p>وضعیت کلید لمسی به تغییرات بسیار کوچک ظرفیت انگاری وابسته است؛ از این رو نسبت به تداخل حساس‌تر می‌شود. برای تضمین حساسیت کلید لمسی، در طراحی <span class="en">PCB</span> باید به دو نکته توجه کرد: کاهش ظرفیت انگاریِ خودِ کلید و کاهش تداخل برد <span class="en">PCB</span>.</p>
+
+<h4 class="h3x" id="sec-2111"><span class="dm">◆</span>۲.۱.۱ مسیرکشی کلید لمسی</h4>
+<p>کوتاه‌کردن طول مسیرها هم ظرفیت انگاری کلید لمسی را کاهش می‌دهد و هم توانایی مقابله با نویز را تقویت می‌کند؛ نویز کم می‌شود و نسبت سیگنال به نویز بالا می‌رود. بنابراین در طراحی <span class="en">PCB</span> باید از مسیرکشی طولانی برای کلید لمسی پرهیز کرد؛ همچنین باید توجه داشت که در کاربردهای چندکاناله، تفاوت فاصلهٔ مسیرها می‌تواند بر نتیجۀ لمس کلیدها اثر بگذارد؛ پس در مسیرکشی <span class="en">PCB</span> نیز باید فاصلۀ مسیر همهٔ کانال‌ها یکسان شود تا اختلاف مسیرکشی میان کانال‌ها از میان برود.</p>
+<div class="fig" id="fig-21">
+  <div class="figbox">
+    <img src="assets/img/an10000-fig_p6_x79.jpeg" alt="شکل ۲-۱" style="max-width:620px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۱</span><span class="cap-text">مسیرکشی کانال‌های لمسی</span></div>
+</div>
+<p>اگر کلید لمسی با خطوط سیگنال (مانند سیگنال <span class="en">SPI</span>) مجاورت داشته باشد، باید مسیر کلید لمسی و خط سیگنال بر یکدیگر عمودی مسیرکشی شوند؛ اگر اجتناب ممکن نبود، باید با زمین‌کشی، تداخل خط سیگنال شیلد شود. هرگز خطوط سیگنال و کلید لمسی را موازی مسیرکشی نکنید تا سیگنال ارتباطی، تشخیص کلید لمسی را مختل نکند.</p>
+<div class="fig" id="fig-22">
+  <div class="figbox">
+    <img src="assets/img/an10000-fig_p6_x80.jpeg" alt="شکل ۲-۲" style="max-width:620px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۲</span><span class="cap-text">مسیرکشی پیشنهادی خطوط ارتباطی و کلید لمسی</span></div>
+</div>
+<p>اگر <span class="en">LED</span> در پشت برد نصب شده باشد و خط سیگنال <span class="en">LED</span> در همان لایۀ کلیدهای لمسی به‌صورت موازی مسیرکشی شود، هنگام تغییر وضعیت <span class="en">LED</span> ممکن است تداخل خازنی به کلید لمسی کوپل شود و کلید به‌اشتباه تحریک گردد. بنابراین برای مسیرکشی کلید لمسی پیشنهاد می‌شود: ۱. پایه‌های <span class="en">IO</span> مانند <span class="en">LED</span>های با نرخ تغییر کم‌فرکانس را می‌توان در لایۀ دیگر نسبت به کلیدهای لمسی مسیرکشی کرد؛ ۲. می‌توان از مسیر کلیدهای لمسی فاصله گرفت و مانند سیگنال‌ها مسیر عمودی کشید.</p>
+
+<h4 class="h3x" id="sec-21111"><span class="dm">◆</span>۱) پورۀ مس کلید خازنی</h4>
+<p>در حالت عادی، پورۀ <span class="en">GND</span> در زیر قطعات برد <span class="en">PCB</span> می‌تواند نوسان پتانسیل ناشی از اثر نویز بیرونی را تضعیف کند؛ اما اگر زمین توپُر (یکپارچه) باشد، ظرفیت انگاری کلید لمسی را افزایش می‌دهد و آستانۀ فشردن کلید را پایین می‌آورد. در طراحی <span class="en">PCB</span> کلید لمسی، بالا و پایین کلید باید زمین شبکه‌ای باشد تا ظرفیت انگاری کلید کم شود؛ سعی کنید لایه‌های زمین در لایه‌های مختلف را تا حد امکان به یکدیگر متصل کنید؛ اتصال فراوان لایه‌ها، القاوندگی زمین را کاهش می‌دهد و لایۀ زمین تراشه را به لایۀ زمین منبع تغذیه نزدیک‌تر می‌کند. افزون بر این، درست زیر <span class="en">Pad</span> لمسی در لایۀ زیرین نباید زمین ریخته شود و در لایۀ روی، اگر برای جداسازی به پورۀ زمین نیاز باشد، معمولاً از پورۀ شبکه‌ای استفاده می‌شود.</p>
+<div class="fig" id="fig-23">
+  <div class="figbox">
+    <img src="assets/img/an10000-fig_p7_x88.jpeg" alt="شکل ۲-۳" style="max-width:560px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۳</span><span class="cap-text">نمونۀ پورۀ زمین شبکه‌ای</span></div>
+</div>
+
+<h4 class="h3x" id="sec-2112"><span class="dm">◆</span>۲.۱.۲ انتخاب <span class="en">Pad</span> کلید لمسی</h4>
+<p>ظرفیت انگاری کلید لمسی به‌صورت زیر به دست می‌آید:</p>
+<div class="formula">C = &epsilon; * S / d</div>
+<p>که در آن <span class="en">&epsilon;</span>: ثابت دی‌الکتریک نسبی؛ <span class="en">S</span>: سطح روبه‌روی الکترودها؛ <span class="en">d</span>: فاصلۀ میان الکترودها.</p>
+<p>دیده می‌شود وقتی فاصلۀ کلیدهای لمسی یکسان باشد، پارامتر سخت‌افزاری با سطح تماس کلید لمسی نسبت مستقیم دارد؛ در طراحی <span class="en">PCB</span> می‌توان مساحت کلید لمسی را به‌اندازۀ مناسب افزایش داد تا حساسیت آن بالا برود. اما باید توجه داشت که در الگوی <span class="en">Pad</span> از گوشۀ تیز یا شکل‌های نواری با عرض مسیر کم و طول کلان پرهیز شود؛ چنین شکل‌هایی به‌آسانی اثر آنتن ایجاد می‌کنند.</p>
+<div class="fig" id="fig-24">
+  <div class="figbox">
+    <img src="assets/img/an10000-fig_p7_x89.jpeg" alt="شکل ۲-۴" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۴</span><span class="cap-text">نمونۀ شکل‌های گوناگون کلید لمسی</span></div>
+</div>
+<p>وقتی پنل لمسی از جنس عایق یا مواد نارسانا باشد، هر چه ثابت دی‌الکتریک <span class="en">&epsilon;</span> مادۀ دی‌الکتریک کوچک‌تر باشد، ماده کمتر رسانا می‌شود و مقدار تغییر نسبیِ هنگام لمس با انگشت نیز کوچک‌تر می‌شود؛ اما اگر ثابت دی‌الکتریک بیش از حد بزرگ باشد، تداخل متقابل میان کلیدها زیاد می‌شود و شناسایی دقیق کلید را دشوار می‌کند. برای پنل لمسی عایق یا نارسانا، پیشنهاد می‌شود ثابت دی‌الکتریک میان <span class="en">1.5~4</span> انتخاب شود.</p>
+<div class="tblwrap" id="tab-21">
+  <div class="tblcap"><span class="cap-pill">جدول ۲-۱</span><span class="cap-text">جدول ثابت دی‌الکتریک نسبی</span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:45%;">ماده</th><th>ثابت دی‌الکتریک نسبی</th></tr></thead>
+    <tr><td>هوا</td><td><span class="en">1</span></td></tr>
+    <tr><td>چوب</td><td><span class="en">1.2~2.5</span></td></tr>
+    <tr><td>اکریلیک</td><td><span class="en">2.8</span></td></tr>
+    <tr><td>شیشه</td><td><span class="en">7.6~8</span></td></tr>
+    <tr><td>آب</td><td><span class="en">48~80</span></td></tr>
+    <tr><td>پلی‌کربنات (<span class="en">PC</span>)</td><td><span class="en">2.7~2.9</span></td></tr>
+  </table>
+</div>
+<p>افزایش فاصلۀ میان کلید لمسی و شبکۀ زمین می‌تواند ظرفیت انگاری کلید را کم کند؛ در طراحی <span class="en">PCB</span> می‌توان فاصلۀ اطراف کلید لمسی را بیشتر گرفت تا حساسیت بالا برود؛ فاصلۀ شبکۀ زمین تا کلید لمسی پیشنهاداً حدود <span class="en">1.5mm</span> در نظر گرفته شود.</p>
+<div class="fig" id="fig-25">
+  <div class="figbox">
+    <img src="assets/img/an10000-fig_p8_x100.png" alt="شکل ۲-۵" style="max-width:400px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۵</span><span class="cap-text">نمونۀ فاصلۀ کلید لمسی تا شبکۀ زمین</span></div>
+</div>
+
+<h3 class="h2x" id="sec-212"><span class="dm">◆</span>۲.۲ حفاظت <span class="en">EMC</span> کلید لمسی</h3>
+<p>چون در <span class="en">MCU</span>های همگانی‌منظورۀ <span class="en">CH32</span> سنجش ولتاژ کلید لمسی توسط ماژول تشخیص <span class="en">ADC</span> انجام می‌شود و مرجع آن ولتاژ <span class="en">VDD</span> است (به‌جز تراشه‌هایی که پایۀ <span class="en">Vref</span> مجزا دارند)، اگر تغذیۀ <span class="en">MCU</span> تداخل قوی داشته باشد یا ریپل تغذیه بزرگ باشد، نتیجۀ سنجش خطا خواهد داشت. بنابراین در سمت تغذیه پیشنهاد می‌شود پیش از رسیدن به <span class="en">MCU</span>، مغناطی‌زد (<span class="en">Ferrite Bead</span>) در خروجی <span class="en">LDO</span> قرار گیرد. در ورودی <span class="en">LDO</span> می‌توان خازن تانتالیوم با ظرفیت بزرگ‌تر برای تثبیت و فیلترکردن ولتاژ قرار داد. روی پایه‌های <span class="en">VDD</span> و <span class="en">VSS</span> تراشه می‌توان چند خازن را موازی بست و این خازن‌ها باید نزدیک پایه‌های <span class="en">VSS</span> و <span class="en">VDD</span> مونتاژ شوند.</p>
+<div class="fig" id="fig-26">
+  <div class="figbox">
+    <img src="assets/img/an10000-fig_p8_x102.jpeg" alt="شکل ۲-۶" style="max-width:620px; display:block; margin:0 auto;">
+    <div style="text-align:center; font-size:11.5px; color:#6b5d4d; margin-top:5px;">پیشنهاد نمی‌شود: خازن‌ها دور از <span class="en">VSS</span> و <span class="en">GND</span> مونتاژ شوند</div>
+    <img src="assets/img/an10000-fig_p8_x103.png" alt="شکل ۲-۶" style="max-width:480px; display:block; margin:10px auto 0;">
+    <div style="text-align:center; font-size:11.5px; color:#6b5d4d; margin-top:5px;">پیشنهاد می‌شود: خازن‌ها نزدیک پایه‌های <span class="en">VDD</span> و <span class="en">GND</span> مونتاژ شوند</div>
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۶</span><span class="cap-text">مسیرکشی پیشنهادی خازن‌های نبایُس</span></div>
+</div>
+<p>افزون بر این، پیشنهاد می‌شود روی خط کانال کلیدها، در سمت نزدیک به تراشه، مقاومتی حدود <span class="en">500</span> اهم به‌صورت سری قرار گیرد؛ این کار شیب لبهٔ پالس را ملایم می‌کند و هارمونیک‌های مرتبۀ بالا را کاهش می‌دهد.</p>
+<div class="fig" id="fig-27">
+  <div class="figbox">
+    <img src="assets/img/an10000-fig_p9_x108.png" alt="شکل ۲-۷" style="max-width:620px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۷</span><span class="cap-text">استفاده از مقاومت سری</span></div>
+</div>
+
+<!-- ================= پیوست ================= -->
+<div class="chapter-header" id="sec-app">
+  <span class="sec-pill">پیوست</span>
+  <div class="sec-title">جدول پشتیبانی تراشه‌های سری <span class="en">CH32</span></div>
+  <div class="sec-divider"></div>
+</div>
+<p>جدول زیر وضعیت پشتیبانی شیلد فعال و نوع کلید لمسی در مدل‌های گوناگون سری همگانی‌منظورۀ <span class="en">CH32</span> را جمع می‌کند؛ در انتخاب تراشه برای کاربرد لمسی می‌توانید به آن استناد کنید.</p>
+<div class="tblwrap" id="tab-app">
+  <div class="tblcap"><span class="cap-pill">جدول پیوست</span><span class="cap-text">پشتیبانی شیلد فعال و نوع کلید لمسی در مدل‌های <span class="en">CH32</span></span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:34%;">مدل تراشه</th><th style="width:30%;">پشتیبانی از شیلد فعال</th><th>نوع کلید لمسی</th></tr></thead>
+    <tr><td><span class="en">CH32L103</span></td><td>دارد</td><td>منبع جریان ثابت</td></tr>
+    <tr><td><span class="en">CH32V00x</span></td><td>دارد</td><td>منبع جریان ثابت</td></tr>
+    <tr><td><span class="en">CH32V205</span></td><td>دارد</td><td>منبع جریان ثابت + انتقال بار</td></tr>
+    <tr><td><span class="en">CH32V20x</span></td><td>ندارد</td><td>منبع جریان ثابت</td></tr>
+    <tr><td><span class="en">CH32V30x</span></td><td>ندارد</td><td>منبع جریان ثابت</td></tr>
+    <tr><td><span class="en">CH32H4x7</span></td><td>دارد</td><td>منبع جریان ثابت</td></tr>
+    <tr><td><span class="en">CH32X035</span></td><td>ندارد</td><td>منبع جریان ثابت</td></tr>
+  </table>
+</div>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN10000</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/07/08</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">Touch Key</span></td><td class="jt">کلید لمسی خازنی؛ الکترود رسانای روی <span class="en">PCB</span> که با سیگنال زمین پیرامون خود، خازن حس‌گر تشکیل می‌دهد</td></tr>
+      <tr><td><span class="en">Cp / CF / Cx</span></td><td class="jt">ظرفیت انگاری کلید در حالت بدون لمس / ظرفیت افزودۀ انگشت هنگام لمس / ظرفیت کل حاصل از موازی‌شدن دو مقدار (<span class="en">Cx=Cp+CF</span>)</td></tr>
+      <tr><td><span class="en">Constant Current Source</span></td><td class="jt">منبع جریان ثابت داخلی؛ با پیکربندی رجیستر، جریان <span class="en">35/17.5uA</span> برای شارژ ظرفیت کلید فراهم می‌کند</td></tr>
+      <tr><td><span class="en">Active Shield</span></td><td class="jt">شیلد فعال؛ الکترود پیرامونیِ رانده‌شده توسط <span class="en">MCU</span> که ولتاژش همیشه با الکترود لمسی برابر است و اثر تداخل زمین و قطرۀ آب را خنثی می‌کند</td></tr>
+      <tr><td><span class="en">Charge Transfer</span></td><td class="jt">روش انتقال بار؛ جابه‌جایی چندبارۀ بار از ظرفیت الکترود به خازن مرجع؛ سازگار با ظرفیت‌های انگاری بزرگ‌تر و از نظر کاری پایدارتر</td></tr>
+      <tr><td><span class="en">Cx</span></td><td class="jt">خازن مرجع خارجی در روش انتقال بار؛ به یک <span class="en">GPIO</span> ثابت از تراشه متصل می‌شود و ظرفیت آن در مرتبۀ <span class="en">nF</span> است</td></tr>
+      <tr><td><span class="en">ADC</span></td><td class="jt">مبدل آنالوگ به دیجیتال؛ پس از پایان شارژ، ولتاژ پایۀ کلید را تبدیل می‌کند و مبنای تشخیص فشردن کلید است</td></tr>
+      <tr><td><span class="en">Relative Permittivity</span></td><td class="jt">ثابت دی‌الکتریک نسبی (<span class="en">&epsilon;</span>) مادۀ پوشش پنل لمسی؛ برای پنل عایق یا نارسانا مقدار پیشنهادی <span class="en">1.5~4</span> است</td></tr>
+      <tr><td><span class="en">LDO</span></td><td class="jt">تنظیم‌گر خطی ولتاژ تغذیه؛ در حفاظت <span class="en">EMC</span>، نقطۀ ورود فیلتر تغذیۀ <span class="en">MCU</span> است</td></tr>
+      <tr><td><span class="en">Ferrite Bead</span></td><td class="jt">مغناطی‌زد؛ روی مسیر تغذیه پس از <span class="en">LDO</span> قرار می‌گیرد تا تداخل و ریپل، پیش از رسیدن به <span class="en">MCU</span> کاهش یابد</td></tr>
+      <tr><td><span class="en">Decoupling Capacitor</span></td><td class="jt">خازن نبایُس؛ چند خازن موازی نزدیک پایه‌های <span class="en">VDD/VSS</span> برای فیلترکردن ریپل تغذیه</td></tr>
+      <tr><td><span class="en">Series Resistor</span></td><td class="jt">مقاومت سری حدود <span class="en">500Ω</span> در سمت تراشه روی خط کانال لمسی؛ لبهٔ پالس را ملایم و هارمونیک‌های مرتبۀ بالا را کاهش می‌دهد</td></tr>
+      <tr><td><span class="en">EMC</span></td><td class="jt">سازگاری الکترومغناطیسی؛ مجموعه اقدامات سخت‌افزاری برای مقاوم‌کردن تشخیص لمسی در برابر تداخل تغذیه و محیط</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN10000 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۲۳</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN10000</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
