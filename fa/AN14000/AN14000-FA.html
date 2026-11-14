@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>راهنمای کاربرد ماژول SerDes در CH32H417 — ترجمۀ فارسی AN14000</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">راهنمای کاربرد ماژول</div>
+    <div class="t2">انتقال دادهٔ پرسرعت با <span class="en">SerDes</span></div>
+    <div class="t3">در میکروکنترلر <span class="en">CH32H417</span></div>
+  </div>
+  <div class="c-sub">از معرفی فناوری <span class="en">SerDes</span> و کارکردهای درهم‌ریزی داده و بافر دوگانۀ ارسال/دریافت، تا نکات طراحی سخت‌افزار و تطبیق امپدانس، روند گام‌به‌گام پیکربندی نرم‌افزاری با <span class="en">SerDes PLL</span> و <span class="en">DMA</span> و تنظیم پارامترهای آنالوگ</div>
+  <div class="c-desc">در این جزوه، ترجمۀ فارسی سند رسمی <span class="en">AN14000</span> (نسخۀ ۱٫۰، منتشرۀ شرکت <span class="en">WCH</span>) را می‌خوانید: تراشۀ <span class="en">CH32H417</span> با یکپارچه‌سازی ماژول <span class="en">SerDes</span> راهکاری کارآمد برای انتقال دادهٔ پرسرعت فراهم می‌کند. معرفی فناوری <span class="en">SerDes</span>، مزیت‌های کارکرد درهم‌ریزی و بافر دوگانه، اثر کیفیت ارتباط بر اجرای برنامه، نتایج اندازه‌گیری نرخ انتقال روی خط <span class="en">CAT6</span>، نکات طراحی سخت‌افزار و روند کامل پیکربندی نرم‌افزاری همراه با کدهای نمونه، گام‌به‌گام مرور می‌شود.</div>
+  <div class="c-tags">
+    <span class="c-tag">میکروکنترلر <span class="en">CH32H417</span></span>
+    <span class="c-tag">ماژول <span class="en">SerDes</span></span>
+    <span class="c-tag">ارتباط سری تفاضلی</span>
+    <span class="c-tag">کارکرد درهم‌ریزی داده</span>
+    <span class="c-tag">بافر دوگانه با <span class="en">DMA</span></span>
+    <span class="c-tag">طراحی <span class="en">PCB</span> و تطبیق امپدانس</span>
+    <span class="c-tag">پیکربندی <span class="en">SerDes PLL</span></span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN14000 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | معرفی کارکرد و نکات مهم</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-111"><span class="s-id">1.1</span><span>معرفی مختصر کارکرد</span><span class="s-dots"></span><span class="s-page">۳</span></a>
+    <a class="toc-sub" href="#sec-112"><span class="s-id">1.2</span><span>نکات مهم</span><span class="s-dots"></span><span class="s-page">۴</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | طراحی سخت‌افزار</span><span class="t-dots"></span><span class="t-page">۵</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-211"><span class="s-id">2.1</span><span>رابط سخت‌افزاری <span class="en">SerDes</span></span><span class="s-dots"></span><span class="s-page">۵</span></a>
+    <a class="toc-sub" href="#sec-212"><span class="s-id">2.2</span><span>نکات طراحی سخت‌افزار</span><span class="s-dots"></span><span class="s-page">۶</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b3"><span class="t-num">۴</span><span class="t-title">بخش ۳ | پیکربندی نرم‌افزاری <span class="en">SerDes</span></span><span class="t-dots"></span><span class="t-page">۷</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-311"><span class="s-id">3.1</span><span>روند پیکربندی نرم‌افزار</span><span class="s-dots"></span><span class="s-page">۷</span></a>
+    <a class="toc-sub" href="#sec-312"><span class="s-id">3.2</span><span>تنظیم پارامترهای آنالوگ</span><span class="s-dots"></span><span class="s-page">۸</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۵</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۹</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۶</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۹</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">شکل ۱-۱</span><span>نمودار زمانی انتقال با بافر دوگانه</span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۲</span><span>روند تأثیر طول خط بر بیشترین نرخ انتقال</span><span class="f-dots"></span><span class="f-page">۵</span></div>
+        <div class="frow"><span class="f-id">شکل ۳-۱</span><span>روند خودکار دریافت پارامترهای آنالوگ</span><span class="f-dots"></span><span class="f-page">۹</span></div>
+        <div class="frow"><span class="f-id">جدول ۱-۱</span><span>بیشترین نرخ انتقال اندازه‌گیری‌شده در طول‌های مختلف خط</span><span class="f-dots"></span><span class="f-page">۵</span></div>
+        <div class="frow"><span class="f-id">کد ۱</span><span>انتظار برای آماده‌شدن نوسان‌ساز <span class="en">HSE</span></span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">کد ۲</span><span>پیکربندی ضریب و فعال‌سازی <span class="en">SerDes PLL</span></span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">کد ۳</span><span>پیکربندی کنترل‌گر <span class="en">SerDes</span> با ساختار <span class="en">SDS_CFG_TypeDef</span></span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">کد ۴</span><span>ارسال سیگنال هم‌گامی و انتظار گیرنده برای دریافت آن</span><span class="f-dots"></span><span class="f-page">۸</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> فناوری <span class="en">SerDes</span> (سریال‌ساز/دیسریال‌ساز) در انتقال دادهٔ پرسرعت امروز نقشی کلیدی دارد: در سمت فرستنده چند سیگنال موازی کم‌سرعت به یک جریان سریال پرسرعت تبدیل می‌شود و در سمت گیرنده همان جریان دوباره به سیگنال‌های موازی بازگردانده می‌شود؛ نتیجه، کاهش چشمگیر شمار کانال‌های انتقال و پایه‌های قطعه و در عوض بالا رفتن نرخ انتقال است. تراشۀ <span class="en">CH32H417</span> دو گروه فرستنده/گیرندۀ تفاضلی با پروتکل اختصاصی <span class="en">WCH</span> دارد که برای ارتباط میان‌بردی (مانند اتصال از راه دور با فیبر نوری) و ارتباط درون‌بردی در اکوسیستم <span class="en">WCH</span> طراحی شده است. این سند کارکرد درهم‌ریزی و بافر دوگانه، اثر قابلیت اطمینان خط بر اجرای برنامه، نتایج اندازه‌گیری نرخ انتقال در طول‌های مختلف خط <span class="en">CAT6</span>، نکات طراحی سخت‌افزار و روند کامل پیکربندی نرم‌افزاری همراه با کدهای نمونه را پوشش می‌دهد.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>تراشۀ <span class="en">CH32H417</span> به‌عنوان تراشه‌ای توانمند، ماژول <span class="en">SerDes</span> را در خود یکپارچه کرده و راهکاری کارآمد و پرسرعت برای انتقال داده در اختیار کاربر می‌گذارد. این یادداشت کاربردی، روش‌های به‌کارگیری <span class="en">SerDes</span> در <span class="en">CH32H417</span>، روند پیکربندی، سناریوهای کاربرد و مسائل و راه‌حل‌های رایج در انتقال دادهٔ پرسرعت را به‌صورت ژرف بررسی می‌کند تا کاربر بتواند از توانایی‌های ماژول <span class="en">SerDes</span> این تراشه بیشترین بهره را ببرد.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>میکروکنترلرهای همگانی‌منظوره</td><td><span class="en">CH32H417</span></td></tr>
+  </table>
+</div>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">معرفی کارکرد و نکات مهم</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-111"><span class="dm">◆</span>۱.۱ معرفی مختصر کارکرد</h3>
+<p><span class="en">SerDes</span> کوته‌نوشت <span class="en">Serializer</span> / <span class="en">Deserializer</span> (سریال‌ساز/دیسریال‌ساز) است و فناوری‌ای به شمار می‌آید که در انتقال دادهٔ پرسرعت امروزی نقشی کلیدی دارد. کارکرد اصلی آن تبدیلِ هوشمندانۀ شکل انتقال سیگنال است: در سمت فرستنده، <span class="en">SerDes</span> مانند کارگزینی کارآمد عمل می‌کند و چند مسیر سیگنال موازی کم‌سرعت را منظّم و به سیگنال سریال پرسرعت تبدیل می‌کند؛ گویی چند بستۀ کوچکِ پراکنده را برای حمل‌ونقل کارآمدتر در قالب یک بستۀ بزرگ بسته‌بندی می‌کند. این سیگنال‌های سریال پرسرعت سپس از محیط‌های انتقال گوناگون، مانند کابل نوری یا سیم مسیِ رایج، منتقل می‌شوند. در سمت گیرنده، <span class="en">SerDes</span> نقش باز‌کنندۀ دقیق بسته‌ها را بر عهده می‌گیرد و سیگنال سریال پرسرعت دریافتی را دوباره به سیگنال‌های موازی کم‌سرعت بازمی‌گرداند تا مدارهای پس از آن به‌سادگی پردازشش کنند؛ درست مانند باز کردن بستۀ بزرگ به همان بسته‌های کوچک نخستین، بی‌کوچک‌ترین خطا.</p>
+<p>این فناوری ارتباط سریِ نقطه‌به‌نقطه، ظرفیت کانال محیط انتقال را به‌تمامی به کار می‌گیرد. با کاهش شمار کانال‌های انتقال موردنیاز و بریدنِ چشمگیر شمار پایه‌های قطعه، نه‌تنها هزینۀ سخت‌افزار به‌طور مؤثر پایین می‌آید، بلکه سرعت انتقال سیگنال نیز بالا می‌رود؛ از این رو در حوزۀ الکترونیک امروز که الزامات کارایی انتقال داده و کنترل هزینه بسیار سخت‌گیرانه است، به وجودی گریزناپذیر بدل شده است.</p>
+
+<h4 class="h3x" id="sec-1111"><span class="dm">◆</span>۱.۱.۱ کارکرد درهم‌ریزی (<span class="en">Scrambling</span>)</h4>
+<p>با روشن‌کردن کارکرد درهم‌ریزی، سیگنال <span class="en">Sync</span> که در زمان بیکاری خط ارسال می‌شود با <span class="en">CONT</span> و دادهٔ درهم‌ریخته جایگزین می‌شود. پس از فعال‌سازی این کارکرد، مزیت‌های زیر به دست می‌آید:</p>
+<div class="bl">پرهیز از دنبالۀ طولانی <span class="en">0</span> یا <span class="en">1</span>: در دادهٔ خام ممکن است بیتی‌های یکسانِ پیاپی ظاهر شود و هم‌گامی ساعت در سمت گیرنده از تعادل خارج شود؛ پس از درهم‌ریزی، بیتی‌های پیاپی می‌شکنند و استخراج پایدار ساعت تضمین می‌شود.</div>
+<div class="bl">کاهش تمرکز طیف سیگنال: بیتی‌های یکسانِ پیاپی انرژی طیف سیگنال را در فرکانس‌های معینی متمرکز می‌کنند و بروز تداخل الکترومغناطیسی (<span class="en">EMI</span>) را آسان می‌سازند؛ پس از درهم‌ریزی، طیف پخش‌تر می‌شود.</div>
+<div class="bl">هم‌خوانی با ویژگی‌های پیوند انتقال: برخی محیط‌های انتقال سیگنال‌های الگودار را بیشتر تضعیف می‌کنند؛ سیگنال تصادفی‌شدۀ حاصل از درهم‌ریزی با پیوند بهتر هم‌خوان می‌شود و اعوجاج سیگنال کمتر می‌گردد.</div>
+
+<h4 class="h3x" id="sec-1112"><span class="dm">◆</span>۱.۱.۲ بافر دوگانۀ ارسال/دریافت</h4>
+<p>در فرایند ارسال و دریافت، اگر حالت بافر دوگانه روشن شده باشد، در سمت گیرنده بسته‌هایی که <span class="en">RX_SEQ_NUM</span> آن‌ها عددی فرد است در ناحیۀ نشانه‌روشدۀ <span class="en">DMA0</span> ذخیره می‌شوند و بسته‌هایی که <span class="en">RX_SEQ_NUM</span> آن‌ها عددی زوج است، در ناحیۀ نشانه‌روشدۀ <span class="en">DMA1</span> قرار می‌گیرند.</p>
+<div class="fig" id="fig-11">
+  <div class="figbox">
+    <div class="note" style="max-width:560px; margin:8px auto 2px;"><span class="lbl">یادداشت مترجم:</span> در فایل رسمی نسخۀ ۱٫۰ این سند که شرکت <span class="en">WCH</span> منتشر کرده است، جای این شکل خالی مانده و ترسیمی برای آن درج نشده است؛ شرح متنی مربوط به آن در همین بخش آمده است.</div>
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۱</span><span class="cap-text">نمودار زمانی انتقال با بافر دوگانه</span></div>
+</div>
+
+<h3 class="h2x" id="sec-112"><span class="dm">◆</span>۱.۲ نکات مهم</h3>
+<h4 class="h3x" id="sec-1121"><span class="dm">◆</span>۱.۲.۱ تأثیر قابلیت اطمینان انتقال داده بر اجرای برنامه</h4>
+<p>داوری گیرندۀ <span class="en">SerDes</span> دربارهٔ پایان بستۀ داده، تماماً بر پایۀ سیگنال بیکاری گذرگاهی است که فرستنده می‌فرستد. اگر کیفیت ارتباط بسیار نامطلوب باشد و در نخستین لحظۀ ارسالِ سیگنال بیکاری پس از پایان ارسال داده، گیرنده آن سیگنال را دریافت نکرده باشد، <span class="en">DMA</span> به نوشتن پیام‌های خطای دریافتی در فضاهای حافظۀ بعدی ادامه می‌دهد تا سرانجام سیگنال بیکاری گذرگاه را دریافت کند. در نتیجه، در شرایطی که کیفیت ارتباط بسیار پایین است، با احتمالی بسیار اندک، گیرندۀ <span class="en">SerDes</span> می‌تواند ناحیۀ دادهٔ دیگری را بازنویسی کند و اجرای برنامه را با خطا روبه‌رو سازد. پس هنگام به‌کارگیری <span class="en">SerDes</span> در شرایطی که کیفیت ارتباط تضمین‌شدنی نیست، باید به تأثیری که این کار بر ساختارهای دادۀ برنامه در زمان اجرا می‌گذارد نیز بیندیشید.</p>
+<h4 class="h3x" id="sec-1122"><span class="dm">◆</span>۱.۲.۲ بیشترین نرخ انتقال اندازه‌گیری‌شده در طول‌های مختلف خط</h4>
+<p>داده‌های زیر از اندازه‌گیری واقعی روی کابل شبکۀ <span class="en">CAT6</span> باکیفیت به دست آمده است:</p>
+<div class="tblwrap" id="tab-11">
+  <div class="tblcap"><span class="cap-pill">جدول ۱-۱</span><span class="cap-text">بیشترین نرخ انتقال اندازه‌گیری‌شده</span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:34%;">فاصلۀ انتقال (متر)</th><th style="width:30%;">مشخصات خط</th><th>بیشترین نرخ انتقال (گیگاهرتز)</th></tr></thead>
+    <tr><td>۱</td><td><span class="en">CAT6</span></td><td>۱٫۸</td></tr>
+    <tr><td>۵</td><td><span class="en">CAT6</span></td><td>۱٫۶۸</td></tr>
+    <tr><td>۱۰</td><td><span class="en">CAT6</span></td><td>۱٫۶</td></tr>
+    <tr><td>۱۰۰</td><td><span class="en">CAT6</span></td><td>۰٫۵۶</td></tr>
+  </table>
+</div>
+<div class="fig" id="fig-12">
+  <div class="figbox">
+    <img src="assets/img/an14000-fig_manual_1.png" alt="شکل ۱-۲" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۲</span><span class="cap-text">روند تأثیر طول خط بر بیشترین نرخ انتقال — بازترسیم‌شده بر پایۀ داده‌های جدول ۱-۱ (در فایل اصلی این نمودار خالی منتشر شده است)</span></div>
+</div>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">طراحی سخت‌افزار</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-211"><span class="dm">◆</span>۲.۱ رابط سخت‌افزاری <span class="en">SerDes</span></h3>
+<p>در شیوۀ اتصال، رابط <span class="en">SerDes</span> از انتقال سیگنال تفاضلی بهره می‌برد و داده از راه یک جفت خط تفاضلی (<span class="en">Tx+/-</span>، <span class="en">Rx+/-</span>) منتقل می‌شود؛ این شیوه تداخل سیگنال را به‌طور مؤثر کاهش می‌دهد، توانایی مقاومت در برابر تداخل را بالا می‌برد و درستی داده را در جریان انتقال پرسرعت تضمین می‌کند. روی <span class="en">CH32H417</span> دو گروه فرستنده/گیرنده وجود دارد که جهت ارسال/دریافتِ دو جفت رابط تفاضلی را می‌توان به‌طور انعطاف‌پذیر پیکربندی کرد؛ قطبیتِ رابط تفاضلی نیز قابل پیکربندی است.</p>
+<p>از منظر ویژگی‌های الکتریکی، رابط <span class="en">SerDes</span> در <span class="en">CH32H417</span> از نرخ‌های گوناگون پشتیبانی می‌کند و بنا بر نیاز کاربردهای متفاوت می‌توان آن را انعطاف‌پذیر پیکربندی کرد؛ بیشترین نرخ آن، الزامات سخت‌گیرانۀ انتقال دادهٔ پرسرعت را برآورده می‌سازد. هم‌زمان این رابط توان رانش سیگنال مناسبی دارد و بی‌اعوجاج‌ماندن سیگنال را در انتقال مسافت بلند تضمین می‌کند.</p>
+<p>باید توجه ویژه داشت که <span class="en">SerDes</span> در <span class="en">CH32H417</span> از پروتکل سفارشی <span class="en">WCH</span> استفاده می‌کند و این پروتکل با محصولات <span class="en">SerDes</span> سازندگان دیگر سازگار نیست؛ صحنۀ کاربرد اصلی آن بر ارتباط میان‌بردی (مانند اتصال راه دور از طریق فیبر نوری) و ارتباط درون‌بردی، در چارچوب اکوسیستم تراشه‌های <span class="en">WCH</span> متمرکز است. همین ویژگی تعیین می‌کند که در طراحی سیستم، اصل به‌کارگیری هم‌زمانِ تراشه‌های <span class="en">WCH</span> باید پیروی شود.</p>
+
+<h3 class="h2x" id="sec-212"><span class="dm">◆</span>۲.۲ نکات طراحی سخت‌افزار</h3>
+<p>در طراحی سخت‌افزار بر پایۀ <span class="en">CH32H417</span>، برای آن‌که <span class="en">SerDes</span> پایدار و کارآمد کار کند، باید در چند زمینه به نکته‌ها توجه کرد.</p>
+<p>در چیدمان <span class="en">PCB</span>، قطعات مرتبط با <span class="en">SerDes</span> را تا جای ممکن نزدیک به تراشۀ <span class="en">CH32H417</span> بچینید تا مسیر انتقال سیگنال کوتاه شود و تأخیر و تلفات انتقال سیگنال کاهش یابد. برای نمونه، قطعات فرستنده و گیرندۀ <span class="en">SerDes</span> را دقیقاً در مجاورت پایه‌های مربوط تراشه قرار دهید و از مسیرگذاری طولانی روی <span class="en">PCB</span> بپرهیزید. هم‌زمان جای قطعات دیگر را منطقی برنامه‌ریزی کنید تا بر سیگنال‌های <span class="en">SerDes</span> تداخل نگذارند؛ برای نمونه، قطعات مولد نویز فرکانس‌بالا را از مسیر سیگنال <span class="en">SerDes</span> دور نگه دارید تا بر سیگنال پرسرعت اثر نگذارند.</p>
+<p>طول مسیرگذاری نیز عاملی کلیدی است. در جریان انتقال، سیگنال پرسرعت با افزایش طول مسیر، تضعیف، تأخیر و اعوجاج شدیدتری پیدا می‌کند. پس طول مسیر خطوط تفاضلی <span class="en">SerDes</span> را تا جای ممکن کوتاه کنید تا سیگنال سریع و درست منتقل شود. به‌طور معمول، طول خط تفاضلی باید در بازۀ منطقی کنترل شود و از مسیرهای بیش‌ازحد طولانی پرهیز گردد.</p>
+<p>تطبیق امپدانس نیز برای کارکرد درست <span class="en">SerDes</span> همان‌قدر حیاتی است. امپدانس مشخصۀ خطوط انتقال سیگنال تفاضلی <span class="en">SerDes</span> در <span class="en">CH32H417</span> باید به‌شدت کنترل شود؛ این پارامتر، کلید تضمین کیفیت انتقال سیگنال پرسرعت است. اگر امپدانس تطبیق نکند، سیگنال در مسیر انتقال بازتاب می‌کند و اعوجاج پیدا می‌کند و قابلیت اطمینان انتقال داده را به‌طور جدی خراب می‌سازد. در طراحی، بنا بر ویژگی رابط <span class="en">SerDes</span> و پارامترهای خط انتقال، امپدانس را دقیق محاسبه و تنظیم کنید تا امپدانس فرستنده، خط انتقال و گیرنده یکسان شود. روش متداول، افزودن مقاومت تطبیق مناسب در دو سر خط انتقال مانند مقاومت انتهایی و مقاومت سرِ مبدأ است و هم‌زمان با کنترل پهنای خط، فاصلۀ خطوط و ضخامت لایۀ عایق <span class="en">PCB</span>، امپدانس تفاضلی را روی <span class="en">100Ω</span> پایدار نگه می‌دارند تا بهترین اثر تطبیق امپدانس حاصل شود.</p>
+<p>افزون بر این، در سمتِ نزدیک به تراشۀ <span class="en">CH32H417</span> روی خطوط انتقال تفاضلی <span class="en">SerDes</span>، توصیه می‌شود خازنی با ظرفیت کوچک به‌صورت سری قرار گیرد (معمولاً خازن سرامیکی فرکانس‌بالای <span class="en">0.1μF~1μF</span> انتخاب می‌شود). نقش اصلی این خازن جداسازی مؤلفۀ جریان مستقیم است: مؤلفۀ <span class="en">DC</span> خط انتقال را قطع می‌کند تا بایاس مستقیم، کارکرد درست مدارهای داخلی ماژول <span class="en">SerDes</span> را بر هم نزند و هم‌زمان به مؤلفۀ <span class="en">AC</span> سیگنال سریال پرسرعت تضعیف محسوسی وارد نمی‌کند. در انتخاب قطعه، خازن سرامیکی با ویژگی فرکانسی خوب و مقاومت سری معادل (<span class="en">ESR</span>) کم را در اولویت بگذارید تا در بازۀ فرکانس کاری <span class="en">SerDes</span> پایدار عمل کند و خلوص سیگنال را باز هم بهتر تضمین کند.</p>
+
+<!-- ================= بخش ۳ ================= -->
+<div class="chapter-header" id="sec-b3">
+  <span class="sec-pill">بخش ۳</span>
+  <div class="sec-title">پیکربندی نرم‌افزاری <span class="en">SerDes</span></div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-311"><span class="dm">◆</span>۳.۱ روند پیکربندی نرم‌افزار</h3>
+<p>نخست باید ساعت کنترل‌گر <span class="en">SerDes</span> را فعال کنید. در <span class="en">CH32H417</span> این کار با تنظیم بیت‌های مربوط در رجیسترهای <span class="en">RCC</span> (ریست و کنترل ساعت) انجام می‌شود تا ساعت ماژول <span class="en">SerDes</span> فعال شود و سیگنال ساعت برای گام‌های بعدیِ پیکربندی فراهم گردد.</p>
+<p>در گام بعد، منبع ساعت <span class="en">SerDes</span> را پیکربندی و ساعت مربوط را فعال کنید. منبع ساعت <span class="en">SerDesPLL</span> از <span class="en">HSE</span> است؛ پس در آغاز باید ساعت <span class="en">HSE</span> را فعال کنید و مطمئن شوید که <span class="en">HSE</span> به‌درستی نوسان را آغاز کرده است.</p>
+<div class="fig" id="code-1">
+  <div class="codeblk">if (!(RCC-&gt;CTLR &amp; RCC_HSERDY))
+{
+    RCC-&gt;CTLR |= ((uint32_t)RCC_HSEON);
+    do
+    {
+        time_out++;
+    } while (((RCC-&gt;CTLR &amp; RCC_HSERDY) == 0) &amp;&amp; (time_out != HSE_STARTUP_TIMEOUT));
+    if (time_out == HSE_STARTUP_TIMEOUT)
+        return __LINE__;
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۱</span><span class="cap-text">انتظار برای آماده‌شدن نوسان‌ساز <span class="en">HSE</span></span></div>
+</div>
+<p>سپس باید فرکانس ساعت <span class="en">SerDes</span> در دو طرف ارسال/دریافت تعیین شود و <span class="en">SerDesPLL</span> روشن گردد. توجه داشته باشید که برای پیکربندی ساعت <span class="en">PLL</span> باید بیت‌های پیکربندی کنترل‌گر <span class="en">SerDes</span> تنظیم شود و این عمل به روشن‌بودن تغذیۀ ماژول گیرنده نیاز دارد.</p>
+<div class="fig" id="code-2">
+  <div class="codeblk">SDS_Rx_Pwrp(SDSx);
+RCC_SERDESPLLMulConfig(RCC_SERDESPLL_MUL50);
+RCC_SERDES_PLLCmd(ENABLE);</div>
+  <div class="figcap"><span class="cap-pill">کد ۲</span><span class="cap-text">پیکربندی ضریب و فعال‌سازی <span class="en">SerDes PLL</span></span></div>
+</div>
+<p>پس از آماده‌شدن ساعت <span class="en">SerDesPLL</span>، می‌توان پیکربندی را در رجیستر کنترل <span class="en">SerDes</span> نوشت. گزینه‌های پیکربندی شامل فعال‌سازی تغذیۀ ماژول ارسال/دریافت، فعال‌سازی ارسال/دریافت ماژول، فعال‌سازی کارکرد درهم‌ریزی، فعال‌سازی وارونگی قطبیت تفاضلی و فعال‌سازی درج سیگنال <span class="en">ALIGN</span> هنگام ارسال است؛ در ادامهٔ سند، بخشی از این کارکردها معرفی می‌شود.</p>
+<div class="fig" id="code-3">
+  <div class="codeblk">SDS_CFG_TypeDef sds_cfg = {.ClearALL = 0,
+                           .DMA_Enable = 1,
+                           .INIBusy_En = 1,
+                           .InsertAlign = 1,
+                           .RxPowerUp = 0,
+                           .TxPowerUp = 1,
+                           .ReplaceSYNCwithCONT = 1,
+                           .RxEn = 0,
+                           .TxEn = 1,
+                           .SwitchRxPolarity = 0,
+                           .ResetLink = 0};
+SDS_Config(SDSx, &amp;sds_cfg);</div>
+  <div class="figcap"><span class="cap-pill">کد ۳</span><span class="cap-text">پیکربندی کنترل‌گر <span class="en">SerDes</span> با ساختار <span class="en">SDS_CFG_TypeDef</span></span></div>
+</div>
+<p>پس از پیکربندی کارکردها و ساعت، فرستنده باید مدتی سیگنال <span class="en">COMINIT</span> برای گیرنده بفرستد تا ساعت هم‌گام شود و گیرنده نیز باید منتظر رسیدن این سیگنال بماند و سپس وارد حالت دریافت داده شود. توجه داشته باشید که در بازۀ دریافت سیگنال هم‌گامی، گیرنده این سیگنال را چند بار دریافت می‌کند؛ از این رو در این بازه، بیت نشانگر دریافتِ سیگنال هم‌گامی نیز بارها ست می‌شود، اما همین‌قدر که سیگنال هم‌گامی دریافت شود، به معنی موفقیت هم‌گامی است.</p>
+<div class="fig" id="code-4">
+  <div class="codeblk"><span class="cm">// ارسال سیگنال هم‌گامی به مدت 120 میلی‌ثانیه</span>
+sds_rtx_ctrl.SDSRTXCtrl_LinkInit = 1;
+SDS_RTX_Ctrl(TxSDS, &amp;sds_rtx_ctrl);
+Delay_Ms(120);
+sds_rtx_ctrl.SDSRTXCtrl_LinkInit = 0;
+SDS_RTX_Ctrl(TxSDS, &amp;sds_rtx_ctrl);
+<span class="cm">// انتظار برای دریافت سیگنال هم‌گامی</span>
+while (!(SDS_ReadIT(RxSDS) &amp; (SDSIT_FLAG_Cominit)));</div>
+  <div class="figcap"><span class="cap-pill">کد ۴</span><span class="cap-text">ارسال سیگنال هم‌گامی و انتظار گیرنده برای دریافت آن</span></div>
+</div>
+<p>اکنون می‌توان ارسال و دریافت رسمی داده را آغاز کرد؛ ارسال و دریافت داده هر دو توسط <span class="en">DMA</span> جابه‌جا می‌شوند و خطاهای پدید‌آمده در جریان انتقال و رخدادهای مرحلۀ انتقال، وقفۀ <span class="en">SerDes</span> را راه می‌اندازند؛ جزئیات در <span class="en">CH32H417RM.PDF</span> آمده است.</p>
+
+<h3 class="h2x" id="sec-312"><span class="dm">◆</span>۳.۲ تنظیم پارامترهای آنالوگ</h3>
+<p>نرم‌افزار می‌تواند همسان‌سازی (تعادل) و تشدید پیشینِ سیگنال فرستنده/گیرندۀ <span class="en">SerDes</span> را تنظیم کند تا با اثر طول و جنس خطوط مختلف بر سیگنال هم‌خوان شود. اقلام قابل تنظیم عبارت‌اند از: دامنه و تشدید دامنه در سمت فرستنده، و خازن و مقاومت بازخورد در سمت گیرنده.</p>
+<p>خطوط مختلف معمولاً ویژگی‌های انتقال متفاوتی دارند و اثر این ویژگی‌ها بر کیفیت انتقال <span class="en">SerDes</span> ناچیز نیست؛ پس هنگام استفاده از خط تازه، باید پارامترهای آنالوگ مناسب را دوباره محاسبه کنید. افزون بر این، می‌توان با روش جست‌وجوی فراگیر، پارامترهای آنالوگ نسبتاً مناسبی را به‌سرعت برگزید؛ جزئیات در <span class="en">CH32H417 EVT</span> آمده است.</p>
+<p>ایدهٔ کلی این کار در شکل زیر نشان داده شده است:</p>
+<div class="fig" id="fig-31">
+  <div class="figbox">
+    <div class="note" style="max-width:560px; margin:8px auto 2px;"><span class="lbl">یادداشت مترجم:</span> در فایل رسمی نسخۀ ۱٫۰ این سند که شرکت <span class="en">WCH</span> منتشر کرده است، جای این شکل خالی مانده و ترسیمی برای آن درج نشده است؛ ایدۀ کلی روش (انتخاب فراگیر پارامترها و آزمودن آن‌ها) در متن همین بخش شرح داده شده است.</div>
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۳-۱</span><span class="cap-text">روند خودکار دریافت پارامترهای آنالوگ</span></div>
+</div>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN14000</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2025/11/17</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">SerDes</span></td><td class="jt">سریال‌ساز/دیسریال‌ساز؛ فناوری ارتباط سریِ نقطه‌به‌نقطه که در فرستنده سیگنال‌های موازی کم‌سرعت را به جریان سریال پرسرعت تبدیل می‌کند و در گیرنده برعکس بازمی‌گرداند</td></tr>
+      <tr><td><span class="en">Serializer / Deserializer</span></td><td class="jt">بلوک فرستندۀ <span class="en">SerDes</span> که دادهٔ موازی را سری می‌کند / بلوک گیرنده‌ای که جریان سریال دریافتی را به دادهٔ موازی بازمی‌گرداند</td></tr>
+      <tr><td><span class="en">Scrambling</span></td><td class="jt">درهم‌ریزی داده؛ جایگزینی سیگنال <span class="en">Sync</span> در زمان بیکاری خط با <span class="en">CONT</span> و دادهٔ درهم‌ریخته برای پرهیز از دنبالۀ طولانی <span class="en">0</span> یا <span class="en">1</span></td></tr>
+      <tr><td><span class="en">Sync / CONT</span></td><td class="jt">سیگنال بیکاری خط در حالت معمول / سیگنال جایگزین آن هنگامی که کارکرد درهم‌ریزی روشن است</td></tr>
+      <tr><td><span class="en">ALIGN</span></td><td class="jt">سیگنال هم‌ترازی که بنا بر پیکربندی، هنگام ارسال در جریان داده درج می‌شود</td></tr>
+      <tr><td><span class="en">COMINIT</span></td><td class="jt">سیگنال آغاز ارتباط که فرستنده در ابتدای پیوند برای هم‌گام‌سازی ساعت به گیرنده می‌فرستد</td></tr>
+      <tr><td><span class="en">RX_SEQ_NUM</span></td><td class="jt">شمارهٔ توالی بستهٔ دریافتی؛ مبنای توزیع بسته‌ها میان دو بافر در حالت بافر دوگانه</td></tr>
+      <tr><td><span class="en">Dual buffer</span></td><td class="jt">بافر دوگانۀ ارسال/دریافت؛ بسته‌های با شمارۀ فرد به ناحیۀ <span class="en">DMA0</span> و بسته‌های زوج به ناحیۀ <span class="en">DMA1</span> نوشته می‌شوند</td></tr>
+      <tr><td><span class="en">DMA</span></td><td class="jt">میسر دسترسی مستقیم به حافظه؛ جابه‌جایی داده‌های ارسال و دریافت <span class="en">SerDes</span> بر دوش آن است</td></tr>
+      <tr><td><span class="en">RCC</span></td><td class="jt">بلوک ریست و کنترل ساعت؛ ساعت ماژول <span class="en">SerDes</span> و منابع <span class="en">HSE</span> و <span class="en">PLL</span> از مسیر رجیسترهای آن فعال می‌شوند</td></tr>
+      <tr><td><span class="en">HSE</span></td><td class="jt">نوسان‌ساز کریستالی خارجی؛ منبع ساعت <span class="en">SerDes PLL</span> است و باید پیش از پیکربندی، آمادۀ کار شده باشد</td></tr>
+      <tr><td><span class="en">SerDes PLL</span></td><td class="jt">ضرب‌کنندۀ فرکانس ماژول <span class="en">SerDes</span>؛ ساعت خط را با ضریب پیکربندی‌شدنی از <span class="en">HSE</span> تولید می‌کند</td></tr>
+      <tr><td><span class="en">ESR</span></td><td class="jt">مقاومت سری معادل خازن؛ در انتخاب خازن جداساز مسیر تفاضلی باید کم باشد</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN14000 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۲۳</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN14000</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
