@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>راهنمای چهار ماژول ADC و نمونه‌برداری هم‌زمان در CH32X315 — ترجمۀ فارسی AN09001</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">چهار ماژول <span class="en">ADC</span> و</div>
+    <div class="t2">نمونه‌برداری هم‌زمان و خروجی اسکن</div>
+    <div class="t3">در میکروکنترلر <span class="en">CH32X315</span></div>
+  </div>
+  <div class="c-sub">از معرفی چهار ماژول <span class="en">ADC</span> و تخصیص پایه‌ها، تا نمونه‌برداری هم‌زمان با حالت دو-<span class="en">ADC</span> و اتصال آبشاری، و پیکربندی خروجی اسکن برای کار با تراشه‌های کلید آنالوگ <span class="en">CH448</span> و گسترش کاملاً خودکار کانال‌ها</div>
+  <div class="c-desc">در این جزوه، ترجمۀ فارسی سند رسمی <span class="en">AN09001</span> (نسخۀ ۱٫۰، منتشرۀ شرکت <span class="en">WCH</span>) را می‌خوانید: میکروکنترلر <span class="en">CH32X315</span> چهار ماژول مستقل <span class="en">ADC</span> دارد که هر یک ۱۲ کانال خارجی با پایۀ اختصاصی ارائه می‌دهد و هر ۴ ماژول از <span class="en">DMA</span> پشتیبانی می‌کنند. مرور حالت دو-<span class="en">ADC</span> هم‌زمان و نمونه‌برداری هم‌زمان ۴ ماژول با اتصال آبشاری و تأخیر تریگر صفر، پیکربندی خروجی اسکن <span class="en">ADCSx</span> برای جابه‌جایی خودکار کانال‌ها با تراشۀ کلید <span class="en">CH448</span> و نمونۀ پیکربندی کامل (<span class="en">ADC</span>، <span class="en">DMA</span> و تایمر) به همراه مدار جانبی، گام‌به‌گام بررسی می‌شود.</div>
+  <div class="c-tags">
+    <span class="c-tag">میکروکنترلر <span class="en">CH32X315</span></span>
+    <span class="c-tag">چهار ماژول <span class="en">ADC</span></span>
+    <span class="c-tag">حالت دو-<span class="en">ADC</span> هم‌زمان</span>
+    <span class="c-tag">اتصال آبشاری (<span class="en">Cascade</span>)</span>
+    <span class="c-tag">خروجی اسکن <span class="en">ADCSx</span></span>
+    <span class="c-tag">کلید آنالوگ <span class="en">CH448</span></span>
+    <span class="c-tag">گسترش تا <span class="en">384</span> کانال</span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN09001 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | معرفی حالت‌های <span class="en">ADC</span></span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-111"><span class="s-id">1.1</span><span>معرفی مختصر کارکرد <span class="en">ADC</span> در <span class="en">CH32X315</span></span><span class="s-dots"></span><span class="s-page">۳</span></a>
+    <a class="toc-sub" href="#sec-112"><span class="s-id">1.2</span><span>نمونه‌برداری هم‌زمان <span class="en">ADC</span></span><span class="s-dots"></span><span class="s-page">۴</span></a>
+    <a class="toc-sub" href="#sec-113"><span class="s-id">1.3</span><span>خروجی اسکن <span class="en">ADC</span></span><span class="s-dots"></span><span class="s-page">۶</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | به‌کارگیری حالت‌های <span class="en">ADC</span></span><span class="t-dots"></span><span class="t-page">۷</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-211"><span class="s-id">2.1</span><span>پیکربندی حالت‌های <span class="en">ADC</span></span><span class="s-dots"></span><span class="s-page">۷</span></a>
+    <a class="toc-sub" href="#sec-2111"><span class="s-id">۱.</span><span>حالت قاعدهٔ هم‌زمان</span><span class="s-dots"></span><span class="s-page">۷</span></a>
+    <a class="toc-sub" href="#sec-2112"><span class="s-id">۲.</span><span>حالت آبشاری</span><span class="s-dots"></span><span class="s-page">۸</span></a>
+    <a class="toc-sub" href="#sec-2113"><span class="s-id">۳.</span><span>خروجی اسکن</span><span class="s-dots"></span><span class="s-page">۹</span></a>
+    <a class="toc-sub" href="#sec-2114"><span class="s-id">۴.</span><span>پیکربندی کل</span><span class="s-dots"></span><span class="s-page">۱۱</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۴</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۱۴</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۵</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۱۴</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">شکل ۱-۱</span><span>تبدیل در حالت هم‌زمان چندکاناله</span><span class="f-dots"></span><span class="f-page">۵</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۱</span><span>نمونه‌برداری هم‌زمان ۴ گروه <span class="en">ADC</span></span><span class="f-dots"></span><span class="f-page">۵</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۲</span><span>وضعیت خروجی پایه‌های خروجی اسکن</span><span class="f-dots"></span><span class="f-page">۶</span></div>
+        <div class="frow"><span class="f-id">جدول ۱-۱</span><span>تخصیص پایه‌های <span class="en">ADC</span></span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">جدول ۱-۲</span><span>جدول کنترل <span class="en">CH448</span></span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۱</span><span>انتخاب حالت قاعدهٔ هم‌زمان</span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۲</span><span>پیکربندی حالت آبشاری <span class="en">ADC</span></span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۳</span><span>نمودار <span class="en">CH448</span></span><span class="f-dots"></span><span class="f-page">۹</span></div>
+      </div>
+      <div>
+        <div class="frow"><span class="f-id">شکل ۲-۴</span><span>توپولوژی کلید چندکانالۀ <span class="en">CH448</span></span><span class="f-dots"></span><span class="f-page">۱۰</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۵</span><span>پیکربندی خروجی اسکن</span><span class="f-dots"></span><span class="f-page">۱۱</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۶</span><span>مقداردهی اولیۀ <span class="en">ADC</span></span><span class="f-dots"></span><span class="f-page">۱۱</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۷</span><span>مقداردهی اولیۀ <span class="en">DMA</span></span><span class="f-dots"></span><span class="f-page">۱۲</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۸</span><span>مقداردهی اولیۀ تایمر</span><span class="f-dots"></span><span class="f-page">۱۲</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۹</span><span>مدار جانبی <span class="en">CH448</span></span><span class="f-dots"></span><span class="f-page">۱۳</span></div>
+        <div class="frow"><span class="f-id">جدول ۲-۱</span><span>پایه‌های خروجی اسکن</span><span class="f-dots"></span><span class="f-page">۹</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> میکروکنترلر <span class="en">CH32X315</span> در مقایسه با سری‌های متعارف، چهار ماژول مستقل <span class="en">ADC</span> دارد؛ هر کانال <span class="en">ADC</span> پایۀ اختصاصی خود را دارد و چهار گروه <span class="en">ADC</span> در مجموع ۴۸ کانال نمونه‌برداری خارجی فراهم می‌کنند و هر ۴ ماژول از <span class="en">DMA</span> پشتیبانی می‌کنند. با حالت دو-<span class="en">ADC</span> و پیکربندی حالت هم‌زمان، کانال‌های متناظر در همان لحظه نمونه‌برداری می‌شوند و با اتصال آبشاری و تأخیر تریگر صفر، هر ۴ ماژول تنها با یک منبع تریگر به‌طور هم‌زمان راه می‌افتند. افزون بر این، قابلیت خروجی اسکن <span class="en">CH32X315</span> با انتقال وضعیت شمارش دورها به پایه‌های <span class="en">ADCSx</span>، همراه با تراشه‌های کلید آنالوگ مانند <span class="en">CH448</span>، جابه‌جایی کاملاً خودکار تا ۳۸۴ کانال <span class="en">ADC</span> را ممکن می‌کند. این سند معرفی حالت‌ها، جدول تخصیص پایه‌ها و مراحل پیکربندی کامل (<span class="en">ADC</span>، <span class="en">DMA</span> و تایمر) را پوشش می‌دهد.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>این سند میکروکنترلر همگانی‌منظورۀ <span class="en">CH32X315</span> را معرفی می‌کند که چهار ماژول <span class="en">ADC</span> دارد؛ <span class="en">ADC</span>ها می‌توانند به روش اتصال آبشاری، هر ۴ ماژول را به‌طور هم‌زمان به کار بیندازند و به هدف نمونه‌برداری هم‌زمان برسند. افزون بر این، <span class="en">CH32X315</span> قابلیت خروجی اسکن دارد که با همراه‌کردن تراشه‌های کلید آنالوگ، اسکن کاملاً خودکارِ کانال‌های متعدد را ممکن می‌سازد.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>میکروکنترلرهای همگانی‌منظوره</td><td><span class="en">CH32X315</span></td></tr>
+  </table>
+</div>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">معرفی حالت‌های <span class="en">ADC</span></div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-111"><span class="dm">◆</span>۱.۱ معرفی مختصر کارکرد <span class="en">ADC</span> در <span class="en">CH32X315</span></h3>
+<p><span class="en">CH32X315</span> در مقایسه با میکروکنترلرهای متعارف، مزایای زیر را دارد:</p>
+<p class="bl">(الف) دارای ۴ ماژول <span class="en">ADC</span> است و از حالت‌های تبدیل چند-<span class="en">ADC</span> پشتیبانی می‌کند.</p>
+<p class="bl">(ب) هر کانال <span class="en">ADC</span> پایۀ مستقل خود را دارد و ۴ گروه <span class="en">ADC</span> در مجموع <span class="en">4*12=48</span> کانال نمونه‌برداری خارجی فراهم می‌کنند.</p>
+<p class="bl">(ج) دارای قابلیت خروجی اسکن است و با افزودن تراشۀ کلید خارجی می‌توان کانال‌های <span class="en">ADC</span> را گسترش داد.</p>
+<p>تخصیص پایه‌های <span class="en">ADC</span> در جدول زیر آمده است:</p>
+
+<div class="tblwrap" id="tab-11">
+  <div class="tblcap"><span class="cap-pill">جدول ۱-۱</span><span class="cap-text">تخصیص پایه‌های <span class="en">ADC</span></span></div>
+  <table class="tbl" style="font-size:10.6px;">
+    <tr><th colspan="2"><span class="en">ADC1</span></th><th colspan="2"><span class="en">ADC2</span></th><th colspan="2"><span class="en">ADC3</span></th><th colspan="2"><span class="en">ADC4</span></th></tr>
+    <tr><th>کانال <span class="en">ADC</span></th><th>پایه</th><th>کانال <span class="en">ADC</span></th><th>پایه</th><th>کانال <span class="en">ADC</span></th><th>پایه</th><th>کانال <span class="en">ADC</span></th><th>پایه</th></tr>
+    <tr><td><span class="en">ADC1_IN0</span></td><td><span class="en">PA2</span></td><td><span class="en">ADC2_IN0</span></td><td><span class="en">PB6</span></td><td><span class="en">ADC3_IN0</span></td><td><span class="en">PB10</span></td><td><span class="en">ADC4_IN0</span></td><td><span class="en">PD14</span></td></tr>
+    <tr><td><span class="en">ADC1_IN1</span></td><td><span class="en">PA3</span></td><td><span class="en">ADC2_IN1</span></td><td><span class="en">PB7</span></td><td><span class="en">ADC3_IN1</span></td><td><span class="en">PB11</span></td><td><span class="en">ADC4_IN1</span></td><td><span class="en">PD15</span></td></tr>
+    <tr><td><span class="en">ADC1_IN2</span></td><td><span class="en">PA4</span></td><td><span class="en">ADC2_IN2</span></td><td><span class="en">PC8</span></td><td><span class="en">ADC3_IN2</span></td><td><span class="en">PD8</span></td><td><span class="en">ADC4_IN2</span></td><td><span class="en">PC0</span></td></tr>
+    <tr><td><span class="en">ADC1_IN3</span></td><td><span class="en">PA5</span></td><td><span class="en">ADC2_IN3</span></td><td><span class="en">PC9</span></td><td><span class="en">ADC3_IN3</span></td><td><span class="en">PD9</span></td><td><span class="en">ADC4_IN3</span></td><td><span class="en">PC1</span></td></tr>
+    <tr><td><span class="en">ADC1_IN4</span></td><td><span class="en">PA6</span></td><td><span class="en">ADC2_IN4</span></td><td><span class="en">PC10</span></td><td><span class="en">ADC3_IN4</span></td><td><span class="en">PD10</span></td><td><span class="en">ADC4_IN4</span></td><td><span class="en">PC2</span></td></tr>
+    <tr><td><span class="en">ADC1_IN5</span></td><td><span class="en">PA7</span></td><td><span class="en">ADC2_IN5</span></td><td><span class="en">PC11</span></td><td><span class="en">ADC3_IN5</span></td><td><span class="en">PD11</span></td><td><span class="en">ADC4_IN5</span></td><td><span class="en">PC3</span></td></tr>
+    <tr><td><span class="en">ADC1_IN6</span></td><td><span class="en">PB0</span></td><td><span class="en">ADC2_IN6</span></td><td><span class="en">PC12</span></td><td><span class="en">ADC3_IN6</span></td><td><span class="en">PD12</span></td><td><span class="en">ADC4_IN6</span></td><td><span class="en">PC4</span></td></tr>
+    <tr><td><span class="en">ADC1_IN7</span></td><td><span class="en">PB1</span></td><td><span class="en">ADC2_IN7</span></td><td><span class="en">PC13</span></td><td><span class="en">ADC3_IN7</span></td><td><span class="en">PD13</span></td><td><span class="en">ADC4_IN7</span></td><td><span class="en">PC5</span></td></tr>
+    <tr><td><span class="en">ADC1_IN8</span></td><td><span class="en">PB2</span></td><td><span class="en">ADC2_IN8</span></td><td><span class="en">PC14</span></td><td><span class="en">ADC3_IN8</span></td><td><span class="en">PA8</span></td><td><span class="en">ADC4_IN8</span></td><td><span class="en">PC6</span></td></tr>
+    <tr><td><span class="en">ADC1_IN9</span></td><td><span class="en">PB3</span></td><td><span class="en">ADC2_IN9</span></td><td><span class="en">PC15</span></td><td><span class="en">ADC3_IN9</span></td><td><span class="en">PA9</span></td><td><span class="en">ADC4_IN9</span></td><td><span class="en">PC7</span></td></tr>
+    <tr><td><span class="en">ADC1_IN10</span></td><td><span class="en">PB4</span></td><td><span class="en">ADC2_IN10</span></td><td><span class="en">PB8</span></td><td><span class="en">ADC3_IN10</span></td><td><span class="en">PD4</span></td><td><span class="en">ADC4_IN10</span></td><td><span class="en">PA0</span></td></tr>
+    <tr><td><span class="en">ADC1_IN11</span></td><td><span class="en">PB5</span></td><td><span class="en">ADC2_IN11</span></td><td><span class="en">PB9</span></td><td><span class="en">ADC3_IN11</span></td><td><span class="en">PD5</span></td><td><span class="en">ADC4_IN11</span></td><td><span class="en">PA1</span></td></tr>
+  </table>
+</div>
+<p>افزون بر این، هر ۴ ماژول <span class="en">ADC</span> از عملیات <span class="en">DMA</span> پشتیبانی می‌کنند.</p>
+
+<h3 class="h2x" id="sec-112"><span class="dm">◆</span>۱.۲ نمونه‌برداری هم‌زمان <span class="en">ADC</span></h3>
+<p><span class="en">CH32X315</span> دارای ۴ ماژول <span class="en">ADC</span> است که به تفکیک از حالت دو-<span class="en">ADC</span> پشتیبانی می‌کنند؛ در حالت دو-<span class="en">ADC</span> می‌توان حالت هم‌زمان را پیکربندی کرد تا کانال‌های متناظر به‌طور هم‌زمان نمونه‌برداری شوند. در حالت دو-<span class="en">ADC</span> تنها می‌توان جفت‌های <span class="en">ADC1/ADC2</span> و <span class="en">ADC3/ADC4</span> را پیکربندی کرد؛ در حالت هم‌زمان، <span class="en">ADC</span> اصلی تنها به یک منبع تریگر نیاز دارد و <span class="en">ADC</span> فرعی هم‌زمان با آن تبدیل را انجام می‌دهد؛ به این ترتیب سیگنال ولتاژ در همان لحظه نمونه‌برداری می‌شود. شکل ۱-۱ نمودار تبدیل در حالت هم‌زمان چندکاناله است.</p>
+<div class="fig" id="fig-11">
+  <div class="figbox">
+    <img src="assets/img/an09001-fig_manual_1.png" alt="شکل ۱-۱" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۱</span><span class="cap-text">تبدیل در حالت هم‌زمان چندکاناله</span></div>
+</div>
+<p>در حالت دو-<span class="en">ADC</span> تنها می‌توان روی <span class="en">ADC1/ADC2</span> و <span class="en">ADC3/ADC4</span> کار کرد؛ بنابراین با روش آبشاری می‌توان ۴ گروه <span class="en">ADC</span> را به یکدیگر متصل کرد. اتصال آبشاری در <span class="en">CH32X315</span> امکان پیکربندی <span class="en">ADC</span> مرحلۀ پیشین را می‌دهد و با تنظیم منبع تریگر و تأخیر تریگرِ مرحلۀ پیشین می‌توان چند <span class="en">ADC</span> را به هم پیوند داد؛ در حالت آبشاری، در کنار پیکربندی حالت دو-<span class="en">ADC</span>، نمونه‌برداری هر ۴ ماژول <span class="en">ADC</span> انجام می‌شود. اگر تأخیر تریگر صفر تنظیم شود، تنها با یک منبع تریگر، نمونه‌برداری هم‌زمان ۴ گروه <span class="en">ADC</span> حاصل می‌شود. وقتی تأخیر تریگر صفر است و هم‌زمان حالت هم‌زمان دو-<span class="en">ADC</span> به کار می‌رود، توالی تبدیل چنین است:</p>
+<div class="fig" id="fig-11b">
+  <div class="figbox">
+    <img src="assets/img/an09001-fig_manual_2.png" alt="شکل ۱-۱" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۱</span><span class="cap-text">نمونه‌برداری هم‌زمان ۴ گروه <span class="en">ADC</span></span></div>
+</div>
+<div class="note"><span class="lbl">یادداشت مترجم:</span> در سند اصلی، شمارۀ این شکل نیز «شکل ۱-۱» درج شده و با شکل پیشین هم‌نام است؛ عنوان فارسی برای تفکیک دو شکل تفکیک‌شده است.</div>
+<p>در این حالت می‌توان چهار کانال را هم‌زمان نمونه‌برداری کرد و در مقایسه با حالت دو-<span class="en">ADC</span> متعارف، سرعت نمونه‌برداری می‌تواند دو برابر شود. از آنجا که پایه‌های کانال‌های هر <span class="en">ADC</span> با یکدیگر انحصاری نیستند، <span class="en">CH32X315</span> در استفاده از این حالت، برخلاف سایر سری‌های متعارف، هیچ محدودیتی در توالی تبدیل کانال‌ها ندارد.</p>
+
+<h3 class="h2x" id="sec-113"><span class="dm">◆</span>۱.۳ خروجی اسکن <span class="en">ADC</span></h3>
+<p><span class="en">CH32X315</span> از حالت خروجی اسکن پشتیبانی می‌کند؛ در این حالت، پس از آنکه <span class="en">ADC</span> اسکن را کامل کرد و شمارش دورها به مقدار پیکربندی‌شده رسید، پایۀ <span class="en">ADCSx</span> متناظر خروجی اسکن خود را به‌روز می‌کند. بنا بر پیکربندی <span class="en">ADC</span>: از لحظه‌ای که یک منبع تریگر تبدیل را آغاز می‌کند تا هنگامی که آخرین توالی <span class="en">ADC</span> نمونه‌برداری شود، یک دور نمونه‌برداری <span class="en">ADC</span> کامل می‌شود. اگر دورۀ شمارش ۳ بیتی تنظیم شود، وضعیت خروجی پایه‌های متناظر پس از یک دور نمونه‌برداری <span class="en">ADC</span> چنین خواهد بود:</p>
+<div class="fig" id="fig-12">
+  <div class="figbox">
+    <img src="assets/img/an09001-fig_p4_x50.png" alt="شکل ۱-۲" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۲</span><span class="cap-text">وضعیت خروجی پایه‌های خروجی اسکن</span></div>
+</div>
+<p>بر پایۀ این قابلیت می‌توان تراشۀ کلید ۸کانالۀ خارجی را برای گسترش کانال‌های <span class="en">ADC</span> به کار برد؛ برای نمونه، با انتخاب تراشۀ کلید دومسیرۀ ۸-به-۱ <span class="en">CH448</span>، جدول کنترل آن چنین است:</p>
+
+<div class="tblwrap" id="tab-12">
+  <div class="tblcap"><span class="cap-pill">جدول ۱-۲</span><span class="cap-text">جدول کنترل <span class="en">CH448</span></span></div>
+  <table class="tbl" style="font-size:11px;">
+    <thead><tr><th style="width:14%;"><span class="en">XEN#</span></th><th style="width:13%;"><span class="en">YEN#</span></th><th style="width:12%;"><span class="en">SEL2</span></th><th style="width:12%;"><span class="en">SEL1</span></th><th style="width:12%;"><span class="en">SEL0</span></th><th><span class="en">AX</span></th><th><span class="en">AY</span></th></tr></thead>
+    <tr><td colspan="2"><span class="en">0</span></td><td><span class="en">0</span></td><td><span class="en">0</span></td><td><span class="en">0</span></td><td>انتخاب <span class="en">A0X</span></td><td>انتخاب <span class="en">A0Y</span></td></tr>
+    <tr><td colspan="2"><span class="en">0</span></td><td><span class="en">0</span></td><td><span class="en">0</span></td><td><span class="en">1</span></td><td>انتخاب <span class="en">A1X</span></td><td>انتخاب <span class="en">A1Y</span></td></tr>
+    <tr><td colspan="2"><span class="en">0</span></td><td><span class="en">0</span></td><td><span class="en">1</span></td><td><span class="en">0</span></td><td>انتخاب <span class="en">A2X</span></td><td>انتخاب <span class="en">A2Y</span></td></tr>
+    <tr><td colspan="2"><span class="en">0</span></td><td><span class="en">0</span></td><td><span class="en">1</span></td><td><span class="en">1</span></td><td>انتخاب <span class="en">A3X</span></td><td>انتخاب <span class="en">A3Y</span></td></tr>
+    <tr><td colspan="2"><span class="en">0</span></td><td><span class="en">1</span></td><td><span class="en">0</span></td><td><span class="en">0</span></td><td>انتخاب <span class="en">A4X</span></td><td>انتخاب <span class="en">A4Y</span></td></tr>
+    <tr><td colspan="2"><span class="en">0</span></td><td><span class="en">1</span></td><td><span class="en">0</span></td><td><span class="en">1</span></td><td>انتخاب <span class="en">A5X</span></td><td>انتخاب <span class="en">A5Y</span></td></tr>
+    <tr><td colspan="2"><span class="en">0</span></td><td><span class="en">1</span></td><td><span class="en">1</span></td><td><span class="en">0</span></td><td>انتخاب <span class="en">A6X</span></td><td>انتخاب <span class="en">A6Y</span></td></tr>
+    <tr><td colspan="2"><span class="en">0</span></td><td><span class="en">1</span></td><td><span class="en">1</span></td><td><span class="en">1</span></td><td>انتخاب <span class="en">A7X</span></td><td>انتخاب <span class="en">A7Y</span></td></tr>
+    <tr><td colspan="2"><span class="en">1</span></td><td><span class="en">x</span></td><td><span class="en">x</span></td><td><span class="en">x</span></td><td>قطع همهٔ مسیرها</td><td>قطع همهٔ مسیرها</td></tr>
+  </table>
+</div>
+<p>همان‌طور که پیداست، با حالت خروجی اسکن می‌توان کانال‌های خارجی گسترش‌یافتهٔ <span class="en">A0X</span> تا <span class="en">A7X</span> و <span class="en">A0Y</span> تا <span class="en">A7Y</span> را به‌ترتیب نمونه‌برداری کرد؛ به این ترتیب ۲ مسیر <span class="en">ADC</span> به ۱۶ کانال <span class="en">ADC</span> گسترش می‌یابد.</p>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">به‌کارگیری حالت‌های <span class="en">ADC</span></div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-211"><span class="dm">◆</span>۲.۱ پیکربندی حالت‌های <span class="en">ADC</span></h3>
+
+<h4 class="h3x" id="sec-2111"><span class="dm">◆</span>۱. حالت قاعدهٔ هم‌زمان</h4>
+<p>برای نمونه‌برداری هم‌زمان ۴ ماژول <span class="en">ADC</span>، نخست باید حالت هم‌زمان دو-<span class="en">ADC</span> پیکربندی شود؛ یعنی برای <span class="en">ADC1</span> و <span class="en">ADC2</span> در حالت دو-<span class="en">ADC</span>، حالت هم‌زمان انتخاب شود. در این نمونه، حالت هم‌زمانِ گروه معمول مبنا قرار گرفته است؛ در این حالت توالی کانال‌های گروه معمول تبدیل می‌شود و هنگامی که <span class="en">ADC1</span> با تریگر تبدیل را آغاز می‌کند، همان تریگر هم‌زمان <span class="en">ADC2</span> را نیز تحریک می‌کند. در پایان تبدیل، یک درخواست انتقال ۳۲ بیتی <span class="en">DMA</span> تولید می‌شود. <span class="en">ADC3</span> و <span class="en">ADC4</span> نیز دقیقاً همین اثر را دارند.</p>
+<div class="fig" id="fig-21">
+  <div class="figbox">
+    <img src="assets/img/an09001-fig_p6_x62.jpeg" alt="شکل ۲-۱" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۱</span><span class="cap-text">انتخاب حالت قاعدهٔ هم‌زمان</span></div>
+</div>
+
+<h4 class="h3x" id="sec-2112"><span class="dm">◆</span>۲. حالت آبشاری</h4>
+<p>پس از پیکربندی حالت قاعدهٔ هم‌زمانِ دو-<span class="en">ADC</span> برای <span class="en">ADC1/ADC2</span> و <span class="en">ADC3/ADC4</span>، می‌توان از حالت آبشاری استفاده کرد تا با یک منبع تریگر، تبدیل هر ۴ ماژول <span class="en">ADC</span> آغاز شود. پیکربندی حالت آبشاری شامل موارد زیر است:</p>
+<p class="bl">(۱) انتخاب <span class="en">ADC</span> مرحلۀ پیشین؛ بنا بر پیکربندی مرحلۀ پیشین می‌توان توالی تبدیل ماژول <span class="en">ADC</span> را انتخاب کرد؛ برای نمونه اگر مرحلۀ پیشینِ <span class="en">ADC3</span> روی <span class="en">ADC1</span> تنظیم شود، تنها لازم است منبع تریگر <span class="en">ADC1</span> راه‌اندازی شود تا <span class="en">ADC3</span> طبق پیکربندی تبدیل را انجام دهد و نیازی به راه‌اندازی منبع تریگر <span class="en">ADC3</span> نیست.</p>
+<p class="bl">(۲) انتخاب فعال‌ساز آبشاری؛ بنا بر اینکه تریگر گروه تزریقی یا گروه معمول پیکربندی شده باشد، فعال‌ساز آبشاری روی گروه تزریقی یا گروه معمول تنظیم می‌شود؛ با انتخاب فعال‌ساز آبشاریِ گروه معمول، پس از آنکه گروه معمول <span class="en">ADC</span> مرحلۀ پیشین با تریگر راه افتاد، گروه معمول <span class="en">ADC</span> مرحلۀ پسین تریگر می‌خورد و تبدیل را انجام می‌دهد.</p>
+<p class="bl">(۳) تنظیم تأخیر تریگر؛ تأخیر تریگر کانال‌های معمول/تزریقی قابل پیکربندی است و گام تنظیم آن یک دورۀ ساعت <span class="en">ADC</span> است. اگر تأخیر تریگر صفر تنظیم شود، هنگامی که <span class="en">ADC</span> مرحلۀ پیشین با تریگر تبدیل را آغاز می‌کند، <span class="en">ADC</span> مرحلۀ پسین نیز هم‌زمان تبدیل را انجام می‌دهد و به این ترتیب اثر نمونه‌برداری هم‌زمان حاصل می‌شود. در استفاده از تأخیر تریگر، مقدار تأخیر تنظیم‌شده مربوط به <span class="en">ADC</span> مرحلۀ پسین است؛ <span class="en">ADC</span>ی که مرحلۀ پسین ندارد، پیکربندی نمی‌شود.</p>
+<p>با این قابلیت و با تنظیم تأخیر تریگر روی صفر و استفاده از حالت نمونه‌برداری هم‌زمان دو-<span class="en">ADC</span>، نمونه‌برداری هم‌زمان ۴ ماژول <span class="en">ADC</span> ممکن می‌شود؛ در حالت اسکن نیز توالی‌های تبدیل باید دورۀ تبدیل یکسانی داشته باشند تا سیگنال منبع در همان لحظه نمونه‌برداری شود.</p>
+<p>با مبنای نمودن حالت قاعدهٔ هم‌زمان، برای نمونه‌برداری هم‌زمان ۴ ماژول <span class="en">ADC</span> لازم است فعال‌ساز آبشاریِ گروه معمولِ <span class="en">ADC3</span> روشن شود؛ مرحلۀ پیشینِ آن روی <span class="en">ADC1</span> تنظیم گردد و تأخیر تریگرِ <span class="en">ADC1</span> صفر باشد.</p>
+<div class="fig" id="fig-22">
+  <div class="figbox">
+    <img src="assets/img/an09001-fig_manual_3.png" alt="شکل ۲-۲" style="max-width:540px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۲</span><span class="cap-text">پیکربندی حالت آبشاری <span class="en">ADC</span></span></div>
+</div>
+
+<h4 class="h3x" id="sec-2113"><span class="dm">◆</span>۳. خروجی اسکن</h4>
+<p>پایه‌های حالت خروجی اسکن <span class="en">ADC</span> را می‌توان به تراشۀ کلید خارجی متصل کرد تا کانال‌های <span class="en">ADC</span> گسترش یابند و جابه‌جایی خودکار کانال‌های <span class="en">ADC</span> تحقق پیدا کند. خروجی اسکن <span class="en">ADC</span> دارای ۳ پایۀ خروجی است؛ بنابراین با همراه‌کردن تراشۀ کلید ۸-به-۱ <span class="en">CH448</span> می‌توان جابه‌جایی خودکار <span class="en">2*8</span> کانال را پیاده کرد. پایه‌های خروجی اسکن چنین‌اند:</p>
+
+<div class="tblwrap" id="tab-21">
+  <div class="tblcap"><span class="cap-pill">جدول ۲-۱</span><span class="cap-text">پایه‌های خروجی اسکن</span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:34%;">قابلیت اسکن <span class="en">ADC</span></th><th><span class="en">ADCS0</span></th><th><span class="en">ADCS1</span></th><th><span class="en">ADCS2</span></th></tr></thead>
+    <tr><td>پایه‌های قابل انتخاب</td><td><span class="en">PA10(AF5)</span></td><td><span class="en">PA11(AF5)</span></td><td><span class="en">PA12(AF5)</span></td></tr>
+  </table>
+</div>
+<p>بنا بر جدول کنترل تراشۀ کلید، تنها کافی است پایه‌های ورودی انتخاب کلید تراشه یعنی <span class="en">SEL0~SEL2</span> مستقیماً به پایه‌های خروجی اسکن <span class="en">ADC</span> یعنی <span class="en">ADCS0~ADCS2</span> وصل شوند؛ پس از هر دور تبدیل <span class="en">ADC</span>، ورودی‌های <span class="en">ADC</span> یعنی <span class="en">AX/AY</span> به‌طور خودکار میان پایه‌های انتخاب ورودی کلید آنالوگ یعنی <span class="en">A0X~A7X</span> و <span class="en">A0Y~A7Y</span> جابه‌جا می‌شوند.</p>
+<div class="fig" id="fig-23">
+  <div class="figbox">
+    <img src="assets/img/an09001-fig_p7_x68.jpeg" alt="شکل ۲-۳" style="max-width:600px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۳</span><span class="cap-text">نمودار <span class="en">CH448</span></span></div>
+</div>
+<p>بر پایۀ این شکل می‌توان چندین تراشۀ کلید ۸-به-۱ را به‌طور هم‌زمان به کار برد و کانال‌های <span class="en">ADC</span> را گسترش داد؛ جابه‌جایی کاملاً خودکار تا سقف <span class="en">8*48=384</span> کانال <span class="en">ADC</span> پشتیبانی می‌شود.</p>
+<div class="fig" id="fig-24">
+  <div class="figbox">
+    <img src="assets/img/an09001-fig_p7_x69.png" alt="شکل ۲-۴" style="max-width:600px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۴</span><span class="cap-text">توپولوژی کلید چندکانالۀ <span class="en">CH448</span></span></div>
+</div>
+<p>مراحل پیکربندی برای استفاده از خروجی اسکن <span class="en">CH32X315</span> چنین است:</p>
+<p class="bl">(۱) پیکربندی منبع پیکربندی خروجی اسکن؛ از طریق بیت <span class="en">SCSCFG</span> در رجیستر <span class="en">ADCx_SCANCNT</span>، کانال گروه معمول یا گروه تزریقی به‌عنوان منبع کانال اسکن انتخاب می‌شود تا مشخص شود پس از یک دور نمونه‌برداری کانال‌های گروه معمول یا گروه تزریقی، خروجی پایه‌های <span class="en">ADCSx</span> تغییر کند.</p>
+<p class="bl">(۲) پیکربندی بیت‌های فعال‌ساز شمارش دورۀ اسکن؛ از طریق رجیستر <span class="en">ADCx_SCANCNT</span>، بیت‌های <span class="en">SCANOEx</span> برای فعال‌سازی شمارش دوره فعال می‌شوند و بنا بر قطعۀ کلید خارجی انتخابی پیکربندی می‌شوند؛ اگر از کلید ۸-به-۱ <span class="en">CH448</span> استفاده شود، فعال‌ساز شمارش دورۀ اسکن روی <span class="en">SCANOE0~SCANOE2</span> تنظیم می‌شود و اگر کلید ۴-به-۱ <span class="en">CH444</span> انتخاب شود، می‌توان فعال‌ساز شمارش دورۀ اسکن را روی <span class="en">SCANOE0~SCANOE1</span> تنظیم کرد.</p>
+<p class="bl">(۳) تنظیم انتخاب <span class="en">ADC</span> خروجی شمارشگر دورۀ اسکن؛ با تنظیم بیت‌های <span class="en">ADC_SCAN_SEL[1:0]</span> در رجیستر <span class="en">R32_EXTEN_CTR</span> مشخص می‌شود شمارش دورۀ اسکنِ کدام <span class="en">ADCx</span> به <span class="en">GPIO</span> داده شود. اگر <span class="en">ADC1</span> انتخاب شود، تنها پس از پایان یک دور نمونه‌برداری <span class="en">ADC1</span> است که سطح پایه‌های خروجی اسکن تغییر می‌کند.</p>
+<p>برای پیکربندی خروجی اسکن، گروه معمول تنظیم می‌شود، فعال‌ساز شمارش دورۀ اسکن روی <span class="en">SCANOE0~SCANOE2</span> قرار می‌گیرد و شمارش دورۀ اسکن روی <span class="en">ADC1</span> مؤثر تنظیم می‌شود.</p>
+<div class="fig" id="fig-25">
+  <div class="figbox">
+    <img src="assets/img/an09001-fig_p8_x74.png" alt="شکل ۲-۵" style="max-width:600px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۵</span><span class="cap-text">پیکربندی خروجی اسکن</span></div>
+</div>
+
+<h4 class="h3x" id="sec-2114"><span class="dm">◆</span>۴. پیکربندی کل</h4>
+<p>نتیجۀ پیاده‌سازی چنین است: نمونه‌برداری هم‌زمان ۴ ماژول <span class="en">ADC</span>، اتصال ۲ قطعۀ کلید ۸-به-۱ خارجی برای فراهم‌کردن <span class="en">4*8</span> کانال <span class="en">ADC</span> گسترش‌یافته و نمونه‌برداری چرخشی زمان‌بندی‌شده. مقداردهی اولیۀ <span class="en">ADC</span> چنین است:</p>
+<div class="fig" id="fig-26">
+  <div class="figbox">
+    <img src="assets/img/an09001-fig_p8_x76.jpeg" alt="شکل ۲-۶" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۶</span><span class="cap-text">مقداردهی اولیۀ <span class="en">ADC</span></span></div>
+</div>
+<p>پایه‌های خروجی اسکن روی <span class="en">ADCS0~ADCS2</span> انتخاب می‌شوند، خروجی شمارشگر دورۀ اسکن روی <span class="en">ADC1</span> مؤثر تنظیم می‌شود، پیکربندی به‌صورت هم‌زمانِ گروه معمولِ دو-<span class="en">ADC</span> انجام می‌گیرد و در اتصال آبشاری، مرحلۀ پیشینِ <span class="en">ADC3</span> روی <span class="en">ADC1</span> و تأخیر تریگر روی صفر تنظیم می‌شود. منبع تریگر خارجی <span class="en">TIM1_CC1</span> انتخاب می‌شود تا تریگر زمان‌بندی‌شده انجام گیرد؛ برای <span class="en">ADC1</span> تا <span class="en">ADC4</span> توالی کانال‌های یکسان و دورۀ نمونه‌برداری برابر پیکربندی می‌شود.</p>
+<p>مقداردهی اولیۀ <span class="en">DMA</span>: در حالت قاعدهٔ هم‌زمانِ دو-<span class="en">ADC</span>، در پایان تبدیل یک درخواست انتقال ۳۲ بیتی <span class="en">DMA</span> تولید می‌شود؛ ۱۶ بیت بالای دادۀ <span class="en">ADC1</span> مقدار نمونه‌برداری‌شدۀ <span class="en">ADC2</span> و ۱۶ بیت پایین آن مقدار نمونه‌برداری‌شدۀ <span class="en">ADC1</span> است؛ به همین صورت ۱۶ بیت بالای دادۀ <span class="en">ADC3</span> مقدار <span class="en">ADC4</span> و ۱۶ بیت پایین آن مقدار <span class="en">ADC3</span> است. بنابراین در پیکربندی مقداردهی اولیۀ <span class="en">DMA</span> تنها لازم است کانال‌های <span class="en">ADC1</span> و <span class="en">ADC3</span> فعال شوند.</p>
+<div class="fig" id="fig-27">
+  <div class="figbox">
+    <img src="assets/img/an09001-fig_p9_x80.jpeg" alt="شکل ۲-۷" style="max-width:560px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۷</span><span class="cap-text">مقداردهی اولیۀ <span class="en">DMA</span></span></div>
+</div>
+<p>پیکربندی سیگنال تریگر: تریگر مقایسۀ تایمر انتخاب می‌شود تا نمونه‌برداری زمان‌بندی‌شده انجام شود.</p>
+<div class="fig" id="fig-28">
+  <div class="figbox">
+    <img src="assets/img/an09001-fig_p9_x81.jpeg" alt="شکل ۲-۸" style="max-width:520px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۸</span><span class="cap-text">مقداردهی اولیۀ تایمر</span></div>
+</div>
+<p>بنا بر کانال‌های انتخابی <span class="en">ADC</span>، پایه‌های مشترک <span class="en">X/Y</span> تراشه‌های کلید به ترتیب به کانال‌های ورودی <span class="en">ADC</span> مربوط به <span class="en">ADC2/ADC1</span> و <span class="en">ADC3/ADC4</span> متصل می‌شوند؛ پایه‌های ورودی کلید یعنی <span class="en">AxX</span> و <span class="en">AxY</span> نیز به ترتیب به سیگنال تحت اندازه‌گیری وصل می‌شوند. با این پیکربندی، نمونه‌برداری چرخشی زمان‌بندی‌شدۀ تایمر برای کانال ۱ <span class="en">ADC1</span> روی <span class="en">A0Y~A7Y</span>، کانال ۰ <span class="en">ADC2</span> روی <span class="en">A0X~A7X</span>، کانال ۰ <span class="en">ADC3</span> روی <span class="en">A0Y_1~A7Y_1</span> و کانال ۰ <span class="en">ADC4</span> روی <span class="en">A0X_1~A7X_1</span> انجام می‌شود. نمودار مدار تراشۀ کلید خارجی:</p>
+<div class="fig" id="fig-29">
+  <div class="figbox">
+    <img src="assets/img/an09001-fig_p10_x85.jpeg" alt="شکل ۲-۹" style="max-width:520px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۹</span><span class="cap-text">مدار جانبی <span class="en">CH448</span></span></div>
+</div>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN09001</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2025/11/20</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">CH32X315</span></td><td class="jt">میکروکنترلر همگانی‌منظورۀ <span class="en">WCH</span> با چهار ماژول مستقل <span class="en">ADC</span>، قابلیت نمونه‌برداری هم‌زمان و خروجی اسکن</td></tr>
+      <tr><td><span class="en">ADC</span></td><td class="jt">مبدل آنالوگ به دیجیتال؛ در <span class="en">CH32X315</span> چهار ماژول <span class="en">ADC1</span> تا <span class="en">ADC4</span> با ۱۲ کانال خارجی اختصاصی</td></tr>
+      <tr><td><span class="en">Dual-ADC / RegSimult</span></td><td class="jt">حالت دو-<span class="en">ADC</span>؛ هر جفت <span class="en">ADC1/ADC2</span> و <span class="en">ADC3/ADC4</span> می‌تواند در حالت هم‌زمانِ گروه معمول کار کند و با یک منبع تریگر، هر دو تبدیل را انجام دهند</td></tr>
+      <tr><td><span class="en">Cascade</span></td><td class="jt">اتصال آبشاری؛ با انتخاب <span class="en">ADC</span> مرحلۀ پیشین و فعال‌ساز آبشاری، تریگر مرحلۀ پیشین به مرحلۀ پسین منتقل می‌شود تا ۴ ماژول با یک تریگر کار کنند</td></tr>
+      <tr><td><span class="en">Regular / Injected Group</span></td><td class="jt">گروه معمول / گروه تزریقی؛ دو نوع توالی کانال‌های تبدیل در <span class="en">ADC</span></td></tr>
+      <tr><td><span class="en">Trigger Delay</span></td><td class="jt">تأخیر تریگر؛ گام تنظیم آن یک دورۀ ساعت <span class="en">ADC</span> است و تأخیر تنظیم‌شده مربوط به <span class="en">ADC</span> مرحلۀ پسین است؛ مقدار صفر به معنای تبدیل هم‌زمان است</td></tr>
+      <tr><td><span class="en">Scan Output (ADCSx)</span></td><td class="jt">خروجی اسکن؛ سه پایۀ <span class="en">ADCS0</span> تا <span class="en">ADCS2</span> (با <span class="en">AF5</span>) که پس از هر دور نمونه‌برداری، وضعیت شمارش دوره را به‌روز می‌کنند</td></tr>
+      <tr><td><span class="en">ADCx_SCANCNT</span></td><td class="jt">رجیستر پیکربندی اسکن؛ بیت <span class="en">SCSCFG</span> منبع کانال اسکن (گروه معمول/تزریقی) و بیت‌های <span class="en">SCANOE0~SCANOE2</span> فعال‌ساز شمارش دوره را نگه می‌دارد</td></tr>
+      <tr><td><span class="en">R32_EXTEN_CTR / ADC_SCAN_SEL</span></td><td class="jt">رجیستر پیکربندی خارجی؛ بیت‌های <span class="en">ADC_SCAN_SEL[1:0]</span> تعیین می‌کنند شمارش دورۀ اسکنِ کدام <span class="en">ADCx</span> به <span class="en">GPIO</span> داده شود</td></tr>
+      <tr><td><span class="en">CH448</span></td><td class="jt">تراشۀ کلید آنالوگ دومسیرۀ ۸-به-۱ با ورودی‌های انتخاب <span class="en">SEL0~SEL2</span> و مسیرهای <span class="en">AX/AY</span>؛ برای گسترش خودکار کانال‌های <span class="en">ADC</span></td></tr>
+      <tr><td><span class="en">CH444</span></td><td class="jt">تراشۀ کلید آنالوگ ۴-به-۱؛ برای آن فعال‌ساز شمارش دورۀ اسکن روی <span class="en">SCANOE0~SCANOE1</span> تنظیم می‌شود</td></tr>
+      <tr><td><span class="en">DMA</span></td><td class="jt">میسر دسترسی مستقیم به حافظه؛ در حالت هم‌زمان دو-<span class="en">ADC</span> با یک درخواست انتقال ۳۲ بیتی، مقادیر دو <span class="en">ADC</span> را در یک واژۀ داده منتقل می‌کند</td></tr>
+      <tr><td><span class="en">TIM1_CC1</span></td><td class="jt">منبع تریگر خارجیِ مقایسۀ کانال ۱ تایمر <span class="en">TIM1</span> برای تریگر زمان‌بندی‌شدۀ نمونه‌برداری</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN09001 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۲۳</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN09001</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
