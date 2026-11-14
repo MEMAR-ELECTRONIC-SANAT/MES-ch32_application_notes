@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>چندگذرندۀ درخواست DMA و حالت بافر دوگانه در CH32H417/H416/H415 — ترجمۀ فارسی AN08000</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">چندگذرندۀ درخواست <span class="en">DMA</span></div>
+    <div class="t2">و حالت بافر دوگانه</div>
+    <div class="t3">در میکروکنترلر <span class="en">CH32H417/H416/H415</span></div>
+  </div>
+  <div class="c-sub">از مفاهیم پایۀ <span class="en">DMA</span> و جدول مقایسۀ کامل با نسل پیشین، تا چندگذرندۀ درخواست <span class="en">DMAMUX</span> با جدول تخصیص ۱۲۳ ورودی، حالت بافر دوگانه، <span class="en">DMA</span> اختصاصی جانبی‌ها و تحلیل کارایی: تخصیص <span class="en">SRAM</span>، نرخ انتقال و اولویت داوری <span class="en">DMA/CPU</span></div>
+  <div class="c-desc">در این جزوه، ترجمۀ فارسی سند رسمی <span class="en">AN08000</span> (نسخۀ ۱٫۰، منتشرۀ شرکت <span class="en">WCH</span>) را می‌خوانید: میکروکنترلرهای دو-هسته‌ای سری <span class="en">CH32H417/H416/H415</span> بر پایۀ هسته‌های <span class="en">RISC-V5F</span> و <span class="en">RISC-V3F</span>، نسبت به نسل پیشین در بخش <span class="en">DMA</span> به چندگذرندۀ درخواست و حالت بافر دوگانه مجهز شده‌اند. مقایسۀ کارکردی <span class="en">DMA</span> با <span class="en">CH32V30X</span>، جدول کامل تخصیص منابع ورودی <span class="en">DMAMUX</span>، سازوکار بافر دوگانه و رجیسترهای آن، <span class="en">DMA</span> اختصاصی جانبی‌های پرسرعت به‌همراه الزامات ترازی بافر، و تحلیل کارایی شامل تخصیص <span class="en">SRAM</span> میان <span class="en">ITCM/DTCM</span> و ناحیۀ اشتراکی، نرخ انتقال و قواعد داوری <span class="en">DMA/CPU</span> گام‌به‌گام مرور می‌شود.</div>
+  <div class="c-tags">
+    <span class="c-tag">میکروکنترلر <span class="en">CH32H417/H416/H415</span></span>
+    <span class="c-tag">هستۀ دوگانۀ <span class="en">RISC-V</span></span>
+    <span class="c-tag">چندگذرندۀ درخواست <span class="en">DMAMUX</span></span>
+    <span class="c-tag">حالت بافر دوگانۀ <span class="en">DMA</span></span>
+    <span class="c-tag"><span class="en">DMA</span> اختصاصی جانبی‌ها</span>
+    <span class="c-tag">تخصیص <span class="en">SRAM</span> و <span class="en">TCM</span></span>
+    <span class="c-tag">داوری <span class="en">DMA/CPU</span></span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN08000 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | کارکردهای <span class="en">DMA</span> در <span class="en">CH32H417</span></span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-111"><span class="s-id">1.1</span><span>مفاهیم پایۀ <span class="en">DMA</span></span><span class="s-dots"></span><span class="s-page">۳</span></a>
+    <a class="toc-sub" href="#sec-112"><span class="s-id">1.2</span><span>مقایسۀ <span class="en">DMA</span> در <span class="en">CH32</span></span><span class="s-dots"></span><span class="s-page">۴</span></a>
+    <a class="toc-sub" href="#sec-113"><span class="s-id">1.3</span><span>چندگذرندۀ درخواست <span class="en">DMA</span></span><span class="s-dots"></span><span class="s-page">۵</span></a>
+    <a class="toc-sub" href="#sec-114"><span class="s-id">1.4</span><span>حالت بافر دوگانۀ <span class="en">DMA</span></span><span class="s-dots"></span><span class="s-page">۸</span></a>
+    <a class="toc-sub" href="#sec-115"><span class="s-id">1.5</span><span><span class="en">DMA</span> اختصاصی جانبی‌ها</span><span class="s-dots"></span><span class="s-page">۹</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | کارایی <span class="en">DMA</span> در <span class="en">CH32H417</span></span><span class="t-dots"></span><span class="t-page">۱۱</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-211"><span class="s-id">2.1</span><span>تخصیص <span class="en">SRAM</span> در <span class="en">CH32H417</span></span><span class="s-dots"></span><span class="s-page">۱۱</span></a>
+    <a class="toc-sub" href="#sec-212"><span class="s-id">2.2</span><span>نرخ انتقال <span class="en">DMA</span></span><span class="s-dots"></span><span class="s-page">۱۱</span></a>
+    <a class="toc-sub" href="#sec-213"><span class="s-id">2.3</span><span>اولویت داوری <span class="en">DMA/CPU</span></span><span class="s-dots"></span><span class="s-page">۱۲</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۴</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۱۴</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۵</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۱۴</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">شکل ۱-۱</span><span>پیکربندی نمونۀ تحریک <span class="en">DMA1_Channel1</span> با <span class="en">TIM1_UP</span></span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۲</span><span>رجیستر <span class="en">DMAy_CFGRx[16]</span></span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۳</span><span>پیکربندی نمونۀ <span class="en">DoubleBuffer_DMA</span></span><span class="f-dots"></span><span class="f-page">۹</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۴</span><span>تعریف آدرس بافر <span class="en">SDMMC</span></span><span class="f-dots"></span><span class="f-page">۱۰</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۱</span><span>نمودار سیستم <span class="en">CH32H417</span></span><span class="f-dots"></span><span class="f-page">۱۲</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۲</span><span>اولویت دسترسی به حافظۀ <span class="en">DTCM</span></span><span class="f-dots"></span><span class="f-page">۱۳</span></div>
+        <div class="frow"><span class="f-id">جدول ۱-۱</span><span>مقایسۀ کارکرد <span class="en">DMA</span></span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">جدول ۱-۲</span><span>جدول تخصیص منابع ورودی <span class="en">DMAMUX</span></span><span class="f-dots"></span><span class="f-page">۵</span></div>
+      </div>
+      <div>
+        <div class="frow"><span class="f-id">جدول ۱-۳</span><span>رجیسترهای آدرس مبدأ و مقصد در حالت بافر دوگانه</span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">جدول ۱-۴</span><span>جدول مقایسۀ کارکرد <span class="en">DMA</span> اختصاصی</span><span class="f-dots"></span><span class="f-page">۱۰</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> سری <span class="en">CH32H417/H416/H415</span> میکروکنترلر دو-هسته‌ای شرکت <span class="en">WCH</span> بر پایۀ هسته‌های <span class="en">Qingke RISC-V5F</span> و <span class="en">RISC-V3F</span> است و نسبت به محصولات پیشین، در بخش <span class="en">DMA</span> دو قابلیت تازۀ چندگذرندۀ درخواست و بافر دوگانه را دارد. این سند کمک می‌کند ویژگی‌های <span class="en">DMA</span> این خانواده را بشناسید: مقایسۀ کارکردی با سری <span class="en">CH32V30X</span>، چندگذرندۀ درخواست <span class="en">DMAMUX</span> و جدول تخصیص ۱۲۳ ورودی آن، حالت بافر دوگانه و رجیسترهای مبدأ/مقصد، <span class="en">DMA</span> اختصاصی جانبی‌ها و الزامات ترازی بافر، و تحلیل کارایی شامل تخصیص <span class="en">896KB</span> حافظۀ داخلی، نرخ انتقال <span class="en">DMA</span> و اولویت داوری دسترسی <span class="en">DMA</span> و هسته به <span class="en">SRAM</span> را پوشش می‌دهد.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>سری میکروکنترلرهای <span class="en">CH32H417/H416/H415</span> محصول دو-هسته‌ای شرکت <span class="en">WCH</span> (沁恒) بر پایۀ هسته‌های <span class="en">Qingke RISC-V5F</span> و <span class="en">RISC-V3F</span> است. این سری نسبت به محصولات پیشین شرکت، در بخش <span class="en">DMA</span> به چندگذرندۀ درخواست (<span class="en">Request Multiplexer</span>) و حالت بافر دوگانه مجهز شده است. سند کاربردی پیشِ‌رو ویژگی‌های <span class="en">DMA</span> میکروکنترلرهای <span class="en">CH32H417/H416/H415</span> را معرفی می‌کند و اولویت داوری دسترسی <span class="en">CPU</span> و <span class="en">DMA</span> به <span class="en">SRAM</span> و نیز نرخ انتقال <span class="en">DMA</span> را تحلیل می‌کند.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند اصلی <span class="en">AN08000</span></span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>میکروکنترلرهای همگانی‌منظوره</td><td><span class="en">CH32H417/H416/H415</span></td></tr>
+  </table>
+</div>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">کارکردهای <span class="en">DMA</span> در <span class="en">CH32H417</span></div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-111"><span class="dm">◆</span>۱.۱ مفاهیم پایۀ <span class="en">DMA</span></h3>
+<p><span class="en">DMA</span> (<span class="en">Direct Memory Access</span>؛ دسترسی مستقیم به حافظه) می‌تواند انتقال داده را به‌طور مستقیم میان جانبی و حافظه یا میان حافظه و حافظه انجام دهد.</p>
+<div class="fig" id="fig-i1">
+  <div class="figbox">
+    <img src="assets/img/an08000-fig_p3_x32.png" alt="نمودار مسیرهای انتقال DMA" style="max-width:560px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">نمودار</span><span class="cap-text">انتقال داده با <span class="en">DMA</span> میان جانبی و <span class="en">RAM</span> (راست) و میان <span class="en">RAM</span> و <span class="en">RAM</span> (چپ)</span></div>
+</div>
+<p>در فرایند انتقال داده با <span class="en">DMA</span> نیازی به مداخلۀ <span class="en">CPU</span> نیست و منابع <span class="en">CPU</span> آزاد می‌ماند. برخلاف شیوۀ سنتی انتقال داده که <span class="en">CPU</span> باید در تمام مراحل حضور داشته باشد، کارایی انتقال داده در سیستم و عملکرد تراشه بالا می‌رود. از آن‌جا که در انتقال داده با <span class="en">DMA</span> مشارکت <span class="en">CPU</span> لازم نیست، <span class="en">DMA</span> حتی هنگامی‌که <span class="en">MCU</span> وارد حالت <span class="en">Sleep</span> شده است نیز می‌تواند به انتقال داده ادامه دهد.</p>
+<p>بهره‌گیری انعطاف‌پذیر از <span class="en">DMA</span> در حالت <span class="en">Sleep</span> — به‌گونه‌ای که هسته در زمان دریافت و ارسال داده توسط جانبی‌ها در وضعیت توقف بماند — می‌تواند مصرف توان <span class="en">MCU</span> را به‌طور مؤثر کاهش دهد.</p>
+<div class="fig" id="fig-i2">
+  <div class="figbox">
+    <img src="assets/img/an08000-fig_p3_x34.jpeg" alt="نمودار جریان انتقال DMA در حالت Sleep" style="max-width:560px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">نمودار</span><span class="cap-text">جریان نمونۀ انتقال داده با <span class="en">DMA</span> هنگام خواب هسته و بیدارسازی با وقفه</span></div>
+</div>
+
+<h3 class="h2x" id="sec-112"><span class="dm">◆</span>۱.۲ مقایسۀ <span class="en">DMA</span> در <span class="en">CH32</span></h3>
+<p><span class="en">CH32H417</span> محصول دو-هسته‌ای تازۀ شرکت <span class="en">WCH</span> است و در کارکردهای <span class="en">DMA</span> نسبت به سری‌های پیشین تفاوت‌هایی دارد.</p>
+<div class="tblwrap" id="tab-11">
+  <div class="tblcap"><span class="cap-pill">جدول ۱-۱</span><span class="cap-text">مقایسۀ کارکرد <span class="en">DMA</span></span></div>
+  <table class="tbl">
+    <tr><th style="width:26%;"><span class="en">MCU</span></th><th style="width:37%;"><span class="en">CH32H41X MCU</span></th><th><span class="en">CH32V30X MCU</span></th></tr>
+    <tr><td>تعداد کانال‌های <span class="en">DMA</span></td><td><span class="en">DMA1/DMA2 (16 channels)</span></td><td><span class="en">DMA1/DMA2 (18 channels)</span></td></tr>
+    <tr><td>تعداد انتقال داده</td><td><span class="en">0-65535</span></td><td><span class="en">0-65535</span></td></tr>
+    <tr><td>اولویت داوری</td><td>بسیار بالا/بالا/متوسط/پایین</td><td>بسیار بالا/بالا/متوسط/پایین</td></tr>
+    <tr><td>حالت انتقال حلقوی</td><td>پشتیبانی می‌شود</td><td>پشتیبانی می‌شود</td></tr>
+    <tr><td>چندگذرندۀ درخواست <span class="en">DMA</span></td><td>پشتیبانی می‌شود</td><td>پشتیبانی نمی‌شود</td></tr>
+    <tr><td>حالت بافر دوگانه</td><td>پشتیبانی می‌شود</td><td>پشتیبانی نمی‌شود</td></tr>
+    <tr><td>پهنای انتقال داده</td><td><span class="en">8/16/32/256</span></td><td><span class="en">8/16/32</span></td></tr>
+  </table>
+</div>
+<p>میکروکنترلرهای سری <span class="en">CH32H417</span> نسبت به <span class="en">CH32V30X</span> پهنای انتقال <span class="en">256bit</span> و چندگذرندۀ درخواست را افزوده‌اند و از حالت دور دوگانه پشتیبانی می‌کنند. هنگامی‌که در پیکربندی <span class="en">DMA</span> پهنای انتقال متفاوتی انتخاب شود، آدرس انتقال نیز باید بر اساس آن تراز شود؛ برای مثال اگر <span class="en">DMA</span> پهنای انتقال <span class="en">256bit</span> را انتخاب کند، آدرس انتقال باید <span class="en">32</span> بایت تراز باشد.</p>
+
+<h3 class="h2x" id="sec-113"><span class="dm">◆</span>۱.۳ چندگذرندۀ درخواست <span class="en">DMA</span></h3>
+<p>در محصولات پیش از سری <span class="en">CH32H417/H416/H415</span> هر کانال <span class="en">DMA</span> مستقیماً به یک درخواست <span class="en">DMA</span> اختصاصی وصل بود؛ درخواست جانبی تنها می‌توانست همان کانال متناظر را تحریک کند و این امر تا حدی استفاده از <span class="en">DMA</span> را محدود می‌کرد. چندگذرندۀ درخواست <span class="en">DMAMUX</span> امکان بازپیکربندی خطوط درخواست میان جانبی‌های تراشه و کنترل‌گر <span class="en">DMA</span> را فراهم می‌کند؛ با چندگذرندۀ درخواست، درخواست جانبی می‌تواند از هر کانال <span class="en">DMA</span> استفاده کند.</p>
+<p><span class="en">DMA</span> در <span class="en">CH32H417</span> <span class="en">16</span> کانال فراهم می‌کند؛ کانال‌های <span class="en">1</span> تا <span class="en">8</span> در <span class="en">DMAMUX</span> به کانال‌های <span class="en">1</span> تا <span class="en">8</span> در <span class="en">DMA1</span> و کانال‌های <span class="en">9</span> تا <span class="en">16</span> در <span class="en">DMAMUX</span> به کانال‌های <span class="en">1</span> تا <span class="en">8</span> در <span class="en">DMA2</span> وصل‌اند.</p>
+<p>در کاربردهایی که جانبی، انتقال <span class="en">DMA</span> را تحریک می‌کند، <span class="en">CH32H417</span> نسبت به <span class="en">CH32V30X</span> نیازمند آن است که درخواست جانبی مطابق جدول تخصیص منابع ورودی <span class="en">DMAMUX</span> تخصیص داده شود.</p>
+<div class="tblwrap" id="tab-12" style="break-inside:auto;">
+  <div class="tblcap"><span class="cap-pill">جدول ۱-۲</span><span class="cap-text">جدول تخصیص منابع ورودی <span class="en">DMAMUX</span></span></div>
+  <table class="tbl" style="font-size:10.5px;">
+    <thead><tr>
+      <th style="width:11%;">ورودی درخواست <span class="en">DMA</span></th><th style="width:22%;">جانبی</th>
+      <th style="width:11%;">ورودی درخواست <span class="en">DMA</span></th><th style="width:22%;">جانبی</th>
+      <th style="width:11%;">ورودی درخواست <span class="en">DMA</span></th><th>جانبی</th>
+    </tr></thead>
+    <tr><td><span class="en">1</span></td><td><span class="en">TIM1_CH1</span></td><td><span class="en">42</span></td><td><span class="en">TIM9_CH4</span></td><td><span class="en">83</span></td><td><span class="en">I3C_TX</span></td></tr>
+    <tr><td><span class="en">2</span></td><td><span class="en">TIM1_CH2</span></td><td><span class="en">43</span></td><td><span class="en">TIM9_UP</span></td><td><span class="en">84</span></td><td><span class="en">I3C_RX</span></td></tr>
+    <tr><td><span class="en">3</span></td><td><span class="en">TIM1_CH3</span></td><td><span class="en">44</span></td><td><span class="en">TIM9_TRIG</span></td><td><span class="en">85</span></td><td><span class="en">USART1_TX</span></td></tr>
+    <tr><td><span class="en">4</span></td><td><span class="en">TIM1_CH4</span></td><td><span class="en">45</span></td><td><span class="en">TIM10_CH1</span></td><td><span class="en">86</span></td><td><span class="en">USART1_RX</span></td></tr>
+    <tr><td><span class="en">5</span></td><td><span class="en">TIM1_UP</span></td><td><span class="en">46</span></td><td><span class="en">TIM10_CH2</span></td><td><span class="en">87</span></td><td><span class="en">USART2_TX</span></td></tr>
+    <tr><td><span class="en">6</span></td><td><span class="en">TIM1_COM</span></td><td><span class="en">47</span></td><td><span class="en">TIM10_CH3</span></td><td><span class="en">88</span></td><td><span class="en">USART2_RX</span></td></tr>
+    <tr><td><span class="en">7</span></td><td><span class="en">TIM1_TRIG</span></td><td><span class="en">48</span></td><td><span class="en">TIM10_CH4</span></td><td><span class="en">89</span></td><td><span class="en">USART3_TX</span></td></tr>
+    <tr><td><span class="en">8</span></td><td><span class="en">TIM2_CH1</span></td><td><span class="en">49</span></td><td><span class="en">TIM10_UP</span></td><td><span class="en">90</span></td><td><span class="en">USART3_RX</span></td></tr>
+    <tr><td><span class="en">9</span></td><td><span class="en">TIM2_CH2</span></td><td><span class="en">50</span></td><td><span class="en">TIM10_TRIG</span></td><td><span class="en">91</span></td><td><span class="en">USART4_TX</span></td></tr>
+    <tr><td><span class="en">10</span></td><td><span class="en">TIM2_CH3</span></td><td><span class="en">51</span></td><td><span class="en">TIM11_CH1</span></td><td><span class="en">92</span></td><td><span class="en">USART4_RX</span></td></tr>
+    <tr><td><span class="en">11</span></td><td><span class="en">TIM2_CH4</span></td><td><span class="en">52</span></td><td><span class="en">TIM11_CH2</span></td><td><span class="en">93</span></td><td><span class="en">USART5_TX</span></td></tr>
+    <tr><td><span class="en">12</span></td><td><span class="en">TIM2_UP</span></td><td><span class="en">53</span></td><td><span class="en">TIM11_CH3</span></td><td><span class="en">94</span></td><td><span class="en">USART5_RX</span></td></tr>
+    <tr><td><span class="en">13</span></td><td><span class="en">TIM2_TRIG</span></td><td><span class="en">54</span></td><td><span class="en">TIM11_CH4</span></td><td><span class="en">95</span></td><td><span class="en">USART6_TX</span></td></tr>
+    <tr><td><span class="en">14</span></td><td><span class="en">TIM3_CH1</span></td><td><span class="en">55</span></td><td><span class="en">TIM11_UP</span></td><td><span class="en">96</span></td><td><span class="en">USART6_RX</span></td></tr>
+    <tr><td><span class="en">15</span></td><td><span class="en">TIM3_CH2</span></td><td><span class="en">56</span></td><td><span class="en">TIM11_TRIG</span></td><td><span class="en">97</span></td><td><span class="en">USART7_TX</span></td></tr>
+    <tr><td><span class="en">16</span></td><td><span class="en">TIM3_CH3</span></td><td><span class="en">57</span></td><td><span class="en">TIM12_CH1</span></td><td><span class="en">98</span></td><td><span class="en">USART7_RX</span></td></tr>
+    <tr><td><span class="en">17</span></td><td><span class="en">TIM3_CH4</span></td><td><span class="en">58</span></td><td><span class="en">TIM12_CH2</span></td><td><span class="en">99</span></td><td><span class="en">USART8_TX</span></td></tr>
+    <tr><td><span class="en">18</span></td><td><span class="en">TIM3_UP</span></td><td><span class="en">59</span></td><td><span class="en">TIM12_CH3</span></td><td><span class="en">100</span></td><td><span class="en">USART8_RX</span></td></tr>
+    <tr><td><span class="en">19</span></td><td><span class="en">TIM3_TRIG</span></td><td><span class="en">60</span></td><td><span class="en">TIM12_CH4</span></td><td><span class="en">101</span></td><td><span class="en">SWPMI_TX</span></td></tr>
+    <tr><td><span class="en">20</span></td><td><span class="en">TIM4_CH1</span></td><td><span class="en">61</span></td><td><span class="en">TIM12_UP</span></td><td><span class="en">102</span></td><td><span class="en">SWPMI_RX</span></td></tr>
+    <tr><td><span class="en">21</span></td><td><span class="en">TIM4_CH2</span></td><td><span class="en">62</span></td><td><span class="en">TIM12_TRIG</span></td><td><span class="en">103</span></td><td><span class="en">DAC1</span></td></tr>
+    <tr><td><span class="en">22</span></td><td><span class="en">TIM4_CH3</span></td><td><span class="en">63</span></td><td><span class="en">SPI1_TX</span></td><td><span class="en">104</span></td><td><span class="en">DAC2</span></td></tr>
+    <tr><td><span class="en">23</span></td><td><span class="en">TIM4_CH4</span></td><td><span class="en">64</span></td><td><span class="en">SPI1_RX</span></td><td><span class="en">105</span></td><td>رزرو</td></tr>
+    <tr><td><span class="en">24</span></td><td><span class="en">TIM4_UP</span></td><td><span class="en">65</span></td><td><span class="en">SPI2_TX</span></td><td><span class="en">106</span></td><td>رزرو</td></tr>
+    <tr><td><span class="en">25</span></td><td><span class="en">TIM4_TRIG</span></td><td><span class="en">66</span></td><td><span class="en">SPI2_RX</span></td><td><span class="en">107</span></td><td><span class="en">DFSDM_DMA0</span></td></tr>
+    <tr><td><span class="en">26</span></td><td><span class="en">TIM5_CH1</span></td><td><span class="en">67</span></td><td><span class="en">SPI3_TX</span></td><td><span class="en">108</span></td><td><span class="en">DFSDM_DMA1</span></td></tr>
+    <tr><td><span class="en">27</span></td><td><span class="en">TIM5_CH2</span></td><td><span class="en">68</span></td><td><span class="en">SPI3_RX</span></td><td><span class="en">109</span></td><td>رزرو</td></tr>
+    <tr><td><span class="en">28</span></td><td><span class="en">TIM5_CH3</span></td><td><span class="en">69</span></td><td><span class="en">SPI4_TX</span></td><td><span class="en">110</span></td><td>رزرو</td></tr>
+    <tr><td><span class="en">29</span></td><td><span class="en">TIM5_CH4</span></td><td><span class="en">70</span></td><td><span class="en">SPI4_RX</span></td><td><span class="en">111</span></td><td><span class="en">SDIO</span></td></tr>
+    <tr><td><span class="en">30</span></td><td><span class="en">TIM5_UP</span></td><td><span class="en">71</span></td><td><span class="en">QSPI1_DMA</span></td><td><span class="en">112</span></td><td><span class="en">SAI_A_TX</span></td></tr>
+    <tr><td><span class="en">31</span></td><td><span class="en">TIM5_TRIG</span></td><td><span class="en">72</span></td><td><span class="en">QSPI2_DMA</span></td><td><span class="en">113</span></td><td><span class="en">SAI_A_RX</span></td></tr>
+    <tr><td><span class="en">32</span></td><td><span class="en">TIM8_CH1</span></td><td><span class="en">73</span></td><td><span class="en">I2C1_TX</span></td><td><span class="en">114</span></td><td><span class="en">SAI_B_TX</span></td></tr>
+    <tr><td><span class="en">33</span></td><td><span class="en">TIM8_CH2</span></td><td><span class="en">74</span></td><td><span class="en">I2C1_RX</span></td><td><span class="en">115</span></td><td><span class="en">SAI_B_RX</span></td></tr>
+    <tr><td><span class="en">34</span></td><td><span class="en">TIM8_CH3</span></td><td><span class="en">75</span></td><td><span class="en">I2C2_TX</span></td><td><span class="en">116</span></td><td>رزرو</td></tr>
+    <tr><td><span class="en">35</span></td><td><span class="en">TIM8_CH4</span></td><td><span class="en">76</span></td><td><span class="en">I2C2_RX</span></td><td><span class="en">117</span></td><td>رزرو</td></tr>
+    <tr><td><span class="en">36</span></td><td><span class="en">TIM8_UP</span></td><td><span class="en">77</span></td><td><span class="en">I2C3_TX</span></td><td><span class="en">118</span></td><td>رزرو</td></tr>
+    <tr><td><span class="en">37</span></td><td><span class="en">TIM8_COM</span></td><td><span class="en">78</span></td><td><span class="en">I2C3_RX</span></td><td><span class="en">119</span></td><td>رزرو</td></tr>
+    <tr><td><span class="en">38</span></td><td><span class="en">TIM8_TRIG</span></td><td><span class="en">79</span></td><td><span class="en">I2C4_TX</span></td><td><span class="en">120</span></td><td><span class="en">ADC1</span></td></tr>
+    <tr><td><span class="en">39</span></td><td><span class="en">TIM9_CH1</span></td><td><span class="en">80</span></td><td><span class="en">I2C4_RX</span></td><td><span class="en">121</span></td><td><span class="en">ADC2</span></td></tr>
+    <tr><td><span class="en">40</span></td><td><span class="en">TIM9_CH2</span></td><td><span class="en">81</span></td><td><span class="en">I3C_RS</span></td><td><span class="en">122</span></td><td><span class="en">TIM6_UP</span></td></tr>
+    <tr><td><span class="en">41</span></td><td><span class="en">TIM9_CH3</span></td><td><span class="en">82</span></td><td><span class="en">I3C_TC</span></td><td><span class="en">123</span></td><td><span class="en">TIM7_UP</span></td></tr>
+  </table>
+</div>
+<p>در نمونۀ این سند، رویداد به‌روزرسانی <span class="en">TIM1</span> انتقال <span class="en">DMA</span> را تحریک می‌کند. پس از پیکربندی <span class="en">DMA</span> باید رجیسترهای مربوط به <span class="en">DMAMUX</span> تنظیم شوند تا رویداد به‌روزرسانی <span class="en">TIM1</span> به <span class="en">DMA1_Channel1</span> تخصیص یابد. طبق جدول تخصیص منابع ورودی <span class="en">DMAMUX</span>، شمارۀ ورودی درخواست <span class="en">DMA</span> برای رویداد <span class="en">TIM1_UP</span> برابر <span class="en">5</span> است؛ کافی است <span class="en">DMAMUX1_4_CFGR[0:6]</span> پیکربندی شود یا مستقیماً تابع <span class="en">DMA_MuxChannelConfig()</span> فراخوانی گردد.</p>
+<div class="fig" id="fig-11">
+  <div class="figbox">
+    <img src="assets/img/an08000-fig_p5_x48.jpeg" alt="شکل ۱-۱" style="max-width:540px; max-height:500px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۱</span><span class="cap-text">پیکربندی نمونۀ تحریک <span class="en">DMA1_Channel1</span> با <span class="en">TIM1_UP</span></span></div>
+</div>
+
+<h3 class="h2x" id="sec-114"><span class="dm">◆</span>۱.۴ حالت بافر دوگانۀ <span class="en">DMA</span></h3>
+<p>در <span class="en">DMA</span> تراشۀ <span class="en">CH32H417</span> برای همۀ کانال‌ها قابلیت تازۀ بافر دوگانه اضافه شده است. با یک‌کردن بیت <span class="en">DOUBLE_MODE</span> در رجیستر <span class="en">DMA_CFGRx</span> حالت بافر دوگانه فعال می‌شود؛ در این حالت به‌طور خودکار حالت حلقوی وارد می‌شود و پس از اتمام هر دور، آدرس حافظه به‌صورت خودکار جابه‌جا می‌شود (جابه‌جایی متناوب میان <span class="en">DMA_MADDRx</span> و <span class="en">DMA_M1ADDRx</span>).</p>
+<p>در پایان هر دور، کنترل‌گر <span class="en">DMA</span> هدف حافظه‌ای خود را با هدف حافظه‌ای دیگری عوض می‌کند؛ بدین ترتیب هم‌زمان با پردازش یک ناحیۀ حافظه توسط نرم‌افزار، انتقال <span class="en">DMA</span> می‌تواند ناحیۀ حافظۀ دوم را پر کند یا از آن استفاده کند. کانال بافر دوگانه را می‌توان در هر دو جهت به کار برد؛ طبق جدول زیر:</p>
+<div class="tblwrap" id="tab-13">
+  <div class="tblcap"><span class="cap-pill">جدول ۱-۳</span><span class="cap-text">رجیسترهای آدرس مبدأ و مقصد در حالت بافر دوگانه</span></div>
+  <table class="tbl">
+    <tr><th style="width:24%;"><span class="en">DMA_CFGRx.DIR</span></th><th style="width:20%;">جهت</th><th style="width:28%;">آدرس مبدأ</th><th>آدرس مقصد</th></tr>
+    <tr><td><span class="en">0</span></td><td>خواندن از جانبی</td><td><span class="en">DMA_PADDRx</span></td><td><span class="en">DMA_MADDRx/DMA_M1ADDRx</span></td></tr>
+    <tr><td><span class="en">1</span></td><td>خواندن از حافظه</td><td><span class="en">DMA_MADDRx/DMA_M1ADDRx</span></td><td><span class="en">DMA_PADDRx</span></td></tr>
+  </table>
+</div>
+<p>حالت بافر دوگانه عمدتاً برای انتقال داده میان جانبی و حافظه به کار می‌رود و به‌کارگیری آن در حالت حافظه‌به‌حافظه ممنوع است. در حالت بافر دوگانه دو آدرس حافظه وجود دارد (<span class="en">DMA_MADDRx</span> و <span class="en">DMA_M1ADDRx</span>) و می‌توان با پیکربندی <span class="en">DMAy_CFGRx[16]</span> تعیین کرد که انتقال از کدام آدرس حافظه آغاز شود (پیش‌فرض <span class="en">DMA_MADDRx</span> است). پس از فعال‌شدن کانال، این بیت عملاً نقش پرچم وضعیت را دارد و نشان می‌دهد آدرس حافظۀ جاری کدام است.</p>
+<div class="fig" id="fig-12">
+  <div class="figbox">
+    <img src="assets/img/an08000-fig_p6_x52.jpeg" alt="شکل ۱-۲" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۲</span><span class="cap-text">رجیستر <span class="en">DMAy_CFGRx[16]</span></span></div>
+</div>
+<p>نمونۀ <span class="en">DoubleBuffer_DMA</span> داده‌های <span class="en">pbuf[3]</span> و <span class="en">pbuf1[3]</span> را از طریق <span class="en">DMA1_Channel1</span> به <span class="en">TIM1_CH2CVR</span> منتقل می‌کند تا ضریب اشغال خروجی تایمر تغییر کند.</p>
+<div class="fig" id="fig-13">
+  <div class="figbox">
+    <img src="assets/img/an08000-fig_p6_x53.jpeg" alt="شکل ۱-۳" style="max-width:560px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۳</span><span class="cap-text">پیکربندی نمونۀ <span class="en">DoubleBuffer_DMA</span></span></div>
+</div>
+
+<h3 class="h2x" id="sec-115"><span class="dm">◆</span>۱.۵ <span class="en">DMA</span> اختصاصی جانبی‌ها</h3>
+<p>جانبی‌هایی مانند <span class="en">HSADC</span>، <span class="en">SDMMC</span> و <span class="en">USB</span> دارای <span class="en">DMA</span> اختصاصی خود هستند. <span class="en">DMA</span> مورد بحث در بخش‌های پیشین، <span class="en">DMA</span> عمومی است. تفاوت بنیادین <span class="en">DMA</span> اختصاصی و <span class="en">DMA</span> عمومی در هدف طراحی، مالکیت و شیوۀ کنترل است.</p>
+<p class="bl"><span class="en">DMA</span> اختصاصی: مستقیماً درون جانبی مشخصی (مانند <span class="en">ETH</span>، <span class="en">USB</span>، <span class="en">SDMMC</span>، <span class="en">DVP</span>) ادغام شده و <span class="en">DMA</span> مخصوص همان جانبی است؛ جانبی نیازی به داوری ندارد و خود، کنترل انتقال داده را در دست می‌گیرد.</p>
+<p class="bl"><span class="en">DMA</span> عمومی: جانبی درخواست می‌دهد و <span class="en">DMA</span> انتقال داده را انجام می‌دهد. وقتی چند درخواست به‌طور هم‌زمان به یک کانال <span class="en">DMA</span> وارد شود، کانال <span class="en">DMA</span> باید داوری کند.</p>
+<div class="tblwrap" id="tab-14">
+  <div class="tblcap"><span class="cap-pill">جدول ۱-۴</span><span class="cap-text">جدول مقایسۀ کارکرد <span class="en">DMA</span> اختصاصی</span></div>
+  <table class="tbl">
+    <tr><th style="width:22%;">ویژگی</th><th style="width:39%;"><span class="en">DMA</span> اختصاصی</th><th><span class="en">DMA</span> عمومی</th></tr>
+    <tr><td>محل ادغام</td><td class="jt">درون کنترل‌گر جانبی ادغام شده است</td><td class="jt">ماژول مستقل</td></tr>
+    <tr><td>مالکیت</td><td class="jt">انحصارِ جانبی</td><td class="jt">مشترک سیستمی</td></tr>
+    <tr><td>هدف طراحی</td><td class="jt">بهینه‌سازی جانبیِ پرسرعت مشخص</td><td class="jt">فراهم‌کردن کارکرد <span class="en">DMA</span> برای چندین جانبی</td></tr>
+    <tr><td>شیوۀ کار</td><td class="jt">جانبی خودش کنترل انتقال داده را در دست می‌گیرد</td><td class="jt">جانبی درخواست می‌دهد و <span class="en">DMA</span> انتقال داده را انجام می‌دهد</td></tr>
+    <tr><td>نیاز به داوری</td><td class="jt">بدون داوری</td><td class="jt">نیازمند داوری (رقابت چند جانبی)</td></tr>
+    <tr><td>کارایی</td><td class="jt">تأخیر کم</td><td class="jt">تأخیر بیشتر (داوری و اشتراک کانال)</td></tr>
+    <tr><td>بار <span class="en">CPU</span></td><td class="jt">بسیار کم (فقط مقداردهی اولیه و پایان کار)</td><td class="jt">کمتر (اما پیکربندی رجیسترهای کنترل <span class="en">DMA</span> لازم است)</td></tr>
+  </table>
+</div>
+<p>در <span class="en">DMA</span> اختصاصی نیز هنگام استفاده باید تراز بودن داده‌ها رعایت شود.</p>
+<div class="bl">آدرس بافر <span class="en">DMA</span> اختصاصی <span class="en">USBHS</span> در <span class="en">CH32H417</span> باید <span class="en">4</span> بایت تراز باشد.</div>
+<div class="bl">در <span class="en">DMA</span> اختصاصی <span class="en">ETH</span> در <span class="en">CH32H417</span>، صف توصیف‌گرهای (<span class="en">Descriptor</span>) ارسال و دریافت و نیز بافرها همگی باید آدرس شروع <span class="en">32</span> بایت تراز داشته باشند.</div>
+<div class="bl">آدرس بافر <span class="en">DMA</span> اختصاصی <span class="en">DVP</span> در <span class="en">CH32H417</span> باید <span class="en">32</span> بایت تراز باشد.</div>
+<div class="bl">آدرس بافر <span class="en">DMA</span> اختصاصی <span class="en">USBPD</span> در <span class="en">CH32H417</span> باید <span class="en">4</span> بایت تراز باشد.</div>
+<div class="bl">آدرس بافر <span class="en">DMA</span> اختصاصی <span class="en">SerDes</span> در <span class="en">CH32H417</span> در حالت دریافت باید <span class="en">16</span> بایت تراز باشد؛ در حالت ارسال نیازی به ترازی <span class="en">16</span> بایتی نیست.</div>
+<div class="bl">آدرس بافر <span class="en">DMA</span> اختصاصی <span class="en">HSADC</span> در <span class="en">CH32H417</span> باید <span class="en">32</span> بایت تراز باشد.</div>
+<div class="bl">آدرس بافر <span class="en">DMA</span> اختصاصی <span class="en">SDMMC</span> در <span class="en">CH32H417</span> باید <span class="en">16</span> بایت تراز باشد.</div>
+<div class="fig" id="fig-14">
+  <div class="figbox">
+    <img src="assets/img/an08000-fig_manual_1.png" alt="شکل ۱-۴" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۴</span><span class="cap-text">تعریف آدرس بافر <span class="en">SDMMC</span> (تعریف بافر <span class="en">SDMMC</span> با ترازی <span class="en">16</span> بایتی)</span></div>
+</div>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">کارایی <span class="en">DMA</span> در <span class="en">CH32H417</span></div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-211"><span class="dm">◆</span>۲.۱ تخصیص <span class="en">SRAM</span> در <span class="en">CH32H417</span></h3>
+<p>تراشۀ <span class="en">CH32H417</span> در مجموع <span class="en">896KB</span> <span class="en">SRAM</span> داخلی دارد. این حافظه به ۳ بلوک تقسیم می‌شود: ناحیۀ کد <span class="en">ITCM</span> با ظرفیت <span class="en">128KB</span>، ناحیۀ داده <span class="en">DTCM</span> با ظرفیت <span class="en">256KB</span> و <span class="en">512KB</span> باقیمانده به‌عنوان ناحیۀ اشتراکی کد و داده.</p>
+<p><span class="en">ITCM</span> و <span class="en">DTCM</span> روی گذرگاه <span class="en">TCM</span> قرار دارند و سرعت گذرگاه <span class="en">TCM</span> با سرعت <span class="en">RISC-V5</span> برابر است.</p>
+<p>ناحیۀ اشتراکی کد و داده روی گذرگاه <span class="en">HB</span> سوار است و سرعت گذرگاه <span class="en">HB</span> با سرعت <span class="en">RISC-V3</span> برابر است.</p>
+<p>ناحیۀ اشتراکی <span class="en">512KB</span> را می‌توان به‌عنوان ناحیۀ کد و دادۀ بدون انتظار (<span class="en">Zero-Wait</span>) برای <span class="en">RISC-V3F</span> پیکربندی کرد؛ پیشنهاد می‌شود بسته به نیاز، به‌صورت واحدهای <span class="en">128KB</span> به‌طور انعطاف‌پذیر تخصیص یابد.</p>
+<p>مجموع <span class="en">128KB</span> ناحیۀ <span class="en">ITCM</span> و <span class="en">256KB</span> ناحیۀ <span class="en">DTCM</span> (در کل <span class="en">384KB</span>) همگی را می‌توان به‌عنوان ناحیۀ کد <span class="en">RISC-V5F</span> پیکربندی کرد؛ البته وقتی <span class="en">DTCM</span> به‌عنوان ناحیۀ کد استفاده شود، هنگام انجام پرش یک دور انتظار ساعت اضافه می‌شود.</p>
+<p><span class="en">RISC-V3F</span> می‌تواند با <span class="en">2</span> دور انتظار روی ساعت <span class="en">HCLK</span> به <span class="en">ITCM</span> یا <span class="en">DTCM</span> دسترسی یابد.</p>
+<p><span class="en">RISC-V5F</span> و <span class="en">RISC-V3F</span> می‌توانند با صفر دور انتظار روی ساعت <span class="en">HCLK</span> به ناحیۀ اشتراکی <span class="en">512KB</span> دسترسی داشته باشند.</p>
+<p>در نمونه‌برنامه‌های رسمی <span class="en">WCH</span>، ناحیه‌های <span class="en">ITCM</span> و <span class="en">DTCM</span> به <span class="en">RISC-V5</span> و بخشی از ناحیۀ اشتراکی <span class="en">512KB</span> به <span class="en">RISC-V3</span> تخصیص یافته است.</p>
+<p>متغیرهای به‌کاررفته در نمونه‌برنامۀ <span class="en">RISC-V5</span> در ناحیۀ <span class="en">DTCM</span> و متغیرهای به‌کاررفته در نمونه‌برنامۀ <span class="en">RISC-V3</span> در ناحیۀ دادۀ اشتراکی ذخیره می‌شوند.</p>
+
+<h3 class="h2x" id="sec-212"><span class="dm">◆</span>۲.۲ نرخ انتقال <span class="en">DMA</span></h3>
+<p>در ارزیابی کارایی <span class="en">DMA</span> باید چند عامل را در نظر گرفت که سرعت انتقال دادهٔ <span class="en">DMA</span> یکی از شاخص‌های کلیدی است. سرعت انتقال <span class="en">DMA</span> مستقیماً به محل مبدأ و مقصد دسترسی <span class="en">DMA</span> روی گذرگاه محدود می‌شود. انتقال <span class="en">DMA</span> از <span class="en">SRAM</span> به <span class="en">SRAM</span> به این دلیل بسیار سریع است که هر دو روی گذرگاه پرسرعت <span class="en">HB</span> سوارند. اغلب جانبی‌های <span class="en">CH32H417</span> نیز مستقیماً روی گذرگاه <span class="en">HB</span> سوارند؛ بنابراین سرعت انتقال داده با <span class="en">DMA</span> میان <span class="en">SRAM</span> و جانبی‌ها با سرعت انتقال میان <span class="en">SRAM</span> و <span class="en">SRAM</span> یکسان است. در تراشه‌های سری <span class="en">CH32V30X</span>، <span class="en">SRAM</span> روی گذرگاه <span class="en">HB</span> و جانبی‌ها روی گذرگاه‌های <span class="en">PB1/PB2</span> سوارند؛ انتقال <span class="en">DMA</span> میان جانبی و <span class="en">SRAM</span> باید از مسیر پل <span class="en">PB-HB</span> و گذرگاه <span class="en">HB</span> بگذرد و طولانی‌بودن این مسیر، سرعت انتقال <span class="en">DMA</span> را محدود می‌کند. <span class="en">DTCM</span> در <span class="en">CH32H417</span> روی گذرگاه <span class="en">TCM</span> سوار است؛ متغیرهای نمونه‌برنامۀ <span class="en">CH32H417</span> در <span class="en">DTCM</span> نگه داشته می‌شوند و <span class="en">DMA</span> روی گذرگاه <span class="en">HB</span> سوار است.</p>
+<div class="fig" id="fig-21">
+  <div class="figbox">
+    <img src="assets/img/an08000-fig_p8_x66.jpeg" alt="شکل ۲-۱" style="max-width:620px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۱</span><span class="cap-text">نمودار سیستم <span class="en">CH32H417</span></span></div>
+</div>
+<p>وقتی <span class="en">RISC-V5</span> در <span class="en">CH32H417</span> از طریق <span class="en">DMA</span> به <span class="en">DTCM</span> انتقال داده انجام می‌دهد، <span class="en">DMA</span> در فرایند خواندن/نوشتن <span class="en">DTCM</span> نسبت به انتقال دادهٔ <span class="en">SRAM</span> یک دور انتظار <span class="en">HB</span> اضافه می‌کشد.</p>
+
+<h3 class="h2x" id="sec-213"><span class="dm">◆</span>۲.۳ اولویت داوری <span class="en">DMA/CPU</span></h3>
+<p>وقتی <span class="en">DMA</span> و هسته هم‌زمان به یک بلوک <span class="en">SRAM</span> دسترسی داشته باشند، داوری انجام می‌شود تا اولویت دسترسی مشخص شود.</p>
+<p><span class="en">DTCM</span> در <span class="en">CH32H417</span> به دو بلوک <span class="en">128K</span> تقسیم شده است؛ وقتی <span class="en">DMA</span> و <span class="en">RISC-V5</span> و <span class="en">RISC-V3</span> هم‌زمان روی یک بلوک <span class="en">128K</span> از <span class="en">DTCM</span> کار می‌کنند، بر اساس تنظیم اولویت <span class="en">MEMARY_CFGR[18:19]</span> داوری دسترسی به <span class="en">DTCM</span> انجام می‌شود.</p>
+<div class="fig" id="fig-22">
+  <div class="figbox">
+    <img src="assets/img/an08000-fig_p9_x70.jpeg" alt="شکل ۲-۲" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۲</span><span class="cap-text">اولویت دسترسی به حافظۀ <span class="en">DTCM</span></span></div>
+</div>
+<p><span class="en">RAM</span> اشتراکی <span class="en">CH32H417</span> به چهار بلوک <span class="en">128K</span> تقسیم شده است. وقتی <span class="en">DMA</span> و <span class="en">RISC-V5</span> و <span class="en">RISC-V3</span> هم‌زمان روی یک بلوک <span class="en">128K</span> از <span class="en">SRAM</span> کار می‌کنند، دسترسی به <span class="en">SRAM</span> از طریق داوری گذرگاه انجام می‌شود. قواعد داوری دسترسی به <span class="en">SRAM</span> ثابت است و قابل پیکربندی یا تغییر نیست.</p>
+<p>قاعدۀ داوری:</p>
+<div class="formula"><span class="en">DMA1</span> &gt; <span class="en">DMA2</span> &gt; <span class="en">RISC_V3</span> &gt; <span class="en">RISC_V5</span></div>
+<p>دستگاه اصلی برندۀ داوری (مثلاً <span class="en">DMA</span>) می‌تواند به <span class="en">SRAM</span> دسترسی یابد و دستگاه‌های دیگر (مثلاً <span class="en">RISC-V3</span>) موقتاً معلق می‌شوند و منتظر پایان دسترسی <span class="en">DMA</span> می‌مانند؛ پس از آن‌که دسترسی <span class="en">DMA</span> به <span class="en">SRAM</span> تمام شد، دستگاه‌های معلق دوباره به کار روی <span class="en">SRAM</span> ادامه می‌دهند. تعلیق هسته تنها به معنی درج دورهای انتظار است و اجرای دستورها را کمی کند می‌کند؛ استثنا یا خطایی رخ نمی‌دهد و کل این فرایند به‌طور خودکار توسط سخت‌افزار انجام می‌شود.</p>
+<div class="note"><span class="lbl">توجه:</span> کاربر باید از عملکرد هم‌زمان روی یک بلوک <span class="en">SRAM</span> پرهیز کند؛ برای مثال وقتی هسته در حال جمع‌زدن آرایه‌ای در <span class="en">SRAM</span> است و <span class="en">DMA</span> محتوای همان <span class="en">SRAM</span> را تغییر می‌دهد، داده‌های نهایی جمع‌زدنی هسته دچار خطا می‌شود.</div>
+<p>راه‌حل‌ها:</p>
+<div class="bl">از قابلیت بافر دوگانه استفاده کنید تا هسته و <span class="en">DMA</span> روی یک بافر واحد کار نکنند.</div>
+<div class="bl">مطمئن شوید ناحیه‌های حافظه هم‌پوشانی ندارند؛ برای <span class="en">DMA</span> و هسته ناحیه‌های کاملاً مستقل اختصاص دهید تا تعارض از ریشه از بین برود.</div>
+<p>بستن کارکرد <span class="en">DMA</span> هنگام استفاده هسته از <span class="en">SRAM</span> و روشن‌کردن دوبارۀ آن پس از پایان استفاده، تنها برای سناریوهایی با الزامات بی‌درنگی (<span class="en">Real-time</span>) پایین مناسب است.</p>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN08000</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2025/11/18</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">DMA</span></td><td class="jt">دسترسی مستقیم به حافظه؛ انتقال داده بدون دخالت <span class="en">CPU</span> میان جانبی و حافظه یا میان حافظه و حافظه؛ در حالت <span class="en">Sleep</span> نیز می‌تواند به انتقال ادامه دهد</td></tr>
+      <tr><td><span class="en">DMAMUX</span></td><td class="jt">چندگذرندۀ درخواست <span class="en">DMA</span>؛ خطوط درخواست میان جانبی‌ها و کنترل‌گر <span class="en">DMA</span> را بازپیکربندی می‌کند؛ کانال‌های ۱ تا ۸ به <span class="en">DMA1</span> و کانال‌های ۹ تا ۱۶ به <span class="en">DMA2</span> وصل‌اند</td></tr>
+      <tr><td><span class="en">Double buffer / DOUBLE_MODE</span></td><td class="jt">حالت بافر دوگانه؛ با یک‌کردن بیت <span class="en">DOUBLE_MODE</span> در <span class="en">DMA_CFGRx</span> فعال می‌شود، خودکار حالت حلقوی می‌گیرد و در پایان هر دور میان دو آدرس حافظه جابه‌جا می‌شود</td></tr>
+      <tr><td><span class="en">DMA_MADDRx / DMA_M1ADDRx</span></td><td class="jt">دو آدرس حافظۀ کانال در حالت بافر دوگانه که در پایان هر دور به‌صورت متناوب عوض می‌شوند</td></tr>
+      <tr><td><span class="en">DMA_PADDRx</span></td><td class="jt">آدرس پایۀ جانبی (مبدأ یا مقصد ثابت) کانال <span class="en">DMA</span></td></tr>
+      <tr><td><span class="en">DMAy_CFGRx[16] / FLAG_CUR_MEM</span></td><td class="jt">بیت انتخاب آدرس حافظۀ شروع در بافر دوگانه؛ پس از فعال‌شدن کانال نقش پرچم وضعیت را دارد و حافظۀ هدف جاری را نشان می‌دهد</td></tr>
+      <tr><td><span class="en">DMA_MuxChannelConfig()</span></td><td class="jt">تابع کتابخانۀ استاندارد برای تخصیص ورودی درخواست به کانال <span class="en">DMAMUX</span>؛ معادل پیکربندی <span class="en">DMAMUX1_4_CFGR[0:6]</span></td></tr>
+      <tr><td><span class="en">ITCM / DTCM</span></td><td class="jt">حافظه‌های نزدیک به هسته روی گذرگاه <span class="en">TCM</span> با سرعت برابر <span class="en">RISC-V5F</span>؛ <span class="en">ITCM</span> ناحیۀ کد و <span class="en">DTCM</span> ناحیۀ داده</td></tr>
+      <tr><td><span class="en">HB bus</span></td><td class="jt">گذرگاه پرسرعتی که ناحیۀ اشتراکی <span class="en">512KB</span>، اغلب جانبی‌ها و <span class="en">DMA</span> روی آن سوارند؛ سرعت آن برابر <span class="en">RISC-V3F</span> است</td></tr>
+      <tr><td><span class="en">RISC-V5F / RISC-V3F</span></td><td class="jt">دو هستۀ نرم‌افزاری محصول دو-هسته‌ای <span class="en">CH32H417</span> بر پایۀ معماری <span class="en">Qingke RISC-V</span></td></tr>
+      <tr><td><span class="en">MEMARY_CFGR</span></td><td class="jt">رجیستر پیکربندی حافظه؛ میدان <span class="en">[19:18]</span> (<span class="en">dtsm_rr_mode</span>) اولویت دسترسی هم‌زمان به <span class="en">DTCM</span> را تعیین می‌کند</td></tr>
+      <tr><td><span class="en">HSADC / SDMMC</span></td><td class="jt">مبدل آنالوگ‌به‌دیجیتال پرسرعت / رابط کارت حافظه؛ هر دو <span class="en">DMA</span> اختصاصی دارند و بافرشان باید تراز باشد</td></tr>
+      <tr><td><span class="en">Sleep mode</span></td><td class="jt">حالت خواب سبک؛ هسته متوقف می‌ماند ولی <span class="en">DMA</span> می‌تواند به انتقال داده ادامه دهد و مصرف توان سیستم پایین بیاید</td></tr>
+      <tr><td><span class="en">Arbitration</span></td><td class="jt">داوری حافظه/گذرگاه؛ وقتی <span class="en">DMA</span> و هسته هم‌زمان به یک بلوک <span class="en">SRAM</span> دسترسی دارند، برندۀ داوری دسترسی می‌گیرد و بقیه موقتاً منتظر می‌مانند</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN08000 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۲۳</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN08000</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
