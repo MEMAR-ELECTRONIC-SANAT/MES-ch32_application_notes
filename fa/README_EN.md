@@ -88,14 +88,14 @@ The PDF and HTML columns link only to files currently present in the repository.
 | AN14000 | SerDes Fundamentals | [Persian guide](./AN14000/README.md) | [AN14000 FA.pdf](./AN14000/AN14000%20FA.pdf) | [AN14000-FA.html](./AN14000/AN14000-FA.html) | Published |
 | AN16001 | I2C vs. I3C and I3C Usage | [Persian guide](./AN16001/README.md) | [AN16001 FA.pdf](./AN16001/AN16001%20FA.pdf) | [AN16001-FA.html](./AN16001/AN16001-FA.html) | Published |
 | AN17000 | SPI Host Mode and NSS Usage | [Persian guide](./AN17000/README.md) | [AN17000 FA.pdf](./AN17000/AN17000%20FA.pdf) | [AN17000-FA.html](./AN17000/AN17000-FA.html) | Published |
-| AN21000 | SDIO Slave Mode Usage | [Persian guide](./AN21000/README.md) | — | — | Translation pending |
-| AN22000 | SDMMC and Slave-Mode Communication | [Persian guide](./AN22000/README.md) | — | — | Translation pending |
-| AN23000 | PIOC Features and Usage | [Persian guide](./AN23000/README.md) | — | — | Translation pending |
-| AN24000 | Using OPA on General CH32 MCUs | [Persian guide](./AN24000/README.md) | — | — | Translation pending |
-| AN24001 | Using CMP on General CH32 MCUs | [Persian guide](./AN24001/README.md) | — | — | Translation pending |
-| AN25001 | SAI vs. I2S and SAI Usage | [Persian guide](./AN25001/README.md) | — | — | Translation pending |
-| AN26001 | SPI vs. QSPI and QSPI Usage | [Persian guide](./AN26001/README.md) | — | — | Translation pending |
-| AN29000 | FMC-Based SDRAM Driver Fundamentals | [Persian guide](./AN29000/README.md) | — | — | Translation pending |
+| AN21000 | SDIO Slave Mode Usage | [Persian guide](./AN21000/README.md) | [AN21000 FA.pdf](./AN21000/AN21000%20FA.pdf) | [AN21000-FA.html](./AN21000/AN21000-FA.html) | Published |
+| AN22000 | SDMMC and Slave-Mode Communication | [Persian guide](./AN22000/README.md) | [AN22000 FA.pdf](./AN22000/AN22000%20FA.pdf) | [AN22000-FA.html](./AN22000/AN22000-FA.html) | Published |
+| AN23000 | PIOC Features and Usage | [Persian guide](./AN23000/README.md) | [AN23000 FA.pdf](./AN23000/AN23000%20FA.pdf) | [AN23000-FA.html](./AN23000/AN23000-FA.html) | Published |
+| AN24000 | Using OPA on General CH32 MCUs | [Persian guide](./AN24000/README.md) | [AN24000 FA.pdf](./AN24000/AN24000%20FA.pdf) | [AN24000-FA.html](./AN24000/AN24000-FA.html) | Published |
+| AN24001 | Using CMP on General CH32 MCUs | [Persian guide](./AN24001/README.md) | [AN24001 FA.pdf](./AN24001/AN24001%20FA.pdf) | [AN24001-FA.html](./AN24001/AN24001-FA.html) | Published |
+| AN25001 | SAI vs. I2S and SAI Usage | [Persian guide](./AN25001/README.md) | [AN25001 FA.pdf](./AN25001/AN25001%20FA.pdf) | [AN25001-FA.html](./AN25001/AN25001-FA.html) | Published |
+| AN26001 | SPI vs. QSPI and QSPI Usage | [Persian guide](./AN26001/README.md) | [AN26001 FA.pdf](./AN26001/AN26001%20FA.pdf) | [AN26001-FA.html](./AN26001/AN26001-FA.html) | Published |
+| AN29000 | FMC-Based SDRAM Driver Fundamentals | [Persian guide](./AN29000/README.md) | [AN29000 FA.pdf](./AN29000/AN29000%20FA.pdf) | [AN29000-FA.html](./AN29000/AN29000-FA.html) | Published |
 | AN31001 | Digital Filter Usage on CH32H417 | [Persian guide](./AN31001/README.md) | — | — | Translation pending |
 | AN35000 | ARGB Comparison and Fundamentals | [Persian guide](./AN35000/README.md) | — | — | Translation pending |
 | AN36000 | PSRAM Usage Guide | [Persian guide](./AN36000/README.md) | — | — | Translation pending |
