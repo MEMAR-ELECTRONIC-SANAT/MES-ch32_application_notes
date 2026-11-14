@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>کاربرد خروجی NSS برای انتخاب قطعه در حالت مستر SPI — ترجمۀ فارسی AN17000</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">بهبود قابلیت اطمینان ارتباط</div>
+    <div class="t2">با خروجی <span class="en">NSS</span> در حالت مستر <span class="en">SPI</span></div>
+    <div class="t3">میکروکنترلرهای همگانی‌منظورۀ <span class="en">CH32</span></div>
+  </div>
+  <div class="c-sub">از اصل کار خروجی سخت‌افزاری <span class="en">NSS</span> و گام‌های پیکربندی <span class="en">SPI1</span> در حالت دودورکس کامل، تا مدیریت نرم‌افزاری انتخاب قطعه با <span class="en">GPIO</span>، مزایای آن در سیستم‌های چنداسلیو و حداکثر سرعت <span class="en">SPI</span> در سری‌های <span class="en">CH32</span></div>
+  <div class="c-desc">در این جزوه، ترجمۀ فارسی سند رسمی <span class="en">AN17000</span> (نسخۀ ۱٫۰، منتشرۀ شرکت <span class="en">WCH</span>) را می‌خوانید: اصل کار <span class="en">NSS</span> سخت‌افزاری، اتصال پایه‌های <span class="en">PA4~PA7</span>، کد کامل مقداردهی <span class="en">SPI1</span> در حالت دودورکس کامل، مقایسه با کنترل نرم‌افزاری از راه <span class="en">GPIO</span> و جدول حداکثر سرعت <span class="en">SPI</span> تراشه‌های متداول.</div>
+  <div class="c-tags">
+    <span class="c-tag">میکروکنترلر <span class="en">CH32</span></span>
+    <span class="c-tag">حالت مستر <span class="en">SPI</span></span>
+    <span class="c-tag">خروجی <span class="en">NSS</span> سخت‌افزاری</span>
+    <span class="c-tag">کنترل <span class="en">NSS</span> با <span class="en">GPIO</span></span>
+    <span class="c-tag"><span class="en">SPI1</span> و پایه‌های <span class="en">PA4~PA7</span></span>
+    <span class="c-tag"><span class="en">2Lines_FullDuplex</span></span>
+    <span class="c-tag">قابلیت اطمینان ارتباط</span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN17000 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | کنترل <span class="en">NSS</span> به روش سخت‌افزاری</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-111"><span class="s-id">1.1</span><span>اصل کار <span class="en">NSS</span> سخت‌افزاری</span><span class="s-dots"></span><span class="s-page">۳</span></a>
+    <a class="toc-sub" href="#sec-112"><span class="s-id">1.2</span><span>گام‌های پیکربندی <span class="en">NSS</span> سخت‌افزاری</span><span class="s-dots"></span><span class="s-page">۴</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | کنترل <span class="en">NSS</span> به روش نرم‌افزاری</span><span class="t-dots"></span><span class="t-page">۶</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-211"><span class="s-id">2.1</span><span>معرفی <span class="en">NSS</span> نرم‌افزاری</span><span class="s-dots"></span><span class="s-page">۶</span></a>
+    <a class="toc-sub" href="#sec-212"><span class="s-id">2.2</span><span>گام‌های پیکربندی <span class="en">NSS</span> نرم‌افزاری</span><span class="s-dots"></span><span class="s-page">۷</span></a>
+    <a class="toc-sub" href="#sec-213"><span class="s-id">2.3</span><span>مزایای <span class="en">NSS</span> نرم‌افزاری</span><span class="s-dots"></span><span class="s-page">۹</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b3"><span class="t-num">۴</span><span class="t-title">بخش ۳ | سرعت <span class="en">SPI</span> در تراشه‌های متداول <span class="en">CH32</span></span><span class="t-dots"></span><span class="t-page">۱۰</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-311"><span class="s-id">3.1</span><span>حداکثر سرعت <span class="en">SPI</span> تراشه‌های متداول</span><span class="s-dots"></span><span class="s-page">۱۰</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۵</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۱۱</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۶</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۱۱</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">شکل ۱-۱</span><span>نمودار ارتباطی <span class="en">NSS</span> سخت‌افزاری</span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۱</span><span>نمودار ارتباطی <span class="en">NSS</span> نرم‌افزاری</span><span class="f-dots"></span><span class="f-page">۶</span></div>
+        <div class="frow"><span class="f-id">جدول ۱-۱</span><span>اتصال سخت‌افزاری <span class="en">SPI1</span> با <span class="en">NSS</span> سخت‌افزاری</span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">جدول ۲-۱</span><span>اتصال سخت‌افزاری <span class="en">SPI1</span> با <span class="en">NSS</span> نرم‌افزاری</span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">جدول ۳-۱</span><span>حداکثر سرعت <span class="en">SPI</span> تراشه‌های متداول <span class="en">CH32</span></span><span class="f-dots"></span><span class="f-page">۱۰</span></div>
+        <div class="frow"><span class="f-id">کد ۱-۱</span><span>مقداردهی اولیۀ <span class="en">SPI1</span> با <span class="en">NSS</span> سخت‌افزاری</span><span class="f-dots"></span><span class="f-page">۵</span></div>
+        <div class="frow"><span class="f-id">کد ۱-۲</span><span>ارسال/دریافت با <span class="en">NSS</span> سخت‌افزاری</span><span class="f-dots"></span><span class="f-page">۶</span></div>
+        <div class="frow"><span class="f-id">کد ۲-۱</span><span>مقداردهی اولیۀ <span class="en">SPI1</span> با <span class="en">NSS</span> نرم‌افزاری</span><span class="f-dots"></span><span class="f-page">۸</span></div>
+      </div>
+      <div>
+        <div class="frow"><span class="f-id">کد ۲-۲</span><span>ارسال/دریافت با <span class="en">NSS</span> نرم‌افزاری</span><span class="f-dots"></span><span class="f-page">۹</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> سری میکروکنترلرهای همگانی‌منظورۀ <span class="en">CH32</span> از شرکت <span class="en">WCH</span> در کاربردهای ارتباطی فراوانی به‌عنوان مستر <span class="en">SPI</span> با سنسورها، حافظه‌ها و نمایشگرها کار می‌کند و انتخاب دستگاه اسلیو از مسیر سیگنال انتخاب قطعه <span class="en">NSS</span> انجام می‌شود. این سند دو رویکرد مدیریت این سیگنال را در حالت مستر بررسی می‌کند: خروجی سخت‌افزاری <span class="en">NSS</span> که با فعال‌شدن <span class="en">SPI</span> به‌طور خودکار پایۀ انتخاب قطعه را درگیر می‌کند، و کنترل نرم‌افزاری از راه <span class="en">GPIO</span>؛ برای هر دو رویکرد، اتصال پایه‌ها، گام‌های پیکربندی و کد کامل مقداردهی <span class="en">SPI1</span> در حالت دودورکس کامل آمده است و در پایان مزایای روش نرم‌افزاری و جدول حداکثر سرعت <span class="en">SPI</span> تراشه‌های متداول ارائه می‌شود.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>رابط خارجی سریال هم‌زمان <span class="en">SPI</span> (<span class="en">Serial Peripheral Interface</span>) پروتکل ارتباطی متداولی است که به‌طور گسترده برای اتصال سنسورها، حافظه‌ها، نمایشگرها و دیگر جانبی‌ها به کار می‌رود. در ارتباط <span class="en">SPI</span>، دستگاه مستر با سیگنال انتخاب قطعه <span class="en">NSS</span> دستگاه اسلیو را برای گفت‌وگو انتخاب می‌کند. این سند کاربردی بر آن است که نشان دهد چگونه در حالت مستر <span class="en">SPI</span> از کارکرد خروجی <span class="en">NSS</span> استفاده کنیم تا قابلیت اطمینان ارتباط بالا برود.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:38%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>میکروکنترلرهای همگانی‌منظوره</td><td><span class="en">CH32V103</span>، <span class="en">CH32V203</span>، <span class="en">CH32V307</span>، <span class="en">CH32L103</span> و…</td></tr>
+  </table>
+</div>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">کنترل <span class="en">NSS</span> به روش سخت‌افزاری</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-111"><span class="dm">◆</span>۱.۱ اصل کار <span class="en">NSS</span> سخت‌افزاری</h3>
+<p>وقتی <span class="en">SPI</span> به‌عنوان مستر پیکربندی شود و خروجی سخت‌افزاری <span class="en">NSS</span> فعال شده باشد:</p>
+<div class="bl">پایۀ <span class="en">NSS</span> پس از فعال‌شدن <span class="en">SPI</span> (<span class="en">SPE = 1</span>) به‌طور خودکار پایین کشیده می‌شود (سطح فعال؛ معمولاً سطح پایین).</div>
+<div class="bl">در آغاز هر انتقال <span class="en">SPI</span>، سیگنال <span class="en">NSS</span> در سطح پایین باقی می‌ماند.</div>
+<div class="bl">اگر <span class="en">SPI</span> غیرفعال شود (<span class="en">SPE = 0</span>)، سیگنال <span class="en">NSS</span> به سطح بالا بازمی‌گردد.</div>
+
+<div class="fig" id="fig-11">
+  <div class="figbox">
+    <img src="assets/img/an17000-fig_p3_x30.jpeg" alt="شکل ۱-۱" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۱</span><span class="cap-text">نمودار ارتباطی <span class="en">NSS</span> سخت‌افزاری</span></div>
+</div>
+
+<h3 class="h2x" id="sec-112"><span class="dm">◆</span>۱.۲ گام‌های پیکربندی <span class="en">NSS</span> سخت‌افزاری</h3>
+<h4 class="h3x" id="sec-1121"><span class="dm">◆</span>۱.۲.۱ اتصال سخت‌افزاری</h4>
+<p>در استفاده از <span class="en">SPI1</span>، پایۀ <span class="en">PA4</span> به پایۀ <span class="en">NSS</span> دستگاه هدف متصل می‌شود تا این کارکرد فراهم شود؛ اتصال مشخص در جدول آمده است.</p>
+
+<div class="tblwrap" id="tab-11">
+  <div class="tblcap"><span class="cap-pill">جدول ۱-۱</span><span class="cap-text">اتصال سخت‌افزاری <span class="en">SPI1</span> با <span class="en">NSS</span> سخت‌افزاری</span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:22%;">پایه</th><th style="width:36%;">کارکرد</th><th>مقصد</th></tr></thead>
+    <tr><td><span class="en">PA5</span></td><td><span class="en">SPI1_SCK</span></td><td><span class="en">SCK</span> اسلیو</td></tr>
+    <tr><td><span class="en">PA6</span></td><td><span class="en">SPI1_MISO</span></td><td><span class="en">MISO</span> اسلیو</td></tr>
+    <tr><td><span class="en">PA7</span></td><td><span class="en">SPI1_MOSI</span></td><td><span class="en">MOSI</span> اسلیو</td></tr>
+    <tr><td><span class="en">PA4</span></td><td><span class="en">SPI1_NSS</span></td><td><span class="en">NSS</span> اسلیو (فعال با سطح پایین)</td></tr>
+  </table>
+</div>
+
+<h4 class="h3x" id="sec-1122"><span class="dm">◆</span>۱.۲.۲ کد نرم‌افزاری</h4>
+<p>هنگام پیکربندی، نخست <span class="en">SPI1</span> و <span class="en">GPIO</span> را فعال کنید؛ پایه‌های <span class="en">PA4</span>، <span class="en">PA5</span> و <span class="en">PA7</span> را در حالت کارکرد جانبیِ خروجی جابه‌جایی‌پوش <span class="en">GPIO_Mode_AF_PP</span> پیکربندی کنید و <span class="en">PA6</span> را در حالت ورودی شناور <span class="en">GPIO_Mode_IN_FLOATING</span> قرار دهید. سپس حالت <span class="en">SPI</span> را روی <span class="en">2Lines_FullDuplex</span> تنظیم کنید، کارکرد <span class="en">NSS</span> سخت‌افزاری را روشن کنید و پس از آن کارکرد خروجی <span class="en">NSS</span> را فعال نمایید. توجه کنید که در این مرحله نباید <span class="en">SPI</span> را فعال کنید.</p>
+
+<div class="fig" id="code-11">
+  <div class="codeblk long">void SPI_FullDuplex_Init(void)
+{
+    GPIO_InitTypeDef GPIO_InitStructure = {0};
+    SPI_InitTypeDef  SPI_InitStructure  = {0};
+
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_SPI1, ENABLE);
+
+    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_4;
+    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_Init(GPIOA, &amp;GPIO_InitStructure);
+
+    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_5;
+    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_Init(GPIOA, &amp;GPIO_InitStructure);
+
+    GPIO_InitStructure.GPIO_Pin  = GPIO_Pin_6;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+    GPIO_Init(GPIOA, &amp;GPIO_InitStructure);
+
+    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_7;
+    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_Init(GPIOA, &amp;GPIO_InitStructure);
+
+    SPI_InitStructure.SPI_Direction         = SPI_Direction_2Lines_FullDuplex;
+    SPI_InitStructure.SPI_Mode              = SPI_Mode_Master;
+    SPI_InitStructure.SPI_DataSize          = SPI_DataSize_16b;
+    SPI_InitStructure.SPI_CPOL              = SPI_CPOL_Low;
+    SPI_InitStructure.SPI_CPHA              = SPI_CPHA_1Edge;
+    SPI_InitStructure.SPI_NSS               = SPI_NSS_Hard;  <span class="cm">/* استفاده از NSS سخت‌افزاری */</span>
+    SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_64;
+    SPI_InitStructure.SPI_FirstBit          = SPI_FirstBit_MSB;
+    SPI_InitStructure.SPI_CRCPolynomial     = 7;
+    SPI_Init(SPI1, &amp;SPI_InitStructure);
+
+    <span class="cm">/* روشن‌کردن کارکرد خروجی NSS در SPI */</span>
+    SPI_SSOutputCmd(SPI1, ENABLE);
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۱-۱</span><span class="cap-text">مقداردهی اولیۀ <span class="en">SPI1</span> با <span class="en">NSS</span> سخت‌افزاری</span></div>
+</div>
+
+<p>هنگام استفاده، نخست باید <span class="en">SPI</span> را فعال کنید و سپس به ارسال و دریافت بپردازید؛ در این هنگام، <span class="en">NSS</span> سخت‌افزاری پایۀ <span class="en">NSS</span> را پایین می‌کشد و پس از آن ارسال آغاز می‌شود. در پایان کار، نخست باید پایان جریان فعلی <span class="en">SPI</span> را منتظر بمانید و سپس <span class="en">SPI</span> را ببندید؛ در این هنگام، <span class="en">NSS</span> سخت‌افزاری پایۀ <span class="en">NSS</span> را بالا می‌برد و جریان کار پایان می‌یابد.</p>
+
+<div class="fig" id="code-12">
+  <div class="codeblk"><span class="cm">/* فعال‌سازی SPI: پایهٔ NSS پایین کشیده می‌شود */</span>
+    SPI_Cmd(SPI1, ENABLE);
+
+    while (SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_TXE) == RESET)
+    {
+    }
+
+    SPI_I2S_SendData(SPI1, 0xaa55);
+
+    while (SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_RXNE) == RESET)
+    {
+    }
+
+    SPI_I2S_ReceiveData(SPI1);
+
+    <span class="cm">/* غیرفعال‌سازی SPI: پایهٔ NSS بالا می‌رود */</span>
+    SPI_Cmd(SPI1, DISABLE);</div>
+  <div class="figcap"><span class="cap-pill">کد ۱-۲</span><span class="cap-text">ارسال/دریافت با <span class="en">NSS</span> سخت‌افزاری</span></div>
+</div>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">کنترل <span class="en">NSS</span> به روش نرم‌افزاری</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-211"><span class="dm">◆</span>۲.۱ معرفی <span class="en">NSS</span> نرم‌افزاری</h3>
+<p>در بسیاری از کاربردهای واقعی، به‌ویژه در سناریوهای سیستم‌های چنداسلیو، کنترل نرم‌افزاری <span class="en">NSS</span> (که «روش کنترل <span class="en">NSS</span> با <span class="en">GPIO</span>» نیز نامیده می‌شود) انتخابی متداول‌تر و انعطاف‌پذیرتر است.</p>
+
+<div class="fig" id="fig-21">
+  <div class="figbox">
+    <img src="assets/img/an17000-fig_p6_x57.jpeg" alt="شکل ۲-۱" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۱</span><span class="cap-text">نمودار ارتباطی <span class="en">NSS</span> نرم‌افزاری</span></div>
+</div>
+
+<h3 class="h2x" id="sec-212"><span class="dm">◆</span>۲.۲ گام‌های پیکربندی <span class="en">NSS</span> نرم‌افزاری</h3>
+<h4 class="h3x" id="sec-221"><span class="dm">◆</span>۲.۲.۱ اتصال سخت‌افزاری</h4>
+<p>در استفاده از <span class="en">SPI1</span> با <span class="en">NSS</span> نرم‌افزاری همچنان می‌توان پایۀ <span class="en">PA4</span> را به پایۀ <span class="en">NSS</span> دستگاه هدف متصل کرد تا این کارکرد فراهم شود؛ در این حالت مدیریت <span class="en">NSS</span> بر عهدۀ نرم‌افزار است و اتصال مشخص در جدول آمده است.</p>
+
+<div class="tblwrap" id="tab-21">
+  <div class="tblcap"><span class="cap-pill">جدول ۲-۱</span><span class="cap-text">اتصال سخت‌افزاری <span class="en">SPI1</span> با <span class="en">NSS</span> نرم‌افزاری</span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:22%;">پایه</th><th style="width:36%;">کارکرد</th><th>مقصد</th></tr></thead>
+    <tr><td><span class="en">PA5</span></td><td><span class="en">SPI1_SCK</span></td><td><span class="en">SCK</span> اسلیو</td></tr>
+    <tr><td><span class="en">PA6</span></td><td><span class="en">SPI1_MISO</span></td><td><span class="en">MISO</span> اسلیو</td></tr>
+    <tr><td><span class="en">PA7</span></td><td><span class="en">SPI1_MOSI</span></td><td><span class="en">MOSI</span> اسلیو</td></tr>
+    <tr><td><span class="en">PA4</span></td><td><span class="en">GPIO_Output</span></td><td><span class="en">NSS</span> اسلیو (فعال با سطح پایین)</td></tr>
+  </table>
+</div>
+
+<h4 class="h3x" id="sec-222"><span class="dm">◆</span>۲.۲.۲ کد نرم‌افزاری</h4>
+<p>هنگام پیکربندی، نخست <span class="en">SPI1</span> و <span class="en">GPIO</span> را فعال کنید؛ پایۀ <span class="en">PA4</span> را در حالت خروجی جابه‌جایی‌پوش <span class="en">GPIO_Mode_Out_PP</span> پیکربندی کنید و خروجی آن را در سطح بالا قرار دهید؛ پایه‌های <span class="en">PA5</span> و <span class="en">PA7</span> را در حالت کارکرد جانبی <span class="en">GPIO_Mode_AF_PP</span> تنظیم کنید و <span class="en">PA6</span> را در حالت ورودی شناور <span class="en">GPIO_Mode_IN_FLOATING</span> قرار دهید. سپس حالت <span class="en">SPI</span> را روی <span class="en">2Lines_FullDuplex</span> تنظیم کنید و از <span class="en">NSS</span> نرم‌افزاری استفاده کنید.</p>
+
+<div class="fig" id="code-21">
+  <div class="codeblk long">void SPI_FullDuplex_Init(void)
+{
+    GPIO_InitTypeDef GPIO_InitStructure = {0};
+    SPI_InitTypeDef  SPI_InitStructure  = {0};
+
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_SPI1, ENABLE);
+
+    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_4;
+    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_Out_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_Init(GPIOA, &amp;GPIO_InitStructure);
+    GPIO_SetBits(GPIOA, GPIO_Pin_4);
+
+    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_5;
+    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_Init(GPIOA, &amp;GPIO_InitStructure);
+
+    GPIO_InitStructure.GPIO_Pin  = GPIO_Pin_6;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+    GPIO_Init(GPIOA, &amp;GPIO_InitStructure);
+
+    GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_7;
+    GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_Init(GPIOA, &amp;GPIO_InitStructure);
+
+    SPI_InitStructure.SPI_Direction         = SPI_Direction_2Lines_FullDuplex;
+    SPI_InitStructure.SPI_Mode              = SPI_Mode_Master;
+    SPI_InitStructure.SPI_DataSize          = SPI_DataSize_16b;
+    SPI_InitStructure.SPI_CPOL              = SPI_CPOL_Low;
+    SPI_InitStructure.SPI_CPHA              = SPI_CPHA_1Edge;
+    SPI_InitStructure.SPI_NSS               = SPI_NSS_Soft;  <span class="cm">/* استفاده از NSS نرم‌افزاری */</span>
+    SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_64;
+    SPI_InitStructure.SPI_FirstBit          = SPI_FirstBit_MSB;
+    SPI_InitStructure.SPI_CRCPolynomial     = 7;
+    SPI_Init(SPI1, &amp;SPI_InitStructure);
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۲-۱</span><span class="cap-text">مقداردهی اولیۀ <span class="en">SPI1</span> با <span class="en">NSS</span> نرم‌افزاری</span></div>
+</div>
+
+<p>هنگام استفاده، نخست باید پایۀ <span class="en">PA4</span> را پایین بکشید تا سیگنال <span class="en">NSS</span> پایین برود و سپس ارسال را آغاز کنید؛ در پایان کار، نخست باید پایان جریان فعلی <span class="en">SPI</span> را منتظر بمانید و سپس پایۀ <span class="en">PA4</span> را بالا ببرید؛ با این کار سیگنال <span class="en">NSS</span> بالا می‌رود و جریان کار پایان می‌یابد.</p>
+
+<div class="fig" id="code-22">
+  <div class="codeblk"><span class="cm">/* پایین‌کشیدن PA4: سیگنال NSS پایین می‌رود */</span>
+    GPIO_ResetBits(GPIOA, GPIO_Pin_4);
+
+    while (SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_TXE) == RESET)
+    {
+    }
+
+    SPI_I2S_SendData(SPI1, 0xaa55);
+
+    while (SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_RXNE) == RESET)
+    {
+    }
+
+    SPI_I2S_ReceiveData(SPI1);
+
+    <span class="cm">/* بالابردن PA4: سیگنال NSS بالا می‌رود */</span>
+    GPIO_ResetBits(GPIOA, GPIO_Pin_4);</div>
+  <div class="figcap"><span class="cap-pill">کد ۲-۲</span><span class="cap-text">ارسال/دریافت با <span class="en">NSS</span> نرم‌افزاری</span></div>
+</div>
+
+<div class="note"><span class="lbl">یادداشت مترجم:</span> در نسخۀ اصلی سند، سطر پایانی این قطعه کد پس از نظر «بالابردن <span class="en">PA4</span>» عیناً به‌صورت <span class="en">GPIO_ResetBits(GPIOA, GPIO_Pin_4);</span> آمده است؛ از نظر منطقی برای بالابردن پایه، فراخوانی <span class="en">GPIO_SetBits</span> انتظار می‌رود، اما برای وفاداری به نسخۀ اصلی، همان سطر عیناً حفظ شده است.</div>
+
+<h3 class="h2x" id="sec-213"><span class="dm">◆</span>۲.۳ مزایای <span class="en">NSS</span> نرم‌افزاری</h3>
+<p><span class="en">NSS</span> نرم‌افزاری در مقایسه با <span class="en">NSS</span> سخت‌افزاری چند مزیت دارد:</p>
+<div class="bl">پشتیبانی از چند اسلیو: می‌توان با چند پایۀ <span class="en">GPIO</span> جداگانه، دستگاه‌های اسلیو متفاوت را به‌طور مستقل کنترل کرد و سیستم را به‌سادگی گسترش داد.</div>
+<div class="bl">کنترل کامل زمان‌بندی: می‌توان در هر لحظه سیگنال <span class="en">NSS</span> را پایین یا بالا برد و نیازمندی‌های پروتکل‌های خاص را برآورده کرد؛ برای مثال، وقتی لازم است <span class="en">NSS</span> در کل طول تراکنش در سطح پایین باقی بماند.</div>
+<div class="bl">سازگاری خوب: با همۀ دستگاه‌های اسلیو <span class="en">SPI</span> کار می‌کند؛ خواه آن دستگاه برای زمان‌بندی <span class="en">NSS</span> نیازمندی خاصی داشته باشد و خواه نداشته باشد.</div>
+<div class="bl">بدون محدودیت سخت‌افزاری: به پایۀ مشخص <span class="en">NSS</span> وابسته نیست و می‌توان از هر <span class="en">GPIO</span> دلخواه بهره گرفت؛ در نتیجه سیم‌کشی آزادی بیشتری دارد.</div>
+
+<!-- ================= بخش ۳ ================= -->
+<div class="chapter-header" id="sec-b3">
+  <span class="sec-pill">بخش ۳</span>
+  <div class="sec-title">سرعت <span class="en">SPI</span> در تراشه‌های متداول <span class="en">CH32</span></div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-311"><span class="dm">◆</span>۳.۱ حداکثر سرعت تراشه‌های متداول <span class="en">CH32</span></h3>
+<p>در تراشه‌های <span class="en">CH32</span>، حداکثر سرعت طراحی‌شدۀ <span class="en">SPI</span> معمولاً نیمی از فرکانس گذرگاه متناظر است؛ جزئیات در جدول زیر آمده است.</p>
+
+<div class="tblwrap" id="tab-31">
+  <div class="tblcap"><span class="cap-pill">جدول ۳-۱</span><span class="cap-text">حداکثر سرعت <span class="en">SPI</span> تراشه‌های متداول <span class="en">CH32</span></span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:34%;">سری تراشه</th><th style="width:33%;">حداکثر فرکانس کاری</th><th>حداکثر سرعت <span class="en">SPI</span></th></tr></thead>
+    <tr><td><span class="en">CH32V317</span></td><td><span class="en">144MHz</span></td><td><span class="en">72MHz</span></td></tr>
+    <tr><td><span class="en">CH32V30x</span></td><td><span class="en">144MHz</span></td><td><span class="en">72MHz</span></td></tr>
+    <tr><td><span class="en">CH32V203</span></td><td><span class="en">144MHz</span></td><td><span class="en">72MHz</span></td></tr>
+    <tr><td><span class="en">CH32V205</span></td><td><span class="en">144MHz</span></td><td><span class="en">72MHz</span></td></tr>
+    <tr><td><span class="en">CH32V208</span></td><td><span class="en">144MHz</span></td><td><span class="en">72MHz</span></td></tr>
+    <tr><td><span class="en">CH32V208</span></td><td><span class="en">144MHz</span></td><td><span class="en">72MHz</span></td></tr>
+    <tr><td><span class="en">CH32V103</span></td><td><span class="en">72MHz</span></td><td><span class="en">36MHz</span></td></tr>
+    <tr><td><span class="en">CH32V00x</span></td><td><span class="en">48MHz</span></td><td><span class="en">24MHz</span></td></tr>
+    <tr><td><span class="en">CH32X035</span></td><td><span class="en">48MHz</span></td><td><span class="en">24MHz</span></td></tr>
+    <tr><td><span class="en">CH32L103</span></td><td><span class="en">96MHz</span></td><td><span class="en">48MHz</span></td></tr>
+    <tr><td><span class="en">CH32M030</span></td><td><span class="en">72MHz</span></td><td><span class="en">36MHz</span></td></tr>
+  </table>
+</div>
+<div class="note"><span class="lbl">یادداشت مترجم:</span> در جدول سند اصلی، ردیف <span class="en">CH32V208</span> دو بار تکرار شده است؛ این تکرار مطابق نسخۀ اصلی حفظ شده است.</div>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN17000</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2025/11/17</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">SPI</span></td><td class="jt">رابط خارجی سریال هم‌زمان؛ پروتکل ارتباط با سیگنال‌های <span class="en">SCK</span>، <span class="en">MOSI</span>، <span class="en">MISO</span> و <span class="en">NSS</span> برای گفت‌وگو با سنسورها، حافظه‌ها و نمایشگرها</td></tr>
+      <tr><td><span class="en">NSS</span></td><td class="jt">سیگنال انتخاب قطعه با سطح فعال پایین؛ مستر با پایین‌کشیدن آن مشخص می‌کند با کدام دستگاه اسلیو گفت‌وگو می‌کند</td></tr>
+      <tr><td><span class="en">SPE</span></td><td class="jt">بیت فعال‌سازی <span class="en">SPI</span> در رجیستر کنترل؛ روشن‌شدن آن در حالت مسترِ دارای خروجی <span class="en">NSS</span>، پایۀ <span class="en">NSS</span> را به‌طور خودکار پایین می‌کشد</td></tr>
+      <tr><td><span class="en">MSTR</span></td><td class="jt">بیت انتخاب نقش مستر در رجیستر کنترل <span class="en">SPI</span>؛ در پیکربندی مسترِ دارای خروجی <span class="en">NSS</span> باید روشن باشد</td></tr>
+      <tr><td><span class="en">SSM / SSI</span></td><td class="jt">بیت مدیریت نرم‌افزاری اسلیو / سیگنال داخلی <span class="en">NSS</span>؛ با <span class="en">SSM=1</span> سطح <span class="en">NSS</span> از بیت <span class="en">SSI</span> گرفته می‌شود و پایۀ خارجی نقشی ندارد</td></tr>
+      <tr><td><span class="en">SSOE</span></td><td class="jt">بیت فعال‌سازی خروجی <span class="en">NSS</span> در حالت مستر؛ روشن‌شدن آن کنترل پایۀ <span class="en">NSS</span> را به سخت‌افزار می‌سپارد (همان کارکرد تابع <span class="en">SPI_SSOutputCmd</span>)</td></tr>
+      <tr><td><span class="en">CPOL / CPHA</span></td><td class="jt">قطبیت ساعت / فاز ساعت؛ تعیین‌کنندۀ سطح سکون <span class="en">SCK</span> و لبهٔ نمونه‌برداری داده در چهار حالت زمان‌بندی <span class="en">SPI</span></td></tr>
+      <tr><td><span class="en">SPI_Direction_2Lines_FullDuplex</span></td><td class="jt">حالت دودورکس کامل <span class="en">SPI</span>؛ دو خط جداگانه برای ارسال و دریافت هم‌زمان داده</td></tr>
+      <tr><td><span class="en">GPIO_Mode_AF_PP</span></td><td class="jt">حالت خروجی جابه‌جایی‌پوش با کارکرد جانبی؛ پیکربندی پایه‌های <span class="en">SCK</span>، <span class="en">MOSI</span> و خروجی سخت‌افزاری <span class="en">NSS</span></td></tr>
+      <tr><td><span class="en">GPIO_Mode_IN_FLOATING</span></td><td class="jt">حالت ورودی شناور؛ پیکربندی استاندارد پایۀ <span class="en">MISO</span> در دستگاه مستر</td></tr>
+      <tr><td><span class="en">GPIO_Mode_Out_PP</span></td><td class="jt">حالت خروجی جابه‌جایی‌پوش معمولی؛ برای کنترل نرم‌افزاری پایۀ <span class="en">NSS</span> در روش <span class="en">GPIO</span></td></tr>
+      <tr><td><span class="en">TXE / RXNE</span></td><td class="jt">فلگ خالی‌بودن بافر ارسال / فلگ آماده‌بودن بافر دریافت؛ ملاک انتظار پیش از نوشتن داده و پیش از خواندن آن</td></tr>
+      <tr><td><span class="en">SPI_SSOutputCmd</span></td><td class="jt">تابع کتابخانۀ استاندارد برای روشن‌کردن کارکرد خروجی <span class="en">NSS</span> در حالت مستر</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN17000 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۲۳</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN17000</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
