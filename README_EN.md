@@ -1,80 +1,132 @@
-# Introduction
+# WCH CH32 Microcontroller Application Notes
+
+<p align="center">
+  <img src="Images/GitHub-Assets/MES-Hero-Banner.svg" width="100%" alt="MEMAR ELECTRONIC SANAT — MES">
+</p>
 
 [🇮🇷 فارسی](README.md) | [🇬🇧 English](README_EN.md) | [🇨🇳 中文](README_zh.md)
 
-This series of AN (Application Note) manuals focuses on the ***main function applications*** and ***implementation in typical*** scenarios of the CH32 series MCUs. It fills the detailed gaps in chip datasheets regarding "how to use functions and how to solve problems", while avoiding the overly macroscopic nature of reference manuals. Directly addressing the high-frequency technical needs that developers encounter in practical development, it provides reusable and verifiable solutions to shorten the project R&D cycle.
+## Introduction
 
-## Usage Recommendations
+This repository collects Application Notes (AN) for **WCH CH32 microcontrollers**. The documents provide practical guidance on MCU features, hardware design, peripheral configuration, firmware implementation, debugging, and performance optimization in real-world applications.
 
-* It is recommended to read this AN manual together with the CH32 chip's datasheet (for understanding pin definitions and electrical parameters) and reference manual (for understanding the structure of peripheral registers) to form a comprehensive technical understanding.
-* Developers can quickly search for the required manual through the Excel spreadsheet in the repository based on project needs (e.g., "Low-Power Application Note", "CH32H417 DMA Performance Analysis").
-* If you encounter technical questions or find content omissions during use, you can submit feedback via the Issue function of the repository, or post a request for help on the [WCH Official Forum](https://www.wch.cn/bbs/forum-106-1.html). We will be dedicated to providing you with answers.
+Application Notes complement the device Datasheet and Reference Manual. They focus on specific functions or engineering problems and provide implementation details, design considerations, example workflows, and practical limitations.
 
-:raised_hand: **This series of AN manuals will be updated continuously. Please stay tuned!**
+## Languages and Repository Layout
 
-## Contents
+| Language | Directory / File | Description |
+| :---: | :--- | :--- |
+| Persian | [fa/](fa/) | Persian note guides and translated deliverables as they are published |
+| Chinese | [zh/](zh/) | Original Chinese application notes, including Markdown and available PDF files |
+| English | [README_EN.md](README_EN.md) | Repository overview and document index in English |
+| Chinese | [README_zh.md](README_zh.md) | Repository overview and document index in Chinese |
 
-| Document Name | Document Link |
-| :---: | :---: |
-| Low Power Application Note | [AN01000](zh/AN01000/AN01000.md) |
-| SDMMC Multimedia Card and Communication in Slave Mode | [AN22000](zh/AN22000/AN22000.md) |
-| Debugging Configuration and Precautions for Dual-Core Chips | [AN91000](zh/AN91000/AN91000.md) |
-| Tutorial on Using SPI Host Mode in General MCU Series | [AN17000](zh/AN17000/AN17000.md) |
-| Usage and Precautions for General MCU Series ADC | [AN09000](zh/AN09000/AN09000.md) |
-| Basic Tutorial on Using SerDes | [AN14000](zh/AN14000/AN14000.md) |
-| Precautions for Using DMA in CH32H417/415/416 Series | [AN08000](zh/AN08000/AN08000.md) |
-| User Guide for CH32H417QEU-R1-1v1 Development Board | [AN90000](zh/AN90000/AN90000.md) |
-| CH32H417 ICache Usage Instructions | [AN03000](zh/AN03000/AN03000.md) |
-| SDIO Mode Usage Instructions | [AN21000](zh/AN21000/AN21000.md) |
-| FMC Driver for SDRAM Basic Tutorial | [AN29000](zh/AN29000/AN29000.md) |
-| ARGB Comparison and Basic Tutorial | [AN35000](zh/AN35000/AN35000.md) |
-| Coremark Introduction and Score Configuration |[AN03002](zh/AN03002/AN03002.md)|
-| Interrupt Allocation and Wakeup for Dual-Core Chips |[AN03001](zh/AN03001/AN03001.md)|
-| Common Engineering Configurations for LD and Startup Files |[AN91002](zh/AN91002/AN91002.md)|
-| Unique Instructions of Qingke Riscv Kernel |[AN03003](zh/AN03003/AN03003.md)|
-| Usage Instructions for CH32X315 ADC Peripheral |[AN09001](zh/AN09001/AN09001.md)|
-| Practical Development of Lightweight WCHGUI - Taking Control Box as an Example |[AN90001](zh/AN90001/AN90001.md)|
-| LINK Download Process for External FLASH |[AN91003](zh/AN91003/AN91003.md)|
-| Usage of Offline Burner |[AN91001](zh/AN91001/AN91001.md)|
-| How to Use PSRAM |[AN36000](zh/AN36000/AN36000.md)|
-| Running Code on PSRAM |[AN36001](zh/AN36001/AN36001.md)|
-| Use of LINK and MRS Related Techniques |[AN91004](zh/AN91004/AN91004.md)|
-| CH32 USB DFU Firmware Upgrade |[AN97000](zh/AN97000/AN97000.md)|
-| Introduction to Special Functions of the Kernel in CH32H417 |[AN03005](zh/AN03005/AN03005.md)|
-| Comparison of Running Speed of CH32H417 in Different Storage Media |[AN03004](zh/AN03004/AN03004.md)|
-| Comparison of I2C and I3C and Brief Instructions on Using I3C |[AN16001](zh/AN16001/AN16001.md)|
-| Comparison of SAI and I2S and Brief Instructions on Using SAI |[AN25001](zh/AN25001/AN25001.md)|
-| Comparison of SPI and QSPI and Brief Instructions on Using QSPI |[AN26001](zh/AN26001/AN26001.md)|
-| Application Guide for WCH Touch Keypad |[AN10000](zh/AN10000/AN10000.md)|
-| External Power Supply Scheme for VDD12 |[AN01001](zh/AN01001/AN01001.md)|
-| User Guide for CH32 General Series CMP |[AN24001](zh/AN24001/AN24001.md)|
-| User Guide for CH32 General Series OPA Peripheral |[AN24000](zh/AN24000/AN24000.md)|
-| Usage Instructions for Digital Filter of CH32H417 |[AN31001](zh/AN31001/AN31001.md)|
-| Comparison of RTC/Systick/TIM/LPTIM and Their Applications |[AN11000](zh/AN11000/AN11000.md)|
-| Functions and Applications of Reduced Timers |[AN11001](zh/AN11001/AN11001.md)|
-| User Character Area as DataFlash | [AN90002](zh/AN90002/AN90002.md) |
-| Comparison of Screen Driving Interfaces | [AN93000](zh/AN93000/AN93000.md) |
-| M030: Introduction and Usage Tips for Power Supply and Motor Applications | [AN94000](zh/AN94000/AN94000.md) |
-| Low Power Consumption Implementation Strategies, Comparison of Flash and RAM Periodic Waking Up under L103 | [AN01002](zh/AN01002/AN01002.md) |
-| Analysis of Chip Reset Reasons | [AN01003](zh/AN01003/AN01003.md) |
-| Use and Comparison of USBPD and Different Chips | [AN37000](zh/AN37000/AN37000.md) |
-| Usage Tips for TIM Related to Motor Applications | [AN11002](zh/AN11002/AN11002.md) |
-| Debugging Method via Command Line | [AN91005](zh/AN91005/AN91005.md) |
-| EMI-related precautions | [AN94001] (zh/AN94001/AN94001.md)
-| Methods for diagnosing chip issues during debugging | [AN91006] (zh/AN91006/AN91006.md)
-| Introduction to the functions and usage of PIOC | [AN23000] (zh/AN23000/AN23000.md)
-| Transplantation of FatFS file system on MRS | [AN90003] (zh/AN90003/AN90003.md)
-| Transplantation of V467 with LVGL and screen-driving technique using PSRAM | [AN36002] (zh/AN36002/AN36002.md)
+**Persian translation status:** The `fa` directory currently contains an individual README guide for each of the 49 note IDs listed below. However, translated deliverables are not equally available for every note: some folders contain Persian HTML or PDF files, while others currently provide a guide and related media only. Open the corresponding Persian guide to verify the actual files available. A folder guide does not, by itself, mean that the full translation is complete.
 
-## Compiled and maintained by
+## How to Find and Use a Note
+
+1. Find the required note by its ID or subject in the table below.
+2. Open the Persian guide to review the translation status and available Persian files.
+3. Use the Chinese source link for the original document and its supporting material.
+4. Verify pin functions, electrical limits, package options, and operating conditions against the Datasheet for the exact MCU part number.
+5. Adapt example code to the MCU model, library version, development environment, and target hardware. Validate the implementation on hardware before using it in a production design.
+
+## Application Note Index
+
+| ID | Topic | Persian Guide | Chinese Source |
+| :---: | :--- | :---: | :---: |
+| AN01000 | Low-Power Application Note | [Persian guide](fa/AN01000/README.md) | [Chinese source](zh/AN01000/AN01000.md) |
+| AN01001 | External VDD12 Power Supply | [Persian guide](fa/AN01001/README.md) | [Chinese source](zh/AN01001/AN01001.md) |
+| AN01002 | Low-Power Strategies for CH32L103 | [Persian guide](fa/AN01002/README.md) | [Chinese source](zh/AN01002/AN01002.md) |
+| AN01003 | Analysis of Chip Reset Causes | [Persian guide](fa/AN01003/README.md) | [Chinese source](zh/AN01003/AN01003.md) |
+| AN03000 | Using ICache on CH32H417 | [Persian guide](fa/AN03000/README.md) | [Chinese source](zh/AN03000/AN03000.md) |
+| AN03001 | Interrupt Allocation and Wake-up in Dual-Core MCUs | [Persian guide](fa/AN03001/README.md) | [Chinese source](zh/AN03001/AN03001.md) |
+| AN03002 | CoreMark Introduction and Benchmark Configuration | [Persian guide](fa/AN03002/README.md) | [Chinese source](zh/AN03002/AN03002.md) |
+| AN03003 | QingKe RISC-V Custom Instructions | [Persian guide](fa/AN03003/README.md) | [Chinese source](zh/AN03003/AN03003.md) |
+| AN03004 | Execution-Speed Comparison Across Memory Types | [Persian guide](fa/AN03004/README.md) | [Chinese source](zh/AN03004/AN03004.md) |
+| AN03005 | CH32H417 Core-Specific Features | [Persian guide](fa/AN03005/README.md) | [Chinese source](zh/AN03005/AN03005.md) |
+| AN08000 | DMA Considerations for CH32H417/415/416 | [Persian guide](fa/AN08000/README.md) | [Chinese source](zh/AN08000/AN08000.md) |
+| AN09000 | ADC Usage and Considerations for General MCUs | [Persian guide](fa/AN09000/README.md) | [Chinese source](zh/AN09000/AN09000.md) |
+| AN09001 | Using the ADC on CH32X315 | [Persian guide](fa/AN09001/README.md) | [Chinese source](zh/AN09001/AN09001.md) |
+| AN10000 | WCH Touch-Key Application Guide | [Persian guide](fa/AN10000/README.md) | [Chinese source](zh/AN10000/AN10000.md) |
+| AN11000 | RTC/Systick/TIM/LPTIM Comparison and Applications | [Persian guide](fa/AN11000/README.md) | [Chinese source](zh/AN11000/AN11000.md) |
+| AN11001 | Reduced Timer Features and Applications | [Persian guide](fa/AN11001/README.md) | [Chinese source](zh/AN11001/AN11001.md) |
+| AN11002 | TIM Techniques for Motor Applications | [Persian guide](fa/AN11002/README.md) | [Chinese source](zh/AN11002/AN11002.md) |
+| AN14000 | SerDes Fundamentals | [Persian guide](fa/AN14000/README.md) | [Chinese source](zh/AN14000/AN14000.md) |
+| AN16001 | I2C vs. I3C and I3C Usage Guide | [Persian guide](fa/AN16001/README.md) | [Chinese source](zh/AN16001/AN16001.md) |
+| AN17000 | SPI Host Mode and NSS Usage | [Persian guide](fa/AN17000/README.md) | [Chinese source](zh/AN17000/AN17000.md) |
+| AN21000 | SDIO Slave Mode Usage Guide | [Persian guide](fa/AN21000/README.md) | [Chinese source](zh/AN21000/AN21000.md) |
+| AN22000 | SDMMC Multimedia Card and Slave-Mode Communication | [Persian guide](fa/AN22000/README.md) | [Chinese source](zh/AN22000/AN22000.md) |
+| AN23000 | PIOC Features and Usage | [Persian guide](fa/AN23000/README.md) | [Chinese source](zh/AN23000/AN23000.md) |
+| AN24000 | Using OPA on General CH32 MCUs | [Persian guide](fa/AN24000/README.md) | [Chinese source](zh/AN24000/AN24000.md) |
+| AN24001 | Using CMP on General CH32 MCUs | [Persian guide](fa/AN24001/README.md) | [Chinese source](zh/AN24001/AN24001.md) |
+| AN25001 | SAI vs. I2S and SAI Usage Guide | [Persian guide](fa/AN25001/README.md) | [Chinese source](zh/AN25001/AN25001.md) |
+| AN26001 | SPI vs. QSPI and QSPI Usage Guide | [Persian guide](fa/AN26001/README.md) | [Chinese source](zh/AN26001/AN26001.md) |
+| AN29000 | FMC-Based SDRAM Driver Fundamentals | [Persian guide](fa/AN29000/README.md) | [Chinese source](zh/AN29000/AN29000.md) |
+| AN31001 | Digital Filter Usage on CH32H417 | [Persian guide](fa/AN31001/README.md) | [Chinese source](zh/AN31001/AN31001.md) |
+| AN35000 | ARGB Comparison and Fundamentals | [Persian guide](fa/AN35000/README.md) | [Chinese source](zh/AN35000/AN35000.md) |
+| AN36000 | PSRAM Usage Guide | [Persian guide](fa/AN36000/README.md) | [Chinese source](zh/AN36000/AN36000.md) |
+| AN36001 | Running Code from PSRAM | [Persian guide](fa/AN36001/README.md) | [Chinese source](zh/AN36001/AN36001.md) |
+| AN36002 | Porting LVGL to V467 and Driving Displays with PSRAM | [Persian guide](fa/AN36002/README.md) | [Chinese source](zh/AN36002/AN36002.md) |
+| AN37000 | USB Power Delivery Usage and MCU Comparison | [Persian guide](fa/AN37000/README.md) | [Chinese source](zh/AN37000/AN37000.md) |
+| AN90000 | CH32H417QEU-R1-1v1 Development Board Guide | [Persian guide](fa/AN90000/README.md) | [Chinese source](zh/AN90000/AN90000.md) |
+| AN90001 | Lightweight WCHGUI Development: Control-Box Example | [Persian guide](fa/AN90001/README.md) | [Chinese source](zh/AN90001/AN90001.md) |
+| AN90002 | Using the User Area as DataFlash | [Persian guide](fa/AN90002/README.md) | [Chinese source](zh/AN90002/AN90002.md) |
+| AN90003 | Porting FatFs to MounRiver Studio | [Persian guide](fa/AN90003/README.md) | [Chinese source](zh/AN90003/AN90003.md) |
+| AN91000 | Debug Configuration for Dual-Core MCUs | [Persian guide](fa/AN91000/README.md) | [Chinese source](zh/AN91000/AN91000.md) |
+| AN91001 | Offline Programmer User Guide | [Persian guide](fa/AN91001/README.md) | [Chinese source](zh/AN91001/AN91001.md) |
+| AN91002 | LD and Startup File Configuration | [Persian guide](fa/AN91002/README.md) | [Chinese source](zh/AN91002/AN91002.md) |
+| AN91003 | LINK Download Procedure for External FLASH | [Persian guide](fa/AN91003/README.md) | [Chinese source](zh/AN91003/AN91003.md) |
+| AN91004 | LINK and MRS Tips | [Persian guide](fa/AN91004/README.md) | [Chinese source](zh/AN91004/AN91004.md) |
+| AN91005 | Command-Line Debugging | [Persian guide](fa/AN91005/README.md) | [Chinese source](zh/AN91005/AN91005.md) |
+| AN91006 | Diagnosing MCU Issues During Debugging | [Persian guide](fa/AN91006/README.md) | [Chinese source](zh/AN91006/AN91006.md) |
+| AN93000 | Comparison of Display Interfaces | [Persian guide](fa/AN93000/README.md) | [Chinese source](zh/AN93000/AN93000.md) |
+| AN94000 | M030 Power and Motor-Application Features | [Persian guide](fa/AN94000/README.md) | [Chinese source](zh/AN94000/AN94000.md) |
+| AN94001 | EMI Design Considerations | [Persian guide](fa/AN94001/README.md) | [Chinese source](zh/AN94001/AN94001.md) |
+| AN97000 | Firmware Upgrade via CH32 USB DFU | [Persian guide](fa/AN97000/README.md) | [Chinese source](zh/AN97000/AN97000.md) |
+
+## Document Index
+
+The [Index.csv](Index.csv) file provides a tabular index for searching document IDs and topics. The current index is based on the upstream source metadata and may contain Chinese descriptions. For Persian translation availability, refer to the README in each corresponding `fa/ANxxxxx/` directory.
+
+## Engineering Notes and Disclaimer
+
+- Application Notes do not replace the Datasheet, Reference Manual, Errata, or official development-tool documentation.
+- Check the exact part number, package, silicon revision, operating voltage, clock limits, and pin restrictions before implementation.
+- Software examples may depend on a particular MounRiver Studio (MRS), Peripheral Library, compiler, or firmware version.
+- Independently validate schematics, PCB layout, and measurements for sensitive areas such as power, clocking, memory, USB, RF, EMI, and programming.
+- Report issues through the repository's Issues page. Include the AN ID, MCU part number, tool versions, reproduction steps, and expected behavior.
+
+## Related Resources
+
+- [MES GitHub Organization](https://github.com/MEMAR-ELECTRONIC-SANAT)
+- [Official WCH Forum](https://www.wch.cn/bbs/forum-106-1.html)
+- [Original Chinese documents](zh/)
+- [Persian guides](fa/)
+
+<p align="center">
+  <img src="Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider">
+</p>
+
+## Images and Diagrams
+
+- [MES GitHub graphic assets](Images/GitHub-Assets/)
+- [Repository hero banner](Images/GitHub-Assets/MES-Hero-Banner.svg)
+- [Section header asset](Images/GitHub-Assets/MES-Section-Header.svg)
+
+## Compiled and Maintained by
 
 **معمار الکترونیک صنعت**\
- **MEMAR ELECTRONIC SANAT (MES)**
+**MEMAR ELECTRONIC SANAT (MES)**
 
 همراه شما در مسیر طراحی و ساخت مدارهای مطمئن
 
-طراحی و توسعه مدارهای الکترونیکی، PCB، سیستم‌های embedded و ابزارهای پیکربندی میکروکنترلر.
+Electronic circuit and PCB design, embedded systems, and microcontroller configuration tools.
 
-- کانال تلگرام: [https://t.me/Memar_Electronic](https://t.me/Memar_Electronic)
-- پیج اینستاگرام: [https://www.instagram.com/Memar.Electronic](https://www.instagram.com/Memar.Electronic)
+- Telegram: [https://t.me/Memar_Electronic](https://t.me/Memar_Electronic)
+- Instagram: [https://www.instagram.com/Memar.Electronic](https://www.instagram.com/Memar.Electronic)
 - GitHub: [MEMAR-ELECTRONIC-SANAT](https://github.com/MEMAR-ELECTRONIC-SANAT)
+
+<p align="center">
+  <img src="Images/GitHub-Assets/MES-Thank-You-Footer.svg" width="100%" alt="Thank you for visiting MES">
+</p>
