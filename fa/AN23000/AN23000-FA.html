@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>واحد جانبی PIOC و راه‌اندازی تک‌سیمۀ WS2812 در میکروکنترلر CH32X035 — ترجمۀ فارسی AN23000</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">واحد جانبی <span class="en">PIOC</span></div>
+    <div class="t2">در میکروکنترلر <span class="en">CH32X035</span></div>
+    <div class="t3">از ساختار اجرایی تا راه‌اندازی نوار <span class="en">LED</span> تک‌سیمۀ <span class="en">WS2812</span></div>
+  </div>
+  <div class="c-sub">از مرور ساختار اجرایی <span class="en">PIOC</span> و سه حلقۀ تعامل با میزبان (<span class="en">Host</span>) — بارگذاری، ارسال فرمان، خواندن نتیجه — و اصول طراحی زمان‌بندی (<span class="en">Timing</span>) بر پایۀ چرخۀ دستور، تا مثال عملی راه‌اندازی نوار <span class="en">LED</span> تک‌سیمۀ <span class="en">WS2812</span> با بارگذاری برنامه، واکشی داده با دستورات اسمبلی (<span class="en">Assembly</span>)، ارسال بیت‌به‌بیت و پردازش نتیجه</div>
+  <div class="c-desc">در این جزوه، ترجمۀ فارسی سند رسمی <span class="en">AN23000</span> (نسخۀ ۱٫۰، منتشرۀ شرکت <span class="en">WCH</span>) را می‌خوانید: سری‌های <span class="en">CH32X035</span>، <span class="en">CH32H417</span> و <span class="en">CH32V205</span> به یک واحد جانبی (<span class="en">Peripheral</span>) قابل‌برنامه‌ریزی به‌نام <span class="en">PIOC</span> (همان <span class="en">eMCU</span>) مجهزند که با هستۀ <span class="en">RISC8B</span> و فضای برنامه و رجیسترهای مستقل، بدون اشغال وقفه و منابع زمان‌بندی میزبان روی دو پایه موج پروتکل تولید می‌کند. دو شیوۀ انتقال داده (<span class="en">SFR</span> و منطقۀ برنامه با <span class="en">RDCODE</span>)، مدولاسیون <span class="en">PWM</span> و <span class="en">Manchester</span>، تایمر ۰ و دستور انتظار <span class="en">WAITB</span> گام‌به‌گام مرور می‌شود.</div>
+  <div class="c-tags">
+    <span class="c-tag">میکروکنترلر <span class="en">CH32X035</span></span>
+    <span class="c-tag">واحد جانبی قابل‌برنامه‌ریزی <span class="en">PIOC</span></span>
+    <span class="c-tag">هستۀ <span class="en">RISC8B</span> و اسمبلی</span>
+    <span class="c-tag">پروتکل <span class="en">1-Wire</span> و <span class="en">WS2812</span></span>
+    <span class="c-tag">مدولاسیون <span class="en">PWM / Manchester</span></span>
+    <span class="c-tag">تایمر ۰ و طراحی تأخیر</span>
+    <span class="c-tag">دستور انتظار <span class="en">WAITB</span></span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN23000 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | ساختار عملکردی <span class="en">PIOC</span></span><span class="t-dots"></span><span class="t-page">۴</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-111"><span class="s-id">1.1</span><span>مرور ساختار</span><span class="s-dots"></span><span class="s-page">۴</span></a>
+    <a class="toc-sub" href="#sec-112"><span class="s-id">1.2</span><span>تعامل میزبان (<span class="en">Host</span>) با <span class="en">PIOC</span></span><span class="s-dots"></span><span class="s-page">۵</span></a>
+    <a class="toc-sub" href="#sec-113"><span class="s-id">1.3</span><span>طراحی زمان‌بندی (<span class="en">Timing</span>)</span><span class="s-dots"></span><span class="s-page">۷</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | نمونۀ راه‌اندازی نوار <span class="en">LED</span> تک‌سیمۀ <span class="en">WS2812</span></span><span class="t-dots"></span><span class="t-page">۱۲</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-211"><span class="s-id">2.1</span><span>پنجره‌های زمانی پروتکل</span><span class="s-dots"></span><span class="s-page">۱۲</span></a>
+    <a class="toc-sub" href="#sec-212"><span class="s-id">2.2</span><span>مؤلفه‌های پروژه و مقداردهی اولیه</span><span class="s-dots"></span><span class="s-page">۱۳</span></a>
+    <a class="toc-sub" href="#sec-213"><span class="s-id">2.3</span><span>کدهای فرمان و کدهای نتیجه</span><span class="s-dots"></span><span class="s-page">۱۳</span></a>
+    <a class="toc-sub" href="#sec-214"><span class="s-id">2.4</span><span>مسیرهای فریم کوتاه و فریم بلند</span><span class="s-dots"></span><span class="s-page">۱۴</span></a>
+    <a class="toc-sub" href="#sec-215"><span class="s-id">2.5</span><span>فراخوانی میزبان و یک ارسال کامل</span><span class="s-dots"></span><span class="s-page">۱۷</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۴</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۱۸</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۵</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۱۸</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">شکل ۱-۱</span><span>ساختار <span class="en">PIOC</span> در <span class="en">CH32X035</span></span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۲</span><span>سه بیت وضعیت فرمان و نتیجه</span><span class="f-dots"></span><span class="f-page">۵</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۳</span><span>دو شیوۀ انتقال داده</span><span class="f-dots"></span><span class="f-page">۶</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۴</span><span>تخصیص نرم‌افزاری دو بافر <span class="en">SFR</span></span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۵</span><span>اشغال دستورها و فاصلۀ لبه‌ها</span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۶</span><span>دو نوع مدولاسیون بیت در <span class="en">PIOC</span></span><span class="f-dots"></span><span class="f-page">۹</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۷</span><span>شمارش در حالت تایمر</span><span class="f-dots"></span><span class="f-page">۱۰</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۸</span><span>شمارش در حالت <span class="en">PWM</span></span><span class="f-dots"></span><span class="f-page">۱۱</span></div>
+      </div>
+      <div>
+        <div class="frow"><span class="f-id">شکل ۲-۱</span><span>تعریف بیت <span class="en">WS2812</span></span><span class="f-dots"></span><span class="f-page">۱۲</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۲</span><span>سه مسیر در کد</span><span class="f-dots"></span><span class="f-page">۱۴</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۳</span><span>زمان‌بندی بیت نرم‌افزاری</span><span class="f-dots"></span><span class="f-page">۱۵</span></div>
+        <div class="frow"><span class="f-id">جدول ۱-۱</span><span>ویژگی‌های اصلی <span class="en">PIOC</span></span><span class="f-dots"></span><span class="f-page">۵</span></div>
+        <div class="frow"><span class="f-id">جدول ۲-۱</span><span>فایل‌های اصلی پروژۀ نمونه</span><span class="f-dots"></span><span class="f-page">۱۳</span></div>
+        <div class="frow"><span class="f-id">جدول ۲-۲</span><span>تخصیص کدهای فرمان در مثال</span><span class="f-dots"></span><span class="f-page">۱۴</span></div>
+        <div class="frow"><span class="f-id">جدول ۲-۳</span><span>ترتیب عملیات دو رابط ارسال میزبان</span><span class="f-dots"></span><span class="f-page">۱۷</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> <p>میکروکنترلرهای سری <span class="en">CH32X035</span>، <span class="en">CH32H417</span>، <span class="en">CH32V205</span> و برخی دیگر از محصولات <span class="en">MCU</span>، به یک واحد جانبی (<span class="en">Peripheral</span>) با نام <span class="en">PIOC</span> مجهز شده‌اند.</p><p style="margin:3px 0 0 0">در این مقاله، با استفاده از میکروکنترلر <span class="en">CH32X035</span> و پروژه نمونه <span class="en">1_Wire</span>، ساختار اجرایی <span class="en">PIOC</span>، نحوه تبادل داده با واحد میزبان (<span class="en">Host</span>) و طراحی زمان‌بندی (<span class="en">Timing</span>) آن معرفی می‌شود.</p><p style="margin:3px 0 0 0">همچنین، با استفاده از راه‌اندازی و کنترل نوار <span class="en">LED</span> تک‌سیمه <span class="en">WS2812</span>، روش‌های بارگذاری برنامه، دریافت داده با استفاده از دستورات اسمبلی (<span class="en">Assembly</span>)، ارسال داده به‌صورت بیت‌به‌بیت و پردازش نتایج بررسی خواهند شد.</p></div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>میکروکنترلرهای سری <span class="en">CH32X035</span>، <span class="en">CH32H417</span>، <span class="en">CH32V205</span> و برخی دیگر از محصولات <span class="en">MCU</span>، به یک واحد جانبی (<span class="en">Peripheral</span>) با نام <span class="en">PIOC</span> مجهز شده‌اند. در این سند، با استفاده از میکروکنترلر <span class="en">CH32X035</span> و پروژه نمونه <span class="en">1_Wire</span>، ساختار اجرایی <span class="en">PIOC</span>، نحوۀ تبادل داده با واحد میزبان (<span class="en">Host</span>) و طراحی زمان‌بندی (<span class="en">Timing</span>) آن معرفی می‌شود. همچنین با راه‌اندازی و کنترل نوار <span class="en">LED</span> تک‌سیمۀ <span class="en">WS2812</span>، روش‌های بارگذاری برنامه، دریافت داده با استفاده از دستورات اسمبلی (<span class="en">Assembly</span>)، ارسال داده به‌صورت بیت‌به‌بیت و پردازش نتایج بررسی خواهند شد.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>میکروکنترلرهای همگانی‌منظوره</td><td><span class="en">CH32X035</span>، <span class="en">CH643</span>، <span class="en">CH32V205</span>، <span class="en">CH32H41x</span> و مانند آن‌ها</td></tr>
+  </table>
+</div>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">ساختار عملکردی <span class="en">PIOC</span></div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-111"><span class="dm">◆</span>۱.۱ مرور ساختار</h3>
+<div class="fig" id="fig-11">
+  <div class="figbox">
+    <img src="assets/img/an23000-fig_p3_x38.jpeg" alt="شکل ۱-۱" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۱</span><span class="cap-text">ساختار <span class="en">PIOC</span> در <span class="en">CH32X035</span></span></div>
+</div>
+<p><span class="en">PIOC</span> واحد جانبیِ قابل‌برنامه‌ریزیِ ورودی/خروجی است که درون تراشه تعبیه شده و در راهنمای تراشه با نام <span class="en">eMCU</span> هم شناخته می‌شود. هستۀ آن <span class="en">RISC8B</span> است و فضای برنامه، بانک رجیسترها و جریان دستورِ مستقل دارد؛ به‌طوری که بدون اشغال وقفه و منابع زمان‌بندی میزبان، می‌تواند با چرخه‌های دستورِ معین روی دو پایه، موج پروتکل تولید کند.</p>
+<p>از منظر نحوۀ استفاده، تعامل میزبان و <span class="en">PIOC</span> در سه حلقۀ اصلی متمرکز است: بارگذاری (نوشتن دستورهای ترجمه‌شده در <span class="en">SRAM</span> مشترک و سپردن واکشی آن‌ها به <span class="en">PIOC</span>)، محول‌کردن وظیفه (نوشتن فرمان و پارامترها) و خواندن نتیجه (خواندن کد نتیجه پس از پایان تراکنش). پس از تکمیل بارگذاری، اجرای پروتکل به‌طور مستقل توسط <span class="en">PIOC</span> انجام می‌شود و میزبان می‌تواند به کارهای دیگر ادامه دهد. بنابراین جایگاه <span class="en">PIOC</span> را می‌توان چنین خلاصه کرد: یک واحد جانبی ۸بیتیِ قابل‌برنامه‌ریزی توسط کاربر، برای پیاده‌سازی رابط‌هایی با زمان‌بندی معین، نرخ متوسط و تعداد پایۀ کم. کارکرد آن را برنامۀ اسمبلیِ نوشتۀ کاربر تعیین می‌کند، نه ساختار ثابت تراشه.</p>
+<div class="tblwrap" id="tab-11">
+  <div class="tblcap"><span class="cap-pill">جدول ۱-۱</span><span class="cap-text">ویژگی‌های اصلی <span class="en">PIOC</span></span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:26%;">ویژگی</th><th>مشخصه</th></tr></thead>
+    <tr><td>هسته</td><td class="jt"><span class="en">RISC8B</span>؛ دادهٔ <span class="en">8</span> بیتی، دستور <span class="en">16</span> بیتی و <span class="en">66</span> دستور.</td></tr>
+    <tr><td>فرکانس اجرا</td><td class="jt">هم‌سان با فرکانس اصلی سیستم؛ طراحی تمام‌استاتیک و محاسبۀ زمان‌بندی بر پایۀ چرخه.</td></tr>
+    <tr><td>فضای برنامه</td><td class="jt"><span class="en">2048</span> کلمه (<span class="en">4KB</span>)، از طریق اشتراک با <span class="en">SRAM</span> سیستم</td></tr>
+    <tr><td>رجیسترها</td><td class="jt"><span class="en">49</span> عدد <span class="en">SFR</span> (<span class="en">0x00~0x3F</span>) شامل <span class="en">33</span> بایت رجیستر داده</td></tr>
+    <tr><td>پشته</td><td class="jt"><span class="en">6</span> سطح با عرض <span class="en">11</span> بیت</td></tr>
+    <tr><td>پایه‌ها</td><td class="jt"><span class="en">2</span> مسیر ورودی/خروجی دوسو با پشتیبانی از تشخیص تغییر سطح</td></tr>
+    <tr><td>کدگذار و کدگشای بیت</td><td class="jt"><span class="en">PWM</span> (<span class="en">25%/75%</span>) و <span class="en">Manchester</span>؛ عرض بیت قابل‌برنامه‌ریزی</td></tr>
+    <tr><td>تایمر</td><td class="jt">تایمر بازبارگذاری فعالِ <span class="en">8</span> بیتی <span class="en">T0</span> با دو حالت تایمر/<span class="en">PWM</span></td></tr>
+    <tr><td>شیوۀ بارگذاری</td><td class="jt">پشتیبانی از توقف و بارگذاری پویا</td></tr>
+  </table>
+</div>
+
+<h3 class="h2x" id="sec-112"><span class="dm">◆</span>۱.۲ تعامل میزبان با <span class="en">PIOC</span></h3>
+<div class="fig" id="fig-12">
+  <div class="figbox">
+    <img src="assets/img/an23000-fig_p4_x49.jpeg" alt="شکل ۱-۲" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۲</span><span class="cap-text">سه بیت وضعیت فرمان و نتیجه</span></div>
+</div>
+<div class="bl"><span class="en">MW_SR</span> نشان می‌دهد فرمان برداشته شده است یا نه (پس از نوشتن <span class="en">CTRL_WR</span> توسط میزبان، <span class="en">MW_SR</span> به‌طور خودکار یک می‌شود و پس از خواندن <span class="en">CTRL_WR</span> توسط <span class="en">PIOC</span> به‌طور خودکار صفر می‌شود؛ این بیت فقط برداشته‌شدن فرمان را نشان می‌دهد و در آن هنگام پردازش پروتکل تازه آغاز شده است. تفسیر این پرچم تنها همراه با عمل ارسال همان مرحله معنا دارد و نباید مقدار اولیۀ صفر را نشانهٔ پایان کار گرفت)؛</div>
+<div class="bl"><span class="en">SW_MR</span> نشان می‌دهد نتیجه خوانده شده است یا نه (پس از نوشتن <span class="en">CTRL_RD</span> توسط <span class="en">PIOC</span>، <span class="en">SW_MR</span> به‌طور خودکار یک می‌شود و پس از خواندن <span class="en">CTRL_RD</span> توسط میزبان، <span class="en">DATA_SW_MR</span> به‌طور خودکار صفر می‌شود)؛</div>
+<div class="bl"><span class="en">INT_REQ</span> توسط <span class="en">PIOC</span> یک می‌شود تا از میزبان درخواست وقفه یا لغوِ درخواست شود و پس از برداشتن نتیجه توسط میزبان، فریم‌ور آن را پاک می‌کند. میزبان می‌تواند با عمل نوشتن جعلی روی رجیستر فقط‌خواندنی <span class="en">CTRL_RD</span>، <span class="en">INT_REQ</span> را صفر کند؛ نوشتن میزبان در <span class="en">CTRL_RD</span> اثر واقعی روی دادهٔ آن ندارد.</div>
+<div class="fig" id="fig-13">
+  <div class="figbox">
+    <img src="assets/img/an23000-fig_p4_x50.jpeg" alt="شکل ۱-۳" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۳</span><span class="cap-text">دو شیوۀ انتقال داده</span></div>
+</div>
+<p>شیوۀ <span class="en">SFR</span> برای پارامترها و داده‌های اندک مناسب است. دو طرف پیش‌تر کاربرد رجیسترها را با هم توافق می‌کنند؛ برای مثال <span class="en">DATA0</span> پیش از ارسال فرمان، توسط میزبان نوشته می‌شود، <span class="en">DATA1</span> هنگام اجرا توسط <span class="en">PIOC</span> نوشته می‌شود و میزبان پس از رسیدن اعلامِ پایان، آن را می‌خواند. اگر میزبان و <span class="en">PIOC</span> در یک چرخه روی یک رجیستر مشترک بنویسند، نوشتن میزبان مقدم می‌شود و نوشتن <span class="en">PIOC</span> دور ریخته می‌شود.</p>
+<p>شیوۀ منطقۀ برنامه برای داده‌های فقط‌خواندنیِ بیشتر یا جدول ثابت‌ها مناسب است. این <span class="en">4KB</span> در <span class="en">CLK_GATE=0</span> در اختیار میزبان است و در <span class="en">CLK_GATE=1</span> به‌عنوان <span class="en">ROM</span> برنامۀ <span class="en">PIOC</span> عمل می‌کند؛ بنابراین نوشتن باید در فاصلۀ بسته‌بودن گیت (یا حفظ حالت ریست) انجام شود و پس از پایان نوشتن، <span class="en">CLK_GATE</span> یک شود. <span class="en">PIOC</span> هنگام خواندن از <span class="en">RDCODE</span> استفاده می‌کند: <span class="en">8</span> بیت پایین آدرس هدف در <span class="en">SFR_INDIR_ADDR</span> و <span class="en">3</span> بیت بالا در رجیستر <span class="en">A</span> نوشته می‌شود و یک بار خواندن، <span class="en">16</span> بیت داده برمی‌گرداند؛ آدرس‌دهی بر پایۀ آدرس کلمۀ <span class="en">11</span> بیتی است.</p>
+<p>منطقۀ برنامه در مجموع <span class="en">2048</span> کلمه است و دستور و داده در آن مشترک‌اند؛ <span class="en">PIOC</span> فقط اجازۀ خواندن دارد و اجازۀ نوشتن ندارد و نتیجه‌ای که تولید می‌کند تنها از مسیر <span class="en">SFR</span> به میزبان بازمی‌گردد. در طول <span class="en">CLK_GATE=1</span> میزبان نیز اجازۀ نوشتن در این ناحیه را ندارد و برای به‌روزرسانی داده‌ها باید دوباره گیت را ببندد.</p>
+<div class="fig" id="fig-14">
+  <div class="figbox">
+    <img src="assets/img/an23000-fig_p5_x58.jpeg" alt="شکل ۱-۴" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۴</span><span class="cap-text">تخصیص نرم‌افزاری دو بافر <span class="en">SFR</span></span></div>
+</div>
+<p>وقتی داده در یک نوبت جا نمی‌شود، می‌توان رجیسترهای <span class="en">DATA_REG</span> موجود را به دو بلوک تقسیم کرد. هنگامی که <span class="en">PIOC</span> بلوک <span class="en">A</span> را می‌خواند، میزبان فقط بلوک <span class="en">B</span> را می‌نویسد؛ پیش از هر جابه‌جایی باید هم‌زمان دو شرط «<span class="en">A</span> خوانده شده است» و «<span class="en">B</span> آماده است» برقرار باشند. در جهت دریافت، وضعیت برعکس است: <span class="en">PIOC</span> در بلوک خالی می‌نویسد و میزبان بلوک کامل‌شده را می‌خواند. طول بلوک، پرچم اعتبار، طول آخرین بلوک و مدیریت مهلت همه باید توسط نرم‌افزار تعریف شوند. در نمونۀ <span class="en">EVT</span>، مثال‌های <span class="en">UART</span> و <span class="en">IIC</span> اعلان دادهٔ بخش‌بخش را شامل می‌شوند و می‌توان به تخصیص رجیسترها و شیوۀ شمارش آن‌ها مراجعه کرد.</p>
+
+<h3 class="h2x" id="sec-113"><span class="dm">◆</span>۱.۳ طراحی زمان‌بندی</h3>
+<p><span class="en">PIOC</span> بر هستۀ <span class="en">RISC8B</span> با مجموعۀ دستور ساده‌شدۀ تک‌چرخه‌ای تکیه دارد، با فرکانس اصلی سیستم اجرا می‌شود و طراحی زمان‌بندی آن بر واحد چرخۀ دستور استوار است. آنچه راهنمای پروتکل معمولاً ارائه می‌دهد نانوثانیه یا میکروثانیه است که باید نخست به تعداد چرخه تبدیل شود. <span class="en">PIOC</span> دستور تأخیر اختصاصی ندارد و تأخیر از اجرای عمل‌های تهی ساخته می‌شود و بنا بر طول، در سه رده قرار می‌گیرد: برای <span class="en">1~10</span> چرخه می‌توان از <span class="en">NOP</span>های پیاپی بهره گرفت؛ برای <span class="en">10~100</span> چرخه می‌توان زیربرنامه‌ای حاوی <span class="en">n</span> دستور <span class="en">NOP</span> را فراخوانی کرد (تعداد چرخه‌ها <span class="en">n+4</span> است و <span class="en">CALL</span> و <span class="en">RET</span> هر کدام <span class="en">2</span> چرخه)؛ برای چرخه‌های بلندتر می‌توان از حلقۀ شمارشی استفاده کرد که در هر دور، <span class="en">DEC</span> و <span class="en">JNZ</span> روی هم <span class="en">3</span> چرخه می‌برند.</p>
+<p>برای تبدیل یک قطعه کد به شکل موج، تنها باید چرخه‌ها را در طول مسیر اجرا جمع کرد. در مثال زیر فرض شده <span class="en">IO0</span> به‌عنوان خروجی نرم‌افزاری پیکربندی شده و کدگذاری بیت و خروجی تایمر هر دو بسته‌اند:</p>
+<div class="codeblk">PULSE:  BS    SFR_PORT_IO,SB_PORT_OUT0
+        NOP
+        NOP
+        NOP
+        BC    SFR_PORT_IO,SB_PORT_OUT0
+        NOP
+        NOP
+        NOP
+        JMP   PULSE</div>
+<p>در شکل، تغییر مقدار قفل خروجی بر مبنای مرزِ پایان هر دستور نشان داده شده است: <span class="en">BS</span> اول در <span class="en">t=1</span> کامل می‌شود، <span class="en">BC</span> در <span class="en">t=5</span> و <span class="en">BS</span> دور بعد در <span class="en">t=11</span>. سطح بالا <span class="en">4</span> چرخه و سطح پایین <span class="en">6</span> چرخه است؛ در <span class="en">48MHz</span> هر چرخه حدود <span class="en">20.833ns</span> است و سطوح اسمیِ بالا و پایین به‌ترتیب حدود <span class="en">83.333ns</span> و <span class="en">125ns</span> می‌شوند. انتقال معمول، عملیات حسابی و عملیات بیتی معمولاً <span class="en">1</span> چرخه است؛ <span class="en">JMP</span>، <span class="en">CALL</span> و بازگشت <span class="en">2</span> چرخه؛ در پرش شرطی، در صورت برقراری شرط یا رخ‌دادن پرش، چرخه‌های اضافی به حساب می‌آید و <span class="en">RDCODE</span> <span class="en">3</span> چرخه است. زمان کل <span class="en">WAITB</span> را زمانِ برقراری رویداد تعیین می‌کند و نمی‌توان زمان انتظار را تأخیر ثابتِ تک‌چرخه‌ای تلقی کرد.</p>
+<div class="fig" id="fig-15">
+  <div class="figbox">
+    <img src="assets/img/an23000-fig_p6_x65.jpeg" alt="شکل ۱-۵" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۵</span><span class="cap-text">اشغال دستورها و فاصلۀ لبه‌ها</span></div>
+</div>
+<p>کدگذار و کدگشای بیت برای پروتکل‌هایی به کار می‌رود که شکل موج یکسان را بیت‌به‌بیت تکرار می‌کنند: پس از پیکربندی عرض بیت و شیوۀ کدگذاری، با نوشتن بیت داده در <span class="en">bit7</span> رجیستر <span class="en">BIT_CYCLE</span>، سخت‌افزار یک دورۀ بیت کامل تولید می‌کند و <span class="en">CPU</span> می‌تواند هم‌زمان به بیت بعدی رسیدگی کند. در حالت <span class="en">PWM</span>، صفر <span class="en">25%</span> و یک <span class="en">75%</span> را در بر می‌گیرد؛ در حالت <span class="en">Manchester</span>، صفر تغییری نمی‌کند و یک در نیمۀ دوره تغییر حالت می‌دهد؛ <span class="en">TAIL=1</span> یعنی وارد یک‌چهارم پایانی شده‌ایم و کدگذاری این بیت کامل شده است. نوشتن در <span class="en">BIT_CYCLE</span> خودش دورۀ بیت را آغاز می‌کند و به بیت آغازگر اضافی نیاز ندارد؛ نوشتن در این رجیستر سجلِ تشخیص لبهٔ <span class="en">IO0</span> را پاک می‌کند و اگر در همان هنگام با <span class="en">WAITB</span> در انتظار لبه باشید، تحت تأثیر قرار می‌گیرید. با نوشتن صفر در میدان عرض بیت، کدگذاری بسته می‌شود.</p>
+<div class="fig" id="fig-16">
+  <div class="figbox">
+    <img src="assets/img/an23000-fig_p6_x66.jpeg" alt="شکل ۱-۶" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۶</span><span class="cap-text">دو نوع مدولاسیون بیت در <span class="en">PIOC</span></span></div>
+</div>
+<p><span class="en">WAITB</span> دستور همگام‌سازی رویداد در <span class="en">PIOC</span> است. تا زمانی که شرط برقرار نشود، شمارندۀ برنامه بدون تغییر می‌ماند و همان دستور بارها اجرا می‌شود؛ پس از برقراری شرط، اجرا به دستور بعدی ادامه می‌یابد. هشت رویداد، نیازهای اصلی همگام‌سازی را پوشش می‌دهند:</p>
+<div class="bl">انتظار برای نوشتن فرمان توسط میزبان (<span class="en">WB_DATA_MW_SR_1</span>)؛</div>
+<div class="bl">انتظار برای خواندن نتیجه توسط میزبان (<span class="en">WB_DATA_SW_MR_0</span>)؛</div>
+<div class="bl">انتظار برای ورود دورۀ بیت به یک‌چهارم پایانی و تکمیل کدگذاری بیت (<span class="en">WB_BIT_CYC_TAIL_1</span>)؛</div>
+<div class="bl">انتظار برای لبهٔ بالارونده یا پایین‌روندۀ <span class="en">IO0</span> (<span class="en">WB_PORT_I0_RISE/FALL</span>)؛</div>
+<div class="bl">انتظار برای متفاوت‌شدن یا یکسان‌شدن دوبارۀ ورودی و خروجی <span class="en">IO0\IO1</span> (<span class="en">WB_PORT_XOR0_1/0</span> و <span class="en">WB_PORT_XOR1_1</span>).</div>
+<p>دو نکتۀ معنایی بر شیوۀ استفاده اثر می‌گذارند: رویدادهای لبه‌ای هنگام خروج، سجل تشخیص را پاک می‌کنند، بنابراین دو انتظار پیاپی برای لبهٔ بالارونده به‌سبب تشخیص‌شدن لبه در بار قبلی، بی‌درنگ بازنمی‌گردند؛ در مقابل، رویدادهای شرطی اگر از پیش برقرار باشند بی‌درنگ خارج می‌شوند. <span class="en">PORT_XORx</span> نتیجۀ XOR ورودی با مقدار قفل خروجی را نشان می‌دهد. اگر <span class="en">OUT0=1</span> باشد، <span class="en">XOR0=1</span> یعنی ورودی پایین است؛ اگر <span class="en">OUT0=0</span> باشد، همان <span class="en">XOR0=1</span> یعنی ورودی بالاست. پس <span class="en">WAITB WB_PORT_XOR0_1</span> را نمی‌توان همیشه «انتظار برای سطح پایین» تعبیر کرد و نخست باید مقدار مرجع <span class="en">OUT</span> روشن شود.</p>
+<p>زمان نمونه‌برداری ورودی همچنین به <span class="en">SB_PORT_IN_EDGE</span> وابسته است: با <span class="en">0</span> نمونه‌برداری در میانهٔ چرخۀ ساعت انجام می‌شود و با <span class="en">1</span> مقدار لبهٔ دورۀ قبلی گرفته می‌شود. هنگام طراحی برنامۀ دریافت، نخست باید شرط آغاز را پیدا کنید و سپس نقطۀ نمونه‌برداری را درون پنجرۀ مؤثر بگذارید؛ تشخیص لبه به آن معنا نیست که دستور بعدی می‌تواند مرکز بیت را نمونه‌برداری کند.</p>
+<p><span class="en">PIOC</span> یک تایمر <span class="en">8</span> بیتی (تایمر <span class="en">0</span>) در اختیار می‌گذارد: <span class="en">TMR0_COUNT</span> مقدار جاری را نگه می‌دارد، <span class="en">TMR0_INIT</span> مقدار بازبارگذاری <span class="en">I</span> را و <span class="en">TIMER_CTRL</span> تقسیم فرکانس، حالت و خروجی را انتخاب می‌کند. ساعت تایمر از تقسیم فرکانس اصلی سیستم به‌وسیلۀ <span class="en">SB_TMR0_FREQ</span> به‌دست می‌آید و میدان تقسیم <span class="en">000~111</span> به‌ترتیب متناظر با <span class="en">D=1024</span>، <span class="en">256</span>، <span class="en">64</span>، <span class="en">16</span>، <span class="en">8</span>، <span class="en">4</span>، <span class="en">2</span> و <span class="en">1</span> است. تایمر <span class="en">0</span> می‌تواند در حالت تایمر یا حالت مدولاتور پهنای پالس کار کند. در حالت تایمر، شمارش از <span class="en">TMR0_INIT</span> تا <span class="en">0xFF</span> ادامه می‌یابد، سرریز می‌شود و مقدار اولیه بازبارگذاری می‌گردد؛ در حالت <span class="en">PWM</span> دوره بر <span class="en">256</span> ساعت تایمر ثابت است و مقدار اولیه به آستانۀ مقایسه تبدیل می‌شود.</p>
+<div class="fig" id="fig-17">
+  <div class="figbox">
+    <img src="assets/img/an23000-fig_p7_x74.jpeg" alt="شکل ۱-۷" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۷</span><span class="cap-text">شمارش در حالت تایمر</span></div>
+</div>
+<p>در حالت تایمر، شمارش از <span class="en">I</span> تا <span class="en">255</span> ادامه می‌یابد و سپس دوباره <span class="en">I</span> بارگذاری می‌شود. دورۀ بازبارگذاری برابر است با:</p>
+<div class="formula">T<sub>reload</sub> = (256 &minus; I) * D / F<sub>pioc</sub></div>
+<p>سیگنال داخلی <span class="en">CYCLE</span> هنگام رسیدن شمارنده به <span class="en">255</span> در سطح بالا است و هنگام بازبارگذاری به سطح پایین بازمی‌گردد. پس از اجازۀ خروجی، <span class="en">IO0</span> موج مربعیِ حاصل از تقسیم بر دو این سیگنال دوره‌ای را تولید می‌کند؛ فرکانس آن برابر است با:</p>
+<div class="formula">F<sub>out</sub> = F<sub>pioc</sub> / [2 * D * (256 &minus; I)]</div>
+<p>و ضریب مطابق آن <span class="en">50%</span> است.</p>
+<div class="fig" id="fig-18">
+  <div class="figbox">
+    <img src="assets/img/an23000-fig_p7_x75.jpeg" alt="شکل ۱-۸" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۸</span><span class="cap-text">شمارش در حالت <span class="en">PWM</span></span></div>
+</div>
+<p>در حالت <span class="en">PWM</span>، شمارش همیشه از <span class="en">0</span> تا <span class="en">255</span> ادامه می‌یابد و به <span class="en">0</span> بازمی‌گردد؛ دوره برابر است با:</p>
+<div class="formula">T<sub>pwm</sub> = 256 * D / F<sub>pioc</sub></div>
+<p>در این حالت <span class="en">INIT</span> نقش آستانۀ مقایسه را دارد و دیگر دورۀ شمارش را تغییر نمی‌دهد. هنگامی که <span class="en">COUNT&gt;I</span> باشد، سیگنال داخلی <span class="en">CYCLE</span> برابر <span class="en">1</span> می‌شود و در صورتی که پایه در اختیار <span class="en">PIOC</span> باشد، جهت آن خروجی بوده و خروجی تایمر اجازه داده شده باشد، این سیگنال روی <span class="en">IO0</span> اعمال می‌شود. ضریب مطابق سطح بالا برابر است با:</p>
+<div class="formula">Duty = (255 &minus; I) / 256</div>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">نمونۀ راه‌اندازی نوار <span class="en">LED</span> تک‌سیمۀ <span class="en">WS2812</span></div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-211"><span class="dm">◆</span>۲.۱ پنجره‌های زمانی پروتکل</h3>
+<div class="fig" id="fig-21">
+  <div class="figbox">
+    <img src="assets/img/an23000-fig_p8_x87.jpeg" alt="شکل ۲-۱" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۱</span><span class="cap-text">تعریف بیت <span class="en">WS2812</span></span></div>
+</div>
+<p>برای گواهی درستیِ زمان‌بندی، باید <span class="en">T0H</span>، <span class="en">T0L</span>، <span class="en">T1H</span>، <span class="en">T1L</span> و سطح پایینِ ریستِ پایان فریم را جداگانه بازبینی کرد؛ تفاوت صفر و یک تنها در سهم سطح بالاست. <span class="en">WS2812B</span> رایج ۲۴ بیتی برای هر عدد <span class="en">3</span> بایت مصرف می‌کند که به ترتیب <span class="en">G</span>، <span class="en">R</span> و <span class="en">B</span> چیده می‌شوند و در هر بایت نخست <span class="en">bit7</span> ارسال می‌شود. در زنجیره‌کردن چند عدد، داده‌ها به‌ترتیب برای عدد اول تا آخرین قرار می‌گیرند؛ هر عدد <span class="en">24</span> بیتِ متعلق به خود را برمی‌دارد و باقیمانده را از <span class="en">DOUT</span> به عدد بعدی منتقل می‌کند. برای مثال، <span class="en">00h</span>، <span class="en">20h</span>، <span class="en">00h</span> یعنی مؤلفۀ سبز و آبی صفر و مؤلفۀ سرخ <span class="en">20h</span> است. برای قطعه‌هایی مانند خانوادۀ <span class="en">RGBW</span> باید تعداد بایت و ترتیب رنگ جداگانه تأیید شود. پروتکل <span class="en">WS2812</span> ساده اما در زمان‌بندی سخت‌گیر است: فقط از دو نوع بیت صفر و یک ساخته می‌شود، تلورانس عرض بیت <span class="en">&plusmn;150ns</span> است، حجم داده از کوچک به بزرگ رشد می‌کند و ارسال باید یک‌بار و پیوسته انجام شود. مثال محلی <span class="en">EXAM\PIOC\1_Wire</span> هم‌زمان دو مسیر فریم کوتاه (<span class="en">SFR</span>) و فریم بلند (بارِ منطقۀ برنامه) را پیاده کرده است و می‌توان از آن برای توضیح دو شیوۀ پیاده‌سازی یک پروتکل بهره گرفت.</p>
+
+<h3 class="h2x" id="sec-212"><span class="dm">◆</span>۲.۲ مؤلفه‌های پروژه و مقداردهی اولیه</h3>
+<div class="tblwrap" id="tab-21">
+  <div class="tblcap"><span class="cap-pill">جدول ۲-۱</span><span class="cap-text">فایل‌های اصلی پروژۀ نمونه</span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:34%;">فایل</th><th>تمرکز خواندن یا تغییر</th></tr></thead>
+    <tr><td><span class="en">Asm/RGB1W.ASM</span></td><td class="jt">تخصیص فرمان، واکشی از <span class="en">SFR</span> و <span class="en">RAM</span>، زمان‌بندی بیت، پایان فریم و بازگرداندن نتیجه</td></tr>
+    <tr><td><span class="en">Asm/PIOC_INC.ASM</span></td><td class="jt">رجیسترها، شمارۀ بیت‌ها و پارامتر دستورهای اختصاصی در سمت <span class="en">PIOC</span></td></tr>
+    <tr><td><span class="en">Asm/RGB1W.BAT</span></td><td class="jt">فراخوانی اسمبلر <span class="en">WASM53B</span> و تبدیل آرایۀ <span class="en">C</span> با <span class="en">BIN_HEX</span></td></tr>
+    <tr><td><span class="en">User/RGB1W.c</span> و <span class="en">RGB1W.h</span></td><td class="jt">مقداردهی اولیۀ میزبان، آرایۀ برنامه، آدرس بافر و رابط ارسال</td></tr>
+    <tr><td><span class="en">Ld/Link.ld</span></td><td class="jt">دامنۀ <span class="en">RAM</span> میزبان و جداسازی <span class="en">SRAM</span> مشترک با <span class="en">PIOC</span></td></tr>
+  </table>
+</div>
+<p>تابع <span class="en">RGB1W_Init</span> به‌ترتیب ساعت‌های <span class="en">AFIO</span>، <span class="en">GPIOC</span> و <span class="en">PIOC</span> را روشن می‌کند، <span class="en">PC18/PC19</span> یا <span class="en">PC7</span> بازنگاشت‌شده را انتخاب و چندبرگرشدن پایه‌ها را تنظیم می‌کند؛ سپس <span class="en">PIOC</span> را در حالت ریست نگه می‌دارد و با <span class="en">CLK_GATE=0</span>، آرایۀ <span class="en">PIOC_1W_CODE</span> را به <span class="en">PIOC_SRAM_BASE</span> کپی می‌کند. همین تابع بارگذاری را کامل می‌کند و رابط ارسالِ واقعی، بعدها ریست را آزاد کرده، ساعت <span class="en">PIOC</span> را روشن و وظیفه را ثبت می‌کند.</p>
+<p>اسکریپت لینکر میزبان، <span class="en">RAM</span> معمولی را به <span class="en">16KB</span> آغازشده از <span class="en">0x20000000</span> محدود می‌کند و منطقۀ اشتراکی <span class="en">PIOC</span> از <span class="en">0x20004000</span> آغاز می‌شود و در مجموع <span class="en">4KB</span> است. هنگام پورت‌کردن، این جداسازی را حفظ کنید تا پشته، هیپ یا متغیرهای سراسری میزبان وارد منطقۀ برنامۀ <span class="en">PIOC</span> نشوند. با استفاده از <span class="en">PC18/PC19</span> باید رابطۀ چندبرگرشدن با رابط اشکال‌زدایی نیز مدیریت شود و اگر فقط از <span class="en">IO0</span> بازنگاشت‌شده استفاده می‌کنید، پیکربندی <span class="en">IO_EN</span> را در همهٔ توابع ارسال هم‌زمان بازبینی کنید.</p>
+
+<h3 class="h2x" id="sec-213"><span class="dm">◆</span>۲.۳ کدهای فرمان و کدهای نتیجه</h3>
+<p>میزبان نخست داده‌ها و پارامترها را آماده می‌کند و در پایان با نوشتن <span class="en">CTRL_WR</span> فرمان را ثبت می‌کند. فرمان‌های زیر دامنۀ رابطِ توافق‌شده در مثال‌اند و به آن معنا نیست که هر مقداری که می‌تواند به شاخه‌های اسمبلی برسد، برای فراخوانی مناسب است. مسیر <span class="en">RAM</span> تعداد کل بایت‌ها را در <span class="en">DATA_REG0/1</span> و انتخاب کانال را در <span class="en">DATA_REG2 bit0</span> می‌گذارد؛ مسیر <span class="en">SFR</span> اما بایت‌های آمادۀ ارسال را در <span class="en">DATA_REG0~31</span> نگه می‌دارد.</p>
+<div class="tblwrap" id="tab-22">
+  <div class="tblcap"><span class="cap-pill">جدول ۲-۲</span><span class="cap-text">تخصیص کدهای فرمان در مثال</span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:20%;">فرمان</th><th style="width:30%;">معنا</th><th style="width:28%;">منبع داده</th><th>کانال</th></tr></thead>
+    <tr><td><span class="en">0x01~0x20</span></td><td class="jt">فریم کوتاه؛ <span class="en">7</span> بیت پایین تعداد بایت (<span class="en">1~32</span>)</td><td class="jt"><span class="en">SFR</span> از <span class="en">DATA_REG0</span> به بعد</td><td><span class="en">IO0</span></td></tr>
+    <tr><td><span class="en">0x44~0x60</span></td><td class="jt">فریم کوتاه؛ <span class="en">6</span> بیت پایین تعداد بایت</td><td class="jt"><span class="en">SFR</span> از <span class="en">DATA_REG0</span> به بعد</td><td><span class="en">IO1</span></td></tr>
+    <tr><td><span class="en">0x88~0xFC</span></td><td class="jt">فریم بلند؛ <span class="en">7</span> بیت پایین عرض بیت <span class="en">N</span></td><td class="jt">بارِ منطقۀ برنامه (<span class="en">RDCODE</span>)</td><td>با <span class="en">DATA_REG2</span> انتخاب می‌شود</td></tr>
+    <tr><td><span class="en">0x41~0x43</span></td><td class="jt"><span class="en">DS18B20</span></td><td class="jt">—</td><td><span class="en">IO0</span></td></tr>
+  </table>
+</div>
+<p>رابط فریم کوتۀ <span class="en">IO1</span> طول را با <span class="en">0x40</span> ترکیب و فرمان می‌سازد. طول‌های <span class="en">1~3</span> متناظر با <span class="en">0x41~0x43</span> هستند و پیش از هر چیز وارد شاخۀ سنسور دما می‌شوند؛ بنابراین <span class="en">3</span> بایت دادهٔ یک <span class="en">LED RGB</span> را نمی‌توان مستقیماً با همین فرمان خامِ فریم کوتۀ <span class="en">IO1</span> ارسال کرد. باید فرمانِ متداخل را دوباره تخصیص دهید و <span class="en">C</span> و <span class="en">ASM</span> را هم‌زمان اصلاح کنید، یا از مسیر ارسال دیگری که قبلاً اصلاح و راستی‌آزمایی شده استفاده نمایید. برای زنجیرۀ کامل <span class="en">LED</span>های <span class="en">RGB</span>، تعداد بایت‌ها نیز باید مضرب <span class="en">3</span> باشد.</p>
+<p>در پایان وظیفه، <span class="en">PIOC</span> نخست <span class="en">CTRL_RD</span> را می‌نویسد، سپس <span class="en">INT_REQ</span> را یک کرده و به <span class="en">WAIT_COMMAND</span> بازمی‌گردد. رابط منتظرِ میزبان از طریق پرس‌وجوی <span class="en">INT_REQ</span> پایان را تشخیص می‌دهد و با خواندن <span class="en">CTRL_RD</span> نتیجه را می‌گیرد؛ پس از آن <span class="en">PIOC</span> با دیدن <span class="en">SW_MR=0</span>، <span class="en">INT_REQ</span> را پاک می‌کند. اگر به شیوۀ وقفه تغییر رویه دهید، باید برنامهٔ سرویس وقفه به‌طور یکپارچه نتیجه را بخواند و لایۀ کاربرد را مطلع سازد تا کد پرس‌وجو و وقفه، یک وضعیتِ پایان را دو بار نخوانند.</p>
+
+<h3 class="h2x" id="sec-214"><span class="dm">◆</span>۲.۴ مسیرهای فریم کوتاه و فریم بلند</h3>
+<div class="fig" id="fig-22">
+  <div class="figbox">
+    <img src="assets/img/an23000-fig_p9_x95.jpeg" alt="شکل ۲-۲" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۲</span><span class="cap-text">سه مسیر در کد</span></div>
+</div>
+<p>مسیر <span class="en">SFR</span> در هر نوبت بیشترین <span class="en">32</span> بایت منتقل می‌کند و دادهٔ <span class="en">10</span> <span class="en">LED</span> کامل <span class="en">RGB</span> را در خود جای می‌دهد. در نقطۀ ورود، کدگذاری بیت بسته می‌شود، مقدار قفل <span class="en">OUT</span> متناظر روی سطح پایین تنظیم و جهت خروجی پیکربندی می‌شود و سپس بررسی می‌شود که ورودی پایین است یا نه. پس از آن با <span class="en">INDIR_ADDR</span> تعداد بایت‌های باقی‌مانده نگه داشته می‌شود و با <span class="en">MOVIA</span>، گروه دوم آدرس‌های غیرمستقیم یعنی <span class="en">INDIR_ADDR2</span> به <span class="en">DATA_REG0</span> اشاره می‌کند.</p>
+<div class="codeblk">        BS    SFR_PORT_IO,SB_PORT_OUT0   <span class="cm">; لبهٔ بالارونده</span>
+        CALL  RGB1W_DLY_0H              <span class="cm">; سطح بالا 292 ns</span>
+        BTSS  SFR_INDIR_PORT2,7         <span class="cm">; اگر بیت داده 1 است، پرش</span>
+        BC    SFR_PORT_IO,SB_PORT_OUT0  <span class="cm">; دادهٔ 0: پایین‌کشیدن زودتر</span>
+        CALL  RGB1W_DLY_HALF            <span class="cm">; پُرکردن تا نیمۀ دوره</span>
+        BC    SFR_PORT_IO,SB_PORT_OUT0  <span class="cm">; دادهٔ 1: پایین‌کشیدن در این‌جا</span>
+        CALL  RGB1W_DLY_1L              <span class="cm">; سطح پایین 292 ns</span>
+        <span class="cm">; ... bit6~bit0 به همان شکل باز می‌شوند؛ بیت آخر از واریانت _B0 برای جبران پیشروی اشاره‌گر استفاده می‌کند</span></div>
+<p>این قطعه کد یک بیت دادهٔ معمولی را پردازش می‌کند. برای دادهٔ <span class="en">0</span>، <span class="en">BTSS</span> از <span class="en">BC</span> اول عبور نمی‌کند و خروجی زودتر پایین کشیده می‌شود؛ برای دادهٔ <span class="en">1</span> همان <span class="en">BC</span> پرش می‌شود و سطح بالا تا <span class="en">BC</span> دوم حفظ می‌شود. <span class="en">DLY_HALF</span> برای پُرکردن بازۀ میانی است و به آن معنا نیست که سیگنال را در مرکز دورۀ بیت پایین بکشد. هر دو مسیر داده باید سربارِ پرش‌ یا نشدن <span class="en">BTSS</span> و نیز <span class="en">CALL/RET</span> را در محاسبۀ زمان داشته باشند.</p>
+<div class="fig" id="fig-23">
+  <div class="figbox">
+    <img src="assets/img/an23000-fig_p10_x110.jpeg" alt="شکل ۲-۳" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۳</span><span class="cap-text">زمان‌بندی بیت نرم‌افزاری</span></div>
+</div>
+<p><span class="en">DLY_0H</span> هشت دستور <span class="en">NOP</span> به‌همراه <span class="en">RET</span> است و در مجموع <span class="en">10</span> چرخه؛ <span class="en">DLY_1L</span> <span class="en">11</span> چرخه؛ و <span class="en">DLY_HALF</span> با در نظر گرفتن فراخوانی تو در تو و مسیر اجرای ترتیبی تا <span class="en">DLY_1L</span>، بدنۀ <span class="en">25</span> چرخه‌ای دارد. با لحاظ فراخوانی و انشعاب، برای بیت معمولی <span class="en">T0H/T0L</span> برابر <span class="en">14/42</span> چرخه و <span class="en">T1H/T1L</span> برابر <span class="en">42/14</span> چرخه می‌شود. در <span class="en">48MHz</span> این‌ها به‌ترتیب حدود <span class="en">0.292/0.875us</span> و <span class="en">0.875/0.292us</span> می‌شوند و دورۀ بیت حدود <span class="en">1.167us</span> است.</p>
+<p>بررسی بیت‌های <span class="en">bit7~bit1</span> نشانگر داده را به‌طور خودکار جلو نمی‌برد؛ در انتهای بایت، <span class="en">MOV SFR_INDIR_PORT2,A</span> افزایش خودکار <span class="en">INDIR_ADDR2</span> را راه می‌اندازد و سپس شمارندۀ بایت کم می‌شود. <span class="en">bit0</span> از نقطۀ ورود تأخیرِ <span class="en">_B0</span> برای جبران سربار واکشی و حلقه بهره می‌گیرد. هنگام تغییر، نمی‌توان فقط <span class="en">NOP</span>های بیت معمولی را تنظیم کرد؛ باید بیت پایانی بایت، بایت‌های پیاپی و مسیر جمع‌بندی پس از آخرین بیت را نیز هم‌زمان حساب کرد.</p>
+<h4 class="h3x" id="sec-2141"><span class="dm">◆</span>واکشی داده و کدگذاری بیت در فریم بلند <span class="en">RAM</span></h4>
+<p>مسیر <span class="en">RAM</span> داده‌ها را از پیش در منطقۀ برنامۀ <span class="en">PIOC</span> می‌گذارد و با کمک <span class="en">RDCODE</span> در هر نوبت یک کلمۀ <span class="en">16</span> بیتی می‌خواند. بایت پایین در <span class="en">A</span> و بایت بالا در <span class="en">INDIR_ADDR</span> قرار می‌گیرد؛ پس نخست بایت پایین و سپس بایت بالا ارسال می‌شود و درون هر بایت همچنان ارسال از <span class="en">bit7</span> تا <span class="en">bit0</span> است. <span class="en">VAR_ADDR_L/H</span> آدرس واکشی بعدی را جداگانه نگه می‌دارد، <span class="en">VAR_SIZE_L/H</span> تعداد بایت‌های باقی‌مانده را ثبت می‌کند و <span class="en">DATA_EXCH</span> بایت جاری را موقتاً نگه می‌دارد.</p>
+<h4 class="h3x" id="sec-2142"><span class="dm">◆</span><span class="en">IO0</span> از کدگذاری بیت سخت‌افزاری استفاده می‌کند</h4>
+<p>شاخۀ <span class="en">IO0</span> مقدار <span class="en">BIT_CONFIG</span> را روی <span class="en">0x80</span> می‌گذارد؛ یعنی <span class="en">TX_EN=1</span> و <span class="en">CODE_MOD=0</span>. <span class="en">7</span> بیت پایین فرمان به‌عنوان میدان دوره به کار می‌رود: در <span class="en">48MHz</span> مقدار <span class="en">56</span> متناظر با فرمان <span class="en">0xB8</span> و در <span class="en">24MHz</span> مقدار <span class="en">28</span> متناظر با فرمان <span class="en">0x9C</span> است و عرض بیتِ اسمی مثال در هر دو حدود <span class="en">1.167us</span> است. قطعۀ زیر آدرس خواندن اصلیِ منطقۀ برنامه را حفظ می‌کند.</p>
+<div class="codeblk">        CLR   VAR_ADDR_L
+        CLR   SFR_INDIR_ADDR
+        MOVL  0X02                 <span class="cm">; بایت بالای آدرس کلمۀ اصلی</span>
+        MOVA  VAR_ADDR_H
+        RDCODE                     <span class="cm">; A=بایت پایین، INDIR_ADDR=بایت بالا</span>
+        MOVA  SFR_DATA_EXCH
+        ANDL  0X80                 <span class="cm">; bit7 بایت نخست</span>
+        IOR   SFR_INDIR_ADDR2,A    <span class="cm">; تلفیق میدان دوره</span>
+        NOP
+        MOVA  SFR_BIT_CYCLE        <span class="cm">; ارسال فعال شده: بارگذاری بیت اول و آغاز</span>
+RGB1W_WORD_NEXT:
+        WAITB WB_PORT_I0_RISE      <span class="cm">; تأیید آغاز بیت جاری</span>
+        BP2F  BO_BIT_TX_O0,6       <span class="cm">; پیش‌بارگذاری بیت بعدی</span></div>
+<p>لبهٔ بالارونده در این‌جا آغاز بیتِ کدگذاری‌شدۀ <span class="en">PWM</span> جاری را نشان می‌دهد، نه پایان ارسال بیت جاری. <span class="en">TX_O0</span> ساختار دوبافر دارد و برنامه پس از آغاز بیت جاری، بیت بعدی را بارگذاری می‌کند؛ بیت جاری همچنان توسط کدگذار ادامه می‌یابد. <span class="en">WAITB</span> روی سجل تشخیص لبهٔ بالارونده انتظار می‌کشد و هنگام خروج آن را پاک می‌کند؛ نوشتن <span class="en">BIT_CYCLE</span> نیز سجل لبهٔ <span class="en">IO0</span> را پاک می‌کند، پس ترتیب «آغاز بیت نخست، پاک‌شدن سجل و نوشتن بیت‌های بعدی» را نمی‌توان دل‌بخواه جابه‌جا کرد.</p>
+<p>برای کم‌کردن یک واحد از طول، کد نخست <span class="en">DEC VAR_SIZE_L</span> و سپس <span class="en">INC VAR_SIZE_L,A</span> را اجرا می‌کند. اگر بایت پایین اصلی <span class="en">00h</span> باشد، پس از یک واحد کم‌شدن <span class="en">FFh</span> می‌شود؛ سپس با افزودن <span class="en">1</span> به <span class="en">A</span> مقدار <span class="en">00h</span> حاصل و پرچم <span class="en">Z</span> برقرار می‌شود و در این هنگام از بایت بالا یک واحد کم می‌شود. نتیجۀ دستور دوم در <span class="en">A</span> نوشته می‌شود و مقدارِ کاسته‌شدۀ <span class="en">VAR_SIZE_L</span> را به حالت اول بازنمی‌گرداند. شناخت رجیستر مقصد کمک می‌کند هنگام تغییر منطق بررسی طول، پردازش قرضِ <span class="en">16</span> بیتی از کار نیفتد.</p>
+<div class="codeblk">RGB1W_BIT_LAST:
+        BP2F  BO_BIT_TX_O0,0
+        WAITB WB_PORT_I0_RISE      <span class="cm">; آغاز بیت پایانی</span>
+        BC    SFR_BIT_CYCLE,SB_BIT_TX_O0
+        WAITB WB_PORT_I0_FALL      <span class="cm">; پایان سطح بالای بیت پایانی</span>
+        CLR   SFR_BIT_CYCLE        <span class="cm">; توقف کدگذاری</span>
+        JMP   RGB1W_LOAD</div>
+<p>پس از بارگذاری بیت پایانی، کد نخست لبهٔ بالاروندۀ همان بیت را انتظار می‌کشد، سپس <span class="en">TX_O0</span> را پاک کرده و لبهٔ پایین‌رونده را انتظار می‌کشد؛ بعد کدگذاری را متوقف می‌کند و وارد مرحلۀ سطح پایین ریست می‌شود. <span class="en">BC BIT_CYCLE</span> نیز سجل لبهٔ قدیمی را پاک می‌کند و در این‌جا برای آن به کار می‌رود که لبهٔ پایین‌روندۀ پیشین به‌اشتباه پایان بیت آخر تلقی نشود. نمی‌توان بلافاصله پس از نوشتن بیت پایانی، کدگذار را بست.</p>
+<h4 class="h3x" id="sec-2143"><span class="dm">◆</span><span class="en">IO1</span> همچنان از خروجی نرم‌افزاری استفاده می‌کند</h4>
+<p><span class="en">RGB1W_LONG_1</span> اگرچه همانند مسیر قبلی از منطقۀ برنامه واکشی می‌کند، اما <span class="en">IO1</span> قابلیت خروجی کدگذاری بیتِ <span class="en">IO0</span> را ندارد؛ بنابراین شکل موج با <span class="en">BS/BC</span> و زیربرنامه‌های تأخیر ساخته می‌شود. میدان دوره در فرمان نمی‌تواند پهنای پالس نرم‌افزاریِ این مسیر را مستقیماً تغییر دهد.</p>
+
+<h3 class="h2x" id="sec-215"><span class="dm">◆</span>۲.۵ فراخوانی میزبان و یک ارسال کامل</h3>
+<p>برای اولین راه‌اندازی می‌توان از مسیر <span class="en">SFR</span> روی <span class="en">IO0</span> شروع کرد. پس از آماده‌سازی ساعت سیستم، سیم‌کشی، سطوح منطقی و سطح پایینِ ریست فریم نخست، فراخوانی زیر دادهٔ سرخ با درخشندگی کم را به یک <span class="en">LED</span> می‌فرستد؛ فایل‌های سرآیند مثال و پیکربندی لینک باید به پروژۀ میزبان افزوده شده باشند.</p>
+<div class="tblwrap" id="tab-23">
+  <div class="tblcap"><span class="cap-pill">جدول ۲-۳</span><span class="cap-text">ترتیب عملیات دو رابط ارسال میزبان</span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:28%;">مرحله</th><th>مسیر <span class="en">SFR</span></th></tr></thead>
+    <tr><td>آماده‌سازی داده</td><td class="jt">چیدن بایت‌های <span class="en">GRB</span> در بافر میزبان</td></tr>
+    <tr><td>ریست و کپی</td><td class="jt">پس از ریست، نخست <span class="en">PIOC</span> راه می‌افتد و سپس کپی به <span class="en">DATA_REG</span></td></tr>
+    <tr><td>ثبت وظیفه</td><td class="jt">در پایان، فرمانِ مرکب از طول و کانال نوشته می‌شود</td></tr>
+    <tr><td>خواندن نتیجه</td><td class="jt">انتظار برای <span class="en">INT_REQ</span> و سپس خواندن <span class="en">CTRL_RD</span></td></tr>
+    <tr><td>فریم بعدی</td><td class="jt">پردازش نتیجه و اطمینان از امکان ثبت دوباره</td></tr>
+  </table>
+</div>
+<h4 class="h3x" id="sec-2151"><span class="dm">◆</span>تنظیم زمان‌بندی و بازتولید فریم‌ور</h4>
+<p>اگر از خروجی نرم‌افزاری استفاده می‌کنید، می‌توانید نخست تعداد چرخۀ هدف هر بخش را تعیین کنید و سپس پیاده‌سازی اسمبلی را تغییر دهید. پس از اصلاح <span class="en">ASM</span>، فایل <span class="en">RGB1W.BAT</span> همراه را اجرا کنید؛ خطاها و هشدارهای فایل <span class="en">LST</span>، آدرس نمادها و انتهای کد را بررسی کنید؛ مطمئن شوید <span class="en">RGB1W_inc.h</span> تولیدشدۀ تبدیل <span class="en">BIN</span> از نظر طول و محتوای بایت‌ها با <span class="en">BIN</span> یکسان است و سپس آرایۀ <span class="en">PIOC_1W_CODE</span> را در <span class="en">RGB1W.c</span> به‌روزرسانی کنید. در پایان، پروژۀ میزبان را دوباره ترجمه و بارگذاری کنید تا تابع مقداردهی اولیه، برنامۀ جدید <span class="en">PIOC</span> را بارگذاری کند. تنها اصلاح <span class="en">ASM</span> یا تنها ترجمۀ دوبارۀ پروژۀ میزبان، هیچ‌کدام تضمین نمی‌کند که آخرین کد ماشین <span class="en">PIOC</span> در حال اجراست.</p>
+<p>اگر نقطۀ آغاز <span class="en">RAM</span> دست‌خوش تغییر می‌شود، ماکروی <span class="en">C</span> و دو آدرس کلمه در <span class="en">ASM</span> باید هم‌زمان اصلاح شوند؛ اگر اصلاح <span class="en">24MHz</span> در میان است، باید آدرس برچسبِ وصله را از <span class="en">LST</span> جاری تأیید و به آفست بایت تبدیل کنید. آدرس برنامۀ <span class="en">PIOC</span> بر حسب کلمه و اشاره‌گر <span class="en">C</span> بر حسب بایت است و رابطۀ تبدیل این دو چنین است:</p>
+<div class="formula">Offset<sub>byte</sub> = 2 * Addr<sub>word</sub></div>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN23000</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/11/02</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">PIOC</span></td><td class="jt">واحد جانبی (<span class="en">Peripheral</span>) قابل‌برنامه‌ریزی ورودی/خروجی روی سری‌های <span class="en">CH32X035</span>، <span class="en">CH32H417</span> و <span class="en">CH32V205</span>؛ موج پروتکل را روی دو پایه و با چرخه‌های دستور معین تولید می‌کند</td></tr>
+      <tr><td><span class="en">eMCU</span></td><td class="jt">نام دیگر <span class="en">PIOC</span> در راهنمای تراشه؛ یک میکروکنترلر کوچکِ تعبیه‌شده در کنار هستۀ اصلی</td></tr>
+      <tr><td><span class="en">RISC8B</span></td><td class="jt">هستۀ ۸بیتی <span class="en">PIOC</span> با دادهٔ <span class="en">8</span> بیت، دستور <span class="en">16</span> بیتی، <span class="en">66</span> دستور و اجرای تک‌چرخه‌ای</td></tr>
+      <tr><td><span class="en">SFR</span></td><td class="jt">رجیسترهای عملکرد خاص؛ پنجرۀ ارتباط مستقیم میزبان و <span class="en">PIOC</span> برای فرمان، پارامتر و داده — <span class="en">49</span> عدد شامل <span class="en">33</span> بایت رجیستر داده</td></tr>
+      <tr><td><span class="en">CTRL_WR / CTRL_RD</span></td><td class="jt">رجیستر نوشتن فرمان میزبان به <span class="en">PIOC</span> / رجیستر فقط‌خواندنی نتیجه؛ نوشتن جعلی روی <span class="en">CTRL_RD</span> راه پاک‌کردن <span class="en">INT_REQ</span> است</td></tr>
+      <tr><td><span class="en">MW_SR / SW_MR</span></td><td class="jt">بیت «فرمان برداشته شد» (پس از نوشتن میزبان یک می‌شود) / بیت «نتیجه خوانده شد» (پس از نوشتن نتیجه توسط <span class="en">PIOC</span> یک می‌شود)</td></tr>
+      <tr><td><span class="en">INT_REQ</span></td><td class="jt">بیت درخواست وقفه از طرف <span class="en">PIOC</span> به میزبان؛ پس از برداشتن نتیجه، فریم‌ور آن را پاک می‌کند</td></tr>
+      <tr><td><span class="en">CLK_GATE</span></td><td class="jt">گیت ساعتِ فضای <span class="en">4KB</span> مشترک؛ <span class="en">0</span>: <span class="en">SRAM</span> میزبان، <span class="en">1</span>: <span class="en">ROM</span> برنامۀ <span class="en">PIOC</span> — نوشتن فقط با گیت بسته مجاز است</td></tr>
+      <tr><td><span class="en">RDCODE</span></td><td class="jt">دستور ویژۀ خواندن منطقۀ برنامه توسط <span class="en">PIOC</span>؛ با آدرس کلمۀ <span class="en">11</span> بیتی، هر بار یک کلمۀ <span class="en">16</span> بیتی برمی‌گرداند و <span class="en">3</span> چرخه طول می‌کشد</td></tr>
+      <tr><td><span class="en">BIT_CYCLE</span></td><td class="jt">رجیستر راه‌اندازی دورۀ بیت؛ نوشتن بیت داده در <span class="en">bit7</span> یک دورۀ بیت کامل تولید می‌کند و نوشتن در آن سجل لبهٔ <span class="en">IO0</span> را نیز پاک می‌کند</td></tr>
+      <tr><td><span class="en">WAITB</span></td><td class="jt">دستور انتظار بر هشت رویداد همگام‌سازی: فرمان میزبان، خواندن نتیجه، <span class="en">TAIL</span>، لبه‌های <span class="en">IO0</span> و مقایسۀ ورودی/خروجی</td></tr>
+      <tr><td><span class="en">WS2812</span></td><td class="jt"><span class="en">LED</span> تک‌سیمۀ <span class="en">RGB</span> با زمان‌بندی سخت‌گیرانه؛ هر عدد <span class="en">24</span> بیت با ترتیب <span class="en">GRB</span> می‌گیرد و تلورانس عرض بیت آن <span class="en">±150ns</span> است</td></tr>
+      <tr><td><span class="en">DS18B20</span></td><td class="jt">سنسور دمای تک‌سیمه؛ در مثال، فرمان‌های <span class="en">0x41~0x43</span> مسیر <span class="en">IO1</span> به شاخۀ آن می‌رسند</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN23000 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۲۳</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN23000</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
