@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>منابع تایمر در کنترل موتورهای BLDC و PMSM با CH32 — ترجمۀ فارسی AN11002</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">راهنمای جامع تایمرها</div>
+    <div class="t2">در کنترل موتورهای <span class="en">BLDC</span> و <span class="en">PMSM</span></div>
+    <div class="t3">با میکروکنترلرهای <span class="en">CH32</span></div>
+  </div>
+  <div class="c-sub">از انتخاب تایمر مناسب برای هر موتور و تولید <span class="en">PWM</span> مکمل با زمان مرده، تا سازوکار ترمز و پیش‌بارگذاری، تحریک نمونه‌برداری <span class="en">ADC</span> با <span class="en">TRGO</span>، رابط انکودر، هم‌کاری <span class="en">DMA</span> و مدیریت وقفه‌ها در کنترل <span class="en">FOC</span></div>
+  <div class="c-desc">در این جزوه، ترجمۀ فارسی سند رسمی <span class="en">AN11002</span> (نسخۀ ۱٫۰، منتشرۀ شرکت <span class="en">WCH</span>) را می‌خوانید: تایمرهای پیشرفته (<span class="en">ADTM</span>)، همگانی‌منظوره (<span class="en">GPTM</span>) و ساده‌شده در میکروکنترلرهای سری <span class="en">CH32</span> با هستۀ <span class="en">RISC-V</span> برای راندن موتورهای <span class="en">BLDC</span> و <span class="en">PMSM</span> نقش‌های مشخصی دارند؛ پیکربندی حالت‌های <span class="en">PWM</span> هم‌ترازِ لبه و مرکزی، خروجی مکمل و زمان مرده، حفاظت ترمز، تحریک <span class="en">ADC</span>، انکودر، <span class="en">DMA</span> و اولویت‌بندی وقفه‌ها همراه با نمونه‌کدهای واقعی گام‌به‌گام مرور می‌شود.</div>
+  <div class="c-tags">
+    <span class="c-tag">میکروکنترلرهای <span class="en">CH32</span></span>
+    <span class="c-tag"><span class="en">ADTM</span> و <span class="en">GPTM</span></span>
+    <span class="c-tag"><span class="en">PWM</span> مکمل و زمان مرده</span>
+    <span class="c-tag">کارکرد ترمز و حفاظت موتور</span>
+    <span class="c-tag">تحریک <span class="en">ADC</span> با <span class="en">TRGO</span></span>
+    <span class="c-tag">رابط انکودر افزایشی</span>
+    <span class="c-tag">هم‌کاری <span class="en">DMA</span></span>
+    <span class="c-tag">مدیریت وقفه‌های تایمر</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN11002 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۰</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | کنترل موتور</span><span class="t-dots"></span><span class="t-page">۰</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-111"><span class="s-id">1.1</span><span>کنترل موتور</span><span class="s-dots"></span><span class="s-page">۰</span></a>
+    <a class="toc-sub" href="#sec-112"><span class="s-id">1.2</span><span>منابع تایمر و انتخاب در کنترل موتور</span><span class="s-dots"></span><span class="s-page">۰</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | تایمرها در کاربرد موتور</span><span class="t-dots"></span><span class="t-page">۰</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-211"><span class="s-id">2.1</span><span>پیکربندی حالت <span class="en">PWM</span></span><span class="s-dots"></span><span class="s-page">۰</span></a>
+    <a class="toc-sub" href="#sec-212"><span class="s-id">2.2</span><span>خروجی مکمل و پیکربندی زمان مرده</span><span class="s-dots"></span><span class="s-page">۰</span></a>
+    <a class="toc-sub" href="#sec-213"><span class="s-id">2.3</span><span>پیکربندی کارکرد ترمز</span><span class="s-dots"></span><span class="s-page">۰</span></a>
+    <a class="toc-sub" href="#sec-214"><span class="s-id">2.4</span><span>سازوکار پیش‌بارگذاری</span><span class="s-dots"></span><span class="s-page">۰</span></a>
+    <a class="toc-sub" href="#sec-215"><span class="s-id">2.5</span><span>تحریک <span class="en">ADC</span> با تایمر</span><span class="s-dots"></span><span class="s-page">۰</span></a>
+    <a class="toc-sub" href="#sec-216"><span class="s-id">2.6</span><span>پیکربندی انکودر</span><span class="s-dots"></span><span class="s-page">۰</span></a>
+    <a class="toc-sub" href="#sec-217"><span class="s-id">2.7</span><span>تحریک <span class="en">DMA</span> با <span class="en">TIM</span></span><span class="s-dots"></span><span class="s-page">۰</span></a>
+    <a class="toc-sub" href="#sec-218"><span class="s-id">2.8</span><span>مدیریت و بهینه‌سازی وقفه‌های تایمر</span><span class="s-dots"></span><span class="s-page">۰</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۴</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۰</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۵</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۰</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">شکل ۱-۱</span><span>مدار پل <span class="en">H</span></span><span class="f-dots"></span><span class="f-page">۰</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۲</span><span>مدار اینورتر سه‌فاز</span><span class="f-dots"></span><span class="f-page">۰</span></div>
+        <div class="frow"><span class="f-id">جدول ۱</span><span>دامنۀ کاربرد سند</span><span class="f-dots"></span><span class="f-page">۰</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> سری <span class="en">CH32</span> شرکت <span class="en">WCH</span> میکروکنترلرهایی مبتنی بر هستۀ <span class="en">RISC-V</span> چینگ‌که است که منابع تایمری غنی و قدرتمندی — شامل تایمر پیشرفته (<span class="en">ADTM</span>)، تایمر همگانی‌منظوره (<span class="en">GPTM</span>) و تایمر ساده‌شده — را در خود جای داده و به‌طور گسترده در کنترل <span class="en">FOC</span> موتورهای <span class="en">BLDC</span> (جریان مستقیم بدون جاروبک) و <span class="en">PMSM</span> (سنکرون با مغناطیس دائم) به کار می‌رود. این سند نکات کلیدی بهره‌گیری از تایمرها در کاربردهای موتور را نظام‌مند مرور می‌کند؛ تولید <span class="en">PWM</span> مکمل، پیکربندی زمان مرده، سازوکار حفاظت ترمز، تحریک نمونه‌برداری <span class="en">ADC</span>، رابط انکودر، هم‌کاری <span class="en">DMA</span> و مدیریت وقفه‌ها را در بر می‌گیرد.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro"><i class="pgmark">MK:sec-intro</i>
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>میکروکنترلرهای سری <span class="en">CH32</span> شرکت ریزالکترونیک وه‌چی‌انگ (<span class="en">WCH</span>) که بر هستۀ <span class="en">RISC-V</span> چینگ‌که (<span class="en">Qingke</span>) ساخته می‌شوند، منابع تایمریِ غنی و قدرتمندی را در خود جای داده‌اند؛ از جمله تایمرهای پیشرفته (<span class="en">ADTM</span>)، تایمرهای همگانی‌منظوره (<span class="en">GPTM</span>) و تایمرهای ساده‌شده. این منابع به‌طور گسترده در کنترل <span class="en">FOC</span> موتورهای <span class="en">BLDC</span> (جریان مستقیم بدون جاروبک) و <span class="en">PMSM</span> (سنکرون با مغناطیس دائم) به کار می‌روند. این یادداشت کاربردی، نکات کلیدی بهره‌گیری از تایمرها در کاربردهای موتور روی تراشه‌های <span class="en">WCH</span> را به‌صورت نظام‌مند مرور می‌کند و تولید <span class="en">PWM</span> مکمل، پیکربندی زمان مرده، سازوکار حفاظت ترمز، تحریک نمونه‌برداری <span class="en">ADC</span>، رابط انکودر، هم‌کاری <span class="en">DMA</span> و مدیریت وقفه‌ها را در بر می‌گیرد.</p>
+<div class="tblwrap" id="tab-01"><i class="pgmark">MK:tab-01</i>
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>میکروکنترلرهای همگانی‌منظوره</td><td><span class="en">CH32M007</span>، <span class="en">CH32M030</span>، <span class="en">CH32V203</span>، <span class="en">CH32V307</span> و مانند این‌ها</td></tr>
+  </table>
+</div>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1"><i class="pgmark">MK:sec-b1</i>
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">کنترل موتور</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-111"><i class="pgmark">MK:sec-111</i><span class="dm">◆</span>۱.۱ کنترل موتور</h3>
+<p>میکروکنترلرهای <span class="en">WCH</span> می‌توانند کنترل سرعت یا موقعیتِ موتورهای جریان مستقیم جاروبک‌دار، موتورهای جریان مستقیم بدون جاروبک (<span class="en">BLDC</span>) و موتورهای سنکرون با مغناطیس دائم (<span class="en">PMSM</span>) را پشتیبانی کنند. نیاز موتورهای گوناگون به کارکردهای تایمر تفاوت چشمگیری دارد.</p>
+<p>تنظیم سرعت موتور جریان مستقیم جاروبک‌دار تنها به یک کانال <span class="en">PWM</span> نیاز دارد و جهت چرخش با <span class="en">GPIO</span> معمولی و پل <span class="en">H</span> کنترل می‌شود. چند کانال یک تایمر می‌تواند هم‌زمان چند موتور را برانگیزد. تغییر نسبت وظیفۀ <span class="en">PWM</span> ولتاژ دو سرِ موتور را عوض می‌کند و بدین‌ترتیب تنظیم سرعت حاصل می‌شود.</p>
+<div class="fig" id="fig-11"><i class="pgmark">MK:fig-11</i>
+  <div class="figbox">
+    <img src="assets/img/an11002-fig_p3_x35.jpeg" alt="شکل ۱-۱" style="max-width:560px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۱</span><span class="cap-text">مدار پل <span class="en">H</span></span></div>
+</div>
+<p>کنترل شش‌گامِ موج مربعیِ موتور <span class="en">BLDC</span> به سه کانال سیگنال <span class="en">PWM</span> برای راندن پل اینورتر سه‌فاز و همراهی حسگرهای هال برای جابه‌جایی (کموتاسیون) نیاز دارد. چون میکروکنترلر نمی‌تواند ماسفت‌ها را مستقیماً برانگیزد، باید یک تراشۀ درایور اختصاصی پیکربندی شود. خروجی مکمل و درج زمان مرده در تایمر پیشرفته همین‌جا نقش‌آفرین می‌شوند — با آن‌که در موج مربعیِ شش‌گام در هر لحظه تنها دو فاز رسانا هستند، خروجی مکمل همچنان کلیدِ جلوگیری از اتصال مستقیم بازوهای بالا و پایینِ یک بازو است.</p>
+<div class="fig" id="fig-12"><i class="pgmark">MK:fig-12</i>
+  <div class="figbox">
+    <img src="assets/img/an11002-fig_p4_x43.jpeg" alt="شکل ۱-۲" style="max-width:560px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۲</span><span class="cap-text">مدار اینورتر سه‌فاز</span></div>
+</div>
+<p>کنترل <span class="en">FOC</span> موتور <span class="en">PMSM</span> بیشترین الزام را به منابع تایمر دارد. تایمر باید سه کانال <span class="en">PWM</span> مکملِ هم‌ترازِ مرکزی تولید کند، رویداد به‌روزرسانی، نمونه‌برداری جریان <span class="en">ADC</span> را تحریک کند و سیگنال انکودر یا هال با تایمر همگانی‌منظوره گرفته شود. <span class="en">FOC</span> بی‌حسگر بر این پایه، محاسبات رؤیت‌گر را نیز اضافه می‌کند، اما پیکربندی تایمر با <span class="en">FOC</span> حسگر‌دار تقریباً یکسان است؛ تنها بر دقتِ زمانِ تحریک <span class="en">ADC</span> بیشتر تأکید می‌شود.</p>
+
+<h3 class="h2x" id="sec-112"><i class="pgmark">MK:sec-112</i><span class="dm">◆</span>۱.۲ منابع تایمر و انتخاب در کنترل موتور</h3>
+<p>تایمرها به چهار دسته تقسیم می‌شوند: تایمر پیشرفته، تایمر همگانی‌منظوره، تایمر ساده‌شده/پایه و تایمر زمان‌بندِ سیستم. در کنترل موتور، تقسیم نقش میان آن‌ها روشن و مشخص است.</p>
+<p><b>تایمر پیشرفته (<span class="en">ADTM</span>)</b> واحد اصلی راندن مرحلۀ توان است. برای نمونه در <span class="en">CH32V203</span>، تایمر پیشرفته شمارندۀ <span class="en">16</span> بیتیِ خودبارگذارِ صعودی/نزولی است که افزون بر کارکردهای کامل تایمر همگانی‌منظوره، ویژگی‌های اختصاصیِ موتوری نیز دارد: خروجی <span class="en">PWM</span> مکمل با زمان مردهٔ قابل برنامه‌ریزی، ورودی ترمز، شمارندۀ تکرار و توانایی تحریک <span class="en">DMA</span> در چند حالت. در طراحی سخت‌افزاری برد ارزیابی <span class="en">CH32V203</span>، سه گروه <span class="en">PWM</span> مکملِ خروجیِ <span class="en">TIM1</span> فرمان‌های کنترل را اجرا می‌کنند.</p>
+<p><b>تایمر همگانی‌منظوره (<span class="en">GPTM</span>)</b> در کنترل موتور نقش کمکی دارد. تایمر همگانی‌منظوره خروجی مکمل و درج زمان مرده ندارد و نمی‌تواند بازوهای بالا و پایین پل اینورتر سه‌فاز را مستقیماً برانگیزد؛ پس برای خروجی <span class="en">PWM</span> مرحلۀ توان، جایگزین تایمر پیشرفته نیست. معمولاً از آن برای گرفتن سیگنال‌ها استفاده می‌شود.</p>
+<p><b>تایمر ساده‌شده و تایمر پایه</b> کارکردهای تأخیر پایه و پالس کمکی را فراهم می‌کنند. سری <span class="en">CH32M007</span> یک تایمر <span class="en">16</span> بیتیِ ساده‌شده دارد که در کنار تایمر پیشرفته، خروجی پالس با فرکانس معین یا کنترل تأخیر را انجام می‌دهد.</p>
+<p><span class="en">CH32V003</span> یک تایمر پیشرفته و یک تایمر همگانی‌منظوره دارد و از خروجی <span class="en">PWM</span> مکمل و ورودی انکودر افزایشی پشتیبانی می‌کند؛ برای موتور جریان مستقیم جاروبک‌داری که تنها به یک کانال <span class="en">PWM</span> برای تنظیم سرعت نیاز دارد مناسب است.</p>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2"><i class="pgmark">MK:sec-b2</i>
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">تایمرها در کاربرد موتور</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-211"><i class="pgmark">MK:sec-211</i><span class="dm">◆</span>۲.۱ پیکربندی حالت <span class="en">PWM</span></h3>
+<p>در کنترل موتور، تولید شکل‌موج <span class="en">PWM</span> پایه‌ترین کارکرد تایمر است. تایمرهای <span class="en">WCH</span> از دو حالت <span class="en">PWM</span> پشتیبانی می‌کنند:</p>
+<div class="bl"><b>حالت <span class="en">PWM</span> ۱:</b> وقتی مقدار شمارندۀ مرکزی از مقدار رجیستر مقایسه/گرفتن کمتر باشد، <span class="en">OCxREF</span> سطح بالا است و وقتی بیشتر شود سطح پایین می‌شود.</div>
+<div class="bl"><b>حالت <span class="en">PWM</span> ۲:</b> برعکس حالت <span class="en">PWM</span> ۱؛ وقتی مقدار شمارندۀ مرکزی از مقدار رجیستر مقایسه/گرفتن کمتر باشد، <span class="en">OCxREF</span> سطح پایین است.</div>
+<p>بسته به حالت شمارش، دو نوع شکل‌موج <span class="en">PWM</span> تولید می‌شود:</p>
+<div class="bl"><b><span class="en">PWM</span> هم‌ترازِ لبه:</b> شمارنده فقط صعودی یا فقط نزولی می‌شمارد؛ دوره توسط <span class="en">ATRLR</span> و نسبت وظیفه توسط <span class="en">CHxCVR</span> تعیین می‌شود.</div>
+<div class="bl"><b><span class="en">PWM</span> هم‌ترازِ مرکزی:</b> شمارنده به‌تناوب صعودی و نزولی می‌شمارد؛ دوره برابر دو برابرِ <span class="en">ATRLR</span> و نسبت وظیفه برابر دو برابرِ <span class="en">CHxCVR</span> است.</div>
+
+<h4 class="h3x" id="sec-2111"><span class="dm">◆</span>۲.۱.۱ پیکربندی <span class="en">PWM</span> هم‌ترازِ لبه</h4>
+<p>کد زیر مقداردهی اولیۀ نوعیِ تولید سه کانال <span class="en">PWM</span> مکمل با <span class="en">TIM1</span> را نشان می‌دهد:</p>
+<div class="codeblk long">void TIM1_PWM_Init(u16 arr, u16 psc)
+{
+    TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStructure = {0};
+    TIM_OCInitTypeDef TIM_OCInitStructure = {0};
+    GPIO_InitTypeDef GPIO_InitStructure = {0};
+
+    <span class="cm">/* Enable clocks */</span>
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE);
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB, ENABLE);
+
+    <span class="cm">/* Configure PWM output pins */</span>
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_Init(GPIOA, &amp;GPIO_InitStructure);
+
+    <span class="cm">/* Configure complementary output pins */</span>
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
+    GPIO_Init(GPIOB, &amp;GPIO_InitStructure);
+
+    <span class="cm">/* Time base configuration */</span>
+    TIM_TimeBaseInitStructure.TIM_Period = arr;
+    TIM_TimeBaseInitStructure.TIM_Prescaler = psc;
+    TIM_TimeBaseInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
+    TIM_TimeBaseInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
+    TIM_TimeBaseInit(TIM1, &amp;TIM_TimeBaseInitStructure);
+
+    <span class="cm">/* PWM channel configuration */</span>
+    TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
+    TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
+    TIM_OCInitStructure.TIM_OutputNState = TIM_OutputNState_Enable;
+    TIM_OCInitStructure.TIM_Pulse = arr / 2;  <span class="cm">/* initial duty cycle 50% */</span>
+    TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
+    TIM_OCInitStructure.TIM_OCNPolarity = TIM_OCNPolarity_High;
+    TIM_OCInitStructure.TIM_OCIdleState = TIM_OCIdleState_Reset;
+    TIM_OCInitStructure.TIM_OCNIdleState = TIM_OCNIdleState_Reset;
+    TIM_OC1Init(TIM1, &amp;TIM_OCInitStructure);
+    TIM_OC2Init(TIM1, &amp;TIM_OCInitStructure);
+    TIM_OC3Init(TIM1, &amp;TIM_OCInitStructure);
+
+    <span class="cm">/* Enable preload */</span>
+    TIM_OC1PreloadConfig(TIM1, TIM_OCPreload_Enable);
+    TIM_OC2PreloadConfig(TIM1, TIM_OCPreload_Enable);
+    TIM_OC3PreloadConfig(TIM1, TIM_OCPreload_Enable);
+    TIM_ARRPreloadConfig(TIM1, ENABLE);
+    TIM_CtrlPWMOutputs(TIM1, ENABLE);
+    TIM_Cmd(TIM1, ENABLE);
+}</div>
+<p>نکات پیکربندی:</p>
+<div class="bl"><b>فعال‌سازی پیش‌بارگذاری:</b> با فعال‌کردن <span class="en">OCxPE</span> و <span class="en">ARPE</span> تضمین می‌شود پارامترها هم‌زمان با رویداد به‌روزرسانی اعمال شوند؛ پارامترهای <span class="en">PWM</span> هنگام رویداد به‌روزرسانی هماهنگ به‌روز می‌شوند و از اعوجاج شکل‌موج جلوگیری می‌شود.</div>
+<div class="bl"><b>مقداردهی بیت <span class="en">UG</span>:</b> پیش از راه‌اندازی شمارنده، بیت <span class="en">UG</span> را برانگیزید تا همۀ رجیسترها مقداردهی و رجیسترهای پیش‌بارگذاری مقدار اولیه بگیرند.</div>
+<div class="bl"><b>فعال‌سازی خروجی اصلی:</b> <span class="en">TIM_CtrlPWMOutputs</span> برای فعال‌سازی خروجی اصلی تایمر پیشرفته (بیت <span class="en">MOE</span>) به کار می‌رود؛ تایمر همگانی‌منظوره به این گام نیاز ندارد.</div>
+
+<h4 class="h3x" id="sec-2112"><span class="dm">◆</span>۲.۱.۲ پیکربندی <span class="en">PWM</span> هم‌ترازِ مرکزی</h4>
+<p>کنترل <span class="en">FOC</span> معمولاً حالت هم‌ترازِ مرکزی را برمی‌گزیند، چون شکل‌موج متقارن است و جای‌گذاری لحظۀ نمونه‌برداری جریان را آسان می‌کند. در پیکربندی تنها کافی است حالت شمارش عوض شود:</p>
+<div class="codeblk">TIM_TimeBaseInitStructure.TIM_CounterMode = TIM_CounterMode_CenterAligned1;</div>
+<p>دورۀ <span class="en">PWM</span> هم‌ترازِ مرکزی برابر است با:</p>
+<div class="formula">T<sub>PWM</sub> = 2 * (ATRLR + 1) * (PSC + 1) / f<sub>CLK</sub></div>
+<p>که در آن <span class="en">f<sub>CLK</sub></span> فرکانس ساعت تایمر است. پیش از راه‌اندازی شمارنده توصیه می‌شود بیت <span class="en">UG</span> برانگیخته شود تا مقادیر پیش‌بارگذاری به‌درستی بارگذاری شوند.</p>
+
+<h4 class="h3x" id="sec-2113"><span class="dm">◆</span>۲.۱.۳ انتخاب مهندسی میان هم‌ترازی لبه و مرکز</h4>
+<p>در کنترل <span class="en">FOC</span>، حالت <span class="en">PWM</span> هم‌ترازِ مرکزی (<span class="en">CAPWM</span>) نخستین انتخاب است. در این حالت شمارنده به‌تناوب صعودی و نزولی می‌شمارد و شکل‌موج <span class="en">PWM</span> نسبت به مرکز دوره متقارن است؛ برای نمونه‌برداری جریان پنجرۀ زمانی ثابتی فراهم می‌کند — هنگامی که شمارنده به قله می‌رسد، بازوهای پایینِ هر سه فاز هم‌زمان رسانا می‌شوند و جریان روی مقاومت نمونه‌برداری، جریان گذرگاه اصلی (باس) است؛ نسبت سیگنال به نویز بهترین حالت را دارد. دورۀ <span class="en">CAPWM</span> برابر دو برابرِ <span class="en">ATRLR</span> و نسبت وظیفه برابر دو برابرِ <span class="en">CHxCVR</span> است. پیش از راه‌اندازی شمارنده باید بیت <span class="en">UG</span> را برانگیزید تا یک رویداد به‌روزرسانی نرم‌افزاری تولید شود و پیش از فعال‌سازی شمارنده، مقادیر رجیسترهای پیش‌بارگذاری به‌درستی بارگذاری شده باشند.</p>
+<p>برای کنترل شش‌گامِ موج مربعیِ <span class="en">BLDC</span>، حالت هم‌ترازِ لبه کفایت می‌کند. در این حالت شمارنده فقط صعودی می‌شمارد، دورۀ <span class="en">PWM</span> مستقیماً توسط <span class="en">ATRLR</span> تعیین می‌شود و پیکربندی ساده‌تر است.</p>
+
+<h3 class="h2x" id="sec-212"><i class="pgmark">MK:sec-212</i><span class="dm">◆</span>۲.۲ خروجی مکمل و پیکربندی زمان مرده</h3>
+<p>دو ماسفت بالایی و پایینیِ یک بازوی پل اینورتر سه‌فاز نمی‌توانند هم‌زمان رسانا شوند؛ در غیر این صورت اتصال مستقیم (شورت‌کردن گذرگاه) رخ می‌دهد. تایمر پیشرفته این مسئله را با خروجی مکمل و درج زمان مرده حل می‌کند.</p>
+<p>زمان مرده از طریق میدان <span class="en">DTCFG</span> در رجیستر <span class="en">BDTR</span> پیکربندی می‌شود:</p>
+<div class="codeblk">TIM_BDTRInitTypeDef TIM_BDTRInitStructure = {0};
+TIM_BDTRInitStructure.TIM_OSSIState = TIM_OSSIState_Enable;
+TIM_BDTRInitStructure.TIM_OSSRState = TIM_OSSRState_Enable;
+TIM_BDTRInitStructure.TIM_LOCKLevel = TIM_LOCKLevel_1;
+TIM_BDTRInitStructure.TIM_DeadTime = DEAD_TIME_VALUE;
+TIM_BDTRInitStructure.TIM_Break = TIM_Break_Disable;
+TIM_BDTRInitStructure.TIM_BreakPolarity = TIM_BreakPolarity_Low;
+TIM_BDTRInitStructure.TIM_AutomaticOutput = TIM_AutomaticOutput_Enable;
+TIM_BDTRConfig(TIM1, &amp;TIM_BDTRInitStructure);</div>
+<p>فرمول محاسبۀ زمان مرده چنین است:</p>
+<div class="formula">T<sub>DT</sub> = DTCFG * T<sub>DTS</sub></div>
+<p>که در آن <span class="en">T<sub>DTS</sub></span> گام زمان مرده است و به ساعت سیستم و پیکربندی تقسیم فرکانس بستگی دارد.</p>
+<p>پیشنهادهایی برای گزینش زمان مرده:</p>
+<div class="bl">زمان مرده باید از زمان خاموش‌شدن ماسفت بیشتر باشد؛ معمولاً چند صد نانوثانیه تا چند میکروثانیه؛</div>
+<div class="bl">زمان مردهٔ بیش از اندازه به اعوجاج شکل‌موج خروجی و افت بازدهی موتور می‌انجامد؛</div>
+
+<h3 class="h2x" id="sec-213"><i class="pgmark">MK:sec-213</i><span class="dm">◆</span>۲.۳ پیکربندی کارکرد ترمز</h3>
+<p>کارکرد ترمز سازوکار حفاظتی مهم در کنترل موتور است. هنگام رخ‌دادن اضافه‌جریان، اضافه‌ولتاژ یا خرابی دیگر، سیگنال ورودی ترمز می‌تواند بلافاصله خروجی تایمر را به وضعیت امن ببرد.</p>
+<p>نکات پیکربندی ترمز:</p>
+<div class="codeblk"><span class="cm">/* Configure brake pin as pull-up input (for low-level trigger) */</span>
+GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12;
+GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;  <span class="cm">/* pull-up input */</span>
+GPIO_Init(GPIOB, &amp;GPIO_InitStructure);
+
+<span class="cm">/* Brake function configuration */</span>
+TIM_BDTRInitStructure.TIM_Break = TIM_Break_Enable;
+TIM_BDTRInitStructure.TIM_BreakPolarity = TIM_BreakPolarity_Low;
+TIM_BDTRInitStructure.TIM_AutomaticOutput = TIM_AutomaticOutput_Disable;</div>
+<div class="note"><span class="lbl">مشکل رایج:</span> هنگام پیکربندی ترمز، اگر حالت پایه درست تنظیم نشده باشد ممکن است «ترمز عمل نمی‌کند» یا «با وصل‌شدن برق، ترمز تحریک می‌شود» پیش بیاید. توصیه می‌شود پایۀ ترمز به‌صورت ورودی با کشش بالا (برای تحریک با سطح پایین) پیکربندی شود تا پایه در حالت بی‌کارِ خود در سطح غیرمحرک باشد.</div>
+<p>پس از تولید رویداد ترمز، بیت <span class="en">MOE</span> صفر و بیت پرچم <span class="en">BIF</span> یک می‌شود. اگر وقفه و <span class="en">DMA</span> مربوطه فعال شده باشند، می‌توان وقفۀ ترمز را برای پردازش برانگیخت.</p>
+
+<h3 class="h2x" id="sec-214"><i class="pgmark">MK:sec-214</i><span class="dm">◆</span>۲.۴ سازوکار پیش‌بارگذاری</h3>
+<p>به‌روزرسانی پارامترهای <span class="en">PWM</span> (نسبت وظیفه و دوره) باید با رجیسترهای پیش‌بارگذاری و به‌صورت بافر دوتایی انجام شود. در پیکربندی باید هم‌زمان <span class="en">OCxPE</span> (پیش‌بارگذاری کانال) و <span class="en">ARPE</span> (پیش‌بارگذاری بارگذاری مجدد خودکار) فعال شوند تا پارامترها هم‌زمان با رویداد به‌روزرسانی اعمال شوند و از پالس‌نویز (گلیچ) یا دورهٔ ناقص در لحظۀ به‌روزرسانی شکل‌موج <span class="en">PWM</span> جلوگیری شود.</p>
+
+<h3 class="h2x" id="sec-215"><i class="pgmark">MK:sec-215</i><span class="dm">◆</span>۲.۵ تحریک <span class="en">ADC</span> با تایمر</h3>
+<p>در کنترل <span class="en">FOC</span>، نمونه‌برداری جریان باید با شکل‌موج <span class="en">PWM</span> هم‌گام باشد تا در مدت رسانایی ماسفت‌ها جریان فاز به‌درستی گرفته شود. تایمر می‌تواند از طریق سیگنال <span class="en">TRGO</span> (خروجی تحریک) نمونه‌برداری <span class="en">ADC</span> را تحریک کند.</p>
+<p>منبع ساعت تایمر پیشرفته می‌تواند به‌صورت سیگنال <span class="en">TRGO</span> خروجی داده شود تا تایمرهای دیگر، <span class="en">ADC</span> و جانبی‌های دیگر را تحریک کند.</p>
+<div class="codeblk"><span class="cm">/* Configure TIM1 TRGO to trigger ADC */</span>
+TIM_SelectOutputTrigger(TIM1, TIM_TRGOSource_Update);
+
+<span class="cm">/* ADC external trigger configuration */</span>
+ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_T1_CC1;
+ADC_InitStructure.ADC_ExternalTrigConvEdge = ADC_ExternalTrigConvEdge_Rising;
+ADC_Init(ADC1, &amp;ADC_InitStructure);
+
+<span class="cm">/* Enable ADC external trigger */</span>
+ADC_ExternalTrigConvCmd(ADC1, ENABLE);</div>
+<div class="note"><span class="lbl">زمان نمونه‌برداری در حالت هم‌ترازِ مرکزی:</span> در <span class="en">PWM</span> هم‌ترازِ مرکزی، شمارنده هنگام رسیدن به قله (مقدار <span class="en">ATRLR</span>) رویداد به‌روزرسانی تولید می‌کند. در این لحظه بازوهای پایینِ هر سه فاز کاملاً رسانا هستند و جریان روی مقاومت نمونه‌برداری، جریان باس است؛ بهترین لحظه برای نمونه‌برداری جریان همین است. توصیه می‌شود تحریک <span class="en">ADC</span> در قلۀ شمارنده پیکربندی شود.</div>
+<p>در طرح تک‌مقاومتی، باید بنا بر تشخیص سکتور <span class="en">SVPWM</span>، در پنجرۀ زمانی معینی نمونه‌برداری <span class="en">ADC</span> تحریک شود. معمولاً از رویداد مقایسه (نه رویداد به‌روزرسانی) برای تحریک <span class="en">ADC</span> استفاده می‌شود تا لحظۀ نمونه‌برداری به‌دقت کنترل شود.</p>
+
+<h3 class="h2x" id="sec-216"><i class="pgmark">MK:sec-216</i><span class="dm">◆</span>۲.۶ پیکربندی انکودر</h3>
+<p>تایمر پیشرفته و تایمر همگانی‌منظوره هر دو از حالت انکودر افزایشی پشتیبانی می‌کنند. حالت انکودر کاربرد نمونه‌ای تایمر است و می‌توان خروجی دو فاز انکودر را به آن داد؛ جهت شمارش شمارندۀ مرکزی با جهت محور انکودر هم‌گام است و هر پالس خروجی انکودر، شمارندۀ مرکزی را یکی زیاد یا یکی کم می‌کند.</p>
+<p>برای فعال‌سازی حالت انکودر کافی است میدان <span class="en">SMS</span> روی <span class="en">001b</span> (شمارش فقط با لبه‌های <span class="en">TI2</span>)، <span class="en">010b</span> (شمارش فقط با لبه‌های <span class="en">TI1</span>) یا <span class="en">011b</span> (شمارش با لبه‌های <span class="en">TI1</span> و <span class="en">TI2</span>) تنظیم شود.</p>
+<div class="codeblk long">void Encoder_Init(void)
+{
+    TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStructure = {0};
+    TIM_ICInitTypeDef TIM_ICInitStructure = {0};
+    GPIO_InitTypeDef GPIO_InitStructure = {0};
+
+    <span class="cm">/* Enable clocks */</span>
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+
+    <span class="cm">/* Configure encoder A/B phase input pins */</span>
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6 | GPIO_Pin_7;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+    GPIO_Init(GPIOA, &amp;GPIO_InitStructure);
+
+    <span class="cm">/* Time base configuration */</span>
+    TIM_TimeBaseInitStructure.TIM_Period = 65535;
+    TIM_TimeBaseInitStructure.TIM_Prescaler = 0;
+    TIM_TimeBaseInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
+    TIM_TimeBaseInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
+    TIM_TimeBaseInit(TIM3, &amp;TIM_TimeBaseInitStructure);
+
+    <span class="cm">/* Encoder interface configuration */</span>
+    TIM_EncoderInterfaceConfig(TIM3, TIM_EncoderMode_TI12, TIM_ICPolarity_Rising,
+    TIM_ICPolarity_Rising);
+
+    <span class="cm">/* Input capture filter configuration */</span>
+    TIM_ICInitStructure.TIM_Channel = TIM_Channel_1;
+    TIM_ICInitStructure.TIM_ICFilter = 0x0F;
+    TIM_ICInit(TIM3, &amp;TIM_ICInitStructure);
+    TIM_ICInitStructure.TIM_Channel = TIM_Channel_2;
+    TIM_ICInit(TIM3, &amp;TIM_ICInitStructure);
+    TIM_Cmd(TIM3, ENABLE);
+}</div>
+<p><b>پیکربندی مضارب:</b> با انتخاب حالت انکودر می‌توان مضارب مختلفی به دست آورد:</p>
+<div class="bl">شمارش فقط با لبه‌های <span class="en">TI1</span>: مضرب ۱؛</div>
+<div class="bl">شمارش فقط با لبه‌های <span class="en">TI2</span>: مضرب ۱؛</div>
+<div class="bl">شمارش با لبه‌های <span class="en">TI1</span> و <span class="en">TI2</span>: مضرب ۲؛</div>
+<p><b>تشخیص جهت:</b> جهت چرخش انکودر با خواندن بیت <span class="en">DIR</span> در رجیستر <span class="en">TIMx-&gt;CR1</span> تعیین می‌شود.</p>
+<p>در کنترل <span class="en">FOC</span> موتور <span class="en">PMSM</span>، انکودر برای به‌دست‌آوردن موقعیت و سرعت روتور به کار می‌رود. گام‌های پیکربندی عبارت‌اند از:</p>
+<div class="bl">مقداردهی تایمر رابط انکودر و تعیین دامنۀ شمارش مناسب؛</div>
+<div class="bl">خواندن مقدار شمارنده در هر دورۀ کنترل و محاسبۀ افزایش موقعیت؛</div>
+<div class="bl">محاسبۀ سرعت چرخش از روی افزایش موقعیت؛</div>
+<div class="bl">ترکیب اطلاعات موقعیت برای تبدیل <span class="en">Park</span> و تبدیل معکوس <span class="en">Park</span>.</div>
+<div class="note"><span class="lbl">توجه:</span> هنگام سرریز شمارنده باید به‌درستی رفتار شود. توصیه می‌شود تعداد سرریزها در وقفه ثبت شود و موقعیت کل از ترکیب مقدار شمارنده محاسبه گردد.</div>
+
+<h3 class="h2x" id="sec-217"><i class="pgmark">MK:sec-217</i><span class="dm">◆</span>۲.۷ تحریک <span class="en">DMA</span> با <span class="en">TIM</span></h3>
+<p>تایمر از <span class="en">DMA</span> در حالت‌های متعدد پشتیبانی می‌کند و می‌تواند با رویدادهای زیر درخواست <span class="en">DMA</span> بدهد:</p>
+<div class="bl">رویداد به‌روزرسانی (<span class="en">UEV</span>)</div>
+<div class="bl">رویداد مقایسه/گرفتن (<span class="en">CCx</span>)</div>
+<div class="bl">رویداد تحریک (<span class="en">TRG</span>)</div>
+<p><span class="en">DMA</span> می‌تواند مقادیر رجیستر مقایسۀ تایمر را خودکار به‌روز کند و بار <span class="en">CPU</span> را سبک‌تر کند. کاربردهای نمونۀ <span class="en">DMA</span> در کنترل موتور عبارت‌اند از:</p>
+<div class="bl"><b>به‌روزرسانی گروهی نسبت وظیفۀ <span class="en">PWM</span>:</b> به‌روزرسانی خودکار مقدار نسبت وظیفه در چند دورۀ <span class="en">PWM</span> و پیاده‌سازی توالی شکل‌موج‌های از پیش تعریف‌شده.</div>
+<div class="bl"><b>انتقال داده‌های نمونه‌برداری <span class="en">ADC</span>:</b> جابه‌جایی خودکار نتایج تبدیل <span class="en">ADC</span> به ناحیۀ مشخصی از حافظه برای مصرف الگوریتم <span class="en">FOC</span>.</div>
+<div class="codeblk"><span class="cm">/* Configure TIM1 update event to trigger DMA */</span>
+TIM_DMACmd(TIM1, TIM_DMA_Update, ENABLE);
+
+<span class="cm">/* DMA configuration */</span>
+DMA_InitStructure.DMA_PeripheralBaseAddr = (u32)&amp;TIM1-&gt;CH1CVR;
+DMA_InitStructure.DMA_MemoryBaseAddr = (u32)pwm_buffer;
+DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralDST;
+DMA_InitStructure.DMA_BufferSize = BUFFER_SIZE;
+DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
+DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
+DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
+DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_HalfWord;
+DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;
+DMA_InitStructure.DMA_Priority = DMA_Priority_High;
+DMA_Init(DMA1_Channel1, &amp;DMA_InitStructure);
+DMA_Cmd(DMA1_Channel1, ENABLE);</div>
+<p>کنترل‌گر <span class="en">DMA</span> از مدیریت بافر حلقوی پشتیبانی می‌کند. در کنترل موتور، حالت حلقه به‌ویژه برای انتقال پیوستۀ داده‌های نمونه‌برداری <span class="en">ADC</span> مناسب است؛ به‌روزرسانی خودکار داده‌های نمونه بدون دخالت <span class="en">CPU</span> حاصل می‌شود.</p>
+
+<h3 class="h2x" id="sec-218"><i class="pgmark">MK:sec-218</i><span class="dm">◆</span>۲.۸ مدیریت و بهینه‌سازی وقفه‌های تایمر</h3>
+<p>میکروکنترلر به‌طور پیش‌فرض تو در تویی وقفه‌ها را می‌بندد و باید اولویت و فعال‌سازی وقفه‌ها به‌صورت دستی از طریق <span class="en">PLIC</span> پیکربندی شود. در کنترل موتور، پیکربندی درست اولویت وقفه‌ها اهمیتی حیاتی دارد:</p>
+<div class="bl"><b>بالاترین اولویت:</b> وقفۀ ترمز (<span class="en">TIM1_BRK_IRQHandler</span>) — تضمین پاسخ فوری هنگام خرابی</div>
+<div class="bl"><b>اولویت بالا:</b> وقفۀ پایان نمونه‌برداری <span class="en">ADC</span> — برای محاسبۀ حلقه جریان</div>
+<div class="bl"><b>اولویت میانی:</b> وقفۀ به‌روزرسانی تایمر — برای محاسبۀ حلقه سرعت و به‌روزرسانی <span class="en">PWM</span></div>
+<div class="bl"><b>اولویت پایین:</b> وقفۀ گرفتن انکودر — برای به‌روزرسانی موقعیت</div>
+<div class="codeblk"><span class="cm">/* Configure interrupt priorities */</span>
+NVIC_SetPriority(TIM1_BRK_IRQn, 0);      <span class="cm">/* brake interrupt: highest priority */</span>
+NVIC_SetPriority(ADC_IRQn, 1);           <span class="cm">/* ADC interrupt: high priority */</span>
+NVIC_SetPriority(TIM1_UP_IRQn, 2);       <span class="cm">/* timer update interrupt */</span>
+NVIC_SetPriority(TIM3_IRQn, 3);          <span class="cm">/* encoder interrupt */</span>
+
+NVIC_EnableIRQ(TIM1_BRK_IRQn);
+NVIC_EnableIRQ(ADC1_2_IRQn);
+NVIC_EnableIRQ(TIM1_UP_IRQn);
+NVIC_EnableIRQ(TIM3_IRQn);</div>
+<p>برای بالا بردن پاسخ‌گویی لحظه‌ای کنترل موتور، برنامه سرویس وقفه باید تا جای ممکن کوتاه باشد:</p>
+<div class="bl"><b>وقفۀ <span class="en">ADC</span>:</b> تنها نمونه‌برداری جریان و تبدیل مختصات انجام می‌شود؛ بخش اصلی الگوریتم <span class="en">FOC</span> می‌تواند همین‌جا کامل شود.</div>
+<div class="bl"><b>وقفۀ به‌روزرسانی تایمر:</b> برای محاسبۀ حلقه سرعت؛ فرکانس آن معمولاً <span class="en">1/10~1/5</span> فرکانس حلقه جریان است.</div>
+<div class="bl"><b>وقفۀ ترمز:</b> بلافاصله خروجی <span class="en">PWM</span> بسته و وضعیت خرابی ثبت می‌شود.</div>
+<div class="codeblk">void TIM1_BRK_IRQHandler(void)
+{
+    if (TIM_GetITStatus(TIM1, TIM_IT_Break) != RESET)
+    {
+        <span class="cm">/* Turn off PWM output immediately */</span>
+        TIM_CtrlPWMOutputs(TIM1, DISABLE);
+        <span class="cm">/* Record fault status */</span>
+        motor_state.fault_flag = FAULT_BREAK;
+        <span class="cm">/* Clear interrupt flag */</span>
+        TIM_ClearITPendingBit(TIM1, TIM_IT_Break);
+    }
+}</div>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver"><i class="pgmark">MK:sec-ver</i>
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN11002</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/07/08</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss"><i class="pgmark">MK:sec-gloss</i>
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">ADTM</span></td><td class="jt">تایمر پیشرفته؛ با خروجی مکمل، درج زمان مرده، ورودی ترمز، شمارندۀ تکرار و تحریک <span class="en">DMA</span> در چند حالت؛ هستۀ اصلی راندن مرحلۀ توان در کنترل موتور</td></tr>
+      <tr><td><span class="en">GPTM</span></td><td class="jt">تایمر همگانی‌منظوره؛ فاقد خروجی مکمل و زمان مرده، معمولاً برای گرفتن سیگنال انکودر یا هال و کارهای کمکی به کار می‌رود</td></tr>
+      <tr><td><span class="en">FOC</span></td><td class="jt">کنترل میدان‌جهت‌یافته؛ روش کنترل برداری موتور با تبدیل‌های مختصات و حلقه‌های جریان و سرعت</td></tr>
+      <tr><td><span class="en">PWM</span></td><td class="jt">مدولاسیون پهنای پالس؛ کنترل ولتاژ مؤثر موتور از راه تغییر نسبت روشن/خاموش بودن سیگنال</td></tr>
+      <tr><td><span class="en">BLDC</span></td><td class="jt">موتور جریان مستقیم بدون جاروبک؛ با موج مربعیِ شش‌گام یا <span class="en">FOC</span> رانده می‌شود</td></tr>
+      <tr><td><span class="en">PMSM</span></td><td class="jt">موتور سنکرون با مغناطیس دائم؛ معمولاً با <span class="en">FOC</span> و <span class="en">PWM</span> هم‌ترازِ مرکزی کنترل می‌شود</td></tr>
+      <tr><td><span class="en">Dead-time</span></td><td class="jt">زمان مرده؛ فاصلۀ زمانی تحمیلی میان خاموش‌شدن یک ترانزیستور و روشن‌شدن مکمل آن برای جلوگیری از اتصال مستقیم بازوهای بالا و پایین</td></tr>
+      <tr><td><span class="en">Complementary output</span></td><td class="jt">خروجی مکمل؛ جفت خروجی <span class="en">CHx/CHxN</span> با منطق وارونه و درج زمان مرده در تایمر پیشرفته</td></tr>
+      <tr><td><span class="en">Brake</span></td><td class="jt">کارکرد ترمز؛ ورودی حفاظتی که در خرابی، خروجی تایمر را بی‌درنگ به وضعیت امن می‌برد و بیت <span class="en">MOE</span> را صفر می‌کند</td></tr>
+      <tr><td><span class="en">Encoder</span></td><td class="jt">انکودر افزایشی؛ حسگر دو فاز <span class="en">A/B</span> که با حالت انکودر تایمر برای تعیین موقعیت و سرعت روتور به کار می‌رود</td></tr>
+      <tr><td><span class="en">ATRLR / CHxCVR</span></td><td class="jt">رجیستر بارگذاری مجدد خودکار (تعیین‌کنندۀ دورۀ <span class="en">PWM</span>) / رجیستر مقایسه‌گر کانال (تعیین‌کنندۀ نسبت وظیفه)</td></tr>
+      <tr><td><span class="en">TRGO</span></td><td class="jt">خروجی تحریک تایمر؛ سیگنالی برای هم‌گام‌سازی نمونه‌برداری <span class="en">ADC</span> یا تحریک تایمرهای دیگر</td></tr>
+      <tr><td><span class="en">DMA</span></td><td class="jt">دسترسی مستقیم به حافظه؛ انتقال خودکار داده‌های نمونه یا به‌روزرسانی مقایسه‌گرها بدون بار روی <span class="en">CPU</span></td></tr>
+      <tr><td><span class="en">MOE / BIF</span></td><td class="jt">بیت فعال‌سازی خروجی اصلی / پرچم رویداد ترمز در رجیستر <span class="en">BDTR</span>؛ وضعیت پس از رویداد ترمز را نشان می‌دهند</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN11002 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۱۹</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN11002</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
