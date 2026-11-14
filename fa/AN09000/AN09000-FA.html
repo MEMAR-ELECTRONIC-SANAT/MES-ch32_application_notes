@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>راهنمای کاربرد، نکات و محاسبۀ پارامترهای ساکن مبدل ADC ۱۲-بیتی در CH32 — ترجمۀ فارسی AN09000</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">معرفی، پیکربندی و نکات</div>
+    <div class="t2">مبدل <span class="en">ADC</span> ۱۲-بیتی</div>
+    <div class="t3">در میکروکنترلرهای همگانی‌منظورۀ <span class="en">CH32</span></div>
+  </div>
+  <div class="c-sub">از معرفی عملکرد مبدل تقریب متوالی و پیکربندی ساعت و زمان نمونه‌برداری، تا کانال‌های داخلی و خودکالیبراسیون، محاسبۀ پارامترهای ساکن (خطای آفست، گین، <span class="en">DNL</span> و <span class="en">INL</span>) و ملاحظات منبع مرجع، امپدانس ورودی، فیلتر <span class="en">RC</span> و فالوئر ولتاژ</div>
+  <div class="c-desc">در این جزوه، ترجمۀ فارسی سند رسمی <span class="en">AN09000</span> (نسخۀ ۱٫۱، منتشرۀ شرکت <span class="en">WCH</span>) را می‌خوانید: روش استفاده از مبدل <span class="en">ADC</span> ۱۲-بیتی در سری میکروکنترلرهای همگانی‌منظورۀ <span class="en">CH32</span> به‌همراه نکات مهم آن. برای رسیدن به دقت اسمی در کاربرد واقعی، توجه هم‌زمان به پیکربندی نرم‌افزاری و طراحی مدار جانبی ضروری است؛ جدول مقایسۀ پارامترهای <span class="en">ADC</span> در مدل‌های مختلف، فرمول‌های زمان تبدیل و نمونه‌برداری، محاسبۀ خطاهای آفست، گین، تفریقی و انتگرالی، و توصیه‌های سخت‌افزاری درباره منبع مرجع، امپدانس ورودی و خازن خارجی گام‌به‌گام مرور می‌شوند.</div>
+  <div class="c-tags">
+    <span class="c-tag">میکروکنترلرهای <span class="en">CH32</span></span>
+    <span class="c-tag">مبدل <span class="en">ADC</span> ۱۲-بیتی</span>
+    <span class="c-tag">پیکربندی ساعت و نمونه‌برداری</span>
+    <span class="c-tag">خطای آفست و گین</span>
+    <span class="c-tag"><span class="en">DNL / INL</span></span>
+    <span class="c-tag">منبع مرجع <span class="en">VREF</span></span>
+    <span class="c-tag">امپدانس ورودی و فیلتر <span class="en">RC</span></span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN09000 V1.1</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | معرفی عملکرد <span class="en">ADC</span></span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-111"><span class="s-id">1.1</span><span>معرفی <span class="en">ADC</span> در سری همگانی‌منظورۀ <span class="en">CH32</span></span><span class="s-dots"></span><span class="s-page">۳</span></a>
+    <a class="toc-sub" href="#sec-112"><span class="s-id">1.2</span><span>پیکربندی نمونه‌برداری <span class="en">ADC</span></span><span class="s-dots"></span><span class="s-page">۵</span></a>
+    <a class="toc-sub" href="#sec-1121"><span class="s-id">1.2.1</span><span>کانال‌های داخلی <span class="en">ADC</span></span><span class="s-dots"></span><span class="s-page">۶</span></a>
+    <a class="toc-sub" href="#sec-1122"><span class="s-id">1.2.2</span><span>خودکالیبراسیون <span class="en">ADC</span></span><span class="s-dots"></span><span class="s-page">۶</span></a>
+    <a class="toc-sub" href="#sec-1123"><span class="s-id">1.2.3</span><span>پارامترهای ساکن <span class="en">ADC</span></span><span class="s-dots"></span><span class="s-page">۷</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | نکات و ملاحظات استفاده از <span class="en">ADC</span></span><span class="t-dots"></span><span class="t-page">۱۱</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-211"><span class="s-id">2.1</span><span>نکات استفاده از <span class="en">ADC</span></span><span class="s-dots"></span><span class="s-page">۱۱</span></a>
+    <a class="toc-sub" href="#sec-2111"><span class="s-id">2.1.1</span><span>منبع ولتاژ مرجع <span class="en">ADC</span></span><span class="s-dots"></span><span class="s-page">۱۱</span></a>
+    <a class="toc-sub" href="#sec-2112"><span class="s-id">2.1.2</span><span>ورودی <span class="en">ADC</span></span><span class="s-dots"></span><span class="s-page">۱۳</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۴</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۱۸</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۵</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۱۸</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">شکل ۱-۱</span><span>نمودار درخت ساعت</span><span class="f-dots"></span><span class="f-page">۶</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۲</span><span>خطای آفست <span class="en">ADC</span></span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۳</span><span>خطای گین <span class="en">ADC</span></span><span class="f-dots"></span><span class="f-page">۹</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۴</span><span>خطای تفریقی <span class="en">ADC</span></span><span class="f-dots"></span><span class="f-page">۱۰</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۵</span><span>خطای انتگرالی <span class="en">ADC</span></span><span class="f-dots"></span><span class="f-page">۱۱</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۱</span><span>ولتاژ نمونه‌برداری <span class="en">ADC</span></span><span class="f-dots"></span><span class="f-page">۱۲</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۲</span><span>توپولوژی تغذیه</span><span class="f-dots"></span><span class="f-page">۱۲</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۳</span><span>مدار نمونه‌برداری <span class="en">ADC</span></span><span class="f-dots"></span><span class="f-page">۱۴</span></div>
+      </div>
+      <div>
+        <div class="frow"><span class="f-id">شکل ۲-۴</span><span>توپولوژی نمونه‌برداری <span class="en">ADC</span></span><span class="f-dots"></span><span class="f-page">۱۵</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۵</span><span>فالوئر ولتاژ خارجی</span><span class="f-dots"></span><span class="f-page">۱۶</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۶</span><span>ولتاژ ورودی و ولتاژ آفست فالوئر</span><span class="f-dots"></span><span class="f-page">۱۷</span></div>
+        <div class="frow"><span class="f-id">جدول ۱-۱</span><span>پارامترهای <span class="en">ADC</span> در مدل‌های مختلف</span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">جدول ۲-۱</span><span>حداکثر امپدانس ورودی</span><span class="f-dots"></span><span class="f-page">۱۳</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> سری همگانی‌منظورۀ <span class="en">CH32</span> به مبدل آنالوگ‌به‌دیجیتالِ تقریب متوالی (<span class="en">SAR</span>) ۱۲-بیتی مجهز است که نمونه‌برداری از کانال‌های خارجی و داخلی، حالت‌های تبدیل تکی، پیوسته، پویش و گسسته و راه‌اندازی با تریگر خارجی را پشتیبانی می‌کند و با بافر داخلی و گین ورودی قابل تنظیم، نمونه‌برداری سیگنال کوچک را هم ممکن می‌سازد. این سند روش استفاده از این مبدل و نکات آن را آموزش می‌دهد: محدودیت ساعت و محاسبۀ زمان تبدیل، کانال‌های داخلی دما و <span class="en">VREFINT</span>، روند خودکالیبراسیون، معنی و فرمول محاسبۀ پارامترهای ساکن (<span class="en">LSB</span>، خطای آفست، خطای گین، <span class="en">DNL</span> و <span class="en">INL</span>)، و ملاحظات سخت‌افزاری شامل منبع ولتاژ مرجع، امپدانس ورودی، فیلتر <span class="en">RC</span>، فالوئر ولتاژ و انتخاب خازن خارجی برای رسیدن به دقت اسمی در کاربرد واقعی.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>این سند روش استفاده از مبدل <span class="en">ADC</span> ۱۲-بیتی در سری میکروکنترلرهای همگانی‌منظورۀ <span class="en">CH32</span> و نکات مربوط به آن را معرفی می‌کند و محاسبۀ پارامترهای ساکن اصلی مبدل را نیز پوشش می‌دهد. برای آنکه در کاربرد واقعی به دقت اسمی برسید، باید هم به پیکربندی نرم‌افزاری و هم به طراحی مدارهای جانبی توجه کافی معطوف کنید؛ بی‌توجهی به هر یک از این دو بخش می‌تواند دقت نهایی تبدیل را از مقدار مشخص‌شده در دیتاشیت پایین‌تر بیاورد.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>میکروکنترلرهای همگانی‌منظوره</td><td><span class="en">CH32</span> همگانی‌منظوره</td></tr>
+  </table>
+</div>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">معرفی عملکرد <span class="en">ADC</span></div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-111"><span class="dm">◆</span>۱.۱ معرفی <span class="en">ADC</span> در سری همگانی‌منظورۀ <span class="en">CH32</span></h3>
+<p>در سری همگانی‌منظورۀ <span class="en">CH32</span>، مبدل آنالوگ‌به‌دیجیتال از نوع تقریب متوالی است و نمونه‌برداری از منابع سیگنالِ کانال خارجی و کانال داخلی را پشتیبانی می‌کند. این مبدل از حالت‌های تبدیل تکی، تبدیل پیوسته، حالت پویش، حالت گسسته و راه‌اندازی با تریگر خارجی پشتیبانی می‌کند. بافر <span class="en">ADC</span> درون ماژول تعبیه شده و گین ورودی آن قابل پیکربندی است؛ به این ترتیب نمونه‌برداری از سیگنال‌های کوچک با تقویت ورودی نیز ممکن می‌شود. تراشه‌های مختلف سری همگانی‌منظورۀ <span class="en">CH32</span> پیکربندی‌های متفاوتی از <span class="en">ADC</span> دارند و برای انتخاب تراشه می‌توان به جدول زیر مراجعه کرد.</p>
+
+<div class="tblwrap" id="tab-11">
+  <div class="tblcap"><span class="cap-pill">جدول ۱-۱</span><span class="cap-text">پارامترهای <span class="en">ADC</span> در مدل‌های مختلف</span></div>
+  <table class="tbl" style="font-size:11px;">
+    <thead><tr><th style="width:16%;">مدل تراشه</th><th style="width:11%;">تعداد کانال خارجی</th><th style="width:13%;">حداکثر ساعت <span class="en">ADC</span></th><th style="width:13%;">حداکثر نرخ نمونه‌برداری</th><th style="width:10%;">تفکیک‌پذیری</th><th style="width:15%;">ولتاژ کاربرد</th><th>وجود دو <span class="en">ADC</span></th></tr></thead>
+    <tr><td><span class="en">CH32F10x</span></td><td><span class="en">16</span></td><td><span class="en">14MHz</span></td><td><span class="en">1MHz</span></td><td><span class="en">12bit</span></td><td><span class="en">3.0V~5.5V</span></td><td><span class="en">N</span></td></tr>
+    <tr><td><span class="en">CH32V10x</span></td><td><span class="en">16</span></td><td><span class="en">14MHz</span></td><td><span class="en">1MHz</span></td><td><span class="en">12bit</span></td><td><span class="en">3.0V~5.5V</span></td><td><span class="en">N</span></td></tr>
+    <tr><td><span class="en">CH32F20x</span></td><td><span class="en">16</span></td><td><span class="en">14MHz</span></td><td><span class="en">1MHz</span></td><td><span class="en">12bit</span></td><td><span class="en">2.4V~3.6V</span></td><td><span class="en">Y</span></td></tr>
+    <tr><td><span class="en">CH32F208</span></td><td><span class="en">16</span></td><td><span class="en">14MHz</span></td><td><span class="en">1MHz</span></td><td><span class="en">12bit</span></td><td><span class="en">2.4V~3.6V</span></td><td><span class="en">N</span></td></tr>
+    <tr><td><span class="en">CH32V208</span></td><td><span class="en">16</span></td><td><span class="en">14MHz</span></td><td><span class="en">1MHz</span></td><td><span class="en">12bit</span></td><td><span class="en">2.4V~3.6V</span></td><td><span class="en">N</span></td></tr>
+    <tr><td><span class="en">CH32V20x</span></td><td><span class="en">10</span></td><td><span class="en">14MHz</span></td><td><span class="en">1MHz</span></td><td><span class="en">12bit</span></td><td><span class="en">2.4V~3.6V</span></td><td><span class="en">Y</span></td></tr>
+    <tr><td><span class="en">CH32V203RB</span></td><td><span class="en">16</span></td><td><span class="en">14MHz</span></td><td><span class="en">1MHz</span></td><td><span class="en">12bit</span></td><td><span class="en">2.4V~3.6V</span></td><td><span class="en">N</span></td></tr>
+    <tr><td><span class="en">CH32V30x</span></td><td><span class="en">16</span></td><td><span class="en">14MHz</span></td><td><span class="en">1MHz</span></td><td><span class="en">12bit</span></td><td><span class="en">2.4V~3.6V</span></td><td><span class="en">Y</span></td></tr>
+    <tr>
+      <td rowspan="3"><span class="en">CH32V003</span></td>
+      <td rowspan="3"><span class="en">8</span></td>
+      <td><span class="en">6MHz</span></td><td><span class="en">0.43MHz</span></td><td><span class="en">10bit</span></td><td><span class="en">2.8V~5.5V</span></td>
+      <td rowspan="3"><span class="en">N</span></td>
+    </tr>
+    <tr><td><span class="en">12MHz</span></td><td><span class="en">0.857MHz</span></td><td><span class="en">10bit</span></td><td><span class="en">3.2V~5.5V</span></td></tr>
+    <tr><td><span class="en">24MHz</span></td><td><span class="en">1.71MHz</span></td><td><span class="en">10bit</span></td><td><span class="en">4.5V~5.5V</span></td></tr>
+    <tr>
+      <td rowspan="2"><span class="en">CH32V00x</span></td>
+      <td rowspan="2"><span class="en">8</span></td>
+      <td rowspan="2"><span class="en">48MHz</span></td>
+      <td><span class="en">3MHz</span></td><td><span class="en">12bit</span></td><td><span class="en">4.5V~5.5V</span></td>
+      <td rowspan="2"><span class="en">N</span></td>
+    </tr>
+    <tr><td><span class="en">1MHz</span></td><td><span class="en">12bit</span></td><td><span class="en">2.4V~5.5V</span></td></tr>
+    <tr>
+      <td rowspan="2"><span class="en">CH32L03x</span></td>
+      <td rowspan="2"><span class="en">10</span></td>
+      <td rowspan="2"><span class="en">48MHz</span></td>
+      <td><span class="en">0.2MHz</span></td><td><span class="en">12bit</span></td><td><span class="en">1.8V~3.6V</span></td>
+      <td rowspan="2"><span class="en">N</span></td>
+    </tr>
+    <tr><td><span class="en">2.4MHz</span></td><td><span class="en">12bit</span></td><td><span class="en">3.0V~3.6V</span></td></tr>
+    <tr><td><span class="en">CH32X03x</span></td><td><span class="en">14</span></td><td><span class="en">8MHz</span></td><td><span class="en">0.47MHz</span></td><td><span class="en">12bit</span></td><td><span class="en">3.0V~5.5V</span></td><td><span class="en">N</span></td></tr>
+    <tr><td><span class="en">CH32V205</span></td><td><span class="en">16</span></td><td><span class="en">64MHz</span></td><td><span class="en">4MHz</span></td><td><span class="en">12bit</span></td><td><span class="en">2.4V~3.6V</span></td><td><span class="en">N</span></td></tr>
+    <tr><td><span class="en">CH32V203CC</span></td><td><span class="en">16</span></td><td><span class="en">64MHz</span></td><td><span class="en">4MHz</span></td><td><span class="en">12bit</span></td><td><span class="en">2.4V~3.6V</span></td><td><span class="en">N</span></td></tr>
+    <tr>
+      <td rowspan="2"><span class="en">CH32H41X</span></td>
+      <td rowspan="2"><span class="en">16</span></td>
+      <td rowspan="2"><span class="en">80MHz</span></td>
+      <td><span class="en">2MHz</span></td><td><span class="en">12bit</span></td><td><span class="en">2.7V~3.6V</span></td>
+      <td rowspan="2"><span class="en">Y</span></td>
+    </tr>
+    <tr><td><span class="en">5MHz</span></td><td><span class="en">12bit</span></td><td><span class="en">3V~3.6V</span></td></tr>
+  </table>
+</div>
+<div class="note"><span class="lbl">نکته:</span> در برخی محصولات، کانال‌های داخلی و بافر داخلی ارائه نشده است؛ برای جزئیات دقیق، دفترچۀ مربوط به همان تراشه را بررسی کنید.</div>
+
+<h3 class="h2x" id="sec-112"><span class="dm">◆</span>۱.۲ پیکربندی نمونه‌برداری <span class="en">ADC</span></h3>
+<p>در سری همگانی‌منظورۀ <span class="en">CH32</span>، مبدل <span class="en">ADC</span> نباید از حداکثر ساعت مجاز فراتر رود؛ حداکثر ساعت هر مدل را می‌توان از جدول ۱-۱ دید. هنگام پیکربندی ساعت <span class="en">ADC</span> باید به رابطۀ میان منبع ساعت <span class="en">ADC</span> و ضریب تقسیم آن توجه شود. برای نمونه در <span class="en">CH32V30x</span>، حداکثر ساعت استفاده‌شده توسط <span class="en">ADC</span> برابر <span class="en">14MHz</span> است؛ منبع ساعت <span class="en">ADC</span> همان <span class="en">ADCCLK</span> است که با <span class="en">PCLK2</span> همگام می‌شود و ضریب تقسیم آن توسط زمینۀ <span class="en">ADCPRE[1:0]</span> در رجیستر <span class="en">RCC_CFGR0</span> پیکربندی می‌شود؛ درخت ساعت در شکل ۱-۱ نشان داده شده است. می‌توان دید که بیشترین ضریب تقسیم ساعت <span class="en">ADC</span> برابر ۸ است؛ پس در شرایط عادی استفاده از <span class="en">ADC</span>، ساعت <span class="en">PCLK2</span> باید کمتر از <span class="en">112MHz</span> باشد و اگر سیستم با حداکثر فرکانس <span class="en">144MHz</span> اجرا می‌شود، هنگام استفاده از <span class="en">ADC</span> توصیه می‌شود ساعت <span class="en">PCLK2</span> دست‌کم ۲ تقسیم شود.</p>
+
+<p>بر اساس ساعت <span class="en">ADC</span>، زمان کل تبدیل برابر است با:</p>
+<div class="formula">T<sub>CONV</sub> = T<sub>SAMP</sub> + 12.5 * T<sub>ADCCLK</sub></div>
+<p>زمان نمونه‌برداری (<span class="en">T<sub>SAMP</sub></span>) با زمینۀ <span class="en">SMPx[2:0]</span> در رجیستر تغییر می‌کند؛ مبنای شمارش دورۀ نمونه‌برداری، ساعت <span class="en">ADCCLK</span> است و عبارت <span class="en">12.5*T<sub>ADCCLK</sub></span>، زمان تبدیل ثابتِ ۱۲٫۵ دورهای را نشان می‌دهد.</p>
+<p>برای نمونه با ساعت <span class="en">ADC</span> برابر <span class="en">12MHz</span> و دورۀ نمونه‌برداری ۷٫۵ دور می‌توان محاسبه کرد. نرخ نمونه‌برداری برابر است با:</p>
+<div class="formula">T<sub>SAMP</sub> = 12MHz / 7.5 = 1.6MHz</div>
+<p>و نرخ تبدیل برابر است با:</p>
+<div class="formula">T<sub>CONV</sub> = 12MHz / (7.5 + 12.5) = 0.8MHz</div>
+<div class="note"><span class="lbl">نکته:</span> در <span class="en">CH32V003</span> تفکیک‌پذیری <span class="en">ADC</span> برابر <span class="en">10bit</span> است و زمان تبدیل <span class="en">11*T<sub>ADCCLK</sub></span> می‌باشد.</div>
+
+<div class="fig" id="fig-11">
+  <div class="figbox">
+    <img src="assets/img/an09000-fig_p4_x56.jpeg" alt="شکل ۱-۱" style="max-width:660px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۱</span><span class="cap-text">نمودار درخت ساعت</span></div>
+</div>
+
+<h3 class="h2x" id="sec-1121"><span class="dm">◆</span>۱.۲.۱ کانال‌های داخلی <span class="en">ADC</span></h3>
+<p>در سری همگانی‌منظورۀ <span class="en">CH32</span> دو کانال داخلی تعبیه شده است:</p>
+<p class="bl"><span class="lbl">سنسور دما:</span> برای اندازه‌گیری دمای اطراف قطعه (<span class="en">T<sub>A</sub></span>) به کار می‌رود؛ میان ولتاژ تبدیل‌شده (بر حسب <span class="en">mV</span>) و دمای داخلی (بر حسب سلسیوس) رابطۀ خطی برقرار است و برای هر تراشه باید به دفترچۀ کاربرد همان تراشه مراجعه کرد.</p>
+<p class="bl"><span class="lbl">ولتاژ مرجع داخلی <span class="en">VREFINT</span>:</span> برای نمونه‌برداری از ولتاژ مرجع داخلی تراشه استفاده می‌شود؛ ولتاژ نمونه‌ای آن <span class="en">1.2V</span> است و یک ولتاژ پایدار برای مقایسۀ ولتاژ مرجع <span class="en">ADC</span> فراهم می‌کند.</p>
+<p>هنگام استفاده از کانال‌های داخلی باید بیت <span class="en">TSVREFE</span> در رجیستر <span class="en">ADC_CTLR2</span> یک شود تا کانال‌های نمونه‌برداری داخلی <span class="en">ADC</span> از حالت خواب بیدار شوند. توصیه می‌شود زمان نمونه‌برداری بیشتر از <span class="en">17.1us</span> تنظیم شود.</p>
+<div class="note"><span class="lbl">نکته:</span> در تراشه‌هایی که ماژول دوگانهٔ <span class="en">ADC</span> دارند، کانال‌های داخلی فقط در ماژول <span class="en">ADC1</span> وجود دارند.</div>
+<p>در سری‌های <span class="en">CH32V10x</span> و <span class="en">CH32F10x</span> هنگام استفاده از کانال خارجی باید فعال‌سازی کانال‌های داخلی خاموش شود.</p>
+
+<h3 class="h2x" id="sec-1122"><span class="dm">◆</span>۱.۲.۲ خودکالیبراسیون <span class="en">ADC</span></h3>
+<p>در سری همگانی‌منظورۀ <span class="en">CH32</span> ماژول خودکالیبراسیون داخلی وجود دارد که برای حذف خطای آفست <span class="en">ADC</span> به کار می‌رود. روند کالیبراسیون به این شکل است:</p>
+<p class="bl">۱) با نوشتن یک در بیت <span class="en">RSTCAL</span> رجیستر <span class="en">ADC_CTLR2</span>، رجیستر کالیبراسیون مقداردهی اولیه می‌شود؛ پس از آن باید صبر کرد تا سخت‌افزار بیت <span class="en">RSTCAL</span> را صفر کند؛ صفرشدن این بیت به معنی پایان مقداردهی اولیه است.</p>
+<p class="bl">۲) با یک‌کردن بیت <span class="en">CAL</span>، عملکرد کالیبراسیون آغاز می‌شود؛ به‌محض پایان کالیبراسیون، سخت‌افزار بیت <span class="en">CAL</span> را به‌طور خودکار پاک می‌کند و کد کالیبراسیون در رجیستر <span class="en">ADC_RDATAR</span> ذخیره می‌شود.</p>
+
+<h3 class="h2x" id="sec-1123"><span class="dm">◆</span>۱.۲.۳ پارامترهای ساکن <span class="en">ADC</span></h3>
+<p>سری همگانی‌منظورۀ <span class="en">CH32</span> مبدل <span class="en">ADC</span> ۱۲-بیتی است و بازۀ مقادیر تبدیل، توان دومِ ۱۲ یعنی <span class="en">4096</span> حالت را پوشش می‌دهد. اگر ماژول <span class="en">ADC</span> ایده‌آل باشد، کوچک‌ترین واحد تغییر ولتاژ نمونه‌برداری‌شده با <span class="en">LSB</span> نشان داده می‌شود و ولتاژ تفکیک <span class="en">1LSB</span> برابر است با:</p>
+<div class="formula">1LSB = V<sub>ref</sub> / 2<sup>12</sup></div>
+<p>که در آن <span class="en">V<sub>ref</sub></span> ولتاژ مرجع <span class="en">ADC</span> است؛ برای مثال در تغذیۀ <span class="en">3.3V</span>، کمترین ولتاژ تفکیک <span class="en">ADC</span> برابر <span class="en">0.805mV</span> می‌شود.</p>
+<p>در تبدیل ولتاژ توسط <span class="en">ADC</span> همیشه خطایی وجود دارد؛ از جمله خطاهای ساکن معمول می‌توان به موارد زیر اشاره کرد:</p>
+
+<h4 class="h3x" id="sec-11231"><span class="dm">◆</span>۱) خطای آفست (<span class="en">Offset Error</span>)</h4>
+<p>خطای آفست (<span class="en">Offset Error</span>) به مقدار جابه‌جایی ولتاژ تبدیل‌شده در نقطۀ ورودیِ صفرِ <span class="en">ADC</span> اشاره دارد و این جابه‌جایی خطای آفست <span class="en">E<sub>O</sub></span> نامیده می‌شود: خطای آفست برابر است با ولتاژ تبدیل واقعی منهای ولتاژ تبدیل ایده‌آل.</p>
+<p>خطای آفست اختلاف بایاسِ میان اولین نقطۀ کدگذاری‌شده و نقطۀ واقعی را نشان می‌دهد؛ اگر اولین نقطه مقدار ۴ را بخواند، خطای آفست ۴ به‌دست می‌آید و اگر در عمل مقداری نااصفر ظاهر شود و نقطۀ اسمیِ متناظر ۴ باشد، خطای آفست <span class="en">-3</span> به‌دست می‌آید.</p>
+<div class="fig" id="fig-12">
+  <div class="figbox">
+    <img src="assets/img/an09000-fig_p5_x70.jpeg" alt="شکل ۱-۲" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۲</span><span class="cap-text">خطای آفست <span class="en">ADC</span></span></div>
+</div>
+
+<h4 class="h3x" id="sec-11232"><span class="dm">◆</span>۲) خطای گین (<span class="en">Gain Error</span>)</h4>
+<p>خطای گین (<span class="en">Gain error</span>) به انحراف ولتاژ نقطۀ کد کامل از مقدار ایده‌آل اشاره دارد و خطای بزرگ‌نمایی یا کوچک‌نمایی را نشان می‌دهد که <span class="en">ADC</span> هنگام تبدیل ورودی آنالوگ به خروجی دیجیتال به سیگنال تحمیل می‌کند؛ این خطا با نماد <span class="en">E<sub>G</sub></span> نشان داده می‌شود.</p>
+<div class="fig" id="fig-13">
+  <div class="figbox">
+    <img src="assets/img/an09000-fig_p5_x71.png" alt="شکل ۱-۳" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۳</span><span class="cap-text">خطای گین <span class="en">ADC</span></span></div>
+</div>
+<p>اگر هنگام رسیدن ولتاژ ورودی به <span class="en">V<sub>ref</sub></span> کد کامل (<span class="en">0xffff</span>) به‌دست نیاید، گین مثبت رخ داده است؛ و اگر پیش از رسیدن ولتاژ ورودی به <span class="en">V<sub>ref</sub></span> کد کامل (<span class="en">0xffff</span>) به‌دست آید، آفست منفی است؛ در این حالت خطای گین برابر ولتاژ تبدیل واقعی منهای ولتاژ تبدیل ایده‌آل است. برای مثال اگر مقدار ایده‌آل <span class="en">0xfffe</span> باشد ولی ولتاژ نمونه‌برداری‌شده <span class="en">0xffff</span> شود، ولتاژ آفست منفی برابر <span class="en">1LSB</span> خواهد بود.</p>
+
+<h4 class="h3x" id="sec-11233"><span class="dm">◆</span>۳) خطای تفریقی (<span class="en">DNL</span>)</h4>
+<p>خطای تفریقی غیرخطی (<span class="en">DNL</span>) پس از حذف خطای گین و خطای آفست، اختلافِ تفاضل ولتاژِ هر دو نمونه‌برداری مجاور را می‌سنجد. در <span class="en">ADC</span> ایده‌آل پهنای هر پله ۱ یعنی <span class="en">1LSB</span> است؛ در این حالت <span class="en">DNL</span> برابر صفر است و خطای تفریقی <span class="en">DNL</span> از رابطۀ زیر محاسبه می‌شود:</p>
+<div class="formula">D<sub>NL</sub>(i) = (V<sub>STP</sub>(i) &minus; V<sub>LSB</sub>) / V<sub>LSB</sub></div>
+<div class="formula">V<sub>STP</sub>(i) = V<sub>CONV</sub>(i) &minus; V<sub>CONV</sub>(i &minus; 1)</div>
+<p>در این روابط <span class="en">D<sub>NL</sub>(i)</span> نشان‌دهندۀ i-امین خطای تفریقی غیرخطی منحنی خروجی است، <span class="en">V<sub>STP</sub>(i)</span> پهنای پلۀ i-امین بازۀ کوانتیزاسیون منحنی خروجی است، <span class="en">V<sub>CONV</sub></span> ولتاژ نمونه‌برداری‌شده است و <span class="en">V<sub>LSB</sub></span> عرض ایده‌آل پله‌ها را نشان می‌دهد.</p>
+<p>برای مثال در <span class="en">ADC</span> ایده‌آل عرض ایده‌آل هر پله ۱ است، یعنی <span class="en">V<sub>LSB</sub>=1</span>؛ اگر میان مقدار تبدیل دوم و مقدار تبدیل سوم پهنای پله ۲ شود، خطای تفریقی پلۀ سوم برابر ۱ خواهد بود.</p>
+<div class="fig" id="fig-14">
+  <div class="figbox">
+    <img src="assets/img/an09000-fig_p6_x79.png" alt="شکل ۱-۴" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۴</span><span class="cap-text">خطای تفریقی <span class="en">ADC</span></span></div>
+</div>
+
+<h4 class="h3x" id="sec-11234"><span class="dm">◆</span>۴) خطای انتگرالی (<span class="en">INL</span>)</h4>
+<p>خطای انتگرالی غیرخطی (<span class="en">INL</span>) بیشترین انحراف میان نقطۀ شروع واقعی و نقطۀ پایان واقعی است و می‌توان آن را بیشترین فاصلۀ میان خطِ واصلِ نقطۀ شروع واقعی تا نقطۀ پایان واقعی و خطِ ولتاژ ایده‌آل دانست.</p>
+<p>همان‌طور که در شکل ۱-۵ دیده می‌شود، منحنی واقعی خطی است که نقطۀ اولین مقدار تبدیل واقعی را به نقطۀ آخرین مقدار تبدیل واقعی وصل می‌کند. مقدار <span class="en">E<sub>L</sub></span> اختلاف هر مقدار ایده‌آل با منحنی واقعی است.</p>
+<div class="fig" id="fig-15">
+  <div class="figbox">
+    <img src="assets/img/an09000-fig_p7_x88.png" alt="شکل ۱-۵" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۵</span><span class="cap-text">خطای انتگرالی <span class="en">ADC</span></span></div>
+</div>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">نکات و ملاحظات استفاده از <span class="en">ADC</span></div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-211"><span class="dm">◆</span>۲.۱ نکات استفاده از <span class="en">ADC</span></h3>
+<p>در استفاده از <span class="en">ADC</span> سری همگانی‌منظورۀ <span class="en">CH32</span> باید به آستانۀ ولتاژ مرجع و امپدانس و ولتاژ ورودی <span class="en">ADC</span> توجه کرد؛ با تغییر زمان نمونه‌برداری در نرم‌افزار، تغییر ورودی خارجی و راه‌های مشابه می‌توان خطای کل ناشی از استفاده نادرست از <span class="en">ADC</span> را کاهش داد.</p>
+
+<h4 class="h3x" id="sec-2111"><span class="dm">◆</span>۲.۱.۱ منبع ولتاژ مرجع <span class="en">ADC</span></h4>
+<p>در سری همگانی‌منظورۀ <span class="en">CH32</span> اگر تراشه پکیج کامل باشد و پایۀ <span class="en">VREF</span> وجود داشته باشد، ولتاژ اعمال‌شده به پایۀ <span class="en">VREF</span> ولتاژ مرجع <span class="en">ADC</span> است؛ هنگام استفاده از <span class="en">ADC</span>، ولتاژ مرجع نباید از آستانۀ طراحی کمتر باشد و همچنین نمی‌تواند از ولتاژ تغذیۀ <span class="en">VDDA</span> بالاتر برود. اگر پایۀ <span class="en">VREF</span> وجود نداشته باشد، پایۀ تغذیۀ ولتاژ مرجع همان <span class="en">VDDA</span> است و هنگام استفاده از <span class="en">ADC</span> می‌توان کمترین مقدار تغذیۀ <span class="en">VDDA</span> را از جدول ۱-۱ دید؛ در این حالت رابطۀ تغذیه به‌صورت <span class="en">VDDA&thinsp;&le;&thinsp;VDD</span> است.</p>
+<p>برای افزایش دقت نمونه‌برداری <span class="en">ADC</span> می‌توان به طرح‌های تغذیۀ زیر مراجعه کرد:</p>
+<p class="bl">۱) برای دستیابی به بهترین دقت تبدیل <span class="en">ADC</span> می‌توان دامنۀ دینامیکی <span class="en">ADC</span> را با ولتاژ تغذیه هم‌تراز کرد. مطابق شکل زیر:</p>
+<div class="fig" id="fig-21">
+  <div class="figbox">
+    <img src="assets/img/an09000-fig_p8_x93.jpeg" alt="شکل ۲-۱" style="max-width:500px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۱</span><span class="cap-text">ولتاژ نمونه‌برداری <span class="en">ADC</span></span></div>
+</div>
+<p>اگر ولتاژ مرجع <span class="en">ADC</span> برابر <span class="en">3.3V</span> باشد و دامنۀ سیگنال ولتاژ تبدیل‌شوندۀ <span class="en">2.5V</span>، آنگاه ۹۹۲ حالتِ تبدیل‌نشده باقی می‌ماند؛ یعنی دقت <span class="en">ADC</span> آسیب دیده است. بنابراین می‌توان ولتاژ مرجع را به دامنۀ پیکِ ولتاژ تبدیل یعنی <span class="en">2.5V</span> تغییر داد؛ با این کار کمترین ولتاژ تفکیک از <span class="en">0.85mV</span> به <span class="en">0.61mV</span> می‌رسد و دقت نمونه‌برداری بالا می‌رود.</p>
+<p class="bl">۲) استفاده از منبع تغذیۀ خارجی مستقل به‌عنوان ولتاژ مرجع: اگر پایۀ مستقل <span class="en">Vref</span> یا <span class="en">VDDA</span> وجود دارد، می‌توان از منبع مرجع مستقل استفاده کرد و پایداری تغذیۀ مستقل را تضمین نمود. منبع ولتاژ مرجع تا حد ممکن باید امپدانس خروجی پایینی داشته باشد تا دقت ولتاژ ورودی حفظ شود. مطابق شکل زیر:</p>
+<div class="fig" id="fig-22">
+  <div class="figbox">
+    <img src="assets/img/an09000-fig_p8_x94.png" alt="شکل ۲-۲" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۲</span><span class="cap-text">توپولوژی تغذیه</span></div>
+</div>
+<p>اگر <span class="en">Vref</span> و تغذیه از یک منبع مشترک تغذیه شوند، میان <span class="en">Vref</span> و پایۀ تغذیه افت ولتاژی وجود دارد که برابر است با:</p>
+<div class="formula">V<sub>ref</sub> = V<sub>CC</sub> &minus; I<sub>DD</sub> * R<sub>AIN</sub></div>
+<p>که در آن <span class="en">I<sub>DD</sub></span> جریان تغذیۀ تراشه و <span class="en">R<sub>AIN</sub></span> امپدانس ورودی مسیرِ منبع تغذیه تا پایۀ تغذیه است. از این رابطه می‌توان دید که وقتی مصرف تراشه زیاد است و <span class="en">Vref</span> به <span class="en">VDD</span> اتصال کوتاه شده، اگر امپدانس خارجی بزرگ باشد، افت ولتاژی چشمگیر به‌وجود می‌آید؛ این افت مقدار ولتاژ مرجع را تغییر می‌دهد و خطای گین بزرگی در <span class="en">ADC</span> ایجاد می‌کند.</p>
+
+<h4 class="h3x" id="sec-2112"><span class="dm">◆</span>۲.۱.۲ ورودی <span class="en">ADC</span></h4>
+<p>هنگام پیکربندی دورۀ نمونه‌برداری باید اثر امپدانس ورودی خارجی را در نظر گرفت؛ امپدانس ورودی <span class="en">ADC</span> و نرخ نمونه‌برداری باید رابطۀ زیر را برآورده کنند:</p>
+<div class="formula">R<sub>AIN</sub> &lt; T<sub>S</sub> / (f<sub>ADC</sub> * C<sub>ADC</sub> * ln(2<sup>N+2</sup>)) &minus; R<sub>ADC</sub></div>
+<p>که در آن <span class="en">R<sub>AIN</sub></span> امپدانس ورودی خارجی است، <span class="en">R<sub>ADC</sub></span> امپدانس کلید داخلی <span class="en">ADC</span> است، <span class="en">f<sub>ADC</sub></span> فرکانس ساعت <span class="en">ADC</span> است، <span class="en">C<sub>ADC</sub></span> خازن نمونه‌برداری داخلی است و <span class="en">N</span> تفکیک‌پذیری است؛ برای تراشه‌های همگانی‌منظورۀ <span class="en">CH32</span> که مبدل نمونه‌برداری ۱۲-بیتی دارند، <span class="en">N=12</span>. برای مثال در تراشۀ پرکاربرد <span class="en">CH32L103</span>، بیشترین مقدار <span class="en">R<sub>AIN</sub></span> در حالت <span class="en">f<sub>ADC</sub>=14MHz</span> به این شرح است:</p>
+<div class="tblwrap" id="tab-21">
+  <div class="tblcap"><span class="cap-pill">جدول ۲-۱</span><span class="cap-text">حداکثر امپدانس ورودی</span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:34%;"><span class="en">T<sub>S</sub></span> (دوره)</th><th style="width:33%;"><span class="en">t<sub>S</sub></span> (<span class="en">us</span>)</th><th>حداکثر <span class="en">R<sub>AIN</sub></span> (<span class="en">kΩ</span>)</th></tr></thead>
+    <tr><td><span class="en">1.5</span></td><td><span class="en">0.11</span></td><td><span class="en">1.2</span></td></tr>
+    <tr><td><span class="en">7.5</span></td><td><span class="en">0.54</span></td><td><span class="en">12.3</span></td></tr>
+    <tr><td><span class="en">13.5</span></td><td><span class="en">0.96</span></td><td><span class="en">23.3</span></td></tr>
+    <tr><td><span class="en">28.5</span></td><td><span class="en">2.04</span></td><td><span class="en">50</span></td></tr>
+    <tr><td><span class="en">41.5</span></td><td><span class="en">2.96</span></td><td><span class="en">75</span></td></tr>
+    <tr><td><span class="en">55.5</span></td><td><span class="en">3.96</span></td><td><span class="en">&mdash;</span></td></tr>
+    <tr><td><span class="en">71.5</span></td><td><span class="en">5.11</span></td><td><span class="en">&mdash;</span></td></tr>
+    <tr><td><span class="en">239.5</span></td><td><span class="en">17.1</span></td><td><span class="en">&mdash;</span></td></tr>
+  </table>
+</div>
+<p>مدار نمونه‌برداری رایج <span class="en">ADC</span> معمولاً مطابق شکل زیر است:</p>
+<div class="fig" id="fig-23">
+  <div class="figbox">
+    <img src="assets/img/an09000-fig_manual_1.png" alt="شکل ۲-۳" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۳</span><span class="cap-text">مدار نمونه‌برداری <span class="en">ADC</span></span></div>
+</div>
+<p>از مدار می‌توان دید که <span class="en">R51</span> و <span class="en">R52</span> مقسم مقاومتی هستند و ساختار آن‌ها موازی است؛ بنابراین مقاومت معادلِ ولتاژ اعمال‌شده به <span class="en">ADC</span> برابر است با:</p>
+<div class="formula">R<sub>IN</sub> = R51//R52 = R51*R52/(R51+R52) = 3.20KΩ</div>
+<p>مقاومت <span class="en">R53</span> با امپدانس معادل موازیِ ورودی، سری است؛ بنابراین امپدانس پایۀ ورودی <span class="en">ADC</span> برابر است با:</p>
+<div class="formula">R<sub>OUT</sub> = R<sub>IN</sub> + R53 = 3.20KΩ + 1KΩ = 4.20KΩ</div>
+<p>در بیشتر موارد، برای کاهش اثر نویز خارجی، در ورودی خازنی افزوده می‌شود تا یک فیلتر پایین‌گذر <span class="en">RC</span> ساخته شود و ورود نویز فرکانس‌بالا محدود شود. در انتخاب خازن معمولاً ملاک، فرکانس قطع مورد انتظار است؛ اما هنگام نمونه‌برداری با <span class="en">ADC</span>، در انتخاب اندازۀ خازن باید زمان پاسخ شارش خازن نیز در نظر گرفته شود. توپولوژی نمونه‌برداری <span class="en">ADC</span> مطابق شکل زیر است:</p>
+<div class="fig" id="fig-24">
+  <div class="figbox">
+    <img src="assets/img/an09000-fig_manual_2.png" alt="شکل ۲-۴" style="max-width:680px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۴</span><span class="cap-text">توپولوژی نمونه‌برداری <span class="en">ADC</span></span></div>
+</div>
+<p>در این شکل <span class="en">C<sub>P</sub></span> نشان‌دهندۀ خازن خارجی و <span class="en">C<sub>ADC</sub></span> نشان‌دهندۀ خازن نگه‌دارندۀ داخلی است. وقتی ولتاژ ورودی در حین نمونه‌برداری تغییر می‌کند، باید دورۀ زمان نمونه‌برداری به‌گونه‌ای محاسبه شود که نیاز دقت نمونه‌برداری برآورده شود. زمان شارش خازن برابر است با:</p>
+<div class="formula">V(t) = V<sub>AIN</sub> * (1 &minus; e<sup>&minus;t/&tau;</sup>)</div>
+<p>که در آن <span class="en">V(t)</span> ولتاژ واقعی پایۀ ورودی <span class="en">ADC</span> پس از پایان نمونه‌برداری است و <span class="en">&tau;</span> پارامتر شارش <span class="en">RC</span> است و برابر <span class="en">R<sub>AIN</sub>*(C<sub>P</sub>//C<sub>ADC</sub>)</span> می‌باشد. از این رو وقتی اندازۀ تغییر به اندازۀ <span class="en">VDD</span> باشد، زمان نمونه‌برداری <span class="en">t</span> باید رابطۀ زیر را برآورده کند:</p>
+<div class="formula">t &ge; R<sub>AIN</sub> * (C<sub>P</sub>//C<sub>ADC</sub>) * ln(V<sub>VIN</sub> &minus; V(t))</div>
+<p>اگر تفکیک‌پذیری پایۀ ورودی <span class="en">1/2LSB</span> باشد و دامنۀ ورودی به بیشترین مقدار <span class="en">V<sub>ref</sub></span> برسد، می‌توان نتیجه گرفت که زمان نمونه‌برداری نباید از مقدار زیر کمتر شود:</p>
+<div class="formula">T<sub>S</sub> &ge; f<sub>ADC</sub> * (R<sub>AIN</sub> * C<sub>P</sub>//C<sub>ADC</sub>) * ln(2<sup>N+1</sup>)</div>
+<p>که در آن <span class="en">T<sub>S</sub></span> دورۀ نمونه‌برداری <span class="en">ADC</span> و <span class="en">f<sub>ADC</sub></span> فرکانس نمونه‌برداری <span class="en">ADC</span> است. نتیجه این است که وقتی در جریان نمونه‌برداری ولتاژ تغییر می‌کند، اثر خازن فیلتر باید جبران شود و اندازۀ دورۀ نمونه‌برداری تنظیم گردد تا دقت <span class="en">ADC</span> تضمین شود.</p>
+<p>برای کاهش اثر امپدانس ورودی بر دقت <span class="en">ADC</span> می‌توان از راه‌های زیر بهره گرفت:</p>
+<p class="bl">۱) افزایش زمان نمونه‌برداری: بدون آنکه به نرخ نمونه‌برداری آسیب بزند، می‌توان با افزایش فرکانس اصلی و افزودن به دورۀ نمونه‌برداری، اثر منبع ورودی با امپدانس بالا را برطرف کرد. بر اساس فرمول زمان کل تبدیل <span class="en">ADC</span>، اگر فرکانس اصلی <span class="en">ADC</span> برابر <span class="en">4MHz</span> و دورۀ نمونه‌برداری ۳٫۵ دور باشد، زمان نمونه‌برداری <span class="en">0.875us</span> و زمان کل تبدیل <span class="en">4us</span> می‌شود؛ اگر در این شرایط زمان نمونه‌برداری کافی نباشد، می‌توان فرکانس اصلی <span class="en">ADC</span> را به <span class="en">12MHz</span> و دورۀ نمونه‌برداری را به ۲۸٫۵ دور تغییر داد تا امپدانس خارجی مجاز بزرگ‌تر شود؛ در این حالت زمان کل تبدیل برابر <span class="en">3.4us</span> خواهد بود.</p>
+<p class="bl">۲) استفاده از فالوئر ولتاژ: وقتی امپدانس ورودی بزرگ است، می‌توان در طبقۀ قبل یک فالوئر ولتاژ افزود، مطابق شکل زیر:</p>
+<div class="fig" id="fig-25">
+  <div class="figbox">
+    <img src="assets/img/an09000-fig_p10_x115.jpeg" alt="شکل ۲-۵" style="max-width:620px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۵</span><span class="cap-text">فالوئر ولتاژ خارجی</span></div>
+</div>
+<p>بر اساس ویژگی فالوئر، ورودی با امپدانس بالا و خروجی با امپدانس پایین است و ورودی <span class="en">ADC</span> به بار خارجی وابسته نیست؛ بنابراین هنگام استفاده از ورودی با امپدانس بالا برای <span class="en">ADC</span> می‌توان از فالوئر ولتاژ برای حل این مسئله استفاده کرد. در ماژول <span class="en">ADC</span> حالت <span class="en">PGA</span> داخلی وجود دارد؛ با فعال‌کردن بیت <span class="en">BUFEN=1</span> در <span class="en">ADC_CTLR1</span> بافر ورودی روشن می‌شود و انتخاب گین ۱ کافی است. اما تقویت‌کنندهٔ عملیاتی خطای آفست دارد و آفست تقویت‌کننده بر دقت نمونه‌برداری <span class="en">ADC</span> اثر می‌گذارد؛ اگر فالوئر ولتاژ آفست مثبت داشته باشد و ولتاژ آفست آن <span class="en">V<sub>OFFSET</sub></span> باشد، مقدار نمونه‌برداری‌شدۀ ولتاژ ورودی برابر است با:</p>
+<div class="formula">V<sub>IN</sub> = V<sub>OUT</sub> + V<sub>OFFSET</sub></div>
+<p>همچنین مقدار ولتاژ آفست با ولتاژ ورودی هم‌بستگی دارد؛ مدل نمونۀ ولتاژ آفست در شکل زیر آمده است:</p>
+<div class="fig" id="fig-26">
+  <div class="figbox">
+    <img src="assets/img/an09000-fig_p11_x123.png" alt="شکل ۲-۶" style="max-width:620px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۶</span><span class="cap-text">ولتاژ ورودی و ولتاژ آفست فالوئر</span></div>
+</div>
+<p>بنابراین می‌توان بازۀ ولتاژ ورودی را به‌گونه‌ای انتخاب کرد که دقت نمونه‌برداری <span class="en">ADC</span> تضمین شود؛ برای مثال در بازۀ <span class="en">0.6V~VDD-0.6V</span> مقدار آفست فالوئر پایدار است و مقداری که <span class="en">ADC</span> نمونه‌برداری می‌کند انحراف ثابتی خواهد داشت تا قابلیت اطمینان نمونه‌برداری تضمین شود. چون ولتاژ آفست فالوئر می‌تواند مثبت یا منفی باشد، فقط یک پدیدۀ نمونه توصیف شده است.</p>
+<p>هرچند فالوئر ولتاژ امپدانس ورودی بالایی دارد، اما این به آن معنا نیست که استفاده از فالوئر ولتاژ برای همهٔ نرخ‌های نمونه‌برداری مناسب است؛ هنگام پیکربندی نرخ نمونه‌برداری <span class="en">ADC</span> باید سرعت پاسخ فالوئر در نظر گرفته شود و نرخ نمونه‌برداری باید چند برابرِ سرعت پاسخ فالوئر انتخاب شود. اگر از فالوئر داخلی تراشه استفاده می‌شود، با توجه به سرعت پاسخ فالوئر و خازن‌های انگلی داخلی، زمان نمونه‌برداری نباید از <span class="en">0.2us</span> کمتر باشد.</p>
+<p class="bl">۳) جانبۀ <span class="en">ADC</span> سری همگانی‌منظورۀ <span class="en">CH32</span> از نوع مبدل خازن سوئیچ‌شده است؛ خازن سوئیچ‌شده همان خازن نمونه‌برداری و نگه‌داشت داخلی (<span class="en">C<sub>ADC</sub></span>) است. اگر امپدانس ورودی مقدار بزرگی داشته باشد، در پایان نمونه‌برداری شارش خازن نمونه‌برداری داخلی کافی نخواهد بود و افت سیگنال ظاهر می‌شود. می‌توان در بیرون پایۀ <span class="en">ADC</span> خازنی بسیار بزرگ‌تر از <span class="en">C<sub>ADC</sub></span> افزود تا خازن خارجی <span class="en">C<sub>P</sub></span> به خازن نمونه‌برداری داخلی <span class="en">C<sub>ADC</sub></span> شارش و تخلیه کند. انتخاب اندازۀ <span class="en">C<sub>P</sub></span> نسبت به نیاز دقت تفکیک یعنی <span class="en">U<sub>lsb</sub></span> تقریباً رابطۀ زیر را دارد:</p>
+<div class="formula">C<sub>P</sub> &ge; (U<sub>max</sub>/U<sub>lsb</sub>) * C<sub>ADC</sub></div>
+<p>برای مثال اگر از تراشۀ <span class="en">CH32V20x</span> استفاده شود که خازن نمونه‌برداری و نگه‌داشت داخلی آن <span class="en">C<sub>ADC</sub>=8pF</span> است و نیاز دقت تفکیک <span class="en">1LSB</span> باشد و دامنۀ نمونه‌برداری <span class="en">VDD</span> باشد، خازن خارجی باید رابطۀ <span class="en">C<sub>P</sub> &ge; (4095/1)*8pF = 32nF</span> را برآورده کند؛ بنابراین می‌توان برای خازن خارجی مقدار <span class="en">47nF</span> را انتخاب کرد. اگر دامنۀ نمونه‌برداری مقدار کامل نباشد، می‌توان خازن خارجی را به همان نسبت کوچک‌تر کرد.</p>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN09000</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/09/07</span></td><td><span class="en">V1.1</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">ADC (SAR)</span></td><td class="jt">مبدل آنالوگ‌به‌دیجیتال از نوع تقریب متوالی؛ مبدل <span class="en">CH32</span> همگانی‌منظوره با پشتیبانی از کانال‌های خارجی و داخلی، بافر داخلی و گین ورودی قابل تنظیم</td></tr>
+      <tr><td><span class="en">LSB</span></td><td class="jt">کوچک‌ترین پلۀ تفکیک ولتاژ؛ مقدار آن <span class="en">1LSB = Vref/2<sup>N</sup></span> است و در مبدل ۱۲-بیتی با مرجع <span class="en">3.3V</span> حدود <span class="en">0.805mV</span> می‌شود</td></tr>
+      <tr><td><span class="en">Offset Error (E<sub>O</sub>)</span></td><td class="jt">خطای آفست؛ اختلاف ولتاژ تبدیل واقعی و ایده‌آل در نقطۀ اول کدهای خروجی</td></tr>
+      <tr><td><span class="en">Gain Error (E<sub>G</sub>)</span></td><td class="jt">خطای گین؛ انحراف ولتاژ نقطۀ کد کامل از مقدار ایده‌آل، به‌صورت بزرگ‌نمایی یا کوچک‌نمایی شیب خط تبدیل</td></tr>
+      <tr><td><span class="en">DNL</span></td><td class="jt">خطای تفریقی غیرخطی؛ اختلاف پهنای پلۀ هر گذار کد از عرض ایده‌آل <span class="en">1LSB</span> پس از حذف خطای گین و آفست</td></tr>
+      <tr><td><span class="en">INL</span></td><td class="jt">خطای انتگرالی غیرخطی؛ بیشترین انحراف منحنی واقعی تبدیل از خط واصل میان نقطۀ شروع و پایان واقعی</td></tr>
+      <tr><td><span class="en">VREFINT</span></td><td class="jt">منبع ولتاژ مرجع داخلی تراشه با ولتاژ نمونه‌ای حدود <span class="en">1.2V</span>؛ کانال داخلی برای مقایسۀ ولتاژ مرجع</td></tr>
+      <tr><td><span class="en">TSVREFE</span></td><td class="jt">بیت فعال‌سازی کانال‌های نمونه‌برداری داخلی (سنسور دما و <span class="en">VREFINT</span>) در رجیستر <span class="en">ADC_CTLR2</span></td></tr>
+      <tr><td><span class="en">RSTCAL / CAL</span></td><td class="jt">بیت مقداردهی اولیهٔ رجیستر کالیبراسیون / بیت آغاز خودکالیبراسیون در <span class="en">ADC_CTLR2</span>؛ نتیجه در <span class="en">ADC_RDATAR</span> ذخیره می‌شود</td></tr>
+      <tr><td><span class="en">ADCPRE[1:0]</span></td><td class="jt">زمینۀ انتخاب ضریب تقسیم ساعت <span class="en">ADC</span> در رجیستر <span class="en">RCC_CFGR0</span>؛ بیشینه ضریب تقسیم ۸ است</td></tr>
+      <tr><td><span class="en">SMPx[2:0]</span></td><td class="jt">زمینۀ انتخاب دورۀ نمونه‌برداری هر کانال؛ مبنای شمارش این دوره‌ها، ساعت <span class="en">ADCCLK</span> است</td></tr>
+      <tr><td><span class="en">BUFEN</span></td><td class="jt">بیت فعال‌سازی بافر ورودی (<span class="en">PGA</span>) در رجیستر <span class="en">ADC_CTLR1</span>؛ با گین ۱ به‌عنوان فالوئر داخلی به کار می‌رود</td></tr>
+      <tr><td><span class="en">C<sub>ADC</sub> / C<sub>P</sub></span></td><td class="jt">خازن نمونه‌نگه‌داشت داخلی <span class="en">ADC</span> / خازن خارجی ورودی؛ نسبت ظرفیت‌ها تعیین‌کنندۀ افت سیگنال در پایان نمونه‌برداری است</td></tr>
+      <tr><td><span class="en">R<sub>AIN</sub></span></td><td class="jt">امپدانس خارجی منبع سیگنال که باید بر اساس دورۀ نمونه‌برداری و رابطۀ <span class="en">RC</span> شارش خازن ورودی محدود شود</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN09000 V1.1</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۲۳</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN09000</span> نسخۀ <span class="en">V1.1</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
