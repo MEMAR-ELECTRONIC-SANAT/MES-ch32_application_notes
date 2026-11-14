@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>راهنمای جامع رابط صوتی سری SAI و گذرگاه صوتی I2S در CH32 — ترجمۀ فارسی AN25001</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">راهنمای جامع</div>
+    <div class="t2">رابط صوتی سری <span class="en">SAI</span></div>
+    <div class="t3">و گذرگاه صوتی <span class="en">I2S</span> در <span class="en">CH32</span></div>
+  </div>
+  <div class="c-sub">از تناظر سیگنال‌های <span class="en">I2S</span> با پایه‌های <span class="en">SPI</span> و استانداردهای <span class="en">Philips / MSB / LSB / PCM</span>، تا ساختار دو زیرماژول مستقل <span class="en">SAI</span>، میدان‌های پیکربندی قاب و جایگاه (<span class="en">Slot</span>) و نمونۀ عملی ارسال صدای <span class="en">8kHz</span> با <span class="en">DMA</span> در <span class="en">CH32H417</span></div>
+  <div class="c-desc">در این جزوه، ترجمۀ فارسی سند رسمی <span class="en">AN25001</span> (نسخۀ ۱٫۰، منتشرۀ شرکت <span class="en">WCH</span>) را می‌خوانید: رابط صوتی سری <span class="en">SAI</span> و گذرگاه صوتی <span class="en">I2S</span> هر دو جانبۀ ارتباط سری صوتیِ همگام برای ارسال و دریافت صدای دیجیتال‌اند و با ساعت قاب (<span class="en">FS</span>) و ساعت بیت (<span class="en">SCK</span>) داده جابه‌جا می‌کنند. <span class="en">I2S</span> پروتکل اختصاصی با قاب ثابت برای استریوی استاندارد دولانه است؛ اما <span class="en">SAI</span> ماژولی چندکاره و قابل‌تنظیم با دو زیرماژول مستقل است که قالب‌های صوتی متنوع را پوشش می‌دهد. پروتکل‌های پشتیبانی‌شده، تناظر میدان‌های قاب <span class="en">SAI</span> با استانداردهای <span class="en">I2S</span>، مقایسۀ کامل دو جانبه و روند مقداردهی اولیه و انتقال داده با <span class="en">DMA</span> گام‌به‌گام مرور می‌شود.</div>
+  <div class="c-tags">
+    <span class="c-tag">میکروکنترلر <span class="en">CH32H417</span></span>
+    <span class="c-tag">رابط صوتی سری <span class="en">SAI</span></span>
+    <span class="c-tag">گذرگاه صوتی <span class="en">I2S</span></span>
+    <span class="c-tag"><span class="en">Philips / MSB / LSB / PCM</span></span>
+    <span class="c-tag">قاب و <span class="en">Slot</span> قابل‌تنظیم</span>
+    <span class="c-tag"><span class="en">FS / SCK / MCLK</span></span>
+    <span class="c-tag">انتقال صدا با <span class="en">DMA</span></span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN25001 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | معرفی <span class="en">I2S</span></span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-111"><span class="s-id">1.1</span><span>جانبۀ <span class="en">I2S</span> و پروتکل <span class="en">I2S</span></span><span class="s-dots"></span><span class="s-page">۳</span></a>
+    <a class="toc-sub" href="#sec-112"><span class="s-id">1.2</span><span>پروتکل‌های پشتیبانی‌شدۀ جانبۀ <span class="en">I2S</span></span><span class="s-dots"></span><span class="s-page">۴</span></a>
+    <a class="toc-sub" href="#sec-1121"><span class="s-id">1.2.1</span><span><span class="en">I2S</span> فیلیپس</span><span class="s-dots"></span><span class="s-page">۴</span></a>
+    <a class="toc-sub" href="#sec-1122"><span class="s-id">1.2.2</span><span>تراز <span class="en">MSB</span></span><span class="s-dots"></span><span class="s-page">۴</span></a>
+    <a class="toc-sub" href="#sec-1123"><span class="s-id">1.2.3</span><span>تراز <span class="en">LSB</span></span><span class="s-dots"></span><span class="s-page">۵</span></a>
+    <a class="toc-sub" href="#sec-1124"><span class="s-id">1.2.4</span><span><span class="en">PCM</span></span><span class="s-dots"></span><span class="s-page">۵</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | معرفی <span class="en">SAI</span></span><span class="t-dots"></span><span class="t-page">۵</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-211"><span class="s-id">2.1</span><span>تعریف و ساختار <span class="en">SAI</span></span><span class="s-dots"></span><span class="s-page">۵</span></a>
+    <a class="toc-sub" href="#sec-212"><span class="s-id">2.2</span><span>پروتکل‌های پشتیبانی‌شده و لایه‌های پیکربندی <span class="en">SAI</span></span><span class="s-dots"></span><span class="s-page">۶</span></a>
+    <a class="toc-sub" href="#sec-213"><span class="s-id">2.3</span><span>تناظر میدان‌های <span class="en">SAI</span> با استانداردهای <span class="en">I2S</span></span><span class="s-dots"></span><span class="s-page">۶</span></a>
+    <a class="toc-sub" href="#sec-214"><span class="s-id">2.4</span><span>مقایسۀ جانبۀ <span class="en">I2S</span> و جانبۀ <span class="en">SAI</span></span><span class="s-dots"></span><span class="s-page">۷</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b3"><span class="t-num">۴</span><span class="t-title">بخش ۳ | نمونۀ عملی جانبۀ <span class="en">SAI</span></span><span class="t-dots"></span><span class="t-page">۷</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-311"><span class="s-id">3.1</span><span>مقداردهی اولیه و پیکربندی جانبۀ <span class="en">SAI</span></span><span class="s-dots"></span><span class="s-page">۸</span></a>
+    <a class="toc-sub" href="#sec-312"><span class="s-id">3.2</span><span>جریان داده در جانبۀ <span class="en">SAI</span></span><span class="s-dots"></span><span class="s-page">۹</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۵</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۱۲</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۶</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۱۲</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">جدول ۱-۱</span><span>تناظر سیگنال‌های <span class="en">I2S</span> با پایه‌های <span class="en">SPI</span></span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">جدول ۲-۱</span><span>تناظر عناصر موج <span class="en">I2S</span> با میدان‌های قاب <span class="en">SAI</span></span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">جدول ۲-۲</span><span>مقایسۀ جانبۀ <span class="en">I2S</span> و جانبۀ <span class="en">SAI</span></span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">کد ۱</span><span>پیکربندی جانبۀ <span class="en">SAI</span>: تقسیم ساعت، قاب و <span class="en">Slot</span></span><span class="f-dots"></span><span class="f-page">۹</span></div>
+        <div class="frow"><span class="f-id">کد ۲</span><span>پیکربندی <span class="en">DMA</span> ارسال صدا و جریان اصلی پخش</span><span class="f-dots"></span><span class="f-page">۱۰</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> رابط صوتی سری <span class="en">SAI</span> و گذرگاه صوتی <span class="en">I2S</span> هر دو جانبۀ ارتباط سری صوتیِ همگام‌اند و به‌طور گسترده در ارسال و دریافت صدای دیجیتال، اتصال <span class="en">codec</span>، مسیریابی صوت چندکاناله و پردازش جریان با تأخیر اندک به کار می‌روند. هر دو در لایۀ عملیات، جابه‌جایی دادهٔ سری با ساعت قاب (<span class="en">FS</span>) و ساعت بیت (<span class="en">SCK</span>) را پشتیبانی می‌کنند؛ اما <span class="en">I2S</span> به‌عنوان یک پروتکل اختصاصی بیشتر بر ارسال استریوی استاندارد دولانه با ساختار قاب ثابت تمرکز دارد و <span class="en">SAI</span> به‌عنوان ماژول جانبیِ چندکارهٔ قابل‌تنظیم، قالب‌های صوتی متنوع را پشتیبانی می‌کند و با دو زیرماژول مستقل انعطاف بیشتری دارد. این سند پروتکل‌های پشتیبانی‌شدۀ هر دو جانبه، تناظر میدان‌های قاب <span class="en">SAI</span> با استانداردهای <span class="en">I2S</span>، مقایسۀ کامل دو جانبه و نمونۀ عملی پیکربندی و انتقال دادهٔ صوتی با <span class="en">DMA</span> را روی میکروکنترلرهای <span class="en">WCH CH32</span> توضیح می‌دهد.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>رابط صوتی سری (<span class="en">SAI</span>) و گذرگاه صوتی (<span class="en">I2S</span>) هر دو جانبۀ ارتباط سری صوتیِ همگام‌اند و به‌طور گسترده در ارسال و دریافت صدای دیجیتال، اتصال کدگشا/رمزگشاها (<span class="en">codec</span>)، مسیریابی صوت چندکاناله و پردازش جریان با تأخیر اندک به کار می‌روند. هر دو در لایۀ عملیات، جابه‌جایی دادهٔ سری را با ساعت قاب (<span class="en">FS</span>) و ساعت بیت (<span class="en">SCK</span>) پشتیبانی می‌کنند؛ اما <span class="en">I2S</span> به‌عنوان یک پروتکل اختصاصی، بیشتر بر انتقال استریوی استاندارد دولانه تمرکز دارد و ساختار قاب آن ثابت است (دادهٔ کانال چپ/راست پشت‌سرهم می‌آیند)؛ در مقابل، <span class="en">SAI</span> به‌عنوان ماژول جانبیِ چندکاره و قابل‌تنظیم، قالب‌های صوتی متنوع را پشتیبانی می‌کند و با دو زیرماژول مستقل، انعطاف بیشتری ارائه می‌دهد.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>میکروکنترلرهای همگانی‌منظوره</td><td><span class="en">CH32H417</span> و مشابه</td></tr>
+  </table>
+</div>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">معرفی <span class="en">I2S</span></div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-111"><span class="dm">◆</span>۱.۱ جانبۀ <span class="en">I2S</span> و پروتکل <span class="en">I2S</span></h3>
+<p><span class="en">I2S</span> (<span class="en">Inter-IC Sound</span>) را شرکت <span class="en">Philips</span> معرفی کرد؛ پروتکل صوتیِ همگام سه‌سیمی که کانال‌های چپ و راست را روی یک ساعت سری به‌صورت تقسیم زمانی جابه‌جا می‌کند. <span class="en">I2S</span> روی <span class="en">MCU</span> در حالت معمول از چندگانه‌سازی جانبۀ <span class="en">SPI</span> به‌همراه سیگنال <span class="en">MCLK</span> به دست می‌آید؛ تناظر مشخص سیگنال‌ها در جدول زیر آمده است. البته جانبۀ <span class="en">I2S</span> معمولاً تنها پروتکل <span class="en">I2S</span> را پشتیبانی نمی‌کند و پروتکل‌های مشابه دیگری را نیز پوشش می‌دهد.</p>
+
+<div class="tblwrap" id="tab-11">
+  <div class="tblcap"><span class="cap-pill">جدول ۱-۱</span><span class="cap-text">تناظر سیگنال‌های <span class="en">I2S</span> با پایه‌های <span class="en">SPI</span></span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:14%;">سیگنال</th><th style="width:30%;">کارکرد <span class="en">I2S</span></th><th style="width:20%;">پایۀ فیزیکی</th><th style="width:20%;">حالت مادر</th><th>حالت برده</th></tr></thead>
+    <tr><td><span class="en">SD</span></td><td>دادهٔ سری</td><td><span class="en">MOSI</span></td><td>خروجی</td><td>ورودی</td></tr>
+    <tr><td><span class="en">WS</span></td><td>گزینش واژه (نشانگر کانال)</td><td><span class="en">NSS</span></td><td>خروجی</td><td>ورودی</td></tr>
+    <tr><td><span class="en">CK</span></td><td>ساعت سری</td><td><span class="en">SCK</span></td><td>خروجی</td><td>ورودی</td></tr>
+    <tr><td><span class="en">MCK</span></td><td>ساعت مادر (اختیاری)</td><td>پایۀ مستقل</td><td>خروجی، فرکانس <span class="en">256×Fs</span></td><td>استفاده نمی‌شود</td></tr>
+  </table>
+</div>
+
+<h3 class="h2x" id="sec-112"><span class="dm">◆</span>۱.۲ پروتکل‌های پشتیبانی‌شدۀ جانبۀ <span class="en">I2S</span></h3>
+<p>در حالت معمول، جانبۀ <span class="en">I2S</span> می‌تواند چهار استاندارد صوتی را پشتیبانی کند.</p>
+
+<h4 class="h3x" id="sec-1121"><span class="dm">◆</span>۱.۲.۱ <span class="en">I2S</span> فیلیپس</h4>
+<p>رایج‌ترین استاندارد برای انتقال استریوی دولانه.</p>
+<p><b>معنای <span class="en">WS</span>:</b> نیمۀ بالایی/پایینی هر قاب را به ترتیب به کانال چپ و راست نشانه‌گذاری می‌کند و تنها مبنای گیرنده برای تفکیک دو کانال است. فرستنده داده را در لبهٔ پایین‌روندِ <span class="en">CK</span> تغییر می‌دهد، گیرنده در لبهٔ بالارونده نمونه‌برداری می‌کند و <span class="en">WS</span> نیز هم‌زمان با داده در لبهٔ پایین‌روند تغییر وضعیت می‌دهد.</p>
+<p><b>فاز <span class="en">WS</span>:</b> سیگنال <span class="en">WS</span> یک ساعت‌بیت پیش از ارسال نخستین بیت (<span class="en">MSB</span>) معتبر می‌شود؛ یعنی <span class="en">WS</span> یک بیت از داده جلوتر است. چون <span class="en">WS</span> همیشه پیش از داده تثبیت می‌شود، نمونه‌برداریِ لبهٔ بالارونده فرصت می‌یابد تشخیص دهد نیمۀ فعلی قاب کانال چپ است یا راست.</p>
+<p><b>طول <span class="en">WS</span>:</b> همیشه برابر نیمۀ قاب است — در قاب ۱۶ بیتی، <span class="en">WS</span> هر نیمه (۱۶ ساعت‌بیت برای هر کانال) یک‌بار وضعیت عوض می‌کند و در قاب ۳۲ بیتی هر ۳۲ ساعت‌بیت؛ کانال چپ و راست هر کدام یک نیمۀ کامل را اشغال می‌کنند.</p>
+<p><b>نمونۀ موج (قاب ۳۲ بیتی):</b> در فاصلۀ سطح بالای <span class="en">WS</span>، سی و دو بیت دادهٔ کانال راست و در فاصلۀ سطح پایین، سی و دو بیت دادهٔ کانال چپ ارسال می‌شود؛ در سرآغاز هر نیمه، نخست جهش <span class="en">WS</span> دیده می‌شود و با فاصلۀ یک ساعت‌بیت، نخستین بیت داده (<span class="en">MSB</span>) بیرون می‌رود.</p>
+
+<h4 class="h3x" id="sec-1122"><span class="dm">◆</span>۱.۲.۲ تراز <span class="en">MSB</span></h4>
+<p><b>فاز <span class="en">WS</span>:</b> سیگنال <span class="en">WS</span> هم‌زمان با <span class="en">MSB</span> داده تولید می‌شود — دیگر یک بیت جلوتر نیست و با نخستین بیتِ هر نیمه هم‌تراز می‌شود؛ بقیۀ زمان‌بندی مانند استاندارد فیلیپس است (<span class="en">MSB</span> پیش‌تر ارسال می‌شود، تغییر داده در لبهٔ پایین‌روند و نمونه‌برداری در لبهٔ بالارونده انجام می‌گیرد).</p>
+<p><b>طول <span class="en">WS</span>:</b> باز هم همیشه نیمۀ قاب است.</p>
+<p><b>کاربرد:</b> استانداردی برای کدگشا/رمزگشاهایی (<span class="en">codec</span>) که الزام دارند <span class="en">FS/WS</span> با نخستین بیت داده دقیقاً هم‌تراز شود (برخی <span class="en">DAC/ADC</span>های قدیمی)؛ تنها تفاوت آن با استاندارد فیلیپس، جابه‌جایی <span class="en">WS</span> به اندازۀ یک ساعت‌بیت است.</p>
+
+<h4 class="h3x" id="sec-1123"><span class="dm">◆</span>۱.۲.۳ تراز <span class="en">LSB</span></h4>
+<p><b>فاز <span class="en">WS</span>:</b> مشابه حالت تراز <span class="en">MSB</span>.</p>
+<p><b>طول <span class="en">WS</span>:</b> همیشه نیمۀ قاب، مانند استاندارد فیلیپس و تراز <span class="en">MSB</span> — کانال چپ و راست هر کدام یک نیمۀ کامل از قاب را اشغال می‌کنند.</p>
+<p><b>تراز:</b> دادهٔ مؤثر به انتهای قاب (سمت بیت‌های کم‌ارزش) چسبیده است؛ یعنی <span class="en">LSB</span> داده روی آخرین ساعت‌بیت قاب/جایگاه می‌افتد. این حالت درست قرینۀ تراز <span class="en">MSB</span> است که در آن نخستین بیت، همان <span class="en">MSB</span> است و داده به سرآغاز قاب تکیه می‌کند.</p>
+<p><b>کاربرد:</b> به‌تنهایی کمتر استفاده می‌شود و بیشتر در دستگاه‌های قدیمی‌ای دیده می‌شود که تأخیر کوتاه ارسال/دریافت یا دریافتِ هم‌تراز با انتهای قاب را الزامی می‌دانند؛ در سمت <span class="en">I2S</span> عمدتاً نقش جایگاه سازگاری را ایفا می‌کند.</p>
+
+<h4 class="h3x" id="sec-1124"><span class="dm">◆</span>۱.۲.۴ <span class="en">PCM</span></h4>
+<p><b>معنای <span class="en">WS</span>:</b> قاب دیگر اطلاعات کانال چپ/راست ندارد و در این حالت <span class="en">WS</span> نقش پالس همگام‌سازی (<span class="en">SYNC</span>) را می‌گیرد؛ فقط در آغاز هر واژۀ داده یک بیت نشانه می‌دهد و دیگر چپ/راست را تفکیک نمی‌کند، به همین دلیل <span class="en">CHSIDE</span> در حالت <span class="en">PCM</span> بی‌معناست. این حالت برای حمل دادهٔ رمزگذاری/رمزگشایی سری به‌صورت واژه‌به‌واژه روی یک پیوند انحصاری مناسب است، نه برای صدای استریوی جفت‌شده.</p>
+<p><b>طول <span class="en">WS</span>:</b> پالس همگام قاب بلند ثابت سیزده ساعت‌بیت است و در قاب کوتاه فقط یک ساعت‌بیت.</p>
+<p><b>داده و فاز:</b> هر واژۀ داده ثابت ۱۶ بیتی است؛ <span class="en">MSB</span> پیش‌تر ارسال می‌شود و داده بلافاصله پس از پالس همگام بیرون می‌آید؛ در هر قاب فقط همین یک واژۀ داده ارسال می‌شود و سپس منتظر پالس همگام بعدی می‌مانیم.</p>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">معرفی <span class="en">SAI</span></div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-211"><span class="dm">◆</span>۲.۱ تعریف و ساختار <span class="en">SAI</span></h3>
+<p><span class="en">SAI</span> (<span class="en">Serial Audio Interface</span>) جانبۀ صوتیِ اختصاصی و مستقلی است و پایه‌های سایر جانبی‌ها را اشغال نمی‌کند. این جانبه از دو زیرماژول صوتیِ کاملاً مستقل <span class="en">A/B</span> تشکیل شده است؛ هر ماژول حداکثر ۴ پایه دارد (<span class="en">SD</span>، <span class="en">SCK</span>، <span class="en">FS</span>، <span class="en">MCLK</span>)، هر یک یک <span class="en">FIFO</span> هشت‌واژه‌ای و یک رجیستر انتقال ۳۲ بیتی درونش جا دارد و از طریق ماژول مدیریت <span class="en">IO</span> به گروه پایه‌های خودش وصل می‌شود. دو ماژول را می‌توان برای کار همگام پیکربندی کرد تا ساعت و <span class="en">FS</span> مشترک شود، پایه‌ها آزاد بماند و دوطرفه‌کاریِ کامل حاصل گردد.</p>
+<p>ترکیب مادر/برده و ارسال/دریافت برای هر ماژول به دلخواه انتخاب‌شدنی است؛ جهت دریافت/ارسالِ یک تک‌ماژول به تنظیمات مادر/برده و همگام/ناهمگام بستگی دارد و با همگام‌شدن دو ماژول، دوطرفه‌کاریِ کامل به دست می‌آید.</p>
+
+<h3 class="h2x" id="sec-212"><span class="dm">◆</span>۲.۲ پروتکل‌های پشتیبانی‌شده و لایه‌های پیکربندی <span class="en">SAI</span></h3>
+<p><span class="en">SAI</span> پوشش‌دهندۀ <span class="en">I2S</span>، تراز <span class="en">LSB/MSB</span>، <span class="en">PCM/DSP</span>، <span class="en">TDM</span> و <span class="en">AC'97</span> است و با میدان <span class="en">PRTCFG</span> می‌توان به حالت خروجی <span class="en">SPDIF</span> و حالت کنترل‌گر پیوند <span class="en">AC'97</span> تغییر وضعیت داد. این جانبه با سه گروه رجیستر، سه لایۀ ساختارِ «قاب»، «جایگاه (<span class="en">Slot</span>) درون‌قابی» و «داده/ساعت» را به‌طور کامل در اختیار کاربر می‌گذارد:</p>
+<div class="bl"><span class="en">FRCR</span> پیکربندی قاب: طول قاب <span class="en">FRL[7:0]</span> (بین <span class="en">8..256</span> ساعت‌بیت، طول قاب = <span class="en">FRL+1</span>)، طول مؤثر <span class="en">FS</span> یعنی <span class="en">FSALL[6:0]</span>، قطبیت <span class="en">FS</span> یعنی <span class="en">FSPOL</span>، جابه‌جایی <span class="en">FS</span> یعنی <span class="en">FSOFF</span> و تعریف <span class="en">FS</span> یعنی <span class="en">FSDEF</span>.</div>
+<div class="bl"><span class="en">SLOTR</span> پیکربندی جایگاه: تعداد جایگاه <span class="en">NBSLOT[3:0]</span> (بین <span class="en">1..16</span>)، اندازۀ جایگاه <span class="en">SLOTSZ[1:0]</span> (= پهنای داده / <span class="en">16</span> / <span class="en">32</span>)، ماسک فعال‌بودن جایگاه <span class="en">SLOTEN[15:0]</span> و جابه‌جایی نخستین بیت <span class="en">FBOFF[4:0]</span>.</div>
+<div class="bl"><span class="en">CFGR1/CFGR2</span> داده/ساعت: پهنای دادهٔ <span class="en">DS[2:0]</span> (<span class="en">8/10/16/20/24/32</span>)، پروتکل <span class="en">PRTCFG</span>، حالت مادر/برده و ارسال/دریافت <span class="en">MODE[1:0]</span>، تقسیم ساعت مادر <span class="en">MCKDIV</span>، اُورسمپل <span class="en">OSR</span>، لبهٔ نمونه‌برداری <span class="en">CKSTR</span>، ترتیب دادهٔ <span class="en">LSBFIRST</span>، بی‌صدا <span class="en">MUTE</span>، فشرده‌سازی/گسترش <span class="en">COMP</span>، حالت سه‌حالته <span class="en">TRIS</span> و آستانۀ <span class="en">FTH</span> برای <span class="en">FIFO</span>.</div>
+<p>برای پروتکل‌های هم‌خانوادۀ <span class="en">I2S</span> مقدار <span class="en">FSDEF=1</span> گذاشته می‌شود تا <span class="en">FS</span> هم‌زمان نقش <span class="en">SOF</span> و شناسایی کانال را بر عهده بگیرد؛ در این حالت <span class="en">NBSLOT</span> باید زوج باشد و کانال‌های چپ/راست قاب را به‌طور مساوی تقسیم کنند. برای <span class="en">PCM/DSP/TDM/AC'97</span> مقدار <span class="en">FSDEF=0</span> قرار می‌گیرد تا <span class="en">FS</span> تنها نقش <span class="en">SOF</span> را داشته باشد. همین ساختارِ «قاب / جایگاه / <span class="en">FS</span> که هر سه مستقل از هم پیکربندی‌شدنی‌اند»، سازوکاری است که به <span class="en">SAI</span> اجازه می‌دهد با یک سخت‌افزار واحد، پروتکل‌های صوتی متنوعی را توصیف کند.</p>
+
+<h3 class="h2x" id="sec-213"><span class="dm">◆</span>۲.۳ تناظر میدان‌های <span class="en">SAI</span> با استانداردهای <span class="en">I2S</span></h3>
+<p>ماژول <span class="en">I2S</span> مقدارهای حالت را در قالب شمارنده‌های ثابت «بسته‌بندی» کرده است؛ اما <span class="en">SAI</span> انعطاف بیشتری دارد، همین مفاهیم را به‌صورت میدان‌های مستقیماً نوشتنی عرضه می‌کند و کاربر بنا بر نیاز خود محتوای مربوط را پیکربندی می‌کند. از همین رو <span class="en">SAI</span> توان توصیف ساختارهای قابِ ویژه‌ای را نیز دارد که در حیطۀ <span class="en">I2S</span> نمی‌گنجند (مانند چندجایگاهیِ <span class="en">TDM</span>، طول قاب غیر از توان‌های ۲ و طول مؤثر دلخواه برای <span class="en">FS</span>).</p>
+
+<div class="tblwrap" id="tab-21">
+  <div class="tblcap"><span class="cap-pill">جدول ۲-۱</span><span class="cap-text">تناظر عناصر موج <span class="en">I2S</span> با میدان‌های قاب <span class="en">SAI</span></span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:46%;">عنصر موج <span class="en">I2S</span></th><th>میدان قاب متناظر در <span class="en">SAI</span></th></tr></thead>
+    <tr><td class="jt">فیلیپس: <span class="en">WS</span> یک بیت از داده جلوتر است</td><td class="jt"><span class="en">FSOFF=1</span> (<span class="en">FS</span> یک بیت پیش از نخستین بیتِ <span class="en">Slot0</span> فعال می‌شود)</td></tr>
+    <tr><td class="jt">تراز <span class="en">MSB</span>: <span class="en">WS</span> هم‌زمان با <span class="en">MSB</span></td><td class="jt"><span class="en">FSOFF=0</span> (<span class="en">FS</span> هم‌زمان با نخستین بیتِ <span class="en">Slot0</span>)</td></tr>
+    <tr><td class="jt">شناسایی کانال (تقسیم مساوی قاب میان چپ/راست)</td><td class="jt"><span class="en">FSDEF=1</span> و زوج‌بودن <span class="en">NBSLOT</span></td></tr>
+    <tr><td class="jt"><span class="en">PCM</span> قاب بلند: <span class="en">WS</span> سیزده بیت / قاب کوتاه: یک بیت</td><td class="jt"><span class="en">FSALL</span> (طول سطح مؤثر = <span class="en">FSALL+1</span>)</td></tr>
+  </table>
+</div>
+
+<h3 class="h2x" id="sec-214"><span class="dm">◆</span>۲.۴ مقایسۀ جانبۀ <span class="en">I2S</span> و جانبۀ <span class="en">SAI</span></h3>
+
+<div class="tblwrap" id="tab-22">
+  <div class="tblcap"><span class="cap-pill">جدول ۲-۲</span><span class="cap-text">مقایسۀ جانبۀ <span class="en">I2S</span> و جانبۀ <span class="en">SAI</span></span></div>
+  <table class="tbl" style="font-size:11px;">
+    <thead><tr><th style="width:18%;">مورد</th><th style="width:38%;"><span class="en">I2S</span> (چندگانه‌شده از <span class="en">SPI</span>)</th><th><span class="en">SAI</span> (جانبۀ مستقل)</th></tr></thead>
+    <tr><td>جایگاه جانبه</td><td class="jt">حالت چندگانۀ <span class="en">SPI</span>؛ اشغال پایه‌های <span class="en">SPI</span></td><td class="jt">جانبۀ صوتی مستقل با گروه پایه‌های جداگانه</td></tr>
+    <tr><td>زیرماژول</td><td>تک‌ماژول</td><td>دو زیرماژول صوتی مستقل <span class="en">A/B</span></td></tr>
+    <tr><td>مسیر داده</td><td class="jt">تک رجیستر ۱۶ بیتی</td><td class="jt">برای هر ماژول <span class="en">FIFO</span> هشت‌واژه‌ای؛ هر واژه یک <span class="en">Slot</span></td></tr>
+    <tr><td>کانال/<span class="en">Slot</span></td><td>ثابت، دو کانال چپ/راست</td><td>متنوع و قابل تعریف توسط کاربر</td></tr>
+    <tr><td>پهنای داده</td><td class="jt"><span class="en">16/24/32</span> (<span class="en">24/32</span> نیازمند دو بار دسترسی)</td><td class="jt"><span class="en">8/10/16/20/24/32</span></td></tr>
+    <tr><td>پروتکل</td><td class="jt">فیلیپس، تراز <span class="en">MSB/LSB</span>، <span class="en">PCM</span></td><td class="jt">متنوع و قابل تعریف توسط کاربر</td></tr>
+    <tr><td>مادر/برده</td><td class="jt">مادر/برده</td><td class="jt">هر ترکیبی از مادر/برده × ارسال/دریافت؛ دو ماژول قابل همگام/ناهمگام</td></tr>
+    <tr><td>دوطرفه‌کاری</td><td class="jt">یک‌طرفه؛ در هر لحظه تنها یک جهت</td><td class="jt">با همگام‌سازی داخلی دو ماژول، دوطرفه‌کاریِ کامل</td></tr>
+    <tr><td>همگام‌سازی قاب</td><td class="jt">فاز/طول <span class="en">WS</span> شمارنده‌ای ثابت است</td><td class="jt">طول، قطبیت، جابه‌جایی و تعریف <span class="en">FS</span> همه قابل پیکربندی</td></tr>
+    <tr><td><span class="en">FIFO</span></td><td>ندارد</td><td>دارد</td></tr>
+  </table>
+</div>
+
+<!-- ================= بخش ۳ ================= -->
+<div class="chapter-header" id="sec-b3">
+  <span class="sec-pill">بخش ۳</span>
+  <div class="sec-title">نمونۀ عملی جانبۀ <span class="en">SAI</span></div>
+  <div class="sec-divider"></div>
+</div>
+<p>این بخش توضیح می‌دهد چگونه جانبۀ <span class="en">SAI</span> پیکربندی می‌شود و چگونه با پروتکل <span class="en">I2S</span> و در نرخ نمونه‌برداری <span class="en">8kHz</span>، داده‌ها از طریق <span class="en">DMA</span> ارسال می‌شوند.</p>
+
+<h3 class="h2x" id="sec-311"><span class="dm">◆</span>۳.۱ مقداردهی اولیه و پیکربندی جانبۀ <span class="en">SAI</span></h3>
+<p>در زمان مقداردهی اولیه، نخست بر پایۀ فرکانس ساعت سیستم و نرخ نمونه‌برداری صوتیِ موردنیاز، ضریب تقسیم ساعت مادر (<span class="en">MCKDIV</span>) محاسبه می‌شود. رابطۀ محاسبه چنین است: <span class="en">MCKDIV = (SYSCLK/6) / (SampleRate × 256)</span> که در آن عدد <span class="en">256</span> در مخرج بیانگر آن است که ساعت مادر ۲۵۶ برابر نرخ نمونه‌برداری است (<span class="en">MCLK = 256 × FS</span>)؛ همین مقدار تقسیم، فرکانس ساعت مادر صوتی تولیدشده توسط ماژول <span class="en">SAI</span> را تعیین می‌کند.</p>
+<div class="formula">MCKDIV = (SYSCLK/6) / (SampleRate * 256)</div>
+<p>سپس حالت کار و پارامترهای پایۀ پروتکل <span class="en">SAI</span> پیکربندی می‌شود؛ مراحل به شرح زیر است:</p>
+<div class="bl">تقسیم ساعت و حالت مادر/برده: زنجیرۀ تقسیم با <span class="en">SAI_MasterDivider_Enabled</span> فعال می‌شود، مقدار محاسبۀ <span class="en">tmpdiv</span> در تقسیم‌کنندۀ ساعت مادر نوشته می‌شود و ماژول <span class="en">SAI</span> به‌عنوان فرستندۀ مادر (<span class="en">SAI_Mode_MasterTx</span>) کار می‌کند؛ ساعت‌مبدأ داخلی گذرگاه را می‌راند و ساعت بیت و سیگنال همگام‌سازی قاب را به‌طور فعال بیرون می‌دهد.</div>
+<div class="bl">پروتکل و قالب داده: پروتکل آزاد (<span class="en">SAI_Free_Protocol</span>) انتخاب می‌شود تا کاربر بتواند ساختار قاب و جایگاه را خودش تعریف کند؛ طول داده ۱۶ بیت تنظیم می‌شود (<span class="en">SAI_DataSize_16b</span>)، ترتیب انتقال نخست با ارسال بیت باارزش‌ترین است (<span class="en">MSB first</span>) و نمونه‌برداری داده در لبهٔ بالاروندۀ ساعت بیت انجام می‌گیرد.</div>
+<div class="bl">روش همگام‌سازی و آستانۀ <span class="en">FIFO</span>: حالت ناهمگام (<span class="en">SAI_Asynchronous</span>) پیکربندی می‌شود؛ یعنی ماژول <span class="en">A</span> مستقل کار می‌کند و با ماژول <span class="en">B</span> همگام نیست. آستانۀ <span class="en">FIFO</span> ارسال روی «خالی» گذاشته می‌شود (<span class="en">SAI_Threshold_FIFOEmpty</span>) تا هنگام خالی‌شدن <span class="en">FIFO</span> درخواست <span class="en">DMA</span> صادر شود و داده‌ها به‌طور پیوسته پر شوند.</div>
+<p>پس از آن ساختار قاب صوتی پیکربندی می‌شود؛ پارامترها عبارت‌اند از:</p>
+<div class="bl">هر قاب ۳۲ دور ساعت‌بیت دارد (<span class="en">SAI_FrameLength = 32</span>) و سیگنال همگام‌سازی قاب به مدت ۱۶ دور ساعت‌بیت مؤثر می‌ماند (<span class="en">SAI_ActiveFrameLength = 16</span>).</div>
+<div class="bl">سیگنال همگام‌سازی قاب تنها در جایگاه آغاز قاب فعال است (<span class="en">SAI_FS_StartFrame</span>) و برای شناسایی کانال به کار نمی‌رود؛ قطبیت آن فعال‌با‌سطح‌بالا است (<span class="en">SAI_FS_ActiveHigh</span>) و این سیگنال یک دور ساعت‌بیت زودتر از نخستین بیت داده ظاهر می‌شود (<span class="en">SAI_FS_BeforeFirstBit</span>).</div>
+<p>در پایان پارامترهای <span class="en">Slot</span> پیکربندی می‌شود، شامل این موارد:</p>
+<div class="bl">پهنای <span class="en">Slot</span> برابر پهنای داده است (۱۶ بیت)؛ هر قاب ۲ جایگاه دارد (<span class="en">SAI_SlotNumber = 2</span>) و همۀ جایگاه‌ها فعال می‌شوند (<span class="en">SAI_SlotActive_ALL</span>) تا همه بتوانند داده را به‌درستی منتقل کنند.</div>
+<p>پس از تکمیل پیکربندی همۀ ساختارهای بالا، تابع <span class="en">SAI_SlotInit</span> برای نوشتن رجیسترهای <span class="en">Slot</span> فراخوانی می‌شود و با فراخوانی <span class="en">SAI_FlushFIFO</span> اشاره‌گرهای خواندن/نوشتن <span class="en">FIFO</span> بازنشانی و داده‌های باقی‌ماندۀ احتمالی پاک می‌شوند تا وضعیت آغاز ارسال تمیز و یکدست باشد. پس از آن با فعال‌سازی ماژول <span class="en">SAI</span>، ارسال دادهٔ صوتی از مسیر <span class="en">DMA</span> یا وقفه آغاز می‌شود.</p>
+
+<div class="fig" id="code-1" style="break-inside:auto;">
+  <div class="codeblk long" style="font-size:10px;"><span class="cm">/* تبدیل نرخ نمونه‌برداری به تقسیم ساعت مادر: MCLK=256*FS، MCKDIV = (SYSCLK/6)/(FS*256) */</span>
+const uint32_t tmpdiv = (RCC_ClocksStatus.SYSCLK_Frequency / 6) / (SampleRate * 256);
+
+SAI_InitStructure.SAI_NoDivider     = SAI_MasterDivider_Enabled;      <span class="cm">/* فعال‌سازی تقسیم، MCKDIV اثر می‌کند */</span>
+SAI_InitStructure.SAI_MasterDivider = tmpdiv;                         <span class="cm">/* از نرخ نمونه‌برداری 8kHz استخراج شده */</span>
+SAI_InitStructure.SAI_AudioMode     = SAI_Mode_MasterTx;              <span class="cm">/* فرستندۀ مادر */</span>
+SAI_InitStructure.SAI_Protocol      = SAI_Free_Protocol;              <span class="cm">/* پروتکل آزاد، قاب/Slot خودپیکربندی */</span>
+SAI_InitStructure.SAI_DataSize      = SAI_DataSize_16b;               <span class="cm">/* داده 16 بیت */</span>
+SAI_InitStructure.SAI_FirstBit      = SAI_FirstBit_MSB;               <span class="cm">/* نخست MSB ارسال می‌شود */</span>
+SAI_InitStructure.SAI_ClockStrobing = SAI_ClockStrobing_RisingEdge;    <span class="cm">/* نمونه‌برداری در لبهٔ بالارونده */</span>
+SAI_InitStructure.SAI_Synchro       = SAI_Asynchronous;               <span class="cm">/* ناهمگام با ماژول B، بدون استفاده از B */</span>
+SAI_InitStructure.SAI_FIFOThreshold = SAI_Threshold_FIFOEmpty;        <span class="cm">/* ارسال: خالی‌شدن FIFO درخواست DMA می‌دهد */</span>
+
+/* پیکربندی قاب */
+SAI_FrameInitStructure.SAI_FrameLength       = 32;                    <span class="cm">/* 32 ساعت‌بیت در هر قاب */</span>
+SAI_FrameInitStructure.SAI_ActiveFrameLength = 16;                    <span class="cm">/* FS مؤثر 16 بیت */</span>
+SAI_FrameInitStructure.SAI_FSDefinition      = SAI_FS_StartFrame;     <span class="cm">/* FS تنها SOF، بدون شناسایی کانال */</span>
+SAI_FrameInitStructure.SAI_FSPolarity        = SAI_FS_ActiveHigh;     <span class="cm">/* فعال با سطح بالا */</span>
+SAI_FrameInitStructure.SAI_FSOffset          = SAI_FS_BeforeFirstBit; <span class="cm">/* FS یک بیت پیش از نخستین بیت */</span>
+
+/* پیکربندی Slot */
+SAI_SlotInitStructure.SAI_FirstBitOffset = 0;                 <span class="cm">/* FBOFF=0 */</span>
+SAI_SlotInitStructure.SAI_SlotSize       = SAI_SlotSize_16b;  <span class="cm">/* پهنای جایگاه = پهنای داده */</span>
+SAI_SlotInitStructure.SAI_SlotNumber     = 2;                 <span class="cm">/* 2 جایگاه */</span>
+SAI_SlotInitStructure.SAI_SlotActive     = SAI_SlotActive_ALL;<span class="cm">/* همه جایگاه‌ها فعال */</span>
+SAI_SlotInit(SAI_Block_A, &amp;SAI_SlotInitStructure);
+
+SAI_FlushFIFO(SAI_Block_A);   <span class="cm">/* FFLUSH: بازنشانی اشاره‌گر خواندن/نوشتن FIFO، پاک‌کردن دادهٔ باقی‌مانده */</span></div>
+  <div class="figcap"><span class="cap-pill">کد ۱</span><span class="cap-text">پیکربندی جانبۀ <span class="en">SAI</span>: تقسیم ساعت، قاب و <span class="en">Slot</span></span></div>
+</div>
+
+<h3 class="h2x" id="sec-312"><span class="dm">◆</span>۳.۲ جریان داده در جانبۀ <span class="en">SAI</span></h3>
+<p>نقطۀ ورود برنامه تابع <span class="en">main</span> است و کار با مرحلۀ تولید دادهٔ موج سینوسی آغاز می‌شود: بنا بر نرخ نمونه‌برداری از پیش تعیین‌شده (<span class="en">8000Hz</span>) و فرکانس صدا (<span class="en">440Hz</span>؛ همان نت استاندارد <span class="en">A4</span>)، دامنۀ موج سینوسی در هر نقطۀ نمونه به‌صورت حلقه‌وار محاسبه می‌شود. هر دو نقطۀ نمونه یک گروه می‌سازند (کانال چپ و راست)؛ دادهٔ دو کانال یکسان است و خروجیِ «تک‌کانال روی دو گذرگاه» حاصل می‌شود. دامنه با ضریب <span class="en">1000</span> مقیاس‌بندی شده تا در بازۀ عددهای صحیح علامت‌دار ۱۶ بیتی به‌آسانی جای گیرد. این داده‌ها به‌عنوان بافر مبدأ انتقال‌های بعدیِ <span class="en">DMA</span> به کار می‌روند.</p>
+<p>پس از آماده‌شدن داده‌ها، توابع مقداردهی اولیۀ سخت‌افزار به ترتیب فراخوانی می‌شوند:</p>
+<div class="bl">فراخوانی <span class="en">SAI_Config</span> با پارامتر نرخ نمونه‌برداری: محاسبۀ تقسیم ساعت ماژول <span class="en">SAI</span>، پیکربندی حالت پروتکل، تعریف ساختار قاب و تنظیم پارامترهای جایگاه را کامل می‌کند تا <span class="en">SAI</span> در حالت فرستندۀ مادر آماده باشد.</div>
+<div class="bl">فراخوانی <span class="en">SAI_GPIO_Config</span>: پایه‌های موردنیاز کارکرد <span class="en">SAI</span> را پیکربندی و در حالت کارکرد چندگانه تنظیم می‌کند تا خروجی فیزیکی سیگنال‌های گذرگاه <span class="en">SAI</span> را حمل کنند.</div>
+<div class="bl">سپس کانال <span class="en">DMA</span> برای انتقال خودکار دادهٔ صوتی پیکربندی می‌شود؛ مراحل به این شرح است:</div>
+<div class="bl">بازنشانی کانال مشخص‌شدۀ <span class="en">DMA</span> (<span class="en">DMA1_Channel1</span>) و پاک‌کردن وضعیت پیکربندی باقی‌ماندۀ احتمالی.</div>
+<div class="bl">پیکربندی پارامترهای انتقال <span class="en">DMA</span>: آدرس جانبی روی رجیستر دادهٔ ماژول <span class="en">A</span> در <span class="en">SAI</span> (<span class="en">DATAR</span>) به‌عنوان مقصد انتقال داده گذاشته می‌شود؛ آدرس حافظه روی آرایۀ دادهٔ موج سینوسیِ از پیش محاسبۀ <span class="en">SAI_Data</span> تنظیم می‌شود؛ جهت انتقال از حافظه به جانبی است (<span class="en">DMA_DIR_PeripheralDST</span>)؛ حجم انتقال برابر <span class="en">DATA_SIZE</span> نیم‌واژه (۱۶ بیت) است؛ آدرس جانبی ثابت می‌ماند (در هر انتقال همان رجیستر داده نوشته می‌شود) و آدرس حافظه افزایش می‌یابد (خواندن ترتیبی داده‌های پیوستۀ آرایه)؛ پهنای دادهٔ جانبی و حافظه هر دو نیم‌واژه (۱۶ بیت) و هم‌خوان با پهنای دادهٔ پیکربندی‌شدۀ <span class="en">SAI</span> است؛ حالت انتقال روی حالت حلقوی گذاشته می‌شود (<span class="en">DMA_Mode_Circular</span>) تا پس از پایان ارسال، پخش به‌طور خودکار از ابتدا از سر گرفته شود و خروجی صوتی پیوسته فراهم گردد؛ اولویت کانال <span class="en">DMA</span> روی بالاترین مقدار تنظیم می‌شود (<span class="en">VeryHigh</span>) تا بلادرنگ‌بودن انتقال دادهٔ صوتی تضمین شود؛ و حالت حافظه‌به‌حافظه ممنوع می‌شود تا صحنۀ کار، انتقال جانبیِ مشخص باشد.</div>
+<div class="bl">فراخوانی <span class="en">DMA_Init</span> برای نوشتن پیکربندی بالا در رجیسترهای سخت‌افزاری <span class="en">DMA</span>.</div>
+<p>پس از پیکربندی پایۀ <span class="en">DMA</span>، با تابع <span class="en">DMA_MuxChannelConfig</span> کانال ۱ مالتی‌پلکسر <span class="en">DMA</span> به شمارۀ درخواست <span class="en">DMA</span> مخصوص <span class="en">SAI</span> (<span class="en">112</span>) نگاشت می‌شود و پیوند سخت‌افزاری میان درخواست <span class="en">DMA</span> و ماژول <span class="en">SAI</span> برقرار می‌گردد.</p>
+<p>در پایان ماژول‌های کارکردی به ترتیب فعال می‌شوند:</p>
+<div class="bl">فراخوانی <span class="en">DMA_Cmd</span> برای فعال‌سازی <span class="en">DMA1_Channel1</span> تا وارد وضعیت آماده‌به‌کار شود.</div>
+<div class="bl">فراخوانی <span class="en">SAI_DMACmd</span> برای فعال‌سازی درخواست ارسال <span class="en">DMA</span> در ماژول <span class="en">SAI</span>؛ با این اجازه، هنگام خالی‌بودن <span class="en">FIFO</span> انتقال <span class="en">DMA</span> خودکار آغاز می‌شود.</div>
+<div class="bl">فراخوانی <span class="en">SAI_Cmd</span> برای فعال‌سازی ماژول <span class="en">SAI</span>؛ خروجی ساعت صوت و سیگنال همگام‌سازی قاب رسماً آغاز می‌شود و پخش دادهٔ صوتی شروع می‌گردد.</div>
+
+<div class="fig" id="code-2" style="break-inside:auto;">
+  <div class="codeblk long" style="font-size:10px;">void SAI_Tx_DMA_Init(DMA_Channel_TypeDef *DMAy_Channelx, uint32_t pAddr, uint32_t mAddr,
+                 uint16_t Length)
+{
+    DMA_InitTypeDef DMA_InitStructure = {0};  <span class="cm">// ساختار پیکربندی DMA، با صفر مقداردهی می‌شود</span>
+
+    RCC_HBPeriphClockCmd(RCC_HBPeriph_DMA1, ENABLE);  <span class="cm">// فعال‌سازی ساعت گذرگاه AHB جانبۀ DMA1</span>
+
+    DMA_DeInit(DMAy_Channelx);  <span class="cm">// بازنشانی کانال DMA، پاک‌کردن وضعیت پیکربندی قبلی</span>
+    DMA_InitStructure.DMA_PeripheralBaseAddr = pAddr;  <span class="cm">// آدرس پایهٔ جانبی: رجیستر دادهٔ SAI</span>
+    DMA_InitStructure.DMA_Memory0BaseAddr    = mAddr;  <span class="cm">// آدرس پایهٔ حافظه: آرایۀ دادهٔ صوتی</span>
+    DMA_InitStructure.DMA_DIR                = DMA_DIR_PeripheralDST;  <span class="cm">// جهت انتقال: حافظه به جانبی</span>
+    DMA_InitStructure.DMA_BufferSize         = Length;  <span class="cm">// حجم انتقال (بر حسب نیم‌واژه)</span>
+    DMA_InitStructure.DMA_PeripheralInc      = DMA_PeripheralInc_Disable;  <span class="cm">// آدرس جانبی افزایش نمی‌یابد (نوشتن ثابت در DATAR)</span>
+    DMA_InitStructure.DMA_MemoryInc          = DMA_MemoryInc_Enable;  <span class="cm">// آدرس حافظه افزایش می‌یابد (خواندن ترتیبی آرایه)</span>
+    DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;  <span class="cm">// پهنای دادهٔ جانبی: 16 بیت</span>
+    DMA_InitStructure.DMA_MemoryDataSize     = DMA_MemoryDataSize_HalfWord;      <span class="cm">// پهنای دادهٔ حافظه: 16 بیت</span>
+    DMA_InitStructure.DMA_Mode               = DMA_Mode_Circular;  <span class="cm">// حالت حلقوی: پس از پایان انتقال، خودکار از ابتدا</span>
+    DMA_InitStructure.DMA_Priority           = DMA_Priority_VeryHigh;  <span class="cm">// اولویت: بالاترین، تضمین بلادرنگ‌بودن صدا</span>
+    DMA_InitStructure.DMA_M2M                = DMA_M2M_Disable;  <span class="cm">// ممنوع‌کردن حالت حافظه‌به‌حافظه (سناریوی انتقال جانبی)</span>
+    DMA_Init(DMAy_Channelx, &amp;DMA_InitStructure);  <span class="cm">// نوشتن پیکربندی در رجیسترهای سخت‌افزاری DMA</span>
+}
+
+void sai_paly(void)
+{
+    <span class="cm">// تولید دادهٔ صوتی موج سینوسی (تک‌کانال روی دو گذرگاه)</span>
+    <span class="cm">// فرکانس صدا: 440Hz (نت استاندارد A4)، نرخ نمونه‌برداری: 8000Hz</span>
+    for (int i = 0; i &lt; DATA_SIZE; i += 2)
+    {
+        float t         = ((float)i) / ((float)SAMPLE_RATE);
+        SAI_Data[i]     = 1000.0f * sinf(440.0f * TAU * t);  <span class="cm">// کانال چپ</span>
+        SAI_Data[i + 1] = SAI_Data[i];  <span class="cm">// کانال راست: هم‌ارز کانال چپ (دو کانال هم‌صدا)</span>
+    }
+
+    SAI_Config(SAMPLE_RATE);  <span class="cm">// پیکربندی جانبۀ SAI (تقسیم ساعت، پروتکل، ساختار قاب، slot و…)</span>
+    SAI_GPIO_Config();  <span class="cm">// پیکربندی پایه‌های کارکرد SAI</span>
+
+    <span class="cm">// مقداردهی اولیۀ کانال DMA: آدرس جانبی روی رجیستر دادهٔ SAI، آدرس حافظه روی آرایۀ دادهٔ صوتی</span>
+    SAI_Tx_DMA_Init(DMA1_Channel1, (uint32_t)(&amp;SAI_Block_A-&gt;DATAR), (uint32_t)SAI_Data, DATA_SIZE);
+    DMA_MuxChannelConfig(DMA_MuxChannel1, 112);  <span class="cm">// نگاشت مالتی‌پلکسر DMA: نگاشت کانال 1 به شمارۀ درخواست DMA مخصوص SAI یعنی 112</span>
+
+    DMA_Cmd(DMA1_Channel1, ENABLE);  <span class="cm">// فعال‌سازی کانال DMA، ورود به وضعیت آماده‌به‌کار</span>
+    SAI_DMACmd(SAI_Block_A, ENABLE);  <span class="cm">// فعال‌سازی درخواست ارسال DMA در SAI (خالی‌شدن FIFO خودکار درخواست می‌دهد)</span>
+
+    SAI_Cmd(SAI_Block_A, ENABLE);  <span class="cm">// فعال‌سازی ماژول SAI، آغاز خروجی ساعت صوت و سیگنال همگام‌سازی قاب</span>
+
+    while (1)  <span class="cm">// چرخش بی‌کاری حلقهٔ اصلی؛ حمل همهٔ دادهٔ صوتی در پس‌زمینه بر دوش DMA است</span>
+    {
+    }
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۲</span><span class="cap-text">پیکربندی <span class="en">DMA</span> ارسال صدا و جریان اصلی پخش</span></div>
+</div>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN25001</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/07/08</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">SAI</span></td><td class="jt">رابط صوتی سری (<span class="en">Serial Audio Interface</span>)؛ جانبۀ صوتی اختصاصی و مستقل با دو زیرماژول <span class="en">A/B</span>، هر یک با <span class="en">FIFO</span> هشت‌واژه‌ای و رجیستر انتقال ۳۲ بیتی</td></tr>
+      <tr><td><span class="en">I2S</span></td><td class="jt">گذرگاه صوتی میان‌مدارها (<span class="en">Inter-IC Sound</span>)؛ پروتکل صوتی همگام سه‌سیمی که شرکت <span class="en">Philips</span> معرفی کرد و کانال‌های چپ/راست را روی یک ساعت سری تقسیم زمانی می‌کند</td></tr>
+      <tr><td><span class="en">FS / WS</span></td><td class="jt">سیگنال همگام‌سازی قاب (در <span class="en">I2S</span> گزینش واژه)؛ نیمۀ بالایی/پایینی قاب را به کانال چپ/راست نشانه‌گذاری می‌کند و در <span class="en">PCM</span> نقش پالس همگام (<span class="en">SYNC</span>) را می‌گیرد</td></tr>
+      <tr><td><span class="en">SCK / CK</span></td><td class="jt">ساعت بیت؛ لبهٔ بالاروندۀ آن نمونه‌برداری گیرنده و لبهٔ پایین‌روند آن تغییر دادهٔ فرستنده است</td></tr>
+      <tr><td><span class="en">MCK / MCLK</span></td><td class="jt">ساعت مادر صوتی (اختیاری)؛ در نمونۀ این سند ۲۵۶ برابر نرخ نمونه‌برداری است (<span class="en">MCLK = 256 × Fs</span>) و با <span class="en">MCKDIV</span> تقسیم می‌شود</td></tr>
+      <tr><td><span class="en">MSB / LSB</span></td><td class="jt">بیت باارزش‌ترین / بیت کم‌ارزش‌ترین واژۀ داده؛ در حالت‌های تراز <span class="en">MSB</span> داده به سرآغاز قاب و در تراز <span class="en">LSB</span> به انتهای قاب تکیه می‌کند</td></tr>
+      <tr><td><span class="en">PCM</span></td><td class="jt">مدولاسیون کد پالس؛ قاب بدون اطلاعات چپ/راست که <span class="en">WS</span> در آن پالس همگام است، قاب بلند <span class="en">13</span> بیت و قاب کوتاه <span class="en">1</span> بیت و هر واژۀ داده ثابت <span class="en">16</span> بیت است</td></tr>
+      <tr><td><span class="en">codec</span></td><td class="jt">کدگشا/رمزگشای صوتی؛ مدار تبدیل صدای دیجیتال به آنالوگ و برعکس که از مسیر <span class="en">I2S</span> یا <span class="en">SAI</span> به <span class="en">MCU</span> وصل می‌شود</td></tr>
+      <tr><td><span class="en">Slot</span></td><td class="jt">جایگاه داده درون قاب در <span class="en">SAI</span>؛ تعداد (<span class="en">NBSLOT</span>)، اندازه (<span class="en">SLOTSZ</span>)، ماسک فعال‌سازی (<span class="en">SLOTEN</span>) و جابه‌جایی نخستین بیت (<span class="en">FBOFF</span>) هر یک رجیستر مستقل دارند</td></tr>
+      <tr><td><span class="en">FIFO</span></td><td class="jt">حافظهٔ میان‌ریز اول‌به‌در / اول‌به‌بیرون؛ هر زیرماژول <span class="en">SAI</span> یک <span class="en">FIFO</span> هشت‌واژه‌ای دارد و آستانۀ آن (<span class="en">FTH</span>) درخواست <span class="en">DMA</span> را تعیین می‌کند</td></tr>
+      <tr><td><span class="en">MCKDIV</span></td><td class="jt">ضریب تقسیم ساعت مادر در <span class="en">SAI</span>؛ برابر <span class="en">(SYSCLK/6)/(SampleRate*256)</span> محاسبه می‌شود</td></tr>
+      <tr><td><span class="en">FRCR / SLOTR / CFGR</span></td><td class="jt">سه گروه رجیستر پیکربندی <span class="en">SAI</span> برای قاب، جایگاه و داده/ساعت؛ همین جداسازی، توصیف پروتکل‌های صوتی مختلف با یک سخت‌افزار را ممکن می‌کند</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN25001 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۲۳</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN25001</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
