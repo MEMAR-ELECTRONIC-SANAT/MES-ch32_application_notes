@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>راهنمای جامع جانبۀ تقویت‌کنندۀ عملیاتی OPA در میکروکنترلرهای CH32 — ترجمۀ فارسی AN24000</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">راهنمای جامع جانبۀ</div>
+    <div class="t2">تقویت‌کنندۀ عملیاتی <span class="en">OPA</span></div>
+    <div class="t3">در میکروکنترلرهای <span class="en">CH32</span></div>
+  </div>
+  <div class="c-sub">از شاخص‌های پایۀ <span class="en">OPA</span> برای انتخاب قطعه (نرخ چرخش، ولتاژ آفست، پهنای باند بهرۀ واحد و اشباع خروجی)، تا حالت‌های مقایسۀ ولتاژ، پیرو، بهرۀ <span class="en">PGA</span> و ورودی افتراقی، نظرسنجی و ماشۀ تایمری و نمونۀ رمزگشای <span class="en">QII</span></div>
+  <div class="c-desc">در این جزوه، ترجمۀ فارسی سند رسمی <span class="en">AN24000</span> (نسخۀ ۱٫۰، منتشرۀ شرکت <span class="en">WCH</span>) را می‌خوانید: جانبۀ <span class="en">OPA</span> در سری همگانی‌منظورۀ <span class="en">CH32</span> برای تقویت و گرفتن سیگنال‌های کوچک به کار می‌رود. شاخص‌های پایۀ <span class="en">OPA</span> شامل نرخ چرخش <span class="en">SR</span>، ولتاژ آفست، پهنای باند بهرۀ واحد و اشباع بالا/پایین خروجی برای انتخاب قطعه مرور می‌شود؛ سپس حالت‌های مقایسۀ ولتاژ، پیرو ولتاژ، بهرۀ داخلی <span class="en">PGA</span> و ورودی افتراقی با محاسبۀ بهره و بایاس گام‌به‌گام بررسی می‌شوند و در پایان، نظرسنجی خودکار و ماشۀ خودکارِ تأخیری همراه با <span class="en">ADC</span>، ماشۀ ضبط ورودی تایمر و نمونۀ رمزگشای شارژ بی‌سیم <span class="en">QII</span> در <span class="en">CH32M030</span> با کد واقعی توضیح داده می‌شود.</div>
+  <div class="c-tags">
+    <span class="c-tag">میکروکنترلرهای همگانی <span class="en">CH32</span></span>
+    <span class="c-tag">جانبۀ <span class="en">OPA</span></span>
+    <span class="c-tag">نرخ چرخش <span class="en">SR</span> و ولتاژ آفست</span>
+    <span class="c-tag">پهنای باند بهرۀ واحد <span class="en">GBW</span></span>
+    <span class="c-tag">حالت‌های مقایسه، پیرو و <span class="en">PGA</span></span>
+    <span class="c-tag">ورودی افتراقی و بایاس <span class="en">VRFBIAS</span></span>
+    <span class="c-tag">نظرسنجی ورودی مثبت با <span class="en">ADC</span></span>
+    <span class="c-tag">رمزگشای <span class="en">QII</span> شارژ بی‌سیم</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN24000 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | معرفی <span class="en">OPA</span> در سری <span class="en">CH32</span></span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-111"><span class="s-id">1.1</span><span>معرفی <span class="en">OPA</span> در <span class="en">CH32</span></span><span class="s-dots"></span><span class="s-page">۳</span></a>
+    <a class="toc-sub" href="#sec-1111"><span class="s-id">1.1.1</span><span>شاخص‌های پایۀ <span class="en">OPA</span></span><span class="s-dots"></span><span class="s-page">۴</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | به‌کارگیری حالت‌های <span class="en">OPA</span></span><span class="t-dots"></span><span class="t-page">۸</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-211"><span class="s-id">2.1</span><span>حالت‌های مختلف <span class="en">OPA</span></span><span class="s-dots"></span><span class="s-page">۸</span></a>
+    <a class="toc-sub" href="#sec-212"><span class="s-id">2.2</span><span>به‌کارگیری حالت‌های کارکردی <span class="en">OPA</span></span><span class="s-dots"></span><span class="s-page">۱۴</span></a>
+    <a class="toc-sub" href="#sec-213"><span class="s-id">2.3</span><span>نمونۀ کاربرد <span class="en">OPA</span></span><span class="s-dots"></span><span class="s-page">۲۰</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b3"><span class="t-num">۴</span><span class="t-title">پیوست | جدول پشتیبانی کارکردهای <span class="en">OPA</span></span><span class="t-dots"></span><span class="t-page">۲۱</span></a>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۵</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۲۱</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۶</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۲۲</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">شکل ۱-۱</span><span>نمودار توپولوژی <span class="en">OPA</span></span><span class="f-dots"></span><span class="f-page">۳</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۲</span><span>نتیجۀ نمونه‌برداری خروجی <span class="en">OPA</span></span><span class="f-dots"></span><span class="f-page">۵</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۳</span><span>نمودار ولتاژ آفست <span class="en">OPA</span></span><span class="f-dots"></span><span class="f-page">۶</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۴</span><span>نمودار ولتاژ ورودی در برابر مقدار آفست</span><span class="f-dots"></span><span class="f-page">۶</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۵</span><span>نمودار اعوجاج خروجی</span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۱</span><span>نمودار مقایسۀ ولتاژ</span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۲</span><span>نمودار تابع پیرو</span><span class="f-dots"></span><span class="f-page">۹</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۳</span><span>نمودار بهرۀ داخلی <span class="en">PGA</span></span><span class="f-dots"></span><span class="f-page">۱۰</span></div>
+      </div>
+      <div>
+        <div class="frow"><span class="f-id">شکل ۲-۴</span><span>نمودار افتراق داخلی <span class="en">CH32V006</span></span><span class="f-dots"></span><span class="f-page">۱۱</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۵</span><span>نمودار بهرۀ داخلی <span class="en">CH32M030</span></span><span class="f-dots"></span><span class="f-page">۱۲</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۶</span><span>نمودار سادۀ افتراق <span class="en">OPA</span></span><span class="f-dots"></span><span class="f-page">۱۳</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۷</span><span>نظرسنجی با ماشۀ خودکار <span class="en">OPA</span></span><span class="f-dots"></span><span class="f-page">۱۵</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۸</span><span>نظرسنجی با ماشۀ تأخیری <span class="en">OPA</span></span><span class="f-dots"></span><span class="f-page">۱۶</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۹</span><span>نمودار تقویت‌کنندۀ رمزگشای <span class="en">QII</span></span><span class="f-dots"></span><span class="f-page">۲۰</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۱۰</span><span>نتیجۀ خروجی مدولاسیون و رمزگشایی</span><span class="f-dots"></span><span class="f-page">۲۰</span></div>
+        <div class="frow"><span class="f-id">جدول ۲-۱</span><span>ولتاژ بایاس خروجی <span class="en">OPA</span></span><span class="f-dots"></span><span class="f-page">۱۲</span></div>
+        <div class="frow"><span class="f-id">جدول ۲-۲</span><span>بهرۀ خروجی <span class="en">OPA</span></span><span class="f-dots"></span><span class="f-page">۱۲</span></div>
+        <div class="frow"><span class="f-id">جدول ۲-۳</span><span>ولتاژ بایاس <span class="en">OPA</span></span><span class="f-dots"></span><span class="f-page">۱۳</span></div>
+        <div class="frow"><span class="f-id">جدول ۲-۴</span><span>بهرۀ <span class="en">OPA</span></span><span class="f-dots"></span><span class="f-page">۱۴</span></div>
+        <div class="frow"><span class="f-id">جدول پیوست ۱</span><span>پشتیبانی <span class="en">OPA</span> در مدل‌های مختلف</span><span class="f-dots"></span><span class="f-page">۲۱</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> این سند شاخص‌های پایۀ <span class="en">OPA</span> (نرخ چرخش، ولتاژ آفست، پهنای باند بهرۀ واحد و اشباع خروجی) را برای انتخاب قطعه در سری همگانی‌منظورۀ <span class="en">CH32</span> معرفی می‌کند؛ حالت‌های مقایسه، پیرو، بهرۀ <span class="en">PGA</span> و ورودی افتراقی را با روابط بهره و بایاس مرور می‌کند و در پایان نظرسنجی خودکار، ماشۀ تأخیری، ماشۀ تایمری و رمزگشای <span class="en">QII</span> در <span class="en">CH32M030</span> را با جدول پشتیبانی مدل‌ها توضیح می‌دهد.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>این سند به معرفی جانبۀ تقویت‌کنندۀ عملیاتی <span class="en">OPA</span> در سری میکروکنترلرهای همگانی‌منظورۀ <span class="en">CH32</span> می‌پردازد؛ به‌طور خلاصه شاخص‌های پارامتری <span class="en">OPA</span> را برای انتخاب قطعه در سری همگانی <span class="en">CH32</span> توضیح می‌دهد و به معرفی چند حالت استفاده از <span class="en">OPA</span> و معرفی چند حالت کاربردی نمونه نیز می‌پردازد.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>میکروکنترلرهای همگانی‌منظوره</td><td>سری <span class="en">CH32</span></td></tr>
+  </table>
+</div>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">معرفی <span class="en">OPA</span> در سری <span class="en">CH32</span></div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-111"><span class="dm">◆</span>۱.۱ معرفی <span class="en">OPA</span> در <span class="en">CH32</span></h3>
+<p>تقویت‌کنندۀ عملیاتی <span class="en">OPA</span> معمولاً برای تقویت سیگنال به کار می‌رود و از چند حالت مختلف برای گرفتن سیگنال‌های کوچک پشتیبانی می‌کند. ویژگی‌های پایۀ <span class="en">OPA</span> عبارت‌اند از: امپدانس ورودی بالا؛ امپدانس خروجی پایین؛ بهرۀ حلقه‌باز بالا.</p>
+<div class="fig" id="fig-11">
+  <div class="figbox">
+    <img src="assets/img/an24000-fig_p3_x35.jpeg" alt="شکل ۱-۱" style="max-width:470px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۱</span><span class="cap-text">نمودار توپولوژی <span class="en">OPA</span></span></div>
+</div>
+<p>قطعۀ <span class="en">OPA</span> همان‌گونه که در شکل بالا نشان داده شده است، دارای دو پایۀ ورودی است — ورودی مثبت (<span class="en">INP</span>) و ورودی منفی (<span class="en">INN</span>) — و یک پایۀ خروجی (<span class="en">OUT</span>). بر اساس ویژگی پایه‌ها می‌توان به‌سادگی چنین خلاصه کرد: وقتی ولتاژ ورودی مثبت بالا برود، ولتاژ خروجی نیز هم‌گام بالا می‌رود و وقتی ولتاژ ورودی منفی بالا برود، ولتاژ خروجی هم‌گام پایین می‌آید؛ ولتاژ پایۀ خروجی، ولتاژ خروجیِ تقویت‌شده است. بر اساس معماری متفاوت <span class="en">OPA</span> می‌توان آن را به دو دستۀ ورودی/خروجی ریل‌به‌ریل (<span class="en">Rail-to-Rail</span>) و ورودی/خروجی غیرریل‌به‌ریل تقسیم کرد. در سری همگانی‌منظورۀ <span class="en">CH32</span>، جانبۀ <span class="en">OPA</span> در <span class="en">CH32V30x</span> از نوع ورودی/خروجی غیرریل‌به‌ریل است و بقیه از نوع ورودی/خروجی ریل‌به‌ریل‌اند.</p>
+<p>در سری همگانی‌منظورۀ <span class="en">CH32</span> پشتیبانی می‌شود:</p>
+<div class="bl">پایه یا کانال ورودی <span class="en">OPA</span> قابل انتخاب است</div>
+<div class="bl">پایۀ خروجی <span class="en">OPA</span> می‌تواند درگاه <span class="en">I/O</span> عمومی یا کانال نمونه‌برداری <span class="en">ADC</span> انتخاب شود</div>
+<div class="bl"><span class="en">OPA</span> از عملکرد نظرسنجی ورودی مثبت پشتیبانی می‌کند</div>
+<div class="bl"><span class="en">OPA</span> از انتخاب بهرۀ داخلی <span class="en">PGA</span> پشتیبانی می‌کند</div>
+<div class="bl">وقفۀ <span class="en">OPA</span> می‌تواند سیستم را از حالت خواب بیدار کند</div>
+<div class="bl"><span class="en">OPA</span> از حالت خروجی پرسرعت پشتیبانی می‌کند</div>
+<p>برای مشاهدهٔ کارکردهای پشتیبانی‌شده در مدل‌های مختلف محصول به جدول پیوست سند مراجعه کنید.</p>
+
+<h4 class="h3x" id="sec-1111"><span class="dm">◆</span>۱.۱.۱ شاخص‌های پایۀ <span class="en">OPA</span></h4>
+<p>برای یک <span class="en">OPA</span> ایده‌آل داریم:</p>
+<div class="bl">بهرۀ حلقه‌باز بی‌نهایت</div>
+<div class="bl">ولتاژ آفست برابر صفر</div>
+<div class="bl">پهنای باند بهرۀ واحد بالا</div>
+<div class="bl">نرخ چرخش سریع</div>
+<div class="bl">استقلال پایه‌های ورودی و خروجی از یکدیگر</div>
+
+<h4 class="h3x" id="sec-11111"><span class="dm">◆</span>۱) نرخ چرخش (<span class="en">SR</span>)</h4>
+<p>نرخ چرخش (<span class="en">SR</span>) که نرخ تبدیل نیز نامیده می‌شود، بیشترین شیب بالا/پایین‌رفتن ولتاژ خروجی <span class="en">OPA</span> است و یکای آن <span class="en">V/uS</span> است:</p>
+<div class="formula">SR = dV<sub>out</sub>/dt</div>
+<p>نرخ چرخش نشان‌دهندۀ توانایی تقویت‌کننده در پاسخ‌دهی به تغییرات دامنۀ سیگنال است؛ هرچه نرخ چرخش بزرگ‌تر باشد به معنی سرعت پاسخ خروجی <span class="en">OPA</span> بیشتر و به معنی سریع‌تربودن نرخ تغییر ولتاژ خروجی در هنگام گرفتن آن است. نرخ چرخش پایین ممکن است باعث موارد زیر شود: اعوجاج در گرفتن سیگنال <span class="en">AC</span>؛ ناپایدارشدن ولتاژ خروجی گرفته‌شده. معمولاً هنگام گرفتن با <span class="en">ADC</span> باید زمان نمونه‌برداری متناسبی پیکربندی شود تا نمونه‌برداری در حالتی انجام شود که خروجی <span class="en">OPA</span> پایدار شده است.</p>
+<div class="fig" id="fig-12">
+  <div class="figbox">
+    <img src="assets/img/an24000-fig_p4_x57.jpeg" alt="شکل ۱-۲" style="max-width:560px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۲</span><span class="cap-text">نتیجۀ نمونه‌برداری خروجی <span class="en">OPA</span></span></div>
+</div>
+<p>در سری همگانی‌منظورۀ <span class="en">CH32</span> می‌توان حالت خروجی پرسرعت <span class="en">OPA</span> را پشتیبانی کرد؛ در این حالت با پرداخت هزینهٔ مصرف توان و کالیبراسیون آفست، نرخ چرخش خروجی <span class="en">OPA</span> بالا برده می‌شود. در آزمایش روی سری <span class="en">CH32</span>، با خروجی‌دادن شکل موج از پایۀ تایمر و مقایسۀ لبهٔ بالارونده و لبهٔ پایین‌روندۀ خروجی می‌توان دید که هنگام استفاده از حالت خروجی پرسرعت <span class="en">OPA</span>، نرخ چرخش خروجی <span class="en">OPA</span> به‌وضوح بهبود می‌یابد.</p>
+
+<h4 class="h3x" id="sec-11112"><span class="dm">◆</span>۲) مقدار آفست</h4>
+<p>ولتاژ آفست <span class="en">OPA</span> پارامتر مهمی برای ارزیابی کاربرد <span class="en">OPA</span> است؛ در <span class="en">OPA</span> ایده‌آل ولتاژ آفست صفر است و ملموس‌ترین حس آن این است: هنگامی‌که <span class="en">OPA</span> در بهرۀ حلقه‌باز باشد، اگر <span class="en">V+&le;V&minus;</span> باشد خروجی <span class="en">OPA</span> صفر می‌شود و اگر <span class="en">V+&gt;V&minus;</span> باشد خروجی <span class="en">OPA</span> برابر <span class="en">VDD</span> می‌شود؛ اما در استفادهٔ واقعی به دلیل وجود آفست ورودی، انحراف در مقایسۀ سطح ورودی رخ می‌دهد:</p>
+<div class="fig" id="fig-13">
+  <div class="figbox">
+    <img src="assets/img/an24000-fig_p4_x58.jpeg" alt="شکل ۱-۳" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۳</span><span class="cap-text">نمودار ولتاژ آفست <span class="en">OPA</span></span></div>
+</div>
+<p>اگر هنگام گرفتن و تقویت سیگنال، ضریب تقویت‌کننده <span class="en">Au</span> و ولتاژ آفست <span class="en">OPA</span> برابر <span class="en">Voffset</span> باشد، ولتاژ خروجی به‌صورت زیر خواهد بود:</p>
+<div class="formula">Vout = Au * (Vin + Voffset)</div>
+<p>می‌بینیم که اگر سیگنال در دست بررسی، سیگنال ورودی ضعیف باشد، ولتاژ آفست می‌تواند خروجی <span class="en">OPA</span> را به اشباع بالا یا پایین ببرد و در نتیجه باعث اعوجاج خروجی شود. بنابراین هنگام تقویت سیگنال کوچک، آفست ورودی یکی از پارامترهای غیرقابل‌چشم‌پوشی است. بر اساس دامنۀ ولتاژ ورودی، مقدار آفست <span class="en">OPA</span> را می‌توان تغییری پله‌ای در نظر گرفت؛ وقتی ورودی در محدوده‌ای مشخص باشد، می‌توان آن را مقدار آفست ثابتی در نظر گرفت.</p>
+<div class="fig" id="fig-14">
+  <div class="figbox">
+    <img src="assets/img/an24000-fig_p5_x62.jpeg" alt="شکل ۱-۴" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۴</span><span class="cap-text">نمودار ولتاژ ورودی در برابر مقدار آفست</span></div>
+</div>
+
+<h4 class="h3x" id="sec-11113"><span class="dm">◆</span>۳) پهنای باند بهرۀ واحد</h4>
+<p>پهنای باند بهرۀ واحد در حالت تابع پیرو (بهرۀ ۱) به فرکانس سیگنالی گفته می‌شود که در آن دامنۀ خروجی به <span class="en">0.707</span> برابر بهرۀ DC می‌رسد. وقتی سیگنال ورودی سیگنال فرکانسی باشد (مثل موج سینوسی)، برای اطمینان از بی‌اعوجاج‌بودن خروجی، علاوه بر برآورده‌شدن شرط نرخ چرخش <span class="en">OPA</span> باید پهنای باند بهرۀ واحد نیز برآورده شود. اگر بهره <span class="en">24</span> برابر و پهنای باند بهرۀ واحد <span class="en">16M</span> باشد، محدودیت فرکانس ورودی باید به‌صورت زیر باشد:</p>
+<div class="formula">FCLK &le; GBW/Au = (16M/24) = 0.67MHz</div>
+<p>در سری همگانی‌منظورۀ <span class="en">CH32</span> هنگام استفاده از حالت پرسرعت می‌توان پهنای باند بهرۀ واحد <span class="en">OPA</span> را بالا برد. بر اساس مقایسه، حالت پرسرعت <span class="en">OPA</span> برای موارد زیر مناسب است:</p>
+<div class="bl">سناریوهایی که کم‌مصرف‌بودن در آن‌ها مهم نیست</div>
+<div class="bl">فرکانس سیگنال ورودی بالا است</div>
+<div class="bl">دامنۀ خروجی بزرگ است و پاسخِ گرفتنِ سریع نیاز است</div>
+<p>در برخی سری‌های همگانی، حالت عادی <span class="en">OPA</span> برای موارد زیر مناسب است:</p>
+<div class="bl">سناریوهای کم‌مصرف</div>
+<div class="bl">ولتاژ آفست ورودی پایین</div>
+<div class="bl">فرکانس سیگنال ورودی پایین</div>
+
+<h4 class="h3x" id="sec-11114"><span class="dm">◆</span>۴) خروجی اشباع بالا/پایین</h4>
+<p>اگرچه <span class="en">OPA</span> خروجی ریل‌به‌ریل دارد، اما همچنان اشباع بالا و پایین خروجی وجود دارد و خروجی محدودیت دارد؛</p>
+<p>خروجی اشباع بالا: خروجی اشباع بالا مقدار حدّاکثر ولتاژ خروجی <span class="en">OPA</span> است؛ مقدار آن تحت تأثیر جریان بار است و در حالت عادی به ولتاژ <span class="en">VDD</span> نزدیک است؛ برای پارامترهای تفصیلی باید به دیتاشیت تراشۀ مربوطه مراجعه شود.</p>
+<p>خروجی اشباع پایین: خروجی اشباع پایین مقدار حدّاقل ولتاژ خروجی <span class="en">OPA</span> است؛ مقدار آن تحت تأثیر جریان بار است و در حالت عادی به ولتاژ <span class="en">GND</span> نزدیک است؛ برای پارامترهای تفصیلی باید به دیتاشیت تراشۀ مربوطه مراجعه شود.</p>
+<p>اگر هنگام خروجی‌دادن، خروجی اشباع بالا/پایین در نظر گرفته نشود، ولتاژ خروجی اعوجاج بالا و پایین خواهد داشت:</p>
+<div class="fig" id="fig-15">
+  <div class="figbox">
+    <img src="assets/img/an24000-fig_p5_x63.jpeg" alt="شکل ۱-۵" style="max-width:600px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۵</span><span class="cap-text">نمودار اعوجاج خروجی</span></div>
+</div>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">به‌کارگیری حالت‌های <span class="en">OPA</span></div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-211"><span class="dm">◆</span>۲.۱ حالت‌های مختلف <span class="en">OPA</span></h3>
+<p>در سری همگانی‌منظورۀ <span class="en">CH32</span>، <span class="en">OPA</span> قابل پیکربندی مستقل به‌صورت داخلی پشتیبانی می‌شود که چندین انتخاب پایۀ ورودی و خروجی مستقل دارد؛ می‌توان <span class="en">OPA</span> را به‌صورت مستقل به کار برد یا حالت‌های مختلف را برای آن انتخاب کرد.</p>
+
+<h4 class="h3x" id="sec-2111"><span class="dm">◆</span>۱) مقایسۀ ولتاژ</h4>
+<p>بر اساس ویژگی بهرۀ حلقه‌باز بالای <span class="en">OPA</span> می‌توان عملکرد مقایسۀ ولتاژ را از آن گرفت؛ اگر <span class="en">V&minus;</span> سطح ولتاژ ثابتی باشد و در ورودی مثبت تغییراتی رخ دهد، هرگاه ورودی مثبت از ورودی منفی بیشتر شود، خروجی <span class="en">OPA</span> سطح <span class="en">VDD</span> خواهد شد و هرگاه ورودی مثبت از ورودی منفی کمتر شود، خروجی <span class="en">OPA</span> سطح <span class="en">GND</span> خواهد شد. بر اساس این ویژگی می‌توان نتیجۀ مقایسه با ولتاژ ثابت را از سطح بالا/پایین خروجی <span class="en">OPA</span> تشخیص داد و بر همین اساس می‌توان از آن برای پایش و حفاظت اضافه‌ولتاژ و خروجی موج مربعی مدوله‌شده استفاده کرد.</p>
+<div class="fig" id="fig-21">
+  <div class="figbox">
+    <img src="assets/img/an24000-fig_p6_x71.jpeg" alt="شکل ۲-۱" style="max-width:520px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۱</span><span class="cap-text">نمودار مقایسۀ ولتاژ</span></div>
+</div>
+<p>با استفاده از این حالت می‌توان پیکربندی‌های زیر را انجام داد:</p>
+<div class="bl"><span class="en">PSEL</span> به‌عنوان پایۀ خروجی <span class="en">GPIO</span> و <span class="en">NSEL</span> به‌عنوان پایۀ خروجی <span class="en">GPIO</span> انتخاب شود.</div>
+<div class="bl">طرف <span class="en">OUT</span> به‌عنوان خروجی انتخاب شود.</div>
+<div class="bl">مقاومت‌های بازخورد داخلی بسته شوند.</div>
+
+<h4 class="h3x" id="sec-2112"><span class="dm">◆</span>۲) پیروی ولتاژ</h4>
+<p>تابع پیرو ولتاژ این ویژگی را دارد که بهرۀ خروجی آن برابر ۱ است؛ یعنی ورودی و خروجی یکسان‌اند. بر اساس ویژگی امپدانس ورودی بالا و امپدانس خروجی پایین <span class="en">OPA</span>، هنگام استفاده از تابع پیرو ولتاژ، خروجی تنها به دامنۀ ورودی بستگی دارد؛ بنابراین از طریق تابع پیرو می‌توان مدار پلۀ بعد را به‌طور کامل جدا کرد و ولتاژ خروجی توانایی باربری بالایی دارد. در این نوع کاربرد، وقتی امپدانس خارجی بزرگ‌تر از حد نیاز است، می‌توان از طریق تابع پیرو تبدیل امپدانس انجام داد. در سری همگانی‌منظورۀ <span class="en">CH32</span>، جانبی‌های <span class="en">ADC</span> و <span class="en">DAC</span> بر اساس همین ویژگی همگی بافر داخلی (تابع پیرو) دارند تا امپدانس ورودی را کم و توانایی درایو را زیاد کند.</p>
+<div class="fig" id="fig-22">
+  <div class="figbox">
+    <img src="assets/img/an24000-fig_p6_x72.jpeg" alt="شکل ۲-۲" style="max-width:520px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۲</span><span class="cap-text">نمودار تابع پیرو</span></div>
+</div>
+<p>وقتی سری همگانی‌منظورۀ <span class="en">CH32</span> از حالت تابع پیرو ولتاژ به‌صورت داخلی پشتیبانی نمی‌کند، باید در حالت مستقل پیکربندی شود و <span class="en">NSEL</span> به <span class="en">VOUT</span> اتصال کوتاه داده شود؛ هنگام ترسیم <span class="en">PCB</span> باید سعی شود مسیر این اتصال کوتاه تا جای ممکن کوتاه باشد تا سلف و خازن انگلی باعث نوسان خروجی نشوند.</p>
+
+<h4 class="h3x" id="sec-2113"><span class="dm">◆</span>۳) بهرۀ <span class="en">PGA</span></h4>
+<p>در سری همگانی‌منظورۀ <span class="en">CH32</span> حالت بهرۀ ثابتِ انتخاب‌شدنی به‌صورت داخلی پشتیبانی می‌شود؛ در این حالت ورودی منفی به‌صورت داخلی به <span class="en">GND</span> متصل می‌شود، بنابراین خروجی <span class="en">OPA</span> تنها به ورودی مثبت بستگی دارد. در حالت بهرۀ ثابت (<span class="en">Au</span>) ورودی و خروجی به‌صورت <span class="en">VOUT=Au*Vin</span> هستند. بر این اساس می‌توان اثر تقویت سیگنال ورودی را گرفت و آن را برای گرفتن سیگنال‌های ورودی کوچک به کار برد. چون سری همگانی‌منظورۀ <span class="en">CH32</span> از خروجی مستقل <span class="en">OPA</span> پشتیبانی می‌کند، تنها با افزودن مقاومت خارجی می‌توان خروجی با بهره‌های مختلف تنظیم کرد:</p>
+<div class="fig" id="fig-23">
+  <div class="figbox">
+    <img src="assets/img/an24000-fig_p7_x76.jpeg" alt="شکل ۲-۳" style="max-width:620px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۳</span><span class="cap-text">نمودار بهرۀ داخلی <span class="en">PGA</span></span></div>
+</div>
+<p>مطابق شکل، بهرۀ پیکربندی‌شده آن به‌صورت زیر است:</p>
+<div class="formula">Vout = (1 + R2/R1) &times; Vin</div>
+<p>در این حالت چون فقط به ورودی تک‌سر نیاز است، مدار ساده است و می‌تواند سیگنال ورودی کوچک را به‌طور مؤثر تقویت کند؛ اما به دلیل وجود آفست ورودی و نبود ولتاژ بایاس، سیگنال خروجی اعوجاج خواهد داشت؛ بنابراین برای سناریوهایی با دامنۀ ورودی بزرگ‌تر و دقت خروجی پایین‌تر مناسب است.</p>
+
+<h4 class="h3x" id="sec-2114"><span class="dm">◆</span>۴) ورودی افتراقی</h4>
+<p>حالت ورودی افتراقی با <span class="en">PSEL</span> و <span class="en">NSEL</span> عملکرد مقایسۀ سطح و تقویت را دارد؛ ولتاژ خروجی آن توسط ولتاژ ورودی <span class="en">PSEL</span> و ولتاژ ورودی <span class="en">NSEL</span> تعیین می‌شود و ولتاژ خروجی برابر <span class="en">VOUT=(V+&minus;V&minus;)*Au</span> است؛ بنابراین در ولتاژ دو سرِ ورودی می‌توان نویز مد مشترک را به‌طور مؤثر تضعیف کرد. در سری همگانی‌منظورۀ <span class="en">CH32</span>، محصولات مدل <span class="en">CH32V00x</span> و <span class="en">CH32M030</span> به‌صورت داخلی ولتاژ بایاس دارند تا خروجیِ تمام‌مقیاس تضمین شود. با نمونۀ سری <span class="en">CH32V006/007</span> که ورودی افتراقی با ولتاژ بایاس دارد، ساختار داخلی به‌صورت شکل زیر است:</p>
+<div class="fig" id="fig-24">
+  <div class="figbox">
+    <img src="assets/img/an24000-fig_p7_x77.jpeg" alt="شکل ۲-۴" style="max-width:560px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۴</span><span class="cap-text">نمودار افتراق داخلی <span class="en">CH32V006</span></span></div>
+</div>
+<p>بر اساس گسست مجازی <span class="en">OPA</span> داریم:</p>
+<div class="formula">V+ = R5/(R3+R4+R5) &times; VDD + (R3+R4)/(R3+R4+R5) &times; (VREF + Vi)</div>
+<p>بر اساس اتصال مجازی <span class="en">OPA</span>:</p>
+<div class="formula">(VREF &minus; V&minus;)/R1 = (V&minus; &minus; VOUT)/R2</div>
+<p>از این رابطه می‌توان نتیجه گرفت:</p>
+<div class="formula">VOUT = (R1 + R2) * V&minus;/R1 &minus; R2/(R1 &times; VREF)</div>
+<p>بر اساس اتصال مجازی <span class="en">V+=V&minus;</span> است، پس:</p>
+<div class="formula">VOUT = (R2 + R1) &times; (R4 + R3)/(R1 &times; (R3 + R4 + R5)) &times; (Vi &minus; VREF) + (R2 + R1) &times; R5/(R1 &times; (R3 + R4 + R5)) &times; VDD &minus; R2/(R1 &times; VREF)</div>
+<p>بر اساس تقسیم ولتاژ مقاومت‌های متفاوت می‌توان به‌سادگی بهره‌ها و مقادیر بایاس متفاوت را به دست آورد:</p>
+<div class="tblwrap" id="tab-21">
+  <div class="tblcap"><span class="cap-pill">جدول ۲-۱</span><span class="cap-text">ولتاژ بایاس خروجی <span class="en">OPA</span> (<span class="en">VBOPAOUT</span>)</span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:50%;"><span class="en">VRFBIAS</span></th><th><span class="en">VBOPAOUT</span></th></tr></thead>
+    <tr><td><span class="en">ISP_VRFBIAS=0</span></td><td><span class="en">0.55V</span></td></tr>
+    <tr><td><span class="en">ISP_VRFBIAS=1</span></td><td><span class="en">1.6V</span></td></tr>
+  </table>
+</div>
+<div class="tblwrap" id="tab-22">
+  <div class="tblcap"><span class="cap-pill">جدول ۲-۲</span><span class="cap-text">بهرۀ خروجی <span class="en">OPA</span> (<span class="en">GainOPAOUT</span>)</span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:50%;"><span class="en">Gain</span></th><th><span class="en">GainOPAOUT</span></th></tr></thead>
+    <tr><td><span class="en">ISP_Gain=0</span></td><td><span class="en">4</span></td></tr>
+    <tr><td><span class="en">ISP_Gain=1</span></td><td><span class="en">8</span></td></tr>
+    <tr><td><span class="en">ISP_Gain=2</span></td><td><span class="en">16</span></td></tr>
+    <tr><td><span class="en">ISP_Gain=3</span></td><td><span class="en">55</span></td></tr>
+  </table>
+</div>
+<p>به همین ترتیب سری <span class="en">CH32M030</span> مدار ساده‌تری دارد و با تنظیم ولتاژ مرجع داخلی (<span class="en">VRFBIAS</span>) ولتاژ بایاس ورودی متفاوتی به دست می‌دهد. ساختار داخلی آن به‌صورت زیر است:</p>
+<div class="fig" id="fig-25">
+  <div class="figbox">
+    <img src="assets/img/an24000-fig_p8_x81.jpeg" alt="شکل ۲-۵" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۵</span><span class="cap-text">نمودار بهرۀ داخلی <span class="en">CH32M030</span></span></div>
+</div>
+<p>می‌توان آن را به‌سادگی چنین خلاصه کرد:</p>
+<div class="fig" id="fig-26">
+  <div class="figbox">
+    <img src="assets/img/an24000-fig_manual_1.png" alt="شکل ۲-۶" style="max-width:520px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۶</span><span class="cap-text">نمودار سادۀ افتراق <span class="en">OPA</span></span></div>
+</div>
+<p>بر اساس محاسبۀ بالا به دست می‌آید:</p>
+<div class="formula">V+ = R1/(R1 + R2) &times; VRFBIAS + R2/(R1 + R2) &times; (VREF + Vi)</div>
+<div class="formula">VOUT = (R1 + R2) &times; V&minus;/R1 &minus; R2/R1 &times; VREF</div>
+<p>از <span class="en">V&minus;=V+</span> نتیجه می‌شود:</p>
+<div class="formula">VOUT = R2/R1 &times; Vi + VRFBIAS</div>
+<p>بر اساس انتخاب بیت‌های رجیستر متفاوت، بایاس و بهرۀ متفاوت به دست می‌آید:</p>
+<div class="tblwrap" id="tab-23">
+  <div class="tblcap"><span class="cap-pill">جدول ۲-۳</span><span class="cap-text">ولتاژ بایاس <span class="en">OPA</span></span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:50%;"><span class="en">VRFBIAS</span></th><th><span class="en">VBOPAOUT</span></th></tr></thead>
+    <tr><td><span class="en">ISP_VRFBIAS=0</span></td><td><span class="en">0.55V</span></td></tr>
+    <tr><td><span class="en">ISP_VRFBIAS=1</span></td><td><span class="en">1.6V</span></td></tr>
+  </table>
+</div>
+<div class="tblwrap" id="tab-24">
+  <div class="tblcap"><span class="cap-pill">جدول ۲-۴</span><span class="cap-text">بهرۀ <span class="en">OPA</span></span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:50%;"><span class="en">Gain</span></th><th><span class="en">GainOPAOUT</span></th></tr></thead>
+    <tr><td><span class="en">ISP_Gain=0</span></td><td><span class="en">4</span></td></tr>
+    <tr><td><span class="en">ISP_Gain=1</span></td><td><span class="en">8</span></td></tr>
+    <tr><td><span class="en">ISP_Gain=2</span></td><td><span class="en">16</span></td></tr>
+    <tr><td><span class="en">ISP_Gain=3</span></td><td><span class="en">55</span></td></tr>
+  </table>
+</div>
+<p>برای تراشه‌های بدون نوع کالیبراسیون آفست <span class="en">OPA</span>، ممکن است <span class="en">OPA</span> آفست بالایی داشته باشد؛ بنابراین هنگام ولتاژ خروجی باید آفست را در نظر گرفت، پس هنگام استفاده از <span class="en">OPA</span> لازم است آفست را کالیبره کرد؛ پیش از کالیبراسیون باید بیشینۀ مقدار آفست در نظر گرفته شود تا خروجیِ اشباع بالا/پایین باعث خروج مقدار از آستانه نشود و در نتیجه اعوجاج خروجی پیش نیاید. محاسبۀ سادۀ آن چنین است:</p>
+<div class="formula">Vout = (Vin + Voffset) &times; Au</div>
+<p>بر اساس بیشینۀ مقدار آفست و مقدار بهره، خروجی بیشینه و کمینه باید میان ولتاژهای اشباع بالا و پایین باشد؛ برای نمونه <span class="en">CH32M030</span> که ولتاژ بایاس دارد، پایه‌های <span class="en">PSEL</span> و <span class="en">NSEL</span> را اتصال کوتاه می‌دهیم؛ یعنی <span class="en">Vin=0</span>؛ ولتاژ آفست برابر <span class="en">Voffset</span> است و از این می‌توان ولتاژ خروجی را چنین به دست آورد:</p>
+<div class="formula">Voffset = (VOUT &minus; VRFBIAS) * (R1/R2)</div>
+<p>با جای‌گذاری مقدار ثابت در محاسبۀ جبران می‌توان اثر خطای آفست را جبران کرد؛ علاوه بر این باید به مقدار ولتاژ ورودی <span class="en">V+</span> توجه شود و دامنۀ ورودی باید در محدودۀ پایدارِ ثابتِ آفست <span class="en">OPA</span> باشد. برای نمودار تقریبی خطا به شکل ۱-۴ مراجعه کنید.</p>
+
+<h3 class="h2x" id="sec-212"><span class="dm">◆</span>۲.۲ به‌کارگیری حالت‌های کارکردی <span class="en">OPA</span></h3>
+<p>سری همگانی‌منظورۀ <span class="en">CH32</span> از کارکردهای دیجیتال مختلف پشتیبانی می‌کند که همراه با حالت‌های مختلف <span class="en">OPA</span> استفاده می‌شوند و مزایایی مانند پایش آسان و کم‌شدن قطعات اطراف <span class="en">OPA</span> دارند.</p>
+
+<h4 class="h3x" id="sec-2121"><span class="dm">◆</span>۱) حالت نظرسنجی <span class="en">OPA</span></h4>
+<p>هنگام استفاده از عملکرد نظرسنجی <span class="en">OPA</span>، ورودی منفی <span class="en">OPA</span> ثابت است و با پیکربندی نرم‌افزاری تعداد ورودی‌های مثبت و فواصل ماشۀ نظرسنجی می‌توان سیگنال‌های ورودی مختلف را به‌صورت نظرسنجی گرفته و این عملکرد با نظرسنجیِ ورودی مثبت می‌تواند برای گرفتن سیگنال‌های مختلف، تعداد <span class="en">OPA</span> را به‌طور مؤثر کاهش دهد. در سری همگانی‌منظورۀ <span class="en">CH32</span> می‌توان عملکرد نظرسنجی <span class="en">OPA</span> را پشتیبانی کرد؛ برای جزئیات جانبی به جدول پیوست مراجعه کنید. در سری <span class="en">CH32V00x</span> نظرسنجی <span class="en">OPA</span> توسط <span class="en">ADC</span> ماشه می‌خورد و پس از ماشه تا هنگام گرفتن نمونه، زمان استقرار <span class="en">OPA</span> لازم است تا پس از پایدارشدن خروجی، نمونه‌برداری انجام شود. بر اساس عملکرد به دو دستۀ ماشۀ خودکار و ماشۀ خودکارِ تأخیری تقسیم می‌شود؛</p>
+<p>ماشۀ خودکار: هنگامی‌که بیت پیکربندی <span class="en">AUTO_ADC_CFG</span> برابر ۱ است، کانال‌های نظرسنجی و منبع ماشه پیکربندی می‌شوند؛ پس از <span class="en">TOPASETUP</span>، <span class="en">ADC</span> نمونه‌برداری را آغاز می‌کند و پس از پایان نمونه‌برداری، کانال نظرسنجی جابه‌جا می‌شود؛ پس از رخ‌دادن رویداد ماشۀ نظرسنجی بعدی، این جریان دوباره تکرار می‌شود. این جریان را می‌توان به سه بخش تقسیم کرد: زمان استقرار <span class="en">OPA</span>، گرفتن نمونه با <span class="en">ADC</span> و تبدیل <span class="en">ADC</span>.</p>
+<div class="fig" id="fig-27">
+  <div class="figbox">
+    <img src="assets/img/an24000-fig_manual_2.png" alt="شکل ۲-۷" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۷</span><span class="cap-text">عملکرد نظرسنجی با ماشۀ خودکار <span class="en">OPA</span></span></div>
+</div>
+<p>ماشۀ خودکارِ تأخیری: هنگامی‌که بیت <span class="en">AUTO_ADC_CFG</span> برابر ۰ است، پس از رخ‌دادن رویداد ماشۀ نظرسنجیِ پیکربندی‌شده و گذر از <span class="en">TOPASETUP</span>، <span class="en">ADC</span> نمونه‌برداری را آغاز می‌کند؛ پس از پایان نمونه‌برداری، کانال نظرسنجی جابه‌جا می‌شود و پس از گذر دوباره از <span class="en">TOPASETUP</span>، نمونه‌برداری بعدی <span class="en">ADC</span> انجام می‌شود و جریان پس از نمونه‌برداری <span class="en">ADC</span> تکرار می‌گردد. هنگام پیکربندی ماشۀ خودکارِ تأخیری باید به این نکته توجه کرد: زمان استقرار <span class="en">OPA</span> باید بزرگ‌تر از زمان تبدیل <span class="en">ADC</span> تنظیم شود.</p>
+<div class="fig" id="fig-28">
+  <div class="figbox">
+    <img src="assets/img/an24000-fig_manual_3.png" alt="شکل ۲-۸" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۸</span><span class="cap-text">نظرسنجی با ماشۀ خودکارِ تأخیری <span class="en">OPA</span></span></div>
+</div>
+<p>برای حالت‌های مختلف نظرسنجی در استفادهٔ واقعی، اگر زمان تبدیل <span class="en">ADC</span> بزرگ‌تر از زمان استقرار <span class="en">OPA</span> باشد، باید ماشۀ خودکار همراه با حالت اسکن <span class="en">ADC</span> انتخاب شود. اگر زمان تبدیل <span class="en">ADC</span> کوچک‌تر از زمان استقرار <span class="en">OPA</span> باشد، باید ماشۀ خودکارِ تأخیری همراه با حالت تکی <span class="en">ADC</span> انتخاب شود.</p>
+<p>پیکربندی ماشۀ خودکارِ تأخیری در <span class="en">CH32V006</span> به‌صورت زیر است:</p>
+<p>مقداردهی اولیۀ انتخاب <span class="en">OPA</span></p>
+<div class="codeblk">void OPA1_Init( void )
+{
+    GPIO_InitTypeDef GPIO_InitStructure = {0};
+    OPA_InitTypeDef  OPA_InitStructure = {0};
+    RCC_PB2PeriphClockCmd(RCC_PB2Periph_GPIOA|RCC_PB2Periph_GPIOD, ENABLE);
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1|GPIO_Pin_2;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
+    GPIO_Init( GPIOA, &amp;GPIO_InitStructure );
+
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7|GPIO_Pin_3;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
+    GPIO_Init( GPIOD, &amp;GPIO_InitStructure );
+
+    OPA_InitStructure.Mode = OUT_IO_OUT0;
+    OPA_InitStructure.POLL_NUM = CHP_POLL_NUM_3; <span class="cm">//تعیین تعداد نظرسنجی ورودی مثبت</span>
+    OPA_InitStructure.PSEL_POLL = CHP_OPA_POLL_ON; <span class="cm">//روشن‌کردن فعال‌سازی نظرسنجی</span>
+    OPA_InitStructure.POLL_CH1 = OPA_POLL_CH1_PA2;<span class="cm">//تنظیم کانال ۱ نظرسنجی</span>
+    OPA_InitStructure.POLL_CH2 = OPA_POLL_CH2_PD7;<span class="cm">//تنظیم کانال ۲ نظرسنجی</span>
+    OPA_InitStructure.POLL_CH3 = OPA_POLL_CH3_PD3;<span class="cm">//تنظیم کانال ۳ نظرسنجی</span>
+    OPA_InitStructure.POLL_AT = OPA_POLL_AUTO_OFF; <span class="cm">//تنظیم به نظرسنجی خودکارِ تأخیری</span>
+    OPA_InitStructure.NSEL = CHN0;
+    OPA_InitStructure.SETUP_CFG = OPA_SETUP_CFG_2;  <span class="cm">//تنظیم مدت زمان استقرار</span>
+    OPA_InitStructure.OPA_HS = HS_ON;
+    OPA_InitStructure.POLL_SEL = OPA_POLL_SEL_TIM2_CH4;  <span class="cm">//تنظیم منبع ماشۀ نظرسنجی</span>
+    OPA_InitStructure.OPA_HS = HS_ON;
+    OPA_Init(&amp;OPA_InitStructure);
+    OPA_Cmd( ENABLE );
+}</div>
+<p>مقداردهی اولیۀ <span class="en">ADC</span></p>
+<div class="codeblk">void ADC_Function_Init(void)
+{
+    ADC_InitTypeDef  ADC_InitStructure = {0};
+    NVIC_InitTypeDef NVIC_InitStructure = {0};
+    RCC_PB2PeriphClockCmd(RCC_PB2Periph_ADC1, ENABLE);
+    RCC_ADCCLKConfig( RCC_PCLK2_Div1 );
+
+    ADC_DeInit(ADC1);
+    ADC_InitStructure.ADC_Mode = ADC_Mode_Independent;
+    ADC_InitStructure.ADC_ScanConvMode = ENABLE;
+    ADC_InitStructure.ADC_ContinuousConvMode = DISABLE;
+    ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigInjecConv_Ext_PD1_PA2_OPA;
+    ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
+    ADC_InitStructure.ADC_NbrOfChannel = 1;
+    ADC_Init(ADC1, &amp;ADC_InitStructure);
+    ADC_ExternalTrigInjectedConvCmd(ADC1, ENABLE);
+    ADC_InjectedExTrigConvConfig(ADC1, ADC_InjectedExTrigConv_OPA);
+    ADC_InjectedSequencerLengthConfig(ADC1, 3);
+    ADC_InjectedChannelConfig(ADC1, ADC_Channel_OPA, 1, ADC_SampleTime_CyclesMode0);
+    ADC_InjectedChannelConfig(ADC1, ADC_Channel_OPA, 2, ADC_SampleTime_CyclesMode0);
+    ADC_InjectedChannelConfig(ADC1, ADC_Channel_OPA, 3, ADC_SampleTime_CyclesMode0);
+
+    ADC_Cmd(ADC1, ENABLE);
+}</div>
+
+<h4 class="h3x" id="sec-2122"><span class="dm">◆</span>۲) ماشۀ تایمری <span class="en">OPA</span></h4>
+<p>وقتی پایۀ خروجی <span class="en">OPA</span> با پایۀ ورودی تایمر هم‌پوشانی دارد، می‌توان بر اساس سطح بالا/پایین خروجی، ضبط ورودی انجام داد تا وضعیت خروجی تأیید شود؛ هنگام استفاده می‌توان مقایسۀ ولتاژ را گرفت و با ضبط ورودیِ تایمر وضعیت خروجی را تأیید کرد تا ولتاژ ورودی معلوم شود. برای نمونه در تراشۀ مدل <span class="en">CH32L103</span>، پایۀ خروجی <span class="en">OPA</span> یعنی <span class="en">PB1</span> در همان زمان پایۀ ورودی کانال ۴ تایمر ۳ نیز هست؛ بنابراین می‌توان ضبط ورودی انجام داد و تایمر را به‌صورت زیر پیکربندی کرد:</p>
+<div class="codeblk">void Input_Capture_Init(u16 arr, u16 psc)
+{
+    TIM_ICInitTypeDef       TIM_ICInitStructure = {0};
+    TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStructure = {0};
+    NVIC_InitTypeDef        NVIC_InitStructure = {0};
+
+    RCC_PB1PeriphClockCmd(RCC_PB1Periph_TIM3, ENABLE);
+
+    TIM_TimeBaseInitStructure.TIM_Period = arr;
+    TIM_TimeBaseInitStructure.TIM_Prescaler = psc;
+    TIM_TimeBaseInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
+    TIM_TimeBaseInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
+    TIM_TimeBaseInitStructure.TIM_RepetitionCounter = 0x00;
+    TIM_TimeBaseInit(TIM3, &amp;TIM_TimeBaseInitStructure);
+
+    TIM_ICInitStructure.TIM_Channel = TIM_Channel_4;
+    TIM_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;
+    TIM_ICInitStructure.TIM_ICFilter = 0x00;
+    TIM_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Rising;
+    TIM_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI;
+
+    TIM_ICInit(TIM3, &amp;TIM_ICInitStructure);
+
+    NVIC_InitStructure.NVIC_IRQChannel = TIM3_IRQn;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&amp;NVIC_InitStructure);
+
+    TIM_ITConfig(TIM3, TIM_IT_CC4 , ENABLE);
+
+    TIM_SelectInputTrigger(TIM3, TIM_TS_TI1FP1);
+    TIM_SelectSlaveMode(TIM3, TIM_SlaveMode_Reset);
+    TIM_SelectMasterSlaveMode(TIM3, TIM_MasterSlaveMode_Enable);
+    TIM_Cmd(TIM3, ENABLE);
+}</div>
+
+<h4 class="h3x" id="sec-2123"><span class="dm">◆</span>۳) پیکربندی پایۀ <span class="en">OPA</span></h4>
+<p>پایۀ <span class="en">OPA</span> به‌عنوان پایۀ ورودی پیکربندی می‌شود و پیکربندی حالت ورودی به دو دستۀ ورودی شناور و ورودی آنالوگ تقسیم می‌شود که تفاوت آن‌ها چنین است:</p>
+<div class="bl">ورودی آنالوگ: هنگام پیکربندی ورودی آنالوگ، اتصال به بخش دیجیتال قطع می‌شود؛ وقتی ورودی آنالوگ پیکربندی شود، عملکرد ضبط ورودی تایمر بی‌اثر می‌شود؛ مزیت آن این است که ورودی آنالوگ از نشتی جلوگیری می‌کند و می‌تواند توان اجرا را پایین بیاورد.</div>
+<div class="bl">ورودی شناور: هنگام پیکربندی ورودی شناور، وقتی به‌صورت ورودی آنالوگ پیکربندی شود عملکرد ضبط ورودی تایمر اثر می‌کند؛ عیب آن این است که ورودی شناور نشتی دارد و توان اجرا را بالا می‌برد.</div>
+
+<h3 class="h2x" id="sec-213"><span class="dm">◆</span>۲.۳ نمونۀ کاربرد <span class="en">OPA</span></h3>
+<p>در <span class="en">CH32M030</span> رمزگشای تقویت سیگنال کوچک <span class="en">AC</span> (<span class="en">QII</span>) به‌صورت داخلی گنجانده شده است که شامل ۱ تقویت‌کنندۀ بهرۀ قابل تنظیم <span class="en">OPA</span> در پلۀ پیش و ۱ مقایسه‌گر ولتاژ <span class="en">CMP</span> در پلۀ پس است. پلۀ پیش می‌تواند سیگنال <span class="en">AC</span> سیم‌پیچ شارژ بی‌سیم <span class="en">QI</span> را تقویت کند و پلۀ پس، سینوسیِ فرکانس‌بالای سیم‌پیچ را با مقایسه به سیگنال موج مربعی تبدیل می‌کند:</p>
+<div class="fig" id="fig-29">
+  <div class="figbox">
+    <img src="assets/img/an24000-fig_p13_x117.jpeg" alt="شکل ۲-۹" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۹</span><span class="cap-text">نمودار تقویت‌کنندۀ رمزگشای <span class="en">QII</span></span></div>
+</div>
+<p>خازن کوچک موازی در پلۀ پیش، پالایۀ میان‌گذر را می‌سازد و منبع نویز فرکانس‌بالا را حذف می‌کند؛ خازن میان سیم‌پیچ و تقویت‌کننده سیگنال DC را حذف می‌کند و تنها سیگنال ارتباطی پروتکل <span class="en">QI</span> را از خود عبور می‌دهد. پس از تقویت توسط <span class="en">OPA</span> به مقایسه‌گر فرستاده می‌شود. سیگنال موج مدوله‌شده:</p>
+<div class="fig" id="fig-210">
+  <div class="figbox">
+    <img src="assets/img/an24000-fig_p14_x121.jpeg" alt="شکل ۲-۱۰" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۱۰</span><span class="cap-text">نتیجۀ خروجی مدولاسیون و رمزگشایی</span></div>
+</div>
+<p>گام‌های استفاده و هم‌کاری به‌صورت زیر است:</p>
+<div class="bl">بیت <span class="en">QII1_AE</span> را پیکربندی کنید تا ماژول <span class="en">QII1</span> فعال شود؛ بیت <span class="en">QII1_AVSEL</span> را پیکربندی کنید تا اندازۀ بهرۀ تقویت‌کنندۀ ماژول <span class="en">QII1</span> انتخاب شود.</div>
+<div class="bl">بیت <span class="en">QII1_HYPSEL</span> را پیکربندی کنید تا ولتاژ هیسترزیس مقایسه‌گر ماژول <span class="en">QII1</span> انتخاب شود؛ بیت <span class="en">CMP1_TO_IO</span> را پیکربندی کنید تا خروجی <span class="en">QII</span> به‌صورت داخلی مستقیماً به ضبط کانال ۱ تایمر <span class="en">TIM3</span> فرستاده شود.</div>
+
+<!-- ================= پیوست ================= -->
+<div class="chapter-header" id="sec-b3">
+  <span class="sec-pill">پیوست</span>
+  <div class="sec-title">جدول پشتیبانی کارکردهای <span class="en">OPA</span> در مدل‌های مختلف</div>
+  <div class="sec-divider"></div>
+</div>
+<p>جدول زیر وضعیت پشتیبانی کارکردهای <span class="en">OPA</span> در مدل‌های مختلف سری همگانی‌منظورۀ <span class="en">CH32</span> را نشان می‌دهد؛ پیش از انتخاب قطعه، کارکردهای موردنیاز <span class="en">OPA</span> را با این جدول تطبیق دهید.</p>
+<div class="tblwrap" id="tab-app1">
+  <div class="tblcap"><span class="cap-pill">جدول پیوست ۱</span><span class="cap-text">کارکردهای پشتیبانی‌شدۀ <span class="en">OPA</span> در مدل‌های مختلف</span></div>
+  <table class="tbl" style="font-size:11.5px;">
+    <thead><tr><th style="width:20%;">مدل تراشه</th><th style="width:20%;">پشتیبانی نظرسنجی</th><th style="width:20%;">افتراق داخلی</th><th style="width:20%;">بهرۀ داخلی</th><th>حالت پرسرعت</th></tr></thead>
+    <tr><td><span class="en">CH32V30X</span></td><td><span class="en">N</span></td><td><span class="en">N</span></td><td><span class="en">N</span></td><td><span class="en">Y</span></td></tr>
+    <tr><td><span class="en">CH32V20X</span></td><td><span class="en">N</span></td><td><span class="en">N</span></td><td><span class="en">N</span></td><td><span class="en">N</span></td></tr>
+    <tr><td><span class="en">CH32V00X</span></td><td><span class="en">Y</span></td><td><span class="en">Y</span></td><td><span class="en">Y</span></td><td><span class="en">Y</span></td></tr>
+    <tr><td><span class="en">CH32V003</span></td><td><span class="en">N</span></td><td><span class="en">N</span></td><td><span class="en">N</span></td><td><span class="en">N</span></td></tr>
+    <tr><td><span class="en">CH32H417</span></td><td><span class="en">N</span></td><td><span class="en">Y</span></td><td><span class="en">Y</span></td><td><span class="en">Y</span></td></tr>
+    <tr><td><span class="en">CH32V407</span></td><td><span class="en">N</span></td><td><span class="en">Y</span></td><td><span class="en">Y</span></td><td><span class="en">Y</span></td></tr>
+    <tr><td><span class="en">CH32X035</span></td><td><span class="en">Y</span></td><td><span class="en">Y</span></td><td><span class="en">Y</span></td><td><span class="en">N</span></td></tr>
+    <tr><td><span class="en">CH32V205</span></td><td><span class="en">Y</span></td><td><span class="en">Y</span></td><td><span class="en">Y</span></td><td><span class="en">Y</span></td></tr>
+    <tr><td><span class="en">CH32L03x</span></td><td><span class="en">Y</span></td><td><span class="en">Y</span></td><td><span class="en">Y</span></td><td><span class="en">Y</span></td></tr>
+    <tr><td><span class="en">CH32M030</span></td><td><span class="en">N</span></td><td><span class="en">Y</span></td><td><span class="en">Y</span></td><td><span class="en">Y</span></td></tr>
+  </table>
+</div>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN24000</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/07/08</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">OPA</span></td><td class="jt">تقویت‌کنندۀ عملیاتی داخلی <span class="en">CH32</span> برای تقویت سیگنال و گرفتن سیگنال‌های کوچک؛ با ورودی مثبت <span class="en">INP</span>، ورودی منفی <span class="en">INN</span> و خروجی <span class="en">OUT</span></td></tr>
+      <tr><td><span class="en">PGA</span></td><td class="jt">تقویت‌کنندۀ بهرۀ برنامه‌پذیر؛ حالت بهرۀ ثابتِ انتخاب‌شدنی داخلی <span class="en">OPA</span> که در آن ورودی منفی به <span class="en">GND</span> متصل می‌شود</td></tr>
+      <tr><td><span class="en">SR (Slew Rate)</span></td><td class="jt">نرخ چرخش یا نرخ تبدیل؛ بیشترین شیب بالا/پایین‌رفتن ولتاژ خروجی <span class="en">OPA</span> با یکای <span class="en">V/μS</span></td></tr>
+      <tr><td><span class="en">VOS / Voffset</span></td><td class="jt">ولتاژ آفست ورودی؛ انحراف خروجی از حالت ایده‌آل که در تقویت سیگنال ضعیف می‌تواند خروجی را به اشباع بالا/پایین برساند</td></tr>
+      <tr><td><span class="en">GBW (Unity-Gain BW)</span></td><td class="jt">پهنای باند بهرۀ واحد؛ فرکانسی که در حالت پیرو (بهرۀ ۱) دامنۀ خروجی به <span class="en">0.707</span> برابر بهرۀ DC می‌رسد</td></tr>
+      <tr><td><span class="en">Rail-to-Rail</span></td><td class="jt">ورودی/خروجی ریل‌به‌ریل؛ توانایی نزدیک‌شدن دامنۀ سیگنال به دو ریل تغذیه؛ در سری <span class="en">CH32</span> فقط <span class="en">CH32V30x</span> ریل‌به‌ریل نیست</td></tr>
+      <tr><td><span class="en">PSEL / NSEL</span></td><td class="jt">انتخاب سیگنال ورودی مثبت / منفی <span class="en">OPA</span>؛ می‌تواند پایۀ <span class="en">GPIO</span> یا مسیر داخلی باشد</td></tr>
+      <tr><td><span class="en">VRFBIAS / VBOPAOUT</span></td><td class="jt">ولتاژ مرجع بایاس داخلی / ولتاژ بایاس خروجی <span class="en">OPA</span>؛ با بیت <span class="en">ISP_VRFBIAS</span> بین <span class="en">0.55V</span> و <span class="en">1.6V</span> انتخاب می‌شود</td></tr>
+      <tr><td><span class="en">ISP_Gain</span></td><td class="jt">بیت‌های انتخاب بهرۀ داخلی <span class="en">OPA</span>؛ مقادیر <span class="en">0~3</span> بهره‌های <span class="en">4</span>، <span class="en">8</span>، <span class="en">16</span> و <span class="en">55</span> را می‌دهند</td></tr>
+      <tr><td><span class="en">OPA_HS</span></td><td class="jt">بیت حالت خروجی پرسرعت <span class="en">OPA</span>؛ به‌بهای مصرف توان و آفست، نرخ چرخش و پهنای باند بهرۀ واحد را بالا می‌برد</td></tr>
+      <tr><td><span class="en">TOPASETUP</span></td><td class="jt">زمان استقرار <span class="en">OPA</span> پیش از نمونه‌برداری <span class="en">ADC</span> در نظرسنجی؛ برای پایدارشدن خروجی پیش از گرفتن نمونه</td></tr>
+      <tr><td><span class="en">AUTO_ADC_CFG</span></td><td class="jt">بیت انتخاب نوع ماشۀ نظرسنجی؛ <span class="en">1</span> ماشۀ خودکار (همراه اسکن <span class="en">ADC</span>) و <span class="en">0</span> ماشۀ خودکارِ تأخیری (همراه با تک‌نمونۀ <span class="en">ADC</span>)</td></tr>
+      <tr><td><span class="en">CMP</span></td><td class="jt">مقایسه‌گر ولتاژ؛ پلۀ دوم رمزگشای <span class="en">QII</span> که سینوسی تقویت‌شده را به موج مربعی تبدیل می‌کند</td></tr>
+      <tr><td><span class="en">QII</span></td><td class="jt">رمزگشای تقویت سیگنال <span class="en">AC</span> شارژ بی‌سیم در <span class="en">CH32M030</span>؛ شامل یک <span class="en">OPA</span> بهرۀ قابل تنظیم و یک <span class="en">CMP</span></td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN24000 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۲۳</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN24000</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
