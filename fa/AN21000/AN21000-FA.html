@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>پیکربندی رابط <span class="en">SDIO</span> در حالت برده روی سری <span class="en">CH32</span> — ترجمۀ فارسی AN21000</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">پیکربندی رابط <span class="en">SDIO</span></div>
+    <div class="t2">در حالت برده برای سری <span class="en">CH32</span></div>
+    <div class="t3">با نمونۀ عملی <span class="en">CH32V407</span></div>
+  </div>
+  <div class="c-sub">از مرور ویژگی‌های کنترل‌گر <span class="en">SDIO</span> و اتصال سخت‌افزاری میزبان و برده، تا پیکربندی رجیسترها، ساز‌و‌کار پاسخ‌گویی به فرمان‌ها و جریان کامل ارسال و دریافت داده با <span class="en">DMA</span></div>
+  <div class="c-desc">در این جزوه، ترجمۀ فارسی سند رسمی <span class="en">AN21000</span> (نسخۀ ۱٫۰، منتشرۀ شرکت <span class="en">WCH</span>) را می‌خوانید: رابط <span class="en">SDIO</span> میکروکنترلر به‌عنوان برده پیکربندی می‌شود تا به فرمان‌های میزبان <span class="en">SDIO</span> خارجی پاسخ دهد و داده جابه‌جا کند. اتصال دو <span class="en">CH32V407</span> در نقش میزبان و برده، جدول نگاشت پایه‌ها، نکات اتصال سخت‌افزاری، تنظیم ساعت و پهنای گذرگاه، پاسخ خودکار <span class="en">R1</span>، پیکربندی <span class="en">DMA</span> و جریان کامل ارسال و دریافت، همگی با فهرست‌های واقعی کد مرور می‌شوند.</div>
+  <div class="c-tags">
+    <span class="c-tag">میکروکنترلر <span class="en">CH32V407</span></span>
+    <span class="c-tag">رابط <span class="en">SDIO</span> در حالت برده</span>
+    <span class="c-tag"><span class="en">CMD</span> و پاسخ <span class="en">R1</span></span>
+    <span class="c-tag">انتقال داده با <span class="en">DMA</span></span>
+    <span class="c-tag">پهنای گذرگاه ۱، ۴ و ۸ بیتی</span>
+    <span class="c-tag">پیکربندی رجیسترها</span>
+    <span class="c-tag">نمونۀ میزبان–برده</span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN21000 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | مرور رابط <span class="en">SDIO</span> در سری <span class="en">CH32</span></span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-111"><span class="s-id">1.1</span><span>مرور کلی</span><span class="s-dots"></span><span class="s-page">۳</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | نمونۀ طراحی <span class="en">SDIO</span> در حالت برده</span><span class="t-dots"></span><span class="t-page">۴</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-211"><span class="s-id">2.1</span><span>اتصال سخت‌افزاری</span><span class="s-dots"></span><span class="s-page">۴</span></a>
+    <a class="toc-sub" href="#sec-2111"><span class="s-id">2.1.1</span><span>اتصال پایه‌ها</span><span class="s-dots"></span><span class="s-page">۴</span></a>
+    <a class="toc-sub" href="#sec-212"><span class="s-id">2.2</span><span>پیکربندی رجیسترها</span><span class="s-dots"></span><span class="s-page">۵</span></a>
+    <a class="toc-sub" href="#sec-2121"><span class="s-id">2.2.1</span><span>پیکربندی میزبان</span><span class="s-dots"></span><span class="s-page">۵</span></a>
+    <a class="toc-sub" href="#sec-2122"><span class="s-id">2.2.2</span><span>پیکربندی برده</span><span class="s-dots"></span><span class="s-page">۸</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b3"><span class="t-num">۴</span><span class="t-title">بخش ۳ | آزمون و راستی‌آزمایی</span><span class="t-dots"></span><span class="t-page">۱۰</span></a>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۵</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۱۱</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۶</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۱۱</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">شکل ۱-۱</span><span>نمودار ارتباط میزبان و بردهٔ <span class="en">SDIO</span></span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">جدول ۲-۱</span><span>تخصیص پایه‌های سیگنال</span><span class="f-dots"></span><span class="f-page">۵</span></div>
+        <div class="frow"><span class="f-id">کد ۱</span><span>مقداردهی اولیۀ پایه‌ها، ساعت و کنترل‌گر <span class="en">SDIO</span> در میزبان</span><span class="f-dots"></span><span class="f-page">۵</span></div>
+        <div class="frow"><span class="f-id">کد ۲</span><span>ارسال فرمان <span class="en">0x05</span> و انتظار پاسخ در میزبان</span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">کد ۳</span><span>پیکربندی <span class="en">DMA</span> و تابع ارسال داده در میزبان</span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">کد ۴</span><span>مقداردهی اولیۀ برده و فعال‌سازی حالت <span class="en">SLV</span></span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">کد ۵</span><span>پیکربندی پاسخ <span class="en">R1</span> و انتظار فرمان در برده</span><span class="f-dots"></span><span class="f-page">۹</span></div>
+        <div class="frow"><span class="f-id">کد ۶</span><span>پیکربندی <span class="en">DMA</span> و تابع دریافت داده در برده</span><span class="f-dots"></span><span class="f-page">۹</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> سری <span class="en">CH32</span> میکروکنترلر بین‌سیستمیِ صنعتی در اکوسیستم <span class="en">RISC-V</span> است و رابط <span class="en">SDIO</span> آن علاوه بر نقش متعارف میزبان کارت‌های حافظه، به‌صورت برده نیز پیکربندی می‌شود تا با میزبان‌های منطبق بر مشخصات <span class="en">SDIO</span> ارتباط برقرار کند. این سند با نمونۀ <span class="en">CH32V407</span> نشان می‌دهد چگونه دو تراشه در نقش میزبان و برده به هم متصل می‌شوند؛ از جدول تخصیص پایه‌ها و نکات اتصال سخت‌افزاری تا پیکربندی رجیسترهای ساعت، ماشین حالت فرمان (<span class="en">CPSM</span>) و ماشین حالت داده (<span class="en">DPSM</span>)، فعال‌سازی حالت برده با <span class="en">DCTRL2</span>، پاسخ خودکار <span class="en">R1</span> و انتقال بلوکیِ <span class="en">512</span> بایتی از مسیر <span class="en">DMA</span>، و در پایان مراحل مرحله‌به‌مرحلۀ آزمون و راستی‌آزمایی را پوشش می‌دهد.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>این سند کاربردی توضیح می‌دهد چگونه می‌توان رابط <span class="en">SDIO</span> چیپ‌های سری <span class="en">CH32</span> را به‌صورت یک دستگاه برده پیکربندی کرد تا به فرمان‌های میزبان <span class="en">SDIO</span> خارجی پاسخ دهد و عملیات انتقال داده را انجام دهد. برای این هدف، از <span class="en">CH32V407</span> به‌عنوان نمونه استفاده شده است: نخست ویژگی‌های کنترل‌گر <span class="en">SDIO</span> مرور می‌شود و سپس یک نمونۀ کامل طراحی <span class="en">SDIO</span> در حالت برده ارائه می‌گردد؛ نمونه‌ای که نمودار اتصال سخت‌افزاری، روش پیکربندی رجیسترها، ساز‌و‌کار پاسخ‌گویی به فرمان‌ها و جریان ارسال و دریافت داده را در بر می‌گیرد.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>میکروکنترلرهای همگانی‌منظوره</td><td><span class="en">CH32V307 · CH32H417 · CH32V407</span></td></tr>
+  </table>
+</div>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">مرور رابط <span class="en">SDIO</span> در سری <span class="en">CH32</span></div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-111"><span class="dm">◆</span>۱.۱ مرور کلی</h3>
+<p>رابط <span class="en">SDIO</span> یک رابط ارتباطی روی میکروکنترلر است که برای کار با کارت‌های حافظهٔ خارجی مانند کارت <span class="en">SD</span> یا دستگاه‌های دیگر طراحی شده و یکی از جانبی‌های میکروکنترلر به شمار می‌آید. <span class="en">SDIO</span> میکروکنترلر مستقیماً روی گذرگاه <span class="en">HB</span> نصب می‌شود و ساعت خود را بی‌واسطه از <span class="en">HCLK</span> می‌گیرد؛ به همین دلیل می‌تواند به سرعت ارتباطی بالایی دست یابد. <span class="en">SDIO</span> میکروکنترلر در نقش میزبان <span class="en">SDIO</span> به کار می‌رود و دستگاه تحت کنترل را به‌طور کلی «دستگاه <span class="en">SDIO</span>» یا «بردهٔ <span class="en">SDIO</span>» می‌نامند. محور اصلی این سند راهنمایی کاربر برای پیکربندی <span class="en">MCU</span> به‌عنوان بردهٔ <span class="en">SDIO</span> است تا با دستگاه میزبان ارتباط برقرار کند و انتقال سریع داده را به سرانجام برساند.</p>
+<p>سری <span class="en">CH32</span> به‌عنوان میکروکنترلر بین‌سیستمیِ صنعتی در اکوسیستم <span class="en">RISC-V</span> (چینگ‌که) است و کنترل‌گر بردهٔ <span class="en">SDIO</span> آن صرفاً یک کانال عبور دادهٔ سنتی نیست، بلکه واحد شتاب‌دهندۀ سخت‌افزاریِ کلیدی برای ساختن سیستم ارتباطی به شمار می‌آید. در طراحی سیستم‌های نهفته با حجم دادهٔ بالا، پردازندۀ میزبان (مانند <span class="en">SoC</span> سطح کاربرد <span class="en">ARM</span>، یک <span class="en">MCU</span> دیگرِ <span class="en">RISC-V</span> یا آرایۀ منطقی <span class="en">FPGA</span>) معمولاً باید بسته‌های داده و دستورهای کنترل لحظه‌ای را با توان عملیاتی بالا، تأخیر کم و بدون دخالت <span class="en">CPU</span> با سری <span class="en">CH32</span> جابه‌جا کند و جابه‌جایی داده مستقیماً در سطح رجیستر و گذرگاه انجام می‌شود. در کنار کنترل‌گر <span class="en">DMA</span> سری <span class="en">CH32</span> و توان انتقال دادهٔ چندبعدیِ آن، کنترل‌گر برده از مسیر ساز‌و‌کار همکاری <span class="en">DMA</span> و وقفه، بدون مشارکت فعال هسته، زنجیرۀ کامل از دریافت و جابه‌جایی داده تا پاسخ‌دهی را می‌بندد و بازده انتقال در لایۀ فیزیکی را به حد نهایی رابط می‌رساند. طراحی سخت‌افزاری آن به‌دقت از مشخصات <span class="en">SDIO</span> پیروی می‌کند و به همین دلیل می‌تواند با انواع میزبان‌های منطبق با پروتکل ارتباط برقرار کند.</p>
+
+<div class="fig" id="fig-11">
+  <div class="figbox">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 310" style="width:100%; max-width:640px; direction:ltr;">
+      <defs>
+        <marker id="arwEnd" markerWidth="14" markerHeight="12" refX="11" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L11,4 L0,8 Z" fill="#51617a"/></marker>
+        <marker id="arwStart" markerWidth="14" markerHeight="12" refX="3" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M11,0 L0,4 L11,8 Z" fill="#51617a"/></marker>
+        <marker id="arwEndC" markerWidth="14" markerHeight="12" refX="11" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L11,4 L0,8 Z" fill="#e08038"/></marker>
+        <marker id="arwStartC" markerWidth="14" markerHeight="12" refX="3" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M11,0 L0,4 L11,8 Z" fill="#e08038"/></marker>
+      </defs>
+      <rect x="30" y="70" width="185" height="205" rx="14" fill="#1b2a41"/>
+      <rect x="545" y="70" width="185" height="205" rx="14" fill="#1b2a41"/>
+      <text x="122" y="110" text-anchor="middle" font-size="16.5" font-weight="700" fill="#ffffff">SDIO Host</text>
+      <text x="122" y="136" text-anchor="middle" font-size="14.5" fill="#e08038">میزبان</text>
+      <text x="122" y="162" text-anchor="middle" font-size="13" fill="#cfc9c2">CH32V407</text>
+      <text x="637" y="110" text-anchor="middle" font-size="16.5" font-weight="700" fill="#ffffff">SDIO Slave</text>
+      <text x="637" y="136" text-anchor="middle" font-size="14.5" fill="#e08038">برده</text>
+      <text x="637" y="162" text-anchor="middle" font-size="13" fill="#cfc9c2">CH32V407</text>
+      <text x="380" y="40" text-anchor="middle" font-size="13" fill="#8d857c">خط ساعت از سمت میزبان تأمین می‌شود؛ فرمان، پاسخ و داده دوطرفه‌اند</text>
+      <text x="380" y="86" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1b2a41">SDIO_CLK · PC12</text>
+      <line x1="215" y1="96" x2="545" y2="96" stroke="#51617a" stroke-width="2.2" marker-end="url(#arwEnd)"/>
+      <text x="380" y="124" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1b2a41">SDIO_CMD · PD2</text>
+      <line x1="215" y1="134" x2="545" y2="134" stroke="#e08038" stroke-width="2.2" marker-start="url(#arwStartC)" marker-end="url(#arwEndC)"/>
+      <text x="380" y="152" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1b2a41">SDIO_D0 · PC8</text>
+      <line x1="215" y1="162" x2="545" y2="162" stroke="#51617a" stroke-width="2.2" marker-start="url(#arwStart)" marker-end="url(#arwEnd)"/>
+      <text x="380" y="180" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1b2a41">SDIO_D1 · PC9</text>
+      <line x1="215" y1="190" x2="545" y2="190" stroke="#51617a" stroke-width="2.2" marker-start="url(#arwStart)" marker-end="url(#arwEnd)"/>
+      <text x="380" y="208" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1b2a41">SDIO_D2 · PC10</text>
+      <line x1="215" y1="218" x2="545" y2="218" stroke="#51617a" stroke-width="2.2" marker-start="url(#arwStart)" marker-end="url(#arwEnd)"/>
+      <text x="380" y="236" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1b2a41">SDIO_D3 · PC11</text>
+      <line x1="215" y1="246" x2="545" y2="246" stroke="#51617a" stroke-width="2.2" marker-start="url(#arwStart)" marker-end="url(#arwEnd)"/>
+      <text x="380" y="288" text-anchor="middle" font-size="13" fill="#8d857c">در این نمونه از حالت ۴ بیتی استفاده شده است: خطوط دادهٔ DAT0-DAT3</text>
+    </svg>
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۱</span><span class="cap-text">نمودار ارتباط میزبان و بردهٔ <span class="en">SDIO</span></span></div>
+</div>
+<div class="note"><span class="lbl">توجه:</span> رابط <span class="en">SDIO</span> سه پهنای خط دادهٔ ۱ بیتی، ۴ بیتی و ۸ بیتی برای انتخاب دارد.</div>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">نمونۀ طراحی <span class="en">SDIO</span> در حالت برده</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-211"><span class="dm">◆</span>۲.۱ اتصال سخت‌افزاری</h3>
+<p>رابط <span class="en">SDIO</span> در بیشترین حالت از ۱۰ خط سیگنال تشکیل می‌شود (در حالت ۸ بیتی از خطوط دادهٔ <span class="en">DATA0-DATA7</span>، در حالت ۴ بیتی از <span class="en">DATA0-DATA3</span> و در حالت ۱ بیتی تنها از <span class="en">DATA0</span> استفاده می‌شود). در این نمونۀ طراحی، حالت ۴ بیتی در نظر گرفته شده است.</p>
+
+<h4 class="h3x" id="sec-2111"><span class="dm">◆</span>۲.۱.۱ اتصال پایه‌ها</h4>
+<p>در این نمونه، دو <span class="en">CH32V407</span> به یکدیگر متصل می‌شوند؛ یکی در نقش میزبان و دیگری در نقش برده، تا ارتباط فرمان و داده میان آنها برقرار شود.</p>
+
+<div class="tblwrap" id="tab-21">
+  <div class="tblcap"><span class="cap-pill">جدول ۲-۱</span><span class="cap-text">تخصیص پایه‌های سیگنال</span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:24%;">نام سیگنال</th><th style="width:16%;">جهت</th><th>شرح</th><th style="width:24%;">پایۀ <span class="en">CH32V407</span></th></tr></thead>
+    <tr><td><span class="en">SDIO_CLK</span></td><td>ورودی</td><td class="jt">سیگنال ساعت؛ تأمین‌شده از سمت میزبان</td><td><span class="en">PC12</span></td></tr>
+    <tr><td><span class="en">SDIO_CMD</span></td><td>دوطرفه</td><td class="jt">خط فرمان / پاسخ</td><td><span class="en">PD2</span></td></tr>
+    <tr><td><span class="en">SDIO_D0</span></td><td>دوطرفه</td><td class="jt">خط دادهٔ ۰</td><td><span class="en">PC8</span></td></tr>
+    <tr><td><span class="en">SDIO_D1</span></td><td>دوطرفه</td><td class="jt">خط دادهٔ ۱</td><td><span class="en">PC9</span></td></tr>
+    <tr><td><span class="en">SDIO_D2</span></td><td>دوطرفه</td><td class="jt">خط دادهٔ ۲</td><td><span class="en">PC10</span></td></tr>
+    <tr><td><span class="en">SDIO_D3</span></td><td>دوطرفه</td><td class="jt">خط دادهٔ ۳</td><td><span class="en">PC11</span></td></tr>
+  </table>
+</div>
+
+<p><b>نکات اتصال سخت‌افزاری:</b></p>
+<div class="bl">مقاومت کشش بالا: خطوط <span class="en">CMD</span> و <span class="en">DATA</span> در حالت بیکار باید در سطح منطقی بالا نگه داشته شوند؛ معمولاً در سمت برد میزبان مقاومت کشش بالای <span class="en">10kΩ</span> تا <span class="en">50kΩ</span> پیکربندی می‌شود تا در زمان بیکاری گذرگاه، وضعیت خطوط سیگنال پایدار بماند.</div>
+<div class="bl">تطبیق سطح منطقی: سطح <span class="en">I/O</span> برد <span class="en">CH32V407</span> بر مبنای دامنۀ تغذیۀ <span class="en">VDDIO</span> است. اگر ولتاژ <span class="en">I/O</span> میزبان با <span class="en">VDDIO</span> برد <span class="en">CH32V407</span> (معمولاً <span class="en">3.3V</span>) یکسان نباشد، باید مدار تبدیل سطح منطقی افزوده شود.</div>
+<div class="bl">یکپارچگی سیگنال: رابط <span class="en">SDIO</span> در حالت ۴ خطی به نرخ انتقال <span class="en">80MHz</span> می‌رسد؛ در ارتباط پرسرعت طراحیِ تطبیق امپدانس توصیه می‌شود، از اتصال با سیم‌های پل (دوپونت) پرهیز کنید و روش اتصال مستقیم کوتاه‌مسیر روی <span class="en">PCB</span> توصیه می‌شود.</div>
+
+<h3 class="h2x" id="sec-212"><span class="dm">◆</span>۲.۲ پیکربندی رجیسترها</h3>
+<p>میزبان و برده به‌صورت جداگانه پیکربندی می‌شوند. گذرگاه <span class="en">SDIO</span> از اصل ارتباطیِ «میزبان آغاز می‌کند، برده پاسخ می‌دهد» پیروی می‌کند و همهٔ عملیات انتقال داده به‌واسطۀ ارسال فرمان از سمت میزبان آغاز می‌شود.</p>
+
+<h4 class="h3x" id="sec-2121"><span class="dm">◆</span>۲.۲.۱ پیکربندی میزبان</h4>
+<p>پیکربندی میزبان به این شکل است و شامل مقداردهی اولیۀ پایه‌های <span class="en">IO</span>، ساعت، پهنای داده، لبهٔ نمونه‌برداری و دیگر موارد می‌شود:</p>
+
+<div class="fig" id="code-1" style="break-inside:auto;">
+  <div class="codeblk long" style="font-size:10px;">SD_Init( void )
+{
+GPIO_InitTypeDef  GPIO_InitStructure;
+    SD_Error errorstatus = SD_OK;
+
+    RCC_PB2PeriphClockCmd(RCC_PB2Periph_GPIOC | RCC_PB2Periph_GPIOD, ENABLE );
+    RCC_HBPeriphClockCmd( RCC_HBPeriph_SDIO, ENABLE );
+    RCC_PB2PeriphClockCmd( RCC_PB2Periph_AFIO, ENABLE );
+
+    GPIO_InitStructure.GPIO_Pin =  GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_Init( GPIOC, &amp;GPIO_InitStructure );
+
+    GPIO_InitStructure.GPIO_Pin =  GPIO_Pin_8 | GPIO_Pin_9 ;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_Init( GPIOC, &amp;GPIO_InitStructure );
+
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_Init( GPIOD, &amp;GPIO_InitStructure );
+
+    SDIO_DeInit();
+
+    errorstatus = SD_PowerON();
+
+    return errorstatus;
+ }
+
+SD_Error SD_PowerON( void )
+{
+
+    SD_Error errorstatus = SD_OK;
+    SDIO_InitStructure.SDIO_ClockDiv = 0;   <span class="cm">//تنظیم ضریب تقسیم: SDIOCLK = HCLK/(ClockDiv+2)</span>
+    SDIO_InitStructure.SDIO_ClockEdge = SDIO_ClockEdge_Falling; <span class="cm">//تنظیم لبهٔ نمونه‌برداری</span>
+    SDIO_InitStructure.SDIO_ClockBypass = SDIO_ClockBypass_Disable; <span class="cm">//فعال یا غیرفعال‌کردن میان‌بری ساعت</span>
+    SDIO_InitStructure.SDIO_ClockPowerSave = SDIO_ClockPowerSave_Disable;<span class="cm">//بستن ساعت در حالت بیکار</span>
+    SDIO_InitStructure.SDIO_BusWide = SDIO_BusWide_4b;<span class="cm">//پهنای داده</span>
+    SDIO_InitStructure.SDIO_HardwareFlowControl = SDIO_HardwareFlowControl_Disable;<span class="cm">//جریان سخت‌افزاری</span>
+    SDIO_Init( &amp;SDIO_InitStructure );
+
+    SDIO_SetPowerState( SDIO_PowerState_ON );<span class="cm">//تنظیم به حالت برق‌رسانی‌شده</span>
+
+    SDIO_ClockCmd(Enable ); <span class="cm">//روشن‌کردن ساعت</span>
+
+return( errorstatus );
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۱</span><span class="cap-text">مقداردهی اولیۀ پایه‌ها، ساعت و کنترل‌گر <span class="en">SDIO</span> در میزبان</span></div>
+</div>
+
+<p>پس از پایان مقداردهی اولیه، میزبان ارسال <span class="en">CMD</span> را آغاز می‌کند و به برده اعلام آمادگی می‌دهد؛ سپس منتظر پاسخ برده می‌ماند. برده تنها از پاسخ از نوع <span class="en">R1</span> پشتیبانی می‌کند:</p>
+
+<div class="fig" id="code-2">
+  <div class="codeblk">while ((SDIO-&gt;STA&amp;SDIO_FLAG_CMDREND)==0)
+{
+ SDIO_CmdInitStructure.SDIO_Argument = 0x6; <span class="cm">//آرگومان (ARG) ارسالی</span>
+SDIO_CmdInitStructure.SDIO_CmdIndex = 0x05;<span class="cm">//فرمان (CMD) ارسالی</span>
+ SDIO_CmdInitStructure.SDIO_Response = SDIO_Response_Short; <span class="cm">//نوع پاسخ در انتظار</span>
+ SDIO_CmdInitStructure.SDIO_Wait = SDIO_Wait_No;
+ SDIO_CmdInitStructure.SDIO_CPSM = SDIO_CPSM_Enable;<span class="cm">//فعال‌سازی ارسال</span>
+ SDIO_SendCommand( &amp;SDIO_CmdInitStructure );
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۲</span><span class="cap-text">ارسال فرمان <span class="en">0x05</span> و انتظار پاسخ در میزبان</span></div>
+</div>
+
+<p>پس از تغییر ماشین حالت و رسیدن وضعیت میزبان به <span class="en">CMDREND</span>، پاسخ دریافت شده و آزمون <span class="en">CRC</span> با موفقیت انجام شده است؛ میزبان ارسال داده را آغاز می‌کند.</p>
+
+<div class="fig" id="code-3" style="break-inside:auto;">
+  <div class="codeblk long" style="font-size:10px;">//تابع پیکربندی DMA
+ void SD_DMA_Config( u32 *mbuf, u32 bufsize, u32 DMA_DIR )
+{
+    DMA_InitTypeDef DMA_InitStructure;
+
+    RCC_HBPeriphClockCmd( RCC_HBPeriph_DMA2, ENABLE );
+
+    DMA_DeInit( DMA2_Channel4 );
+    DMA_Cmd( DMA2_Channel4, DISABLE );
+
+    DMA_InitStructure.DMA_PeripheralBaseAddr = ( u32 )&amp;SDIO-&gt;FIFO;
+    DMA_InitStructure.DMA_MemoryBaseAddr = ( u32 )mbuf;
+    DMA_InitStructure.DMA_DIR = DMA_DIR;
+    DMA_InitStructure.DMA_BufferSize = bufsize/4 ;
+    DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
+    DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
+    DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Word;
+    DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_Word;
+    DMA_InitStructure.DMA_Mode = DMA_Mode_Normal;
+    DMA_InitStructure.DMA_Priority = DMA_Priority_High;
+    DMA_InitStructure.DMA_M2M = DMA_M2M_Disable;
+    DMA_Init( DMA2_Channel4, &amp;DMA_InitStructure );
+}
+//تابع ارسال میزبان
+Void HOST_Send()
+{
+SD_DMA_Config(( u32 * )buf,512,DMA_DIR_PeripheralDST);<span class="cm">//فراخوانی پیکربندی DMA با پارامترهای انتقال</span>
+    SDIO_DataInitStructure.SDIO_DataBlockSize = 9 &lt;&lt; 4; ; <span class="cm">//طول بلوک دادهٔ انتقال: 512B</span>
+    SDIO_DataInitStructure.SDIO_DataLength = 512 ;
+    SDIO_DataInitStructure.SDIO_DataTimeOut = SD_DATATIMEOUT ;<span class="cm">//تنظیم مهلت زمانی</span>
+    SDIO_DataInitStructure.SDIO_DPSM = SDIO_DPSM_Enable;
+    SDIO_DataInitStructure.SDIO_TransferDir = SDIO_TransferDir_ToCard; <span class="cm">//جهت انتقال</span>
+    SDIO_DataInitStructure.SDIO_TransferMode = SDIO_TransferMode_Block;<span class="cm">//انتقال در حالت بلوکی</span>
+SDIO_DataConfig( &amp;SDIO_DataInitStructure );
+
+    SDIO_DMACmd( ENABLE );<span class="cm">//فعال‌سازی DMA</span>
+    DMA_Cmd( DMA2_Channel4, ENABLE );
+    while( ( ( DMA2-&gt;INTFR &amp; 0X2000 ) == RESET ) ) <span class="cm">//انتظار پرچم پایان انتقال DMA</span>
+    {
+    }
+    while(((SDIO-&gt;STA&amp;SDIO_FLAG_DBCKEND)==0)) <span class="cm">//انتظار پرچم ارسال یا دریافت بلوک داده همراه با درستی CRC</span>
+    {
+    }
+    SDIO-&gt;DCTRL&amp;=~(1&lt;&lt;0); <span class="cm">//بستن ارسال SDIO</span>
+
+    SDIO_DMACmd( DISABLE );
+    DMA_Cmd( DMA2_Channel4, DISABLE );<span class="cm">//بستن DMA</span>
+    printf("data send OK!!!\r\n");
+SDIO-&gt;ICR=0xFFFFFF; <span class="cm">//پاک‌سازی بیت‌های وضعیت SDIO</span>
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۳</span><span class="cap-text">پیکربندی <span class="en">DMA</span> و تابع ارسال داده در میزبان</span></div>
+</div>
+
+<h4 class="h3x" id="sec-2122"><span class="dm">◆</span>۲.۲.۲ پیکربندی برده</h4>
+<p>پیکربندی برده به این شکل است و شامل مقداردهی اولیۀ پایه‌های <span class="en">IO</span>، پهنای داده و دیگر موارد می‌شود:</p>
+
+<div class="fig" id="code-4" style="break-inside:auto;">
+  <div class="codeblk long" style="font-size:10px;">SD_Init( void )
+{
+GPIO_InitTypeDef  GPIO_InitStructure;
+    SD_Error errorstatus = SD_OK;
+
+    RCC_PB2PeriphClockCmd(RCC_PB2Periph_GPIOC | RCC_PB2Periph_GPIOD, ENABLE );
+    RCC_HBPeriphClockCmd( RCC_HBPeriph_SDIO, ENABLE );
+    RCC_PB2PeriphClockCmd( RCC_PB2Periph_AFIO, ENABLE );
+
+    GPIO_InitStructure.GPIO_Pin =  GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_Init( GPIOC, &amp;GPIO_InitStructure );
+
+    GPIO_InitStructure.GPIO_Pin =   GPIO_Pin_8 | GPIO_Pin_9 ;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_Init( GPIOC, &amp;GPIO_InitStructure );
+
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_Init( GPIOD, &amp;GPIO_InitStructure );
+
+    SDIO_DeInit();
+
+    errorstatus = SD_PowerON();
+
+    return errorstatus;
+ }
+
+SD_Error SD_PowerON( void )
+{
+
+    SD_Error errorstatus = SD_OK;
+    SDIO_InitStructure.SDIO_ClockDiv = 0;   <span class="cm">//تنظیم ضریب تقسیم: SDIOCLK = HCLK/(ClockDiv+2)</span>
+    SDIO_InitStructure.SDIO_ClockEdge = SDIO_ClockEdge_Falling; <span class="cm">//تنظیم لبهٔ نمونه‌برداری</span>
+    SDIO_InitStructure.SDIO_ClockBypass = SDIO_ClockBypass_Disable; <span class="cm">//فعال یا غیرفعال‌کردن میان‌بری ساعت</span>
+    SDIO_InitStructure.SDIO_ClockPowerSave = SDIO_ClockPowerSave_Disable;<span class="cm">//بستن ساعت در حالت بیکار</span>
+    SDIO_InitStructure.SDIO_BusWide = SDIO_BusWide_4b;<span class="cm">//پهنای داده</span>
+    SDIO_InitStructure.SDIO_HardwareFlowControl = SDIO_HardwareFlowControl_Disable;<span class="cm">//جریان سخت‌افزاری</span>
+    SDIO_Init( &amp;SDIO_InitStructure );
+
+    SDIO_SetPowerState( SDIO_PowerState_ON );<span class="cm">//تنظیم به حالت برق‌رسانی‌شده</span>
+
+SDIO_ClockCmd(Enable ); <span class="cm">//روشن‌کردن ساعت</span>
+
+SDIO-&gt;DCTRL2|=(1&lt;&lt;24);<span class="cm">////فعال‌سازی حالت SLV</span>
+    return( errorstatus );
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۴</span><span class="cap-text">مقداردهی اولیۀ برده و فعال‌سازی حالت <span class="en">SLV</span></span></div>
+</div>
+
+<p>پس از پایان مقداردهی اولیه، برده پاسخ <span class="en">R1</span> برای <span class="en">CMD</span> را پیکربندی می‌کند تا پس از دریافت <span class="en">CMD</span> میزبان به‌صورت خودکار پاسخ دهد، آمادگی خود را به میزبان اعلام کند و وارد حالت انتظار برای ارسال <span class="en">CMD</span> از سمت میزبان شود.</p>
+
+<div class="fig" id="code-5">
+  <div class="codeblk">SDIO-&gt;ARG=0x13;<span class="cm">///////////پاسخ R1 به میزبان: 0x13</span>
+while ((SDIO-&gt;STA&amp;SDIO_FLAG_CMDSENT)==0)
+{
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۵</span><span class="cap-text">پیکربندی پاسخ <span class="en">R1</span> و انتظار فرمان در برده</span></div>
+</div>
+
+<p>پس از تغییر ماشین حالت و رسیدن وضعیت برده به <span class="en">CMDREND</span>، پاسخ دریافت شده است؛ برده دریافت داده را آغاز می‌کند.</p>
+
+<div class="fig" id="code-6" style="break-inside:auto;">
+  <div class="codeblk long" style="font-size:10px;">//تابع پیکربندی DMA
+void SD_DMA_Config( u32 *mbuf, u32 bufsize, u32 DMA_DIR )
+{
+    DMA_InitTypeDef DMA_InitStructure;
+
+    RCC_HBPeriphClockCmd( RCC_HBPeriph_DMA2, ENABLE );
+
+    DMA_DeInit( DMA2_Channel4 );
+    DMA_Cmd( DMA2_Channel4, DISABLE );
+
+    DMA_InitStructure.DMA_PeripheralBaseAddr = ( u32 )&amp;SDIO-&gt;FIFO;
+    DMA_InitStructure.DMA_MemoryBaseAddr = ( u32 )mbuf;
+    DMA_InitStructure.DMA_DIR = DMA_DIR;
+    DMA_InitStructure.DMA_BufferSize = bufsize/4 ;
+    DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
+    DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
+    DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Word;
+    DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_Word;
+    DMA_InitStructure.DMA_Mode = DMA_Mode_Normal;
+    DMA_InitStructure.DMA_Priority = DMA_Priority_High;
+    DMA_InitStructure.DMA_M2M = DMA_M2M_Disable;
+    DMA_Init( DMA2_Channel4, &amp;DMA_InitStructure );
+}
+//تابع ارسال میزبان
+Void SLV_Rec()
+{
+    SDIO_DataInitStructure.SDIO_DataBlockSize = 9 &lt;&lt; 4; ; <span class="cm">//طول بلوک دادهٔ انتقال: 512B</span>
+    SDIO_DataInitStructure.SDIO_DataLength = 512 ;
+    SDIO_DataInitStructure.SDIO_DataTimeOut = SD_DATATIMEOUT ;
+    SDIO_DataInitStructure.SDIO_DPSM = SDIO_DPSM_Enable;
+    SDIO_DataInitStructure.SDIO_TransferDir = SDIO_TransferDir_ToSDIO; <span class="cm">//جهت انتقال: دریافت</span>
+    SDIO_DataInitStructure.SDIO_TransferMode = SDIO_TransferMode_Block;<span class="cm">//انتقال در حالت بلوکی</span>
+SDIO_DataConfig( &amp;SDIO_DataInitStructure );
+
+SD_DMA_Config(( u32 * )Readbuf,512,DMA_DIR_PeripheralSRC);
+
+    SDIO_DMACmd( ENABLE );<span class="cm">//فعال‌سازی DMA</span>
+    DMA_Cmd( DMA2_Channel4, ENABLE );
+    while( ( ( DMA2-&gt;INTFR &amp; 0X2000 ) == RESET ) ) <span class="cm">//انتظار پرچم پایان انتقال DMA</span>
+    {
+    }
+    while(((SDIO-&gt;STA&amp;SDIO_FLAG_DBCKEND)==0)) <span class="cm">//انتظار پرچم ارسال یا دریافت بلوک داده همراه با درستی CRC</span>
+    {
+    }
+
+    SDIO-&gt;DCTRL&amp;=~(1&lt;&lt;0); <span class="cm">//بستن دریافت SDIO</span>
+    SDIO_DMACmd( DISABLE );
+    DMA_Cmd( DMA2_Channel4, DISABLE );<span class="cm">//بستن DMA</span>
+    printf("data send OK!!!\r\n");
+SDIO-&gt;ICR=0xFFFFFF; <span class="cm">//پاک‌سازی بیت‌های وضعیت SDIO</span>
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۶</span><span class="cap-text">پیکربندی <span class="en">DMA</span> و تابع دریافت داده در برده</span></div>
+</div>
+
+<p>پس از انجام پیکربندی‌های بالا، یک دور کامل عملیات «ارسال از سمت میزبان و دریافت از سمت برده» قابل انجام است.</p>
+
+<!-- ================= بخش ۳ ================= -->
+<div class="chapter-header" id="sec-b3">
+  <span class="sec-pill">بخش ۳</span>
+  <div class="sec-title">آزمون و راستی‌آزمایی</div>
+  <div class="sec-divider"></div>
+</div>
+<p>پس از انجام پیکربندی‌های بالا، توصیه می‌شود کارکرد بردهٔ <span class="en">SDIO</span> را طبق گام‌های زیر به‌صورت مرحله‌به‌مرحله راستی‌آزمایی کنید:</p>
+<div class="bl">آزمون اتصال سخت‌افزاری: با اسیلوسکوپ وجود شکل موج سیگنال روی خطوط <span class="en">CMD</span> و <span class="en">DATA</span> را اندازه بگیرید تا اتصال فیزیکی درست میان میزبان و برده تأیید شود.</div>
+<div class="bl">آزمون شناسایی فرمان: پس از آنکه برده <span class="en">SDIO_FLAG_CMDSENT</span> را تشخیص داد، مقادیر را چاپ کنید؛ پارامتر فرمان دریافتی در <span class="en">RESP1</span> و شاخص فرمان دریافتی در <span class="en">RESP2</span> قرار می‌گیرد و از این راه می‌توانید درستی ارسال <span class="en">CMD</span> را بررسی کنید، یا با تحلیل‌گر منطقی آن را دریافت و کدگشایی کنید.</div>
+<div class="bl">آزمون انبوه ارسال و دریافت داده: از سمت میزبان داده ارسال کنید و برده محتوای دادهٔ دریافتی را از طریق پورت سریال چاپ کند تا عملکرد دریافت راستی‌آزمایی شود.</div>
+<p>وضعیت <span class="en">STA</span> میزبان و برده را بررسی کنید که خطای غیرعادی گزارش نشده باشد.</p>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN21000</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/06/25</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">SDIO</span></td><td class="jt">رابط ارتباطی برای کار با کارت‌های حافظه و دستگاه‌های خارجی؛ جانبیِ میکروکنترلر که مستقیماً روی گذرگاه <span class="en">HB</span> نصب است و از <span class="en">HCLK</span> ساعت می‌گیرد</td></tr>
+      <tr><td><span class="en">HB / HCLK</span></td><td class="jt">گذرگاه پرسرعت میزبان و ساعت مبنای آن؛ منبع ساعت رابط <span class="en">SDIO</span> و تعیین‌کنندۀ سرعت ارتباط</td></tr>
+      <tr><td><span class="en">Host / Slave</span></td><td class="jt">میزبان: سمتِ آغازگر که فرمان می‌فرستد و ساعت را تأمین می‌کند؛ برده: دستگاه تحت کنترل که به فرمان‌ها پاسخ می‌دهد</td></tr>
+      <tr><td><span class="en">SDIO_CLK</span></td><td class="jt">خط ساعت ارتباط که همیشه توسط میزبان تأمین می‌شود؛ در نمونۀ این سند به پایۀ <span class="en">PC12</span> نگاشت شده است</td></tr>
+      <tr><td><span class="en">CMD</span></td><td class="jt">خط دوطرفهٔ فرمان-پاسخ برای انتقال فرمان‌ها از میزبان و ارسال پاسخ از برده؛ در نمونه به پایۀ <span class="en">PD2</span> نگاشت شده است</td></tr>
+      <tr><td><span class="en">R1 Response</span></td><td class="jt">نوع پاسخِ تنها پشتیبانی‌شده در حالت برده؛ پس از دریافت فرمان میزبان، محتوای رجیستر <span class="en">ARG</span> به‌صورت خودکار به‌عنوان پاسخ ارسال می‌شود</td></tr>
+      <tr><td><span class="en">DAT0-DAT3</span></td><td class="jt">خطوط داده در حالت ۴ بیتی؛ در حالت ۸ بیتی تا <span class="en">DAT7</span> گسترش می‌یابد و در حالت ۱ بیتی فقط <span class="en">DAT0</span> به کار می‌رود</td></tr>
+      <tr><td><span class="en">CPSM</span></td><td class="jt">ماشین حالت فرمان در کنترل‌گر <span class="en">SDIO</span>؛ با فعال‌شدن، فرمان پیکربندی‌شده را روی خط <span class="en">CMD</span> می‌فرستد</td></tr>
+      <tr><td><span class="en">DPSM</span></td><td class="jt">ماشین حالت داده در کنترل‌گر <span class="en">SDIO</span>؛ انتقال داده را در جهت کارت یا در جهت <span class="en">SDIO</span> (دریافت) مدیریت می‌کند</td></tr>
+      <tr><td><span class="en">DMA</span></td><td class="jt">میسر دسترسی مستقیم به حافظه؛ جابه‌جایی داده میان <span class="en">FIFO</span> کنترل‌گر <span class="en">SDIO</span> و حافظه را بدون دخالت هسته انجام می‌دهد</td></tr>
+      <tr><td><span class="en">FIFO</span></td><td class="jt">میان‌گیر دادهٔ کنترل‌گر <span class="en">SDIO</span>؛ آدرس پایۀ کانال <span class="en">DMA</span> در نمونۀ این سند</td></tr>
+      <tr><td><span class="en">STA Flags</span></td><td class="jt">پرچم‌های رجیستر وضعیت: <span class="en">CMDREND</span> پایان فرمان همراه با پاسخ، <span class="en">CMDSENT</span> ارسال کامل فرمان و <span class="en">DBCKEND</span> پایان بلوک داده همراه با درستیِ <span class="en">CRC</span></td></tr>
+      <tr><td><span class="en">DCTRL2</span></td><td class="jt">رجیستر کنترل داده در حالت برده؛ قرار دادن بیت ۲۴ آن، کارکرد برده (<span class="en">SLV</span>) را فعال می‌کند</td></tr>
+      <tr><td><span class="en">VDDIO</span></td><td class="jt">دامنۀ تغذیۀ پایه‌های ورودی-خروجی؛ مبنای سطح منطقی <span class="en">I/O</span> که در نمونۀ این سند معمولاً <span class="en">3.3V</span> است</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN21000 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۲۳</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN21000</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
