@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>راه‌اندازی حافظۀ <span class="en">SDRAM</span> با کنترل‌کنندۀ حافظۀ انعطاف‌پذیر <span class="en">FMC</span> — ترجمۀ فارسی AN29000</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">راه‌اندازی حافظۀ <span class="en">SDRAM</span></div>
+    <div class="t2">با کنترل‌کنندۀ حافظۀ انعطاف‌پذیر <span class="en">FMC</span></div>
+    <div class="t3">میکروکنترلر <span class="en">CH32H417</span></div>
+  </div>
+  <div class="c-sub">از خطوط سیگنال، ساختار حافظه و پارامترهای زمان‌بندی <span class="en">SDRAM</span> و جدول اتصال پایه‌های <span class="en">FMC</span>، تا پیکربندی گام‌به‌گام نرم‌افزار، استفاده هم‌زمان از دو <span class="en">SDRAM</span>، انتقال داده با <span class="en">DMA</span> و عیب‌یابی خطاهای متداول</div>
+  <div class="c-desc">در این جزوه، ترجمۀ فارسی سند رسمی <span class="en">AN29000</span> (نسخۀ ۱٫۰، منتشرۀ شرکت <span class="en">WCH</span>) را می‌خوانید: راه‌اندازی حافظۀ <span class="en">SDRAM</span> با کنترل‌کنندۀ حافظۀ انعطاف‌پذیر <span class="en">FMC</span> روی <span class="en">CH32H417</span>؛ جدول خطوط سیگنال و اتصال پایه‌ها، نکات طراحی سخت‌افزاری، توالی مقداردهی اولیه، استفاده هم‌زمان از دو حافظه، خواندن و نوشتن مستقیم و با <span class="en">DMA</span> و اندازه‌گیری عملی سرعت تا <span class="en">380MB/s</span>.</div>
+  <div class="c-tags">
+    <span class="c-tag">میکروکنترلر <span class="en">CH32H417</span></span>
+    <span class="c-tag">کنترل‌کنندۀ حافظۀ انعطاف‌پذیر <span class="en">FMC</span></span>
+    <span class="c-tag">حافظۀ <span class="en">SDRAM</span> خارجی</span>
+    <span class="c-tag">پارامترهای زمان‌بندی <span class="en">tRCD/tRP</span></span>
+    <span class="c-tag">استفاده هم‌زمان از دو <span class="en">SDRAM</span></span>
+    <span class="c-tag">انتقال داده با <span class="en">DMA</span></span>
+    <span class="c-tag">خواندن بسته‌ای و پیش‌واکشی</span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN29000 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | اصول کار پایه</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-111"><span class="s-id">1.1</span><span>خطوط سیگنال</span><span class="s-dots"></span><span class="s-page">۳</span></a>
+    <a class="toc-sub" href="#sec-112"><span class="s-id">1.2</span><span>ساختار حافظۀ <span class="en">SDRAM</span></span><span class="s-dots"></span><span class="s-page">۴</span></a>
+    <a class="toc-sub" href="#sec-113"><span class="s-id">1.3</span><span>پارامترهای زمان‌بندی کلیدی</span><span class="s-dots"></span><span class="s-page">۴</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | راهنمای طراحی سخت‌افزار</span><span class="t-dots"></span><span class="t-page">۵</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-211"><span class="s-id">2.1</span><span>جدول اتصال پایه‌های <span class="en">FMC</span> و <span class="en">SDRAM</span></span><span class="s-dots"></span><span class="s-page">۵</span></a>
+    <a class="toc-sub" href="#sec-212"><span class="s-id">2.2</span><span>نکات طراحی سخت‌افزاری</span><span class="s-dots"></span><span class="s-page">۶</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b3"><span class="t-num">۴</span><span class="t-title">بخش ۳ | راهنمای پیکربندی نرم‌افزار</span><span class="t-dots"></span><span class="t-page">۶</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-311"><span class="s-id">3.1</span><span>مرور گام‌های پیکربندی</span><span class="s-dots"></span><span class="s-page">۶</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b4"><span class="t-num">۵</span><span class="t-title">بخش ۴ | خطاهای متداول و تکنیک‌های اشکال‌زدایی</span><span class="t-dots"></span><span class="t-page">۱۰</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-411"><span class="s-id">4.1</span><span>عیب‌یابی شکست مقداردهی اولیه</span><span class="s-dots"></span><span class="s-page">۱۰</span></a>
+    <a class="toc-sub" href="#sec-412"><span class="s-id">4.2</span><span>عیب‌یابی خطای خواندن و نوشتن</span><span class="s-dots"></span><span class="s-page">۱۰</span></a>
+    <a class="toc-sub" href="#sec-413"><span class="s-id">4.3</span><span>اندازه‌گیری عملی سرعت خواندن و نوشتن</span><span class="s-dots"></span><span class="s-page">۱۰</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۶</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۱۱</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۷</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۱۱</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">جدول ۱</span><span>دامنۀ کاربرد سند</span><span class="f-dots"></span><span class="f-page">۳</span></div>
+        <div class="frow"><span class="f-id">جدول ۱-۱</span><span>خطوط سیگنال <span class="en">SDRAM</span></span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">جدول ۲-۱</span><span>اتصال پایه‌های <span class="en">FMC</span> و <span class="en">SDRAM</span></span><span class="f-dots"></span><span class="f-page">۵</span></div>
+        <div class="frow"><span class="f-id">کد ۱</span><span>پیکربندی پایه‌ها و ساعت <span class="en">FMC</span></span><span class="f-dots"></span><span class="f-page">۶</span></div>
+        <div class="frow"><span class="f-id">کد ۲</span><span>پیکربندی کنترل‌کنندۀ <span class="en">SDRAM</span> و زمان‌بندی</span><span class="f-dots"></span><span class="f-page">۶</span></div>
+      </div>
+      <div>
+        <div class="frow"><span class="f-id">کد ۳</span><span>توالی مقداردهی اولیۀ <span class="en">SDRAM</span></span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">کد ۴</span><span>خواندن و نوشتن مستقیم از مسیر نگاشت آدرس</span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">کد ۵</span><span>نوشتن در <span class="en">SDRAM</span> با <span class="en">DMA</span></span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">کد ۶</span><span>خواندن از <span class="en">SDRAM</span> با <span class="en">DMA</span></span><span class="f-dots"></span><span class="f-page">۹</span></div>
+        <div class="frow"><span class="f-id">کد ۷</span><span>فراخوانی توابع انتقال <span class="en">DMA</span></span><span class="f-dots"></span><span class="f-page">۹</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> <p style="line-height:1.5"><span class="en">FMC</span> (Flexible Memory Controller، کنترل‌کنندۀ حافظۀ انعطاف‌پذیر) جانبیِ میکروکنترلر برای گسترش حافظۀ خارجی است و از <span class="en">SRAM</span>، <span class="en">SDRAM</span>، <span class="en">NOR FLASH</span> و <span class="en">NAND FLASH</span> پشتیبانی می‌کند؛ کنترل‌کنندۀ <span class="en">SDRAM</span> هستۀ اصلی کارکردهای آن برای سناریوهای نیازمند حافظۀ اجرایی پرظرفیت است. این سند راه‌اندازی <span class="en">SDRAM</span> با <span class="en">FMC</span> را معرفی می‌کند؛ از طراحی سخت‌افزار و پیکربندی نرم‌افزار تا نصب هم‌زمان دو <span class="en">SDRAM</span>، و تنها از <span class="en">SDRAM</span> معمولی (بدون <span class="en">DDR</span>) پشتیبانی می‌کند.</p></div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p><span class="en">FMC</span> (Flexible Memory Controller، کنترل‌کنندۀ حافظۀ انعطاف‌پذیر) ماژول جانبیِ میکروکنترلر برای گسترش حافظۀ خارجی است و از انواع حافظه شامل <span class="en">SRAM</span>، <span class="en">SDRAM</span>، <span class="en">NOR FLASH</span> و <span class="en">NAND FLASH</span> پشتیبانی می‌کند. کنترل‌کنندۀ <span class="en">SDRAM</span> یکی از هسته‌های اصلی کارکردهای <span class="en">FMC</span> است و برای سناریوهای نیازمند حافظۀ اجرایی پرظرفیت، زیربنای سخت‌افزاری فراهم می‌آورد. این سند کاربردی نحوۀ راه‌اندازی <span class="en">SDRAM</span> با <span class="en">FMC</span> را معرفی می‌کند؛ از طراحی سخت‌افزار و پیکربندی نرم‌افزار تا نحوۀ نصب هم‌زمان دو <span class="en">SDRAM</span>. این طراحی تنها از <span class="en">SDRAM</span> معمولی پشتیبانی می‌کند و از نوع <span class="en">DDR</span> پشتیبانی نمی‌شود.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>میکروکنترلرهای همگانی‌منظوره</td><td><span class="en">CH32H417</span></td></tr>
+  </table>
+</div>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">اصول کار پایه</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-111"><span class="dm">◆</span>۱.۱ خطوط سیگنال</h3>
+<p>خطوط سیگنال خارجی تراشۀ <span class="en">SDRAM</span> را می‌توان به چند گروه تقسیم کرد؛ شناخت کارکرد هر خط، پایۀ طراحی درست سخت‌افزار و پیکربندی نرم‌افزار است:</p>
+<div class="tblwrap" id="tab-11">
+  <div class="tblcap"><span class="cap-pill">جدول ۱-۱</span><span class="cap-text">خطوط سیگنال <span class="en">SDRAM</span></span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:22%;">خط سیگنال</th><th style="width:14%;">نوع</th><th>شرح</th></tr></thead>
+    <tr><td><span class="en">CLK</span></td><td>خروجی</td><td class="jt">سیگنال ساعت هم‌زمان؛ همهٔ سیگنال‌های ورودی در لبهٔ بالاروندۀ <span class="en">CLK</span> نمونه‌برداری می‌شوند</td></tr>
+    <tr><td><span class="en">CKE</span></td><td>خروجی</td><td class="jt">فعال‌سازی ساعت؛ با غیرفعال‌شدن ساعت، <span class="en">SDRAM</span> عملیات خودنوسازی را آغاز می‌کند</td></tr>
+    <tr><td><span class="en">CS#</span></td><td>خروجی</td><td class="jt">سیگنال انتخاب قطعه با سطح فعال پایین</td></tr>
+    <tr><td><span class="en">CAS#</span></td><td>خروجی</td><td class="jt">گزینش آدرس ستون؛ هنگام فعال‌بودن، خطوط آدرس آدرس ستون را نشان می‌دهند</td></tr>
+    <tr><td><span class="en">RAS#</span></td><td>خروجی</td><td class="jt">گزینش آدرس سطر؛ هنگام فعال‌بودن، خطوط آدرس آدرس سطر را نشان می‌دهند</td></tr>
+    <tr><td><span class="en">WE#</span></td><td>خروجی</td><td class="jt">فعال‌سازی نوشتن با سطح فعال پایین</td></tr>
+    <tr><td><span class="en">DQM[0:1]</span></td><td>خروجی</td><td class="jt">سیگنال ماسک ورودی/خروجی داده</td></tr>
+    <tr><td><span class="en">BA[0:1]</span></td><td>خروجی</td><td class="jt">ورودی آدرس بانک برای انتخاب بانک داخلیِ مورد کنترل</td></tr>
+    <tr><td><span class="en">A[0:12]</span></td><td>خروجی</td><td class="jt">ورودی آدرس (اشتراک خطوط سطر و ستون)</td></tr>
+    <tr><td><span class="en">DQ[0:15]</span></td><td>دوطرفه</td><td class="jt">سیگنال‌های ورودی/خروجی داده</td></tr>
+  </table>
+</div>
+
+<h3 class="h2x" id="sec-112"><span class="dm">◆</span>۱.۲ ساختار حافظۀ <span class="en">SDRAM</span></h3>
+<p>درون <span class="en">SDRAM</span> چند آرایۀ ذخیره‌سازی (بانک) وجود دارد و هر بانک با سطر و ستون آدرس‌دهی می‌شود. برای نمونه، در تراشۀ رایج <span class="en">W9825G6KH</span> چهار بانک داخلی وجود دارد، هر بانک ۱۳ بیت آدرس سطر و ۹ بیت آدرس ستون دارد، عرض داده ۱۶ بیت است و ظرفیت کل برابر <span class="en">4×2¹³×2⁹×16bit = 32MB</span> می‌شود.</p>
+
+<h3 class="h2x" id="sec-113"><span class="dm">◆</span>۱.۳ پارامترهای زمان‌بندی کلیدی</h3>
+<p>پارامترهای زمان‌بندی <span class="en">SDRAM</span> هستۀ پیکربندی راه‌اندازی آن هستند و این پارامترها باید دقیقاً با دیتاشیت <span class="en">SDRAM</span> مطابقت داشته باشند:</p>
+<div class="bl"><b><span class="en">tRCD</span> (RAS-to-CAS Delay):</b> تعداد دوره‌های تأخیر میان فرمان فعال‌سازی سطر و فرمان خواندن/نویسندۀ ستون؛ معمولاً ۲ تا ۳ دورۀ ساعت.</div>
+<div class="bl"><b><span class="en">tRP</span> (Row Precharge Delay):</b> تعداد دوره‌های تأخیر میان فرمان پیش‌شارژ تا فرمان فعال بعدی.</div>
+<div class="bl"><b><span class="en">tWR</span> (Write Recovery Time):</b> تعداد دوره‌های تأخیر میان پایان عملیات نوشتن تا فرمان پیش‌شارژ.</div>
+<div class="bl"><b><span class="en">tRC</span> (Row Cycle Delay):</b> کمترین فاصلۀ دو فرمان فعال‌سازی سطر پیوسته، و نیز فاصلۀ فرمان نوسازی و فرمان فعال‌سازی.</div>
+<div class="bl"><b><span class="en">tRAS</span> (Self Refresh Time):</b> کمترین فاصلۀ ساعتیِ <span class="en">SDRAM</span> برای عملیات خودنوسازی.</div>
+<div class="bl"><b>CAS Latency:</b> تعداد دوره‌های ساعتیِ <span class="en">SDRAM</span> از ارسال آدرس ستون (فرمان <span class="en">READ</span>) تا آغاز خروجی داده؛ معمولاً ۲ یا ۳ است و پیکربندی کنترل‌کنندۀ <span class="en">SDRAM</span> باید با تنظیم رجیستر حالتِ <span class="en">SDRAM</span> یکسان نگه داشته شود.</div>
+<div class="bl"><b>دورۀ نوسازی:</b> <span class="en">SDRAM</span> برای ماندگاری داده به نوسازی دوره‌ای نیاز دارد و استاندارد، نوسازی همهٔ سطرها در هر <span class="en">64ms</span> را الزامی می‌کند. فرمول محاسبۀ دورۀ نوسازی به این شکل است: فاصلۀ نوسازی <span class="en">= 64ms ÷</span> (تعداد سطرها).</div>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">راهنمای طراحی سخت‌افزار</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-211"><span class="dm">◆</span>۲.۱ جدول اتصال پایه‌های <span class="en">FMC</span> و <span class="en">SDRAM</span></h3>
+<p>جانبیِ <span class="en">FMC</span> در سری <span class="en">CH32</span> از طریق پایه‌های اختصاصی به تراشۀ <span class="en">SDRAM</span> متصل می‌شود؛ جدول زیر تناظر پایه‌های کلیدی را نشان می‌دهد:</p>
+<div class="tblwrap" id="tab-21">
+  <div class="tblcap"><span class="cap-pill">جدول ۲-۱</span><span class="cap-text">اتصال پایه‌های <span class="en">FMC</span> و <span class="en">SDRAM</span></span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:30%;">پایۀ <span class="en">FMC</span></th><th style="width:26%;">پایۀ <span class="en">SDRAM</span></th><th>شرح</th></tr></thead>
+    <tr><td><span class="en">FMC_A[12:0]</span></td><td><span class="en">A[12:0]</span></td><td class="jt">خطوط آدرس سطر و ستون</td></tr>
+    <tr><td><span class="en">FMC_A[15:14]</span></td><td><span class="en">BA[1:0]</span></td><td class="jt">خطوط آدرس بانک</td></tr>
+    <tr><td><span class="en">FMC_D[15:0]</span></td><td><span class="en">DQ[15:0]</span></td><td class="jt">خطوط داده (عرض ۱۶ بیتی)</td></tr>
+    <tr><td><span class="en">FMC_NBL[1:0]</span></td><td><span class="en">DQM[1:0]</span></td><td class="jt">سیگنال‌های ماسک داده</td></tr>
+    <tr><td><span class="en">FMC_SDCLK</span></td><td><span class="en">CLK</span></td><td class="jt">سیگنال ساعت هم‌زمان</td></tr>
+    <tr><td><span class="en">FMC_SDNWE</span></td><td><span class="en">WE#</span></td><td class="jt">فعال‌سازی نوشتن</td></tr>
+    <tr><td><span class="en">FMC_NRAS</span></td><td><span class="en">RAS#</span></td><td class="jt">گزینش آدرس سطر</td></tr>
+    <tr><td><span class="en">FMC_NCAS</span></td><td><span class="en">CAS#</span></td><td class="jt">گزینش آدرس ستون</td></tr>
+    <tr><td><span class="en">FMC_SDNE[1:0]</span></td><td><span class="en">CS#</span></td><td class="jt">فعال‌سازی تراشه (انتخاب قطعه)</td></tr>
+    <tr><td><span class="en">FMC_SDCKE[1:0]</span></td><td><span class="en">CKE</span></td><td class="jt">فعال‌سازی ساعت</td></tr>
+  </table>
+</div>
+<div class="note"><span class="lbl">توجه:</span> هر یک از سیگنال‌های <span class="en">FMC_SDNE</span> و <span class="en">FMC_SDCKE</span> دو خط دارند و متناظر با دو ناحیۀ حافظۀ مستقل هستند؛ گروه سیگنال شمارۀ ۰ به ناحیۀ حافظۀ ۱ (آدرس آغاز <span class="en">0xC000 0000</span>) و گروه شمارۀ ۱ به ناحیۀ حافظۀ ۲ (آدرس آغاز <span class="en">0xD000 0000</span>) مربوط است.</div>
+
+<h3 class="h2x" id="sec-212"><span class="dm">◆</span>۲.۲ نکات طراحی سخت‌افزاری</h3>
+<div class="bl"><b>تناسب عرض گذرگاه داده:</b> اگر تراشۀ <span class="en">SDRAM</span> عرض ۱۶ بیتی داشته باشد، کافی است ۱۶ خط اولِ دادۀ <span class="en">FMC_D[15:0]</span> متصل شود و در رجیستر پیکربندی <span class="en">FMC</span> عرض داده روی ۱۶ بیت تنظیم گردد.</div>
+<div class="bl"><b>سیگنال ساعت:</b> فرکانس ساعت <span class="en">FMC_SDCLK</span> با بیت <span class="en">SDCLK</span> در رجیستر <span class="en">FMC_SDCR1</span> روی <span class="en">1/2</span> یا <span class="en">1/3</span> مقدار <span class="en">HCLK</span> تنظیم می‌شود و بیشترین فرکانس ساعت هم‌زمانِ ارتباط با <span class="en">SDRAM</span> برابر <span class="en">100MHz</span> است.</div>
+<div class="bl"><b>سیگنال‌های ماسک بایت (<span class="en">NBL</span>):</b> برای گذرگاه دادۀ ۱۶ بیتی دو سیگنال ماسک <span class="en">NBL0</span> و <span class="en">NBL1</span> لازم است؛ گذرگاه ۸ بیتی فقط به <span class="en">NBL0</span> نیاز دارد و گذرگاه ۳۲ بیتی هر چهار <span class="en">NBL</span> را به کار می‌گیرد.</div>
+<div class="bl"><b>توصیۀ چیدمان <span class="en">PCB</span>:</b> <span class="en">SDRAM</span> باید تا حد ممکن نزدیک به <span class="en">CH32</span> قرار گیرد تا طول مسیرها کوتاه بماند؛ طول مسیر خط ساعت <span class="en">FMC_SDCLK</span> باید تا حد ممکن با خطوط داده و آدرس هم‌خوان شود؛ از یکپارچگی سیگنال و خازن‌های جداکنندهٔ تغذیه غفلت نکنید و از اشغال هم‌زمان گذرگاه <span class="en">FMC</span> توسط <span class="en">SDRAM</span> و دستگاه‌هایی مانند <span class="en">NAND</span> بپرهیزید تا تضاد گذرگاه رخ ندهد.</div>
+
+<!-- ================= بخش ۳ ================= -->
+<div class="chapter-header" id="sec-b3">
+  <span class="sec-pill">بخش ۳</span>
+  <div class="sec-title">راهنمای پیکربندی نرم‌افزار</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-311"><span class="dm">◆</span>۳.۱ مرور گام‌های پیکربندی</h3>
+<p>پیکربندی نرم‌افزاریِ راه‌اندازی <span class="en">SDRAM</span> با <span class="en">FMC</span> به ترتیب گام‌های زیر انجام می‌شود:</p>
+<p><b>گام ۱) پیکربندی پایه‌ها و ساعت:</b> پیکربندی پورت‌های <span class="en">GPIO</span> مربوط به <span class="en">FMC</span> و فعال‌سازی منبع ساعت:</p>
+<div class="fig" id="code-1">
+  <div class="codeblk">RCC_HBPeriphClockCmd(RCC_HBPeriph_FMC,ENABLE);
+GPIO_Config();</div>
+  <div class="figcap"><span class="cap-pill">کد ۱</span><span class="cap-text">پیکربندی پایه‌ها و ساعت <span class="en">FMC</span></span></div>
+</div>
+<p><b>گام ۲) پیکربندی کنترل‌کنندۀ <span class="en">FMC</span>:</b> پیکربندی رجیسترهای کنترل و زمان‌بندی <span class="en">SDRAM</span>؛ اگر لازم است هم‌زمان از دو <span class="en">SDRAM</span> استفاده شود، باید بانک ۵ و بانک ۶ در دو مرحله جداگانه پیکربندی شوند و پارامترهای پیکربندی بانک ۶ دقیقاً همان بانک ۵ است و امکان پیکربندی مستقل وجود ندارد:</p>
+<div class="fig" id="code-2" style="break-inside:auto;">
+  <div class="codeblk long" style="font-size:10px;">FMC_SDRAM_InitTypeDef  SDRAMInitStructure={0};
+FMC_SDRAM_TimingTypeDef SDRAM_Timing={0};
+
+    SDRAMInitStructure.FMC_Bank=FMC_Bank5_SDRAM;                       <span class="cm">//انتخاب بانک</span>
+    SDRAMInitStructure.FMC_ColumnBitsNumber=FMC_ColumnBitsNumber_9;     <span class="cm">//تعداد سطرهای SDRAM</span>
+    SDRAMInitStructure.FMC_RowBitsNumber=FMC_ROWBitsNumber_12;          <span class="cm">//تعداد ستون‌های SDRAM</span>
+    SDRAMInitStructure.FMC_MemoryDataWidth=FMC_MemoryDataWidth_32;       <span class="cm">//عرض بیت SDRAM</span>
+    SDRAMInitStructure.FMC_InternalBankNumber=FMC_InternalBankNumber_4;  <span class="cm">//تعداد بانک‌های SDRAM</span>
+    SDRAMInitStructure.FMC_CASLatency=FMC_CASLatency_2CLk;        <span class="cm">//تأخیر CAS</span>
+    SDRAMInitStructure.FMC_WriteProtection=FMC_WriteProtection_Disable;
+    SDRAMInitStructure.FMC_SDClockPeriod=1;  <span class="cm">//تقسیم ساعت ؛ CLK مثال SDRAM = HCLK / SDClockPeriod</span>
+    SDRAMInitStructure.FMC_ReadBurst=FMC_ReadBurst_Enable;       <span class="cm">//استفاده از حالت خواندن بسته‌ای یا نه</span>
+    SDRAMInitStructure.FMC_ReadPipeDelay=FMC_ReadPipeDelay_none;
+    SDRAMInitStructure.FMC_PHASE_SEL=0xF;
+
+    SDRAM_Timing.FMC_LoadToActiveDelay=2;
+    SDRAM_Timing.FMC_ExitSelfRefreshDelay=8;
+    SDRAM_Timing.FMC_SelfRefreshTime=6;
+    SDRAM_Timing.FMC_RowCycleDelay=6;
+    SDRAM_Timing.FMC_WriteRecoveryTime=2;
+    SDRAM_Timing.FMC_RPDelay=2;
+    SDRAM_Timing.FMC_RCDDelay=2;
+    SDRAMInitStructure.FMC_SDRAM_Timing = &amp;SDRAM_Timing;
+
+FMC_SDRAM_Init(&amp;SDRAMInitStructure);</div>
+  <div class="figcap"><span class="cap-pill">کد ۲</span><span class="cap-text">پیکربندی کنترل‌کنندۀ <span class="en">SDRAM</span> و زمان‌بندی</span></div>
+</div>
+<p><b>گام ۳) توالی مقداردهی اولیۀ <span class="en">SDRAM</span>:</b> با ارسال فرمان، مقداردهی اولیۀ روشن‌شدن تراشۀ <span class="en">SDRAM</span> کامل می‌شود؛ اگر لازم است هم‌زمان از دو <span class="en">SDRAM</span> استفاده شود، باید برای هر دو بانک عملیات مقداردهی اولیۀ روشن‌شدن انجام شود. اگر از دو ناحیۀ حافظۀ <span class="en">SDRAM</span> استفاده می‌شود، برای ارسال هم‌زمان فرمان‌های خودنوسازی و <span class="en">PALL</span> به دو دستگاه باید بیت‌های <span class="en">CTB1</span> و <span class="en">CTB2</span> یک شوند، در غیر این صورت فرمان نادیده گرفته می‌شود؛ اگر فقط از یک ناحیۀ حافظۀ <span class="en">SDRAM</span> استفاده می‌شود و فرمان با یک‌کردن بیت <span class="en">CTB</span> متناظرِ آن صادر می‌گردد، بیت <span class="en">CTB</span> ناحیۀ استفاده‌نشده باید صفر بماند:</p>
+<div class="fig" id="code-3" style="break-inside:auto;">
+  <div class="codeblk long" style="font-size:10px;">FMC_Bank5_6-&gt;MISC|=(1&lt;&lt;16);
+SDRAM_Send_Cmd(0,FMC_SDRAM_CMD_CLK_ENABLE,1,0);
+Delay_Us(500);
+SDRAM_Send_Cmd(0,FMC_SDRAM_CMD_PALL,1,0);
+
+SDRAM_Send_Cmd(0,FMC_SDRAM_CMD_AUTOREFRESH_MODE,8,0);
+
+temp=(u32)SDRAM_MODEREG_BURST_LENGTH_1          |
+             SDRAM_MODEREG_BURST_TYPE_SEQUENTIAL   |
+             SDRAM_MODEREG_CAS_LATENCY_2           |
+             SDRAM_MODEREG_OPERATING_MODE_STANDARD |
+             SDRAM_MODEREG_WRITEBURST_MODE_SINGLE;
+
+SDRAM_Send_Cmd(0,FMC_SDRAM_CMD_LOAD_MODE,1,temp);
+
+FMC_SDRAM_SetRefreshCnt(700);
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۳</span><span class="cap-text">توالی مقداردهی اولیۀ <span class="en">SDRAM</span></span></div>
+</div>
+
+<p><b>گام ۴) آزمون خواندن و نوشتن:</b> خواندن و نوشتن می‌تواند مستقیماً از مسیر نگاشت آدرس و با دسترسی <span class="en">U8/U16/U32</span> انجام شود:</p>
+<div class="fig" id="code-4">
+  <div class="codeblk">for(i=0; i&lt;5120; i++){
+      *(u32*)(Bank5_SDRAM_ADDR + 4*i) = i;
+}
+
+printf("Read data:\n");
+
+for(i=0; i&lt;5120; i++){
+     p=*(u32*)(Bank5_SDRAM_ADDR + 4*i);
+      printf("%08x ", p);
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۴</span><span class="cap-text">خواندن و نوشتن مستقیم از مسیر نگاشت آدرس</span></div>
+</div>
+<p>برای بهینه‌سازی سرعت، خواندن و نوشتن همچنین می‌تواند مستقیماً با روش <span class="en">DMA</span> انجام شود؛ عرض بیشینۀ کانال روی ۲۵۶ انتخاب می‌شود و حالت خواندن تقویت‌شده/پیش‌واکشی با یک‌کردن <span class="en">Enhance_read_mode</span> فعال می‌گردد. توجه کنید که خواندن بسته‌ای و خواندن تقویت‌شده نمی‌توانند هم‌زمان فعال باشند؛ در غیر این صورت بی‌اثر خواهد بود:</p>
+<div class="fig" id="code-5" style="break-inside:auto;">
+  <div class="codeblk long" style="font-size:10px;">/*********************************************************************
+ * @fn      FMC_SDRAM_WriteBuffer
+ *
+ * @brief   Write buffer.
+ *
+ * @return  none
+ */
+
+void FMC_SDRAM_WriteBuffer_DMA(u32 *pBuffer,u32 WriteAddr,u32 n)
+{
+    DMA_InitTypeDef DMA_InitStructure = {0};
+    RCC_HBPeriphClockCmd(RCC_HBPeriph_DMA1, ENABLE);
+    DMA_Cmd(DMA1_Channel3, DISABLE);
+    DMA_StructInit(&amp;DMA_InitStructure);
+    DMA_InitStructure.DMA_PeripheralBaseAdd= (volatile u32)(Bank5_SDRAM_ADDR+WriteAddr);
+
+DMA_InitStructure.DMA_Memory0BaseAddr = (volatile u32)pBuffer;
+    DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralDST;
+    DMA_InitStructure.DMA_BufferSize = n/8;
+    DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Enable;
+    DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
+    DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_256;
+    DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_256;
+    DMA_InitStructure.DMA_Mode = DMA_Mode_Normal;
+    DMA_InitStructure.DMA_Priority = DMA_Priority_VeryHigh;
+    DMA_InitStructure.DMA_M2M = DMA_M2M_Enable;
+    DMA_Init(DMA1_Channel3, &amp;DMA_InitStructure);
+    DMA_ClearFlag(DMA1,DMA1_FLAG_TC3);
+    DMA_Cmd(DMA1_Channel3, ENABLE);
+
+while(DMA_GetFlagStatus(DMA1,DMA1_FLAG_TC3) == RESET)
+    {
+    }
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۵</span><span class="cap-text">نوشتن در <span class="en">SDRAM</span> با <span class="en">DMA</span></span></div>
+</div>
+<div class="fig" id="code-6" style="break-inside:auto;">
+  <div class="codeblk long" style="font-size:10px;">/*********************************************************************
+ * @fn      FMC_SDRAM_ReadBuffer
+ *
+ * @brief   Read buffer.
+ *
+ * @return  none
+ */
+
+void FMC_SDRAM_ReadBuffer_DMA(u32 *pBuffer,u32 ReadAddr,u32 n)
+{
+    DMA_InitTypeDef DMA_InitStructure = {0};
+    DMA_Cmd(DMA1_Channel3, DISABLE);
+    RCC_HBPeriphClockCmd(RCC_HBPeriph_DMA1, ENABLE);
+    DMA_StructInit(&amp;DMA_InitStructure);
+    DMA_InitStructure.DMA_PeripheralBaseAddr = (volatile u32)(Bank5_SDRAM_ADDR+ReadAddr);
+
+DMA_InitStructure.DMA_Memory0BaseAddr = (volatile u32)pBuffer;
+    DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralSRC;
+    DMA_InitStructure.DMA_BufferSize = n/8;
+    DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Enable;
+    DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
+    DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_256;
+    DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_256;
+    DMA_InitStructure.DMA_Mode = DMA_Mode_Normal;
+    DMA_InitStructure.DMA_Priority = DMA_Priority_VeryHigh;
+    DMA_InitStructure.DMA_M2M = DMA_M2M_Enable;
+    DMA_Init(DMA1_Channel3, &amp;DMA_InitStructure);
+    DMA_ClearFlag(DMA1,DMA1_FLAG_TC3);
+    DMA_Cmd(DMA1_Channel3, ENABLE);
+
+while(DMA_GetFlagStatus(DMA1,DMA1_FLAG_TC3) == RESET)
+    {
+
+    }
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۶</span><span class="cap-text">خواندن از <span class="en">SDRAM</span> با <span class="en">DMA</span></span></div>
+</div>
+<div class="fig" id="code-7">
+  <div class="codeblk">FMC_SDRAM_WriteBuffer_DMA(TxBuffer,WRITE_READ_ADDR,BUFFER_SIZE);
+FMC_SDRAM_ReadBuffer_DMA(RxBuffer, WRITE_READ_ADDR, BUFFER_SIZE);</div>
+  <div class="figcap"><span class="cap-pill">کد ۷</span><span class="cap-text">فراخوانی توابع انتقال <span class="en">DMA</span></span></div>
+</div>
+
+<!-- ================= بخش ۴ ================= -->
+<div class="chapter-header" id="sec-b4">
+  <span class="sec-pill">بخش ۴</span>
+  <div class="sec-title">خطاهای متداول و تکنیک‌های اشکال‌زدایی</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-411"><span class="dm">◆</span>۴.۱ عیب‌یابی شکست مقداردهی اولیه</h3>
+<p>اگر مقداردهی اولیۀ <span class="en">SDRAM</span> شکست بخورد، باید لایه‌به‌لایه از جنبه‌های زیر بررسی شود:</p>
+<div class="bl"><b>بررسی اتصال سخت‌افزاری:</b> درستیِ پیکربندی پایه‌های رابط <span class="en">FMC</span> را تأیید کنید و پایداری ولتاژ تغذیۀ <span class="en">SDRAM</span> (معمولاً <span class="en">3.3V</span>) را بررسی کنید.</div>
+<div class="bl"><b>راستی‌آزمایی پیکربندی ساعت:</b> مطمئن شوید منبع ساعت <span class="en">FMC</span> از <span class="en">HCLK</span> می‌آید و ضریب تقسیم به‌درستی محاسبه شده است.</div>
+<div class="bl"><b>مطابقت پارامترهای زمان‌بندی:</b> با دیتاشیت <span class="en">SDRAM</span> بررسی کنید که پارامترهای زمان‌بندی مانند <span class="en">TRCD</span>، <span class="en">TWR</span>، <span class="en">TRP</span> و <span class="en">TRC</span> با دیتاشیت هم‌خوان باشند.</div>
+<div class="bl"><b>اندازه‌گیری با اسیلوسکوپ:</b> پایداری سیگنال <span class="en">FMC_SDCLK</span> را مشاهده و خروجی مورد انتظار سیگنال‌های کنترلی را بررسی کنید.</div>
+
+<h3 class="h2x" id="sec-412"><span class="dm">◆</span>۴.۲ عیب‌یابی خطای خواندن و نوشتن</h3>
+<div class="bl">اگر در خواندن و نوشتن پیوستهٔ <span class="en">SDRAM</span> خطا رخ می‌دهد اما با افزودن تأخیر مشکل حل می‌شود، معمولاً علت آن است که پیکربندی زمان‌بندی بیش از حد سریع است؛ می‌توانید فرکانس ساعت <span class="en">FMC</span> را پایین بیاورید و سپس پارامترهای زمان‌بندی و فازها را گام‌به‌گام تنظیم کنید.</div>
+<div class="bl">از درستیِ پیکربندی بانک <span class="en">SDRAM</span>، تعداد بیت‌های آدرس سطر و ستون و عرض گذرگاه داده مطمئن شوید.</div>
+<div class="bl">تطابق سیگنال انتخاب قطعه در سمت <span class="en">MCU</span> با پیکربندی بانک <span class="en">FMC</span> را تأیید کنید.</div>
+<div class="bl">بررسی کنید که فضای آدرس <span class="en">SDRAM</span> با ظرفیتی که در دیتاشیت آمده است مطابقت دارد.</div>
+
+<h3 class="h2x" id="sec-413"><span class="dm">◆</span>۴.۳ اندازه‌گیری عملی سرعت خواندن و نوشتن</h3>
+<p>سرعت را با حجم بالای خواندن و نوشتن می‌سنجند: یک پورت <span class="en">IO</span> مستقل پیکربندی می‌شود، در آغاز عملیات خواندن/نوشتن <span class="en">IO</span> پایین کشیده و در پایان بالا برده می‌شود و با محاسبۀ زمان، سرعت واقعی خواندن و نوشتن <span class="en">SDRAM</span> به دست می‌آید: در <span class="en">SDRAM</span> سی‌ودوبیتی، هنگامی که <span class="en">SDRAM_CLK = 100MHz</span> است، سرعت واقعی خواندن و نوشتن در روش <span class="en">DMA</span> با عرض ۲۵۶ بیتی برابر <span class="en">380MB/s</span> است که تنها بخشی از تلفات نسبت به مقدار نظری <span class="en">400MB/s</span> را نشان می‌دهد.</p>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN29000</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/03/17</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">FMC</span></td><td class="jt">کنترل‌کنندۀ حافظۀ انعطاف‌پذیر؛ جانبیِ میکروکنترلر برای گسترش حافظۀ خارجی با پشتیبانی از <span class="en">SRAM</span>، <span class="en">SDRAM</span>، <span class="en">NOR FLASH</span> و <span class="en">NAND FLASH</span></td></tr>
+      <tr><td><span class="en">SDRAM</span></td><td class="jt">حافظۀ دسترسی مستقیم پویا و هم‌زمان؛ همهٔ سیگنال‌های ورودی در لبهٔ بالاروندۀ <span class="en">CLK</span> نمونه‌برداری می‌شوند</td></tr>
+      <tr><td><span class="en">CLK / CKE</span></td><td class="jt">خط ساعت هم‌زمان / فعال‌سازی ساعت؛ با غیرفعال‌شدن ساعت، <span class="en">SDRAM</span> عملیات خودنوسازی را آغاز می‌کند</td></tr>
+      <tr><td><span class="en">CS# / WE#</span></td><td class="jt">انتخاب قطعه با سطح فعال پایین / فعال‌سازی نوشتن با سطح فعال پایین</td></tr>
+      <tr><td><span class="en">RAS# / CAS#</span></td><td class="jt">گزینش آدرس سطر / گزینش آدرس ستون؛ با فعال‌شدن هر یک، معنای خطوط آدرس عوض می‌شود</td></tr>
+      <tr><td><span class="en">DQM[0:1]</span></td><td class="jt">ماسک ورودی/خروجی داده؛ در گذرگاه ۱۶ بیتی دو سیگنال <span class="en">NBL0</span> و <span class="en">NBL1</span> لازم است</td></tr>
+      <tr><td><span class="en">BA[0:1]</span></td><td class="jt">خطوط آدرس بانک داخلی برای انتخاب بانک مورد کنترل</td></tr>
+      <tr><td><span class="en">A[0:12] / DQ[0:15]</span></td><td class="jt">خطوط آدرس با اشتراک سطر و ستون / خطوط دادۀ ۱۶ بیتی</td></tr>
+      <tr><td><span class="en">tRCD / tRP</span></td><td class="jt">فاصلۀ فرمان فعال‌سازی سطر تا فرمان خواندن/نویسندۀ ستون / فاصلۀ فرمان پیش‌شارژ تا فرمان فعال بعدی؛ معمولاً ۲ تا ۳ دورۀ ساعت</td></tr>
+      <tr><td><span class="en">tWR / tRC / tRAS</span></td><td class="jt">زمان بازیابی پس از نوشتن تا پیش‌شارژ / فاصلۀ حداقلی دو فرمان فعال‌سازی سطر پیوسته و فرمان نوسازی و فعال‌سازی / فاصلۀ حداقلی ساعتیِ عملیات خودنوسازی</td></tr>
+      <tr><td><span class="en">CAS Latency</span></td><td class="jt">تعداد دوره‌های ساعتیِ <span class="en">SDRAM</span> از ارسال فرمان خواندن ستون تا آغاز خروجی داده؛ معمولاً ۲ یا ۳ و باید با تنظیم رجیستر حالت یکسان باشد</td></tr>
+      <tr><td><span class="en">Refresh</span></td><td class="jt">نوسازی؛ <span class="en">SDRAM</span> برای ماندگاری داده به نوسازی دوره‌ای نیاز دارد و استاندارد، نوسازی همهٔ سطرها در هر ۶۴ میلی‌ثانیه را الزامی می‌کند</td></tr>
+      <tr><td><span class="en">Bank5 / Bank6</span></td><td class="jt">دو بانک کنترل <span class="en">SDRAM</span> در <span class="en">FMC</span>؛ برای نصب هم‌زمان دو حافظه جداگانه پیکربندی می‌شوند و پارامترهای بانک ۶ همان بانک ۵ است</td></tr>
+      <tr><td><span class="en">0xC0000000 / 0xD0000000</span></td><td class="jt">آدرس آغاز ناحیۀ حافظۀ ۱ و ۲؛ متناظر با گروه سیگنال شمارۀ ۰ و ۱ از <span class="en">FMC_SDNE/FMC_SDCKE</span></td></tr>
+      <tr><td><span class="en">CTB1 / CTB2</span></td><td class="jt">بیت‌های انتخاب حافظۀ ۱ و ۲؛ برای ارسال هم‌زمان فرمان‌های خودنوسازی و <span class="en">PALL</span> به دو دستگاه باید هر دو ۱ شوند</td></tr>
+      <tr><td><span class="en">Enhance_read_mode</span></td><td class="jt">حالت خواندن تقویت‌شده (پیش‌واکشی)؛ با عرض کانال ۲۵۶ فعال می‌شود و هم‌زمان با خواندن بسته‌ای کار نمی‌کند</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN29000 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۲۳</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN29000</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
