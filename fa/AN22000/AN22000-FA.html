@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>راهبری کارت‌های <span class="en">eMMC</span> با رابط <span class="en">SDMMC</span> پرسرعت در <span class="en">CH32H417</span> — ترجمۀ فارسی AN22000</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">راهبری کارت‌های <span class="en">eMMC</span></div>
+    <div class="t2">با رابط <span class="en">SDMMC</span> پرسرعت</div>
+    <div class="t3">در میکروکنترلر <span class="en">CH32H417</span></div>
+  </div>
+  <div class="c-sub">از تعریف پین‌های رابط، طراحی مدار هسته و راهنمای چیدمان <span class="en">PCB</span>، تا مبانی پروتکل فرمان–پاسخ، پیکربندی رجیسترهای درایور و تنظیم تایمینگ، همراه با چهار روند گام‌به‌گام <span class="en">High Speed SDR/DDR</span>، <span class="en">HS200</span> و <span class="en">HS400</span></div>
+  <div class="c-desc">در این جزوه، ترجمۀ فارسی سند رسمی <span class="en">AN22000</span> (نسخۀ ۱٫۰، منتشرۀ شرکت <span class="en">WCH</span>) را می‌خوانید: کارت <span class="en">eMMC</span> با یکپارچه‌سازی <span class="en">NAND Flash</span> و کنترلر در رابط استاندارد <span class="en">MMC</span>، گزینه‌ای نخست برای حافظۀ حجیم میان‌بسته است. کنترلر میزبان <span class="en">SDMMC</span> در <span class="en">CH32H417</span> کاملاً با پروتکل <span class="en">eMMC</span> سازگار است و با ساعت تا <span class="en">200MHz</span>، خواندن و نوشتن پرسرعت داده را فراهم می‌کند؛ ارتباط در حالت اسلیو نیز پوشش داده شده است.</div>
+  <div class="c-tags">
+    <span class="c-tag">میکروکنترلر <span class="en">CH32H417</span></span>
+    <span class="c-tag"><span class="en">SDMMC / eMMC</span></span>
+    <span class="c-tag"><span class="en">High Speed SDR / DDR</span></span>
+    <span class="c-tag"><span class="en">HS200 / HS400</span></span>
+    <span class="c-tag">سخت‌افزار و مسیرکشی <span class="en">PCB</span></span>
+    <span class="c-tag">قالب فرمان و پاسخ</span>
+    <span class="c-tag">درخت ساعت و تایمینگ</span>
+    <span class="c-tag">درایور و وقفه‌ها</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN22000 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۴</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | معرفی</span><span class="t-dots"></span><span class="t-page">۴</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-111"><span class="s-id">1.1</span><span>معرفی تراشۀ <span class="en">CH32H417</span></span><span class="s-dots"></span><span class="s-page">۴</span></a>
+    <a class="toc-sub" href="#sec-112"><span class="s-id">1.2</span><span>مفاهیم <span class="en">SD</span>، <span class="en">SDMMC</span> و <span class="en">eMMC</span></span><span class="s-dots"></span><span class="s-page">۴</span></a>
+    <a class="toc-sub" href="#sec-113"><span class="s-id">1.3</span><span>معرفی پروتکل</span><span class="s-dots"></span><span class="s-page">۵</span></a>
+    <a class="toc-sub" href="#sec-114"><span class="s-id">1.4</span><span>شرح اصطلاحات رایج</span><span class="s-dots"></span><span class="s-page">۵</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | طراحی سخت‌افزار و مشخصات رابط</span><span class="t-dots"></span><span class="t-page">۶</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-211"><span class="s-id">2.1</span><span>تعریف پین‌های رابط</span><span class="s-dots"></span><span class="s-page">۶</span></a>
+    <a class="toc-sub" href="#sec-212"><span class="s-id">2.2</span><span>طراحی مدار هسته</span><span class="s-dots"></span><span class="s-page">۶</span></a>
+    <a class="toc-sub" href="#sec-213"><span class="s-id">2.3</span><span>راهنمای چیدمان و مسیرکشی <span class="en">PCB</span></span><span class="s-dots"></span><span class="s-page">۸</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b3"><span class="t-num">۴</span><span class="t-title">بخش ۳ | مبانی پروتکل</span><span class="t-dots"></span><span class="t-page">۸</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-311"><span class="s-id">3.1</span><span>قالب فرمان</span><span class="s-dots"></span><span class="s-page">۸</span></a>
+    <a class="toc-sub" href="#sec-312"><span class="s-id">3.2</span><span>قالب پاسخ</span><span class="s-dots"></span><span class="s-page">۹</span></a>
+    <a class="toc-sub" href="#sec-313"><span class="s-id">3.3</span><span>قالب بستۀ داده</span><span class="s-dots"></span><span class="s-page">۹</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b4"><span class="t-num">۵</span><span class="t-title">بخش ۴ | توسعهٔ درایور نرم‌افزاری</span><span class="t-dots"></span><span class="t-page">۹</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-411"><span class="s-id">4.1</span><span>پیکربندی مقداردهی اولیه</span><span class="s-dots"></span><span class="s-page">۹</span></a>
+    <a class="toc-sub" href="#sec-412"><span class="s-id">4.2</span><span>پیکربندی فرمان</span><span class="s-dots"></span><span class="s-page">۱۲</span></a>
+    <a class="toc-sub" href="#sec-413"><span class="s-id">4.3</span><span>پیکربندی داده</span><span class="s-dots"></span><span class="s-page">۱۲</span></a>
+    <a class="toc-sub" href="#sec-414"><span class="s-id">4.4</span><span>تنظیم تایمینگ</span><span class="s-dots"></span><span class="s-page">۱۳</span></a>
+    <a class="toc-sub" href="#sec-415"><span class="s-id">4.5</span><span>پیکربندی وقفه</span><span class="s-dots"></span><span class="s-page">۱۵</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b5"><span class="t-num">۶</span><span class="t-title">بخش ۵ | نمونۀ روند درایو <span class="en">eMMC</span></span><span class="t-dots"></span><span class="t-page">۱۶</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-511"><span class="s-id">5.1</span><span>روند پیکربندی <span class="en">High Speed SDR</span></span><span class="s-dots"></span><span class="s-page">۱۶</span></a>
+    <a class="toc-sub" href="#sec-512"><span class="s-id">5.2</span><span>روند پیکربندی <span class="en">High Speed DDR</span></span><span class="s-dots"></span><span class="s-page">۱۹</span></a>
+    <a class="toc-sub" href="#sec-513"><span class="s-id">5.3</span><span>روند پیکربندی <span class="en">HS200</span></span><span class="s-dots"></span><span class="s-page">۱۹</span></a>
+    <a class="toc-sub" href="#sec-514"><span class="s-id">5.4</span><span>روند پیکربندی <span class="en">HS400</span></span><span class="s-dots"></span><span class="s-page">۱۹</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۷</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۲۰</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۸</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۲۰</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">شکل ۲-۱</span><span>نمودار سیم‌کشی کارت <span class="en">eMMC</span></span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۲</span><span>نقشۀ <span class="en">PCB</span> مسیرکشی هم‌طول ارتباط مستر–اسلیو</span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">شکل ۴-۱</span><span>درخت ساعت <span class="en">SDMMC</span></span><span class="f-dots"></span><span class="f-page">۱۱</span></div>
+        <div class="frow"><span class="f-id">شکل ۴-۲</span><span>نمودار تایمینگ حالت <span class="en">SDR</span></span><span class="f-dots"></span><span class="f-page">۱۴</span></div>
+        <div class="frow"><span class="f-id">شکل ۴-۳</span><span>نمودار تایمینگ حالت <span class="en">DDR</span></span><span class="f-dots"></span><span class="f-page">۱۵</span></div>
+        <div class="frow"><span class="f-id">جدول ۲-۱</span><span>تعریف رابط <span class="en">SDMMC</span></span><span class="f-dots"></span><span class="f-page">۶</span></div>
+        <div class="frow"><span class="f-id">جدول ۲-۲</span><span>پین‌های نگاشت‌شدۀ <span class="en">SDMMC</span></span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">جدول ۳-۱</span><span>قالب فرمان</span><span class="f-dots"></span><span class="f-page">۸</span></div>
+      </div>
+      <div>
+        <div class="frow"><span class="f-id">جدول ۳-۲</span><span>قالب پاسخ</span><span class="f-dots"></span><span class="f-page">۹</span></div>
+        <div class="frow"><span class="f-id">جدول ۴-۱</span><span>پیکربندی مقداردهی اولیۀ پین‌ها</span><span class="f-dots"></span><span class="f-page">۱۰</span></div>
+        <div class="frow"><span class="f-id">جدول ۵-۱</span><span>حالت‌های <span class="en">eMMC</span></span><span class="f-dots"></span><span class="f-page">۱۶</span></div>
+        <div class="frow"><span class="f-id">جدول ۵-۲</span><span>اطلاعات <span class="en">CID</span></span><span class="f-dots"></span><span class="f-page">۱۷</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> کارت چندرسانه‌ای میان‌بسته <span class="en">eMMC</span> حافظۀ <span class="en">NAND Flash</span> و کنترلر را در یک پکلۀ استاندارد با رابط <span class="en">MMC</span> گرد هم می‌آورد و به‌واسطۀ یکپارچگی بالا، اتکاپذیری و درایور نرم‌افزاری ساده، یکی از گزینه‌های نخست برای حافظۀ حجیم در سامانه‌های میان‌بسته است. این سند نشان می‌دهد چگونه کنترلر میزبان <span class="en">SDMMC</span> میکروکنترلر <span class="en">CH32H417</span> — سازگار با پروتکل <span class="en">eMMC</span> و ساعت تا <span class="en">200MHz</span> — برای درایو کارت <span class="en">eMMC</span> و ارتباط در حالت اسلیو پیکربندی می‌شود؛ از تعریف پین‌ها و طراحی سخت‌افزار تا قالب فرمان/پاسخ، پیکربندی رجیسترها، تنظیم تایمینگ و چهار روند کامل راه‌اندازی <span class="en">High Speed SDR</span>، <span class="en">High Speed DDR</span>، <span class="en">HS200</span> و <span class="en">HS400</span>.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>این یادداشت کاربردی به‌تفصیل شرح می‌دهد که چگونه می‌توان با رابط <span class="en">SDMMC</span> پرسرعتِ میکروکنترلر <span class="en">RISC-V</span> با کارایی بالا <span class="en">CH32H417</span> ساختۀ شرکت <span class="en">WCH</span>، کارت چندرسانه‌ای میان‌بسته (<span class="en">eMMC</span>) را درایو کرد و ارتباط در حالت اسلیو را برقرار ساخت. <span class="en">eMMC</span> حافظۀ <span class="en">NAND Flash</span> و کنترلر را یکپارچه می‌کند و رابط استاندارد <span class="en">MMC</span> را به کار می‌گیرد؛ از این رو یکپارچگی بالا، اتکاپذیری بالا و شیوۀ درایو نرم‌افزاری ساده‌شده را فراهم می‌آورد و از گزینه‌های نخست برای حافظۀ حجیم میان‌بسته به شمار می‌رود. کنترلر میزبان <span class="en">SDMMC</span> در <span class="en">CH32H417</span> کاملاً با پروتکل <span class="en">eMMC</span> سازگار است و با پشتیبانی از فرکانس ساعت تا <span class="en">200MHz</span>، خواندن و نوشتن پرسرعت داده را ممکن می‌سازد. این سند نیز حولِ معرفی رابط <span class="en">SDMMC</span>، طراحی سخت‌افزاری رابط، مبانی پروتکل و پیکربندی درایور نرم‌افزاری، شرح مفصل دارد.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>میکروکنترلرهای همگانی‌منظوره</td><td><span class="en">CH32H417</span></td></tr>
+  </table>
+</div>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">معرفی</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-111"><span class="dm">◆</span>۱.۱ معرفی تراشۀ <span class="en">CH32H417</span></h3>
+<p><span class="en">CH32H417</span> میکروکنترلر همگانی‌منظورۀ میان‌بسته‌ای است که بر پایۀ طراحی دو هسته‌ایِ <span class="en">Qingke RISC-V5F</span> و <span class="en">RISC-V3F</span> ساخته شده است. این تراشه یک کنترلر میزبان <span class="en">SDMMC</span> کامل (سازگار با پروتکل‌های <span class="en">SD/MMC/SDIO</span>) را در خود جای داده است؛ این کنترلر از دستگاه‌های <span class="en">eMMC</span> پشتیبانی می‌کند، می‌توان آن را برای کار در حالت گذرگاه ۱ بیتی، ۴ بیتی یا ۸ بیتی پیکربندی کرد و بیشترین فرکانس ساعت ارتباط آن به <span class="en">200MHz</span> می‌رسد؛ بنیاد سخت‌افزاری لازم برای ذخیرۀ داده‌های حجیم را فراهم می‌آورد.</p>
+
+<h3 class="h2x" id="sec-112"><span class="dm">◆</span>۱.۲ مفاهیم <span class="en">SD</span>، <span class="en">SDMMC</span> و <span class="en">eMMC</span></h3>
+<div class="bl"><span class="en">SD Card (Secure Digital Memory Card)</span>: کارت فلشی که از استاندارد <span class="en">SD</span> پیروی می‌کند و عمدتاً برای ذخیرۀ داده به کار می‌رود. پروتکل آن عمدتاً سه لایهٔ فیزیکی (<span class="en">Physical Layer</span>)، لایهٔ سیستم فایل (<span class="en">File System Layer</span>) و لایهٔ کاربرد (<span class="en">Application Layer</span>) را در بر می‌گیرد.</div>
+<div class="bl"><span class="en">SDMMC (SD/EMMC Controller)</span>: استاندارد رابطی که بر بستر استاندارد <span class="en">SD</span> گسترش یافته و به دستگاه‌ها اجازه می‌دهد در عین اشتراکِ رابط <span class="en">SD</span>، کارکردهای افزوده‌ای را پیاده کنند. متداول‌ترین دستگاه‌های رابط <span class="en">SDMMC</span> شامل ماژول‌های <span class="en">Wi-Fi</span>، ماژول‌های بلوتوث و ماژول‌های <span class="en">GPS</span> و مانند آن‌هاست. پس از مقداردهی اولیۀ دستگاه <span class="en">SDMMC</span>، میزبان می‌تواند با فرمان‌های ویژۀ ورودی/خروجی (<span class="en">I/O</span>) با واحدهای کارکردی آن (<span class="en">Function</span>) ارتباط برقرار کند؛ نه صرفاً خواندن و نوشتن سادۀ بلوکی.</div>
+<div class="bl"><span class="en">eMMC (embedded MultiMediaCard)</span>: راه‌حل ذخیره‌سازی میان‌بسته‌ای که رابط <span class="en">MMC</span>، حافظۀ <span class="en">NAND Flash</span> و کنترلر اصلی را در یک پکلۀ <span class="en">BGA</span> یکپارچه می‌کند. این راه‌حل پیچیدگی مدیریت <span class="en">NAND</span> را از میزبان پنهان می‌کند و رابط دستگاه بلوکی مشابه کارت <span class="en">SD</span> فراهم می‌آورد؛ اما تعریف پین‌ها و بخشی از ویژگی‌های پیشرفته تفاوت دارد.</div>
+
+<h3 class="h2x" id="sec-113"><span class="dm">◆</span>۱.۳ معرفی پروتکل</h3>
+<p>پروتکل <span class="en">SD</span> از شیوۀ ارتباط سریال مستر–اسلیو و از نوع فرمان–پاسخ بهره می‌گیرد.</p>
+<div class="bl">توپولوژی گذرگاه: اتصال یک میزبان (<span class="en">Host</span>) به چند دستگاه اسلیو (<span class="en">Card</span>) پشتیبانی می‌شود و آدرس‌دهی از طریق نشانی دستگاه (<span class="en">RCA</span>) انجام می‌گیرد.</div>
+<div class="bl">کانال‌های ارتباط: سه خط <span class="en">CMD</span>، <span class="en">DAT</span> و <span class="en">CLK</span>؛ شرح هر یک در ادامه آمده است:</div>
+<div class="bl">خط <span class="en">CMD</span>: برای انتقال دوسویۀ فرمان‌ها و پاسخ‌ها به کار می‌رود. این سیگنال یک کانال فرمان دوسویه برای مقداردهی اولیه و انتقال فرمان‌های دستگاه است. سیگنال <span class="en">CMD</span> دو حالت کاری دارد: در حالت مقداردهی اولیه به‌صورت بازتخلیه (<span class="en">Open-Drain</span>) و برای انتقال سریع فرمان‌ها به‌صورت پوش-پول کار می‌کند. فرمان‌ها از کنترلر میزبان به دستگاه اسلیو ارسال می‌شوند و پاسخ‌ها از دستگاه اسلیو به میزبان برمی‌گردند.</div>
+<div class="bl">خط <span class="en">DAT</span>: برای انتقال دوسویۀ داده به کار می‌رود و از حالت‌های ۱ بیتی، ۴ بیتی و ۸ بیتی پشتیبانی می‌کند.</div>
+<div class="bl">خط <span class="en">CLK</span>: ساعت همگام‌سازی برای همهٔ انتقال‌ها را میزبان تولید می‌کند. در هر دور ساعت، یک بیت روی خط <span class="en">CMD</span> و یک بیت (<span class="en">1x</span>) یا دو بیت (<span class="en">2x</span>) روی همهٔ خط‌های <span class="en">DAT</span> منتقل می‌شود؛ فرکانس نیز می‌تواند از صفر تا بیشترین فرکانس ساعت تغییر کند.</div>
+<div class="bl">حالت‌های انتقال داده: به نرخ دادۀ تکی (<span class="en">SDR</span>) و نرخ دادۀ دوگانه (<span class="en">DDR</span>) تقسیم می‌شود.</div>
+
+<h3 class="h2x" id="sec-114"><span class="dm">◆</span>۱.۴ شرح اصطلاحات رایج</h3>
+<div class="bl"><span class="en">RCA (Relative Card Address)</span>: نشانی نسبی‌ای که میزبان در جریان مقداردهی اولیه به کارت اختصاص می‌دهد و برای آدرس‌دهی‌های بعدی به کار می‌رود.</div>
+<div class="bl"><span class="en">CID (Card Identification Number)</span>: شناسۀ یکتای کارت که شامل سازنده، شمارۀ سری و مانند آن است.</div>
+<div class="bl"><span class="en">CSD (Card Specific Data)</span>: داده‌های ویژگی کارت؛ شامل ظرفیت، اندازۀ بلوک، بیشترین سرعت انتقال پشتیبانی‌شده و مانند آن.</div>
+<div class="bl"><span class="en">OCR (Operating Conditions Register)</span>: ثبت شرایط عملکرد؛ شامل دامنۀ ولتاژ کارت و اطلاعات حالت‌های پشتیبانی‌شده.</div>
+<div class="bl"><span class="en">Block</span> (بلوک): کوچک‌ترین واحد منطقی خواندن و نوشتن کارت <span class="en">eMMC</span> که معمولاً <span class="en">512</span> بایت است.</div>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">طراحی سخت‌افزار و مشخصات رابط</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-211"><span class="dm">◆</span>۲.۱ تعریف پین‌های رابط</h3>
+<p>رابط <span class="en">SDMMC</span> در مجموع ۱۱ خط رابط دارد: یک خط ساعت (<span class="en">CLK</span>)، یک خط فرمان (<span class="en">CMD</span>)، هشت خط داده (<span class="en">DAT[7:0]</span>) و یک خط سیگنال استروبِ داده (<span class="en">STR</span>)؛ نوع و شرح هر خط در جدول زیر آمده است.</p>
+<div class="tblwrap" id="tab-21">
+  <div class="tblcap"><span class="cap-pill">جدول ۲-۱</span><span class="cap-text">تعریف رابط <span class="en">SDMMC</span></span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:22%;">پایۀ <span class="en">SD/EMMC</span></th><th style="width:24%;">نوع</th><th>شرح</th></tr></thead>
+    <tr><td><span class="en">CLK</span></td><td>خروجی میزبان / ورودی اسلیو</td><td class="jt">سیگنال ساعت همگام</td></tr>
+    <tr><td><span class="en">CMD</span></td><td>دوسویه، <span class="en">Open-Drain</span></td><td class="jt">خط سیگنال فرمان/پاسخ؛ کشش بالا الزامی است.</td></tr>
+    <tr><td><span class="en">DAT[7:0]</span></td><td>دوسویه، <span class="en">Open-Drain</span></td><td class="jt">خط‌های داده؛ دست‌کم <span class="en">DAT0</span> لازم است. کشش بالا الزامی است.</td></tr>
+    <tr><td><span class="en">STR</span></td><td>خروجی اسلیو</td><td class="jt">سیگنال ساعت بازگشتی؛ برای حالت <span class="en">HS400</span> به کار می‌رود</td></tr>
+    <tr><td><span class="en">VDD</span></td><td>تغذیه</td><td class="jt">ولتاژ تغذیۀ هسته (مقدار نوعی <span class="en">3.3V</span>)</td></tr>
+    <tr><td><span class="en">VCCQ</span></td><td>تغذیه</td><td class="jt">ولتاژ تغذیۀ ورودی/خروجی (<span class="en">3.3V</span> به <span class="en">1.8V</span>)</td></tr>
+    <tr><td><span class="en">VSS</span></td><td>تغذیه</td><td class="jt">زمین</td></tr>
+    <tr><td><span class="en">RST</span></td><td>ورودی</td><td class="jt">ریست سخت‌افزاری؛ پیش‌فرض با کشش بالا و ریست در سطح منطقی پایین</td></tr>
+  </table>
+</div>
+
+<h3 class="h2x" id="sec-212"><span class="dm">◆</span>۲.۲ طراحی مدار هسته</h3>
+<div class="bl">مقاومت کشش بالا: خط‌های <span class="en">CMD</span> و همهٔ خط‌های <span class="en">DAT</span> باید با مقاومت به <span class="en">VDD</span> کشش بالا داده شوند. این الزامِ اجباریِ پروتکل است و برای آن‌که گذرگاه در حالت بیکاری در سطح منطقی بالا بماند و بایاس <span class="en">DC</span> پایدار فراهم شود به کار می‌رود. حتی اگر <span class="en">MCU</span> کشش بالای داخلی داشته باشد، به‌شدت توصیه می‌شود از مقاومت کشش بالای خارجیِ مطمئن‌تر استفاده کنید.</div>
+<div class="bl">مدار تغذیه: تغذیۀ تمیز و پایدار فراهم کنید. پایه‌های تغذیه باید چند خازن موازی برای هز‌هز (دیکوپلینگ) داشته باشند.</div>
+<div class="fig" id="fig-21">
+  <div class="figbox">
+    <img src="assets/img/an22000-fig_p5_x55.png" alt="شکل ۲-۱" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۱</span><span class="cap-text">نمودار سیم‌کشی کارت <span class="en">eMMC</span></span></div>
+</div>
+<p><span class="en">CH32H417QEU6</span> سه گروه پین نگاشت‌شدۀ <span class="en">SDMMC</span> فراهم می‌کند و بسته به پکله می‌توان گروه متناظر را برگزید؛ پین‌های <span class="en">SDMMC</span> متناظر با <span class="en">CH32H417</span> در جدول زیر آمده است.</p>
+<div class="tblwrap" id="tab-22">
+  <div class="tblcap"><span class="cap-pill">جدول ۲-۲</span><span class="cap-text">پین‌های نگاشت‌شدۀ <span class="en">SDMMC</span></span></div>
+  <table class="tbl">
+    <thead><tr><th>کارکرد <span class="en">SDMMC</span></th><th><span class="en">SDMMC_RM=00</span><br>پین‌های نگاشت پیش‌فرض</th><th><span class="en">SDMMC_RM=01</span><br>پین‌های نگاشت مجدد</th><th><span class="en">SDMMC_RM=1x</span><br>پین‌های نگاشت مجدد</th></tr></thead>
+    <tr><td><span class="en">SDMMC_STS/SDMMC_CMD</span></td><td><span class="en">PD2</span></td><td><span class="en">PD12</span></td><td><span class="en">PC10</span></td></tr>
+    <tr><td><span class="en">SDMMC_SDCK/SDMMC_SLVCK</span></td><td><span class="en">PC12</span></td><td><span class="en">PD11</span></td><td><span class="en">PC12</span></td></tr>
+    <tr><td><span class="en">SDMMC_STR</span></td><td><span class="en">PD3</span></td><td><span class="en">PD10</span></td><td><span class="en">PC11</span></td></tr>
+    <tr><td><span class="en">SDMMC_D0</span></td><td><span class="en">PC8</span></td><td><span class="en">PB13</span></td><td><span class="en">PD0</span></td></tr>
+    <tr><td><span class="en">SDMMC_D1</span></td><td><span class="en">PC9</span></td><td><span class="en">PC9</span></td><td><span class="en">PD1</span></td></tr>
+    <tr><td><span class="en">SDMMC_D2</span></td><td><span class="en">PC10</span></td><td><span class="en">PB10</span></td><td><span class="en">PD2</span></td></tr>
+    <tr><td><span class="en">SDMMC_D3</span></td><td><span class="en">PC11</span></td><td><span class="en">PB11</span></td><td><span class="en">PD3</span></td></tr>
+    <tr><td><span class="en">SDMMC_D4</span></td><td><span class="en">PA14</span></td><td><span class="en">PA14</span></td><td><span class="en">PD4</span></td></tr>
+    <tr><td><span class="en">SDMMC_D5</span></td><td><span class="en">PA15</span></td><td><span class="en">PA15</span></td><td><span class="en">PD5</span></td></tr>
+    <tr><td><span class="en">SDMMC_D6</span></td><td><span class="en">PC6</span></td><td><span class="en">PC6</span></td><td><span class="en">PD6</span></td></tr>
+    <tr><td><span class="en">SDMMC_D7</span></td><td><span class="en">PC7</span></td><td><span class="en">PC7</span></td><td><span class="en">PD7</span></td></tr>
+  </table>
+</div>
+
+<h3 class="h2x" id="sec-213"><span class="dm">◆</span>۲.۳ راهنمای چیدمان و مسیرکشی <span class="en">PCB</span></h3>
+<div class="bl">۱. مسیرکشی هم‌طول: برای گروه خط‌های سیگنالی <span class="en">DAT[3:0]</span> تفاوت طول مسیرها باید در محدودۀ <span class="en">150mil</span> (حدود <span class="en">3.8mm</span>) نگه داشته شود. در حالت ۸ بیتیِ <span class="en">eMMC</span> بهتر است خط‌های <span class="en">DAT[7:0]</span> نیز هم‌طول‌سازی شوند.</div>
+<div class="bl">۲. اولویت مسیرکشی: خط <span class="en">CLK</span> باید تا حد ممکن کوتاه باشد و از سایر سیگنال‌های پرسرعت و سیگنال‌های آنالوگ دور نگه داشته شود تا تداخل کم شود.</div>
+<div class="bl">۳. سطح مرجع: زیر همهٔ خط‌های سیگنالیِ <span class="en">SDMMC</span> باید سطح زمین کامل به‌عنوان مرجع وجود داشته باشد و از عبور روی مرزبندی‌ها پرهیز کنید.</div>
+<div class="bl">۴. ویا (<span class="en">Via</span>): تعداد ویاها را تا حد ممکن کم کنید؛ در صورت لزوم از ویاهای اندازۀ کوچک استفاده شود.</div>
+<div class="fig" id="fig-22">
+  <div class="figbox">
+    <img src="assets/img/an22000-fig_p6_x63.jpeg" alt="شکل ۲-۲" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۲</span><span class="cap-text">نقشۀ <span class="en">PCB</span> مسیرکشی هم‌طول ارتباط مستر–اسلیو</span></div>
+</div>
+
+<!-- ================= بخش ۳ ================= -->
+<div class="chapter-header" id="sec-b3">
+  <span class="sec-pill">بخش ۳</span>
+  <div class="sec-title">مبانی پروتکل</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-311"><span class="dm">◆</span>۳.۱ قالب فرمان</h3>
+<p>همۀ قاب‌های فرمان طول ثابت <span class="en">48</span> بیتی دارند و قالب آن‌ها به شرح زیر است:</p>
+<div class="tblwrap" id="tab-31">
+  <div class="tblcap"><span class="cap-pill">جدول ۳-۱</span><span class="cap-text">قالب فرمان</span></div>
+  <table class="tbl">
+    <tr><th style="width:16%;">بیت</th><th><span class="en">47</span></th><th><span class="en">46</span></th><th><span class="en">45:40</span></th><th><span class="en">39:8</span></th><th><span class="en">7:1</span></th><th><span class="en">0</span></th></tr>
+    <tr><td>مقدار</td><td><span class="en">0</span></td><td><span class="en">1</span></td><td><span class="en">Index</span></td><td><span class="en">Argument</span></td><td><span class="en">CRC7</span></td><td><span class="en">1</span></td></tr>
+    <tr><td>شرح</td><td>بیت آغاز</td><td>بیت انتقال</td><td>شمارۀ فرمان</td><td>پارامتر فرمان</td><td>بیت درستی‌سنجی</td><td>بیت پایان</td></tr>
+  </table>
+</div>
+
+<h3 class="h2x" id="sec-312"><span class="dm">◆</span>۳.۲ قالب پاسخ</h3>
+<p>متداول‌ترین پاسخ <span class="en">R1</span> است (<span class="en">48</span> بیت) و قالب آن به شرح زیر است:</p>
+<div class="tblwrap" id="tab-32">
+  <div class="tblcap"><span class="cap-pill">جدول ۳-۲</span><span class="cap-text">قالب پاسخ</span></div>
+  <table class="tbl">
+    <tr><th style="width:16%;">بیت</th><th><span class="en">47</span></th><th><span class="en">46</span></th><th><span class="en">45:40</span></th><th><span class="en">39:8</span></th><th><span class="en">7:1</span></th><th><span class="en">0</span></th></tr>
+    <tr><td>مقدار</td><td><span class="en">0</span></td><td><span class="en">0</span></td><td><span class="en">Index</span></td><td><span class="en">Card Status</span></td><td><span class="en">CRC7</span></td><td><span class="en">1</span></td></tr>
+    <tr><td>شرح</td><td>بیت آغاز</td><td>بیت انتقال</td><td>شمارۀ فرمان اصلی</td><td>ثبت وضعیت ۳۲ بیتی</td><td>بیت درستی‌سنجی</td><td>بیت پایان</td></tr>
+  </table>
+</div>
+<p>در ثبت وضعیت ۳۲ بیتی، هر بیت نشانگر یک وضعیت است؛ برای نمونه بیت ۳۱ خطای <span class="en">ADDRESS_OUT_OF_RANGE</span> است و بیت ۸ نشانگر <span class="en">READY_FOR_DATA</span> (بیانگر آمادگی کارت برای انتقال داده).</p>
+
+<h3 class="h2x" id="sec-313"><span class="dm">◆</span>۳.۳ قالب بستۀ داده</h3>
+<p>داده از طریق خط‌های <span class="en">DAT</span> و به واحد بلوک داده منتقل می‌شود. پیش از هر بلوک داده یک بیت آغاز قرار دارد و پس از محتوای داده، کد درستی‌سنجی <span class="en">CRC16</span> می‌آید.</p>
+<p>خواندن داده (از دستگاه به میزبان):</p>
+<div class="codeblk">[Start Bit (0)] + [Data] + [CRC16] + [End Bit (1)]</div>
+<p>نوشتن داده (از میزبان به دستگاه):</p>
+<div class="codeblk">[Start Bit (0)] + [Data] + [CRC16] + [End Bit (1)]</div>
+<p>اندازۀ بلوک داده را می‌توان در زمان مقداردهی اولیه پیکربندی کرد (معمولاً <span class="en">512</span> بایت و سازگار با سکتور هارددیسک). در حالت‌های پرسرعتی مانند <span class="en">HS400</span>، داده هم‌زمان روی لبهٔ بالارونده و پایین‌روندۀ ساعت منتقل می‌شود (<span class="en">DDR</span>).</p>
+
+<!-- ================= بخش ۴ ================= -->
+<div class="chapter-header" id="sec-b4">
+  <span class="sec-pill">بخش ۴</span>
+  <div class="sec-title">توسعهٔ درایور نرم‌افزاری</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-411"><span class="dm">◆</span>۴.۱ پیکربندی مقداردهی اولیه</h3>
+<p>در پیکربندی مقداردهی اولیۀ <span class="en">SDMMC</span>، نخست باید <span class="en">GPIO</span>های مورد استفاده پیکربندی شوند؛ انتخاب پین‌های نگاشت واقعی، سرعت <span class="en">IO</span> و مانند آن.</p>
+<div class="tblwrap" id="tab-41">
+  <div class="tblcap"><span class="cap-pill">جدول ۴-۱</span><span class="cap-text">پیکربندی مقداردهی اولیۀ پین‌ها</span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:26%;">پایۀ <span class="en">SD/EMMC</span></th><th>پیکربندی</th></tr></thead>
+    <tr><td><span class="en">CLK</span></td><td class="jt">حالت میزبان: خروجی چندپلۀ پوش-پول<br>حالت اسلیو: خروجی چندپلۀ پوش-پول</td></tr>
+    <tr><td><span class="en">CMD</span></td><td class="jt">خروجی چندپلۀ پوش-پول</td></tr>
+    <tr><td><span class="en">D[7:0]</span></td><td class="jt">خروجی چندپلۀ پوش-پول (تعداد پین‌ها بسته به پهنای مؤثر دادۀ پیکربندی‌شده)</td></tr>
+    <tr><td><span class="en">STR</span></td><td class="jt">خروجی چندپلۀ پوش-پول (در حالت <span class="en">HS400</span> در صورت نیاز پیکربندی می‌شود)</td></tr>
+  </table>
+</div>
+<p>گام بعدی، پیکربندی رجیسترهای متناظر <span class="en">SDMMC</span> برای پیاده‌سازی کارکردهای موردنیاز است.</p>
+<p>نخست نقش <span class="en">SDMMC</span> را انتخاب کنید؛ برای این منظور <span class="en">RB_SLV_MODE</span> را به حالت میزبان یا اسلیو پیکربندی کنید.</p>
+<p>بلافاصله پس از آن، ساعت را پیکربندی کنید. رابط کنترلر دو حالت ساعت فراهم می‌کند: حالت کم‌سرعت و حالت پرسرعت. طبق قاعدۀ عمومی پروتکل <span class="en">SD</span>، در مرحلۀ مقداردهی اولیۀ دستگاه‌های رابط <span class="en">SD</span> از ساعت ارتباط حدود <span class="en">400KHz</span> استفاده می‌شود تا سازگاری ارتباط بهتری حاصل شود؛ پس از گرفتن اطلاعات پارامترهای دستگاه متصل، بنا بر پیکربندی‌های پشتیبانی‌شدۀ داخلی آن می‌توان به فرکانس ساعت بالاتری برای ارتباط مهاجرت کرد.</p>
+<div class="fig" id="fig-41">
+  <div class="figbox">
+    <img src="assets/img/an22000-fig_p8_x74.jpeg" alt="شکل ۴-۱" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۴-۱</span><span class="cap-text">درخت ساعت <span class="en">SDMMC</span></span></div>
+</div>
+<p>بر پایۀ راهنمای درخت ساعت، ساعت <span class="en">SDMMC</span> از <span class="en">SYSPLL_SEL</span> می‌آید و انتخاب مسیر مطابق رجیستر <span class="en">R16_EMMC_CLK_DIV</span> با <span class="en">RB_EMMC_CLKOE</span> انجام می‌شود:</p>
+<p>اگر <span class="en">RB_EMMC_CLKMode = 1</span> باشد، آن‌گاه <span class="en">SDCLK = SYSPLL_SEL/RB_EMMC_DIV_MASK</span>؛</p>
+<div class="formula">SDCLK = SYSPLL_SEL / RB_EMMC_DIV_MASK</div>
+<p>اگر <span class="en">RB_EMMC_CLKMode = 0</span> باشد، آن‌گاه <span class="en">SDCLK = SYSPLL_SEL/RB_EMMC_DIV_MASK/64</span>.</p>
+<div class="formula">SDCLK = SYSPLL_SEL / RB_EMMC_DIV_MASK / 64</div>
+<p>میزبان پس از پیکربندی بالا، ساعت متناظر را به بیرون ارسال می‌کند؛ ساعت اسلیو مقدار ورودی مستقیم است و نیازی به محاسبۀ بالا ندارد، اما <span class="en">RB_EMMC_DIV_MASK</span> باید به کمترین مقدار یعنی ۲ پیکربندی شود. ساعت ارتباط از خروجی <span class="en">200M</span> بیشینه پشتیبانی می‌کند.</p>
+<p>با نوشتن ۱ در بیت <span class="en">bit10</span> رجیستر <span class="en">R16_EMMC_CLK_DIV</span> می‌توان سیگنال ساعت خروجی را به‌صورت فیزیکی وارونه کرد، بی‌آنکه ساعت داخلی کنترلر تغییر کند. این روش می‌تواند تایمینگ ارتباط را تنظیم کند. در حالت <span class="en">SDR</span> می‌توان بیت <span class="en">RB_EMMC_NEGSMP</span> را تغییر داد تا لبهٔ نمونه‌برداری داده عوض شود و به این وسیله تایمینگ ارتباط بهبود یابد.</p>
+<p>بنا بر پهنای بیت دادۀ مورد استفاده در عمل، بیت <span class="en">RB_EMMC_LW_MASK</span> را پیکربندی کنید تا حالت ۱/۴/۸ خطی بر اساس پیکربندی برگزیده شود. طبق قاعدۀ پروتکل، هنگام مقداردهی اولیۀ <span class="en">SD/EMMC</span> از حالت تک‌خطی استفاده می‌شود؛ در ارتباط داده، <span class="en">SD</span> معمولاً حالت ۴ خطی و <span class="en">EMMC</span> معمولاً حالت ۸ خطی را انتخاب می‌کند.</p>
+<p>اگر لازم است فرستنده–گیرنده ریست شود، می‌توان بیت‌های <span class="en">RB_EMMC_RST_LGC</span> و <span class="en">RB_EMMC_ALL_CLR</span> را ابتدا ۱ نوشت و سپس 0 نوشت. پیش از استفادهٔ عادی از کنترلر باید مطمئن شوید این دو بیت 0 هستند.</p>
+<p>برای اینکه ارسال و دریافت داده در ادامه روان باشد، در دورۀ مقداردهی اولیه <span class="en">RB_EMMC_DMAEN</span> را پیکربندی کنید تا <span class="en">DMA</span> فعال شود. <span class="en">RB_EMMC_TOCNT_MASK</span> را برای تنظیم مهلت پاسخ/داده پیکربندی کنید: <span class="en">SDCLK * 4194304 * RB_EMMC_TOCNT_MASK</span>؛ هرگاه چهار حالت زیر رخ دهد، پرچم وقفۀ مهلت متناظر برقرار می‌شود:</p>
+<div class="formula">T<sub>TIMEOUT</sub> = SDCLK * 4194304 * RB_EMMC_TOCNT_MASK</div>
+<div class="bl">۱) مهلت مشغول بودن <span class="en">D[0]</span> پس از پاسخ <span class="en">R1b</span>؛</div>
+<div class="bl">۲) هنگام نوشتن بلوک داده، مهلت مشغول بودن <span class="en">D[0]</span> پس از <span class="en">CRC status</span>؛</div>
+<div class="bl">۳) هنگام نوشتن بلوک داده، مهلت انتظار برای <span class="en">CRC status</span>؛</div>
+<div class="bl">۴) هنگام خواندن بلوک داده، مهلت انتظار برای بیت آغاز.</div>
+
+<h3 class="h2x" id="sec-412"><span class="dm">◆</span>۴.۲ پیکربندی فرمان</h3>
+<p>میزبان برای ارسال <span class="en">CMD</span>، <span class="en">EMMC_ARGUMENT</span> (پارامتر)، <span class="en">RB_EMMC_CMDIDX_MASK</span> (شمارهٔ ایندکس ارسالی) و <span class="en">RB_EMMC_RPTY_MASK</span> (نوع پاسخ مورد انتظار) را پیکربندی می‌کند؛ پارامتر پاسخی که اسلیو برمی‌گرداند در رجیستر <span class="en">R32_EMMC_RESPONSE</span> ذخیره می‌شود.</p>
+<p>اسلیو هنگام دریافت <span class="en">CMD</span>، پارامتر دریافتی در <span class="en">R32_EMMC_RESPONSE3</span> و ایندکس دریافتی در <span class="en">R32_EMMC_RESPONSE2</span> ذخیره می‌شود؛ پارامتر پاسخی که باید به میزبان برگردانده شود باید در <span class="en">EMMC_ARGUMENT</span> نوشته شود.</p>
+
+<h3 class="h2x" id="sec-413"><span class="dm">◆</span>۴.۳ پیکربندی داده</h3>
+<p>در پیکربندی داده، میزبان و اسلیو از شیوۀ پیکربندی یکسانی پیروی می‌کنند. برای جلوگیری از تصاحب میان خواندن و نوشتن، می‌توان پیش از خواندن و نوشتن، بیت <span class="en">RB_EMMC_DAT0STA</span> رجیستر <span class="en">R32_EMMC_STATUS</span> را بررسی کرد و وضعیت خط دادۀ <span class="en">D0</span> را دید و پس از سطح منطقی بالا، عملیات خواندن و نوشتن را آغاز کرد.</p>
+
+<h4 class="h3x" id="sec-4131"><span class="dm">◆</span>۴.۳.۱ حالت تک‌بافر</h4>
+<p>هنگام ارسال داده، <span class="en">RB_EMMC_MODE_BOOT</span> روی حالت عادی تنظیم می‌شود و جهت انتقال با <span class="en">RB_EMMC_DMA_DIR</span> روی کنترلر به <span class="en">SD</span> قرار می‌گیرد. اندازۀ انتقال تک‌بلوکی ارسال را با <span class="en">RB_EMMC_BKSIZE_MASK</span> تنظیم کنید (<span class="en">1</span> تا <span class="en">2048</span> بایت)، تعداد کل بلوک‌های انتقال ارسال را با <span class="en">RB_EMMC_BKNUM_MASK</span> تنظیم کنید (<span class="en">1</span> تا <span class="en">65535</span> بلوک) و سرانجام رجیستر <span class="en">R32_EMMC_DMA_BEG1</span> را پیکربندی کنید و نشانی آغازین بافر ذخیرۀ داده‌های ارسالی را در آن بنویسید؛ هم‌ترازی <span class="en">16</span> بایتی را رعایت کنید و سپس ارسال داده را آغاز کنید.</p>
+<p>هنگام دریافت داده، <span class="en">RB_EMMC_MODE_BOOT</span> روی حالت عادی تنظیم می‌شود و جهت انتقال با <span class="en">RB_EMMC_DMA_DIR</span> روی <span class="en">SD</span> به کنترلر قرار می‌گیرد. اندازۀ انتقال تک‌بلوکی دریافت را با <span class="en">RB_EMMC_BKSIZE_MASK</span> تنظیم کنید (<span class="en">1</span> تا <span class="en">2048</span> بایت)، تعداد کل بلوک‌های انتقال دریافت را با <span class="en">RB_EMMC_BKNUM_MASK</span> تنظیم کنید (<span class="en">1</span> تا <span class="en">65535</span> بلوک) و سرانجام رجیستر <span class="en">R32_EMMC_DMA_BEG1</span> را تنظیم کنید و نشانی آغازین بافر ذخیرۀ داده را در آن بنویسید؛ هم‌ترازی <span class="en">16</span> بایتی را رعایت کنید و برای دریافت داده در انتظار بمانید.</p>
+<p>اگر لازم است از حالت <span class="en">DDR</span> استفاده شود، بر بستر پیکربندی بالا بیت <span class="en">RB_DDR_MODE</span> را فعال کنید.</p>
+<p>اگر چند بلوک به‌صورت پیوسته خوانده/نوشته می‌شود، پس از پایان هر بلوک باید مقداری دلخواه در <span class="en">R32_EMMC_WRITE_CONT</span> نوشته شود تا ارسال بلوک بعدی آغاز شود.</p>
+<p>در ارتباط مستر–اسلیو، اگر اسلیو در جریان ارسال/دریافت دچار سرریز <span class="en">FIFO</span> داخلی شود، سخت‌افزار به‌طور خودکار بلوک دادۀ همین ارسال/دریافت را به‌اجبار با خطای <span class="en">CRC</span> درمی‌آورد تا به میزبان اعلام کند انتقال اشکال دارد؛ اسلیو نیز می‌تواند با <span class="en">RB_SLV_FORCE_ERR</span> پاسخ خطای <span class="en">CRC</span> برای بلوک دادۀ میزبان را اجباری کند.</p>
+
+<h4 class="h3x" id="sec-4132"><span class="dm">◆</span>۴.۳.۲ حالت دو‌بافر</h4>
+<p>طبق بند ۴.۳.۱ حالت ارسال و دریافت را پیکربندی کنید و بر بستر آن <span class="en">RB_EMMC_DULEDMA_EN</span> را فعال کنید تا حالت دو‌بافر روشن شود؛ بیت <span class="en">RB_EMMC_DMATN_CNT</span> را پیکربندی کنید و شمارش بلوکِ جابه‌جایی بافر را تنظیم کنید و رجیستر <span class="en">R32_EMMC_DMA_BEG2</span> را برای نگه‌داشتن نشانی آغازین بافر دادۀ دیگر پیکربندی کنید.</p>
+
+<h3 class="h2x" id="sec-414"><span class="dm">◆</span>۴.۴ تنظیم تایمینگ</h3>
+<p>در فرکانس‌های بالاتر <span class="en">SDCLK</span>، اگر مقادیر توصیه‌شدۀ رجیسترهای تنظیم تایمینگ نتواند ارتباط را پایدار کند، کاربر باید توالی <span class="en">tuning</span> نمونه‌برداری گذرگاه را آغاز کند تا نقطۀ نمونه‌برداری بهتری بیابد.</p>
+<p>می‌توان شکل موج نمونه‌برداری داده را با اسیلوسکوپ مشاهده کرد و بر اساس شکل موج رصدشده، تأخیر متناظر را تنظیم نمود. در این حالت از تحلیل‌گر منطقی استفاده نکنید؛ نرخ نمونه‌برداری تحلیل‌گرهای منطقی معمولی دیگر نمی‌تواند شکل موج ارسال/دریافت داده را به‌درستی نمونه‌برداری کند.</p>
+<p>نمونه را با حالت ارتباط مستر–اسلیو و میزبانِ ارسال‌کننده و اسلیوِ دریافت‌کننده بررسی می‌کنیم:</p>
+<div class="bl">۱. اگر لبهٔ نمونه‌برداری <span class="en">CLK</span> از دادۀ مؤثر کندتر باشد:<br>سویۀ میزبان می‌تواند رجیستر <span class="en">R32_EMMC_TUNE_DATO</span> را تنظیم کند و تأخیر خروجی تک‌خط دادۀ داده را تنظیم نمود: تأخیر خروجی = <span class="en">0.1ns * RB_TUNNE_DATx_O</span>؛<br>سویۀ اسلیو می‌تواند رجیستر <span class="en">R32_EMMC_TUNE_DATI</span> را تنظیم کند و تأخیر ورودی تک‌خط دادۀ داده را تنظیم نمود: تأخیر ورودی = <span class="en">0.1ns * RB_TUNNE_DATx_I</span>.</div>
+<div class="bl">۲. اگر لبهٔ نمونه‌برداری <span class="en">CLK</span> از دادۀ مؤثر سریع‌تر باشد:<br>سویۀ میزبان می‌تواند بیت <span class="en">RB_TUNNE_CLK_O</span> را پیکربندی کند تا خروجی <span class="en">CLK</span> به تأخیر افتد: تأخیر = <span class="en">0.2ns * RB_TUNNE_CLK_O</span>؛<br>سویۀ اسلیو می‌تواند بیت <span class="en">RB_TUNNE_CLK_I</span> را پیکربندی کند تا ورودی <span class="en">CLK</span> به تأخیر افتد: تأخیر = <span class="en">0.2ns * RB_TUNNE_CLK_I</span>.</div>
+<p>با پیکربندی‌های بند ۱ و ۲، بیت‌های دادۀ مؤثر به‌درستی روی لبهٔ نمونه‌برداری <span class="en">CLK</span> منطبق می‌شوند.</p>
+<div class="fig" id="fig-42">
+  <div class="figbox">
+    <img src="assets/img/an22000-fig_p10_x85.jpeg" alt="شکل ۴-۲" style="max-width:600px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۴-۲</span><span class="cap-text">نمودار تایمینگ حالت <span class="en">SDR</span></span></div>
+</div>
+<div class="fig" id="fig-43">
+  <div class="figbox">
+    <img src="assets/img/an22000-fig_p11_x93.jpeg" alt="شکل ۴-۳" style="max-width:620px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۴-۳</span><span class="cap-text">نمودار تایمینگ حالت <span class="en">DDR</span></span></div>
+</div>
+<div class="bl">۳. اگر لبهٔ نمونه‌برداری <span class="en">CLK</span> از <span class="en">CMD</span> مؤثر کندتر باشد:<br>سویۀ میزبان می‌تواند <span class="en">RB_TUNNE_CMD_O</span> را تنظیم کند و تأخیر خروجی <span class="en">CMD</span> را تنظیم نمود: مقدار تأخیر = <span class="en">0.2ns * RB_TUNNE_CMD_O</span>؛<br>سویۀ اسلیو می‌تواند <span class="en">RB_TUNNE_CMD_I</span> را تنظیم کند و تأخیر ورودی <span class="en">CMD</span> را تنظیم نمود: مقدار تأخیر = <span class="en">0.2ns * RB_TUNNE_CMD_I</span>.</div>
+<div class="bl">۴. اگر لبهٔ نمونه‌برداری <span class="en">CLK</span> از <span class="en">CMD</span> مؤثر سریع‌تر باشد:<br>سویۀ میزبان می‌تواند بیت <span class="en">RB_TUNNE_CLK_O</span> را پیکربندی کند تا خروجی <span class="en">CLK</span> به تأخیر افتد: تأخیر = <span class="en">0.2ns * RB_TUNNE_CLK_O</span>؛<br>سویۀ اسلیو می‌تواند بیت <span class="en">RB_TUNNE_CLK_I</span> را پیکربندی کند تا ورودی <span class="en">CLK</span> به تأخیر افتد: تأخیر = <span class="en">0.2ns * RB_TUNNE_CLK_I</span>.</div>
+<p>با پیکربندی‌های بند ۳ و ۴، <span class="en">CMD</span> مؤثر به‌درستی روی لبهٔ نمونه‌برداری <span class="en">CLK</span> منطبق می‌شود.</p>
+
+<h3 class="h2x" id="sec-415"><span class="dm">◆</span>۴.۵ پیکربندی وقفه</h3>
+<p>با فعال‌کردن پیکربندی وقفهٔ متناظر می‌توان وضعیت ارسال/دریافت داده/فرمان را به‌موقع بازتاب داد. رجیستر فعال‌ساز وقفه (<span class="en">R16_EMMC_INT_EN</span>) را پیکربندی کنید و وقفه‌های موردنیاز را فعال کنید؛ پس از پایان پیکربندی، تابع <span class="en">NVIC_EnableIRQ( SDMMC_IRQn )</span> را فراخوانی کنید و از وقفۀ سریع استفاده کنید. سپس می‌توانید بدنۀ تابع را بنویسید و در وقفه، عملیات متناظر را پردازش کنید.</p>
+<div class="codeblk">void SDMMC_IRQHandler (void) __attribute__((interrupt("WCH-Interrupt-fast")))
+
+void SDMMC_IRQHandler( void )
+{
+    If(Interruptflag){
+    ......
+    ......
+    }
+Clear Interruptflag;
+}</div>
+<p>پس از پایان پردازش، برای پاک‌کردن پرچم وقفه در رجیستر پرچم وقفه (<span class="en">R16_EMMC_INT_FG</span>) مقدار ۱ نوشته می‌شود.</p>
+
+<!-- ================= بخش ۵ ================= -->
+<div class="chapter-header" id="sec-b5">
+  <span class="sec-pill">بخش ۵</span>
+  <div class="sec-title">نمونۀ روند درایو <span class="en">eMMC</span></div>
+  <div class="sec-divider"></div>
+</div>
+<p><span class="en">eMMC</span> چند حالت اجرایی تعریف کرده است. این بخش روند پیکربندی و نکات مهم چند حالت را معرفی می‌کند و جدول زیر برخی ویژگی‌های این حالت‌ها را خلاصه می‌کند.</p>
+<div class="tblwrap" id="tab-51">
+  <div class="tblcap"><span class="cap-pill">جدول ۵-۱</span><span class="cap-text">حالت‌های <span class="en">eMMC</span></span></div>
+  <table class="tbl" style="font-size:11px;">
+    <thead><tr><th style="width:16%;">نام حالت</th><th style="width:12%;">لبهٔ نمونه‌برداری</th><th style="width:15%;">ولتاژ <span class="en">IO</span></th><th style="width:11%;">پهنای بیت داده</th><th style="width:13%;">فرکانس ساعت</th><th>بیشترین حجم انتقال نظری داده (۸ خط)</th></tr></thead>
+    <tr><td class="jt">سازگار با کارت‌های <span class="en">MMC</span> نسخه‌های پیشین</td><td>تک‌لبه</td><td><span class="en">3V/1.8V/1.2V</span></td><td><span class="en">1, 4, 8</span></td><td><span class="en">0-26 MHz</span></td><td><span class="en">26 MB/s</span></td></tr>
+    <tr><td class="jt"><span class="en">High Speed SDR</span></td><td>تک‌لبه</td><td><span class="en">3V/1.8V/1.2V</span></td><td><span class="en">1, 4, 8</span></td><td><span class="en">0-52 MHz</span></td><td><span class="en">52 MB/s</span></td></tr>
+    <tr><td class="jt"><span class="en">High Speed DDR</span></td><td>دولبه</td><td><span class="en">3V/1.8V/1.2V</span></td><td><span class="en">4, 8</span></td><td><span class="en">0-52 MHz</span></td><td><span class="en">104 MB/s</span></td></tr>
+    <tr><td class="jt"><span class="en">HS200</span></td><td>تک‌لبه</td><td><span class="en">1.8V/1.2V</span></td><td><span class="en">4, 8</span></td><td><span class="en">0-200 MHz</span></td><td><span class="en">200 MB/s</span></td></tr>
+    <tr><td class="jt"><span class="en">HS400</span></td><td>دولبه</td><td><span class="en">1.8V/1.2V</span></td><td><span class="en">8</span></td><td><span class="en">0-200 MHz</span></td><td><span class="en">400 MB/s</span></td></tr>
+  </table>
+</div>
+
+<h3 class="h2x" id="sec-511"><span class="dm">◆</span>۵.۱ روند پیکربندی <span class="en">High Speed SDR</span></h3>
+<div class="bl">۱. تغذیه با <span class="en">3.3V</span> برقرار شود و در ابتدا الزاماً فرکانس ≤ <span class="en">400KHz</span> حفظ گردد.</div>
+<div class="codeblk">RCC_HB1PeriphClockCmd(RCC_HB1Periph_PWR, ENABLE);
+PWR_VIO18ModeCfg(PWR_VIO18CFGMODE_SW);
+PWR_VIO18LevelCfg(PWR_VIO18Level_MODE3);</div>
+<p>با فراخوانی توابع بالا، حالت ولتاژ <span class="en">IO</span> به حالت پیکربندی نرم‌افزاری تغییر می‌کند و سطح منطقی بالای خط‌های داده در زمان مقداردهی اولیه روی <span class="en">3.3V</span> پیکربندی می‌شود.</p>
+<p>بیت <span class="en">RB_EMMC_CLKMode</span> رجیستر <span class="en">R16_EMMC_CLK_DIV</span> را روی حالت کم‌سرعت پیکربندی کنید و مقدار مناسب را در <span class="en">RB_EMMC_DIV_MASK</span> بنویسید تا فرکانس خروجی محاسبۀ <span class="en">SDMMC</span> از <span class="en">400kHz</span> کمتر شود. در نمونۀ برنامه: <span class="en">SYSPLL_SEL</span> روی <span class="en">600M</span> و <span class="en">RB_EMMC_DIV_MASK</span> روی <span class="en">0x1F</span> پیکربندی شده است و فرکانس خروجی واقعی <span class="en">SDMMC_CLK = 600M/0x1F/64 = 302kHz</span> است.</p>
+<div class="bl">۲. ارسال پیوستهٔ <span class="en">CMD0 (GO_IDLE_STATE)</span>: فرمان ریست سخت‌افزاری را ارسال کنید تا <span class="en">eMMC</span> وارد حالت <span class="en">Idle</span> شود. این فرمان حداکثر <span class="en">74</span> دور ارسال پیوسته می‌شود و هرگاه کنترلر بازخورد بدون خطا بدهد، از حلقه خارج می‌شویم.</div>
+<div class="bl">۳. ارسال پیوستهٔ <span class="en">CMD1 (SEND_OP_COND)</span>.<br>تنظیم پارامتر: <span class="en">Argument = 0x40FF8080</span><br>با ارسال پیوسته، ولتاژ کاری (<span class="en">3.3V/1.8V</span>) و توانایی‌های میزبان مذاکره می‌شود. هنگامی‌که بیت مساوی <span class="en">1</span>ِ پاسخ <span class="en">R3</span> بالا رفت، از حلقه خارج می‌شویم.</div>
+<div class="bl">۴. ارسال <span class="en">CMD2 (ALL_SEND_CID)</span>: در انتظار پاسخ <span class="en">R2</span> بمانید و <span class="en">CID</span> کارت را بگیرید.</div>
+<div class="tblwrap" id="tab-52">
+  <div class="tblcap"><span class="cap-pill">جدول ۵-۲</span><span class="cap-text">اطلاعات <span class="en">CID</span></span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:40%;">نام</th><th style="width:22%;">پهنا</th><th>برش <span class="en">CID</span></th></tr></thead>
+    <tr><td><span class="en">Manufacturer ID</span></td><td><span class="en">8</span></td><td><span class="en">[127:120]</span></td></tr>
+    <tr><td><span class="en">Reserved</span></td><td><span class="en">6</span></td><td><span class="en">[119:114]</span></td></tr>
+    <tr><td><span class="en">Device/BGA</span></td><td><span class="en">2</span></td><td><span class="en">[113:112]</span></td></tr>
+    <tr><td><span class="en">OEM/Application ID</span></td><td><span class="en">8</span></td><td><span class="en">[111:104]</span></td></tr>
+    <tr><td><span class="en">Product name</span></td><td><span class="en">48</span></td><td><span class="en">[103:56]</span></td></tr>
+    <tr><td><span class="en">Product revision</span></td><td><span class="en">8</span></td><td><span class="en">[55:48]</span></td></tr>
+    <tr><td><span class="en">Product revision</span></td><td><span class="en">32</span></td><td><span class="en">[47:16]</span></td></tr>
+    <tr><td><span class="en">Manufacturing date</span></td><td><span class="en">8</span></td><td><span class="en">[15:8]</span></td></tr>
+    <tr><td><span class="en">CRC7 checksum</span></td><td><span class="en">7</span></td><td><span class="en">[7:1]</span></td></tr>
+    <tr><td><span class="en">not used, always "1"</span></td><td><span class="en">1</span></td><td><span class="en">[0:0]</span></td></tr>
+  </table>
+</div>
+<div class="bl">۵. ارسال <span class="en">CMD3 (SET_RELATIVE_ADDR)</span>: به کارت نشانی نسبی (<span class="en">RCA</span>) اختصاص می‌دهد. در نمونۀ برنامه <span class="en">RCA</span> روی <span class="en">0x1A86</span> پیکربندی شده است و پارامتر فرمان، <span class="en">RCA&lt;&lt;16</span> تنظیم می‌شود: <span class="en">Argument = 0x1A860000</span>.</div>
+<div class="bl">۶. ارسال <span class="en">CMD9 (SD_CMD_SEND_CSD)</span>: گرفتن اطلاعات <span class="en">CSD</span> کارت.<br>تنظیم پارامتر: <span class="en">Argument = RCA&lt;&lt;16</span> و در انتظار داده‌های برگشتی متناظر بمانید.</div>
+<div class="bl">۷. ارسال <span class="en">CMD7 (SELECT_CARD)</span>: کارت هدف را از طریق <span class="en">RCA</span> انتخاب کنید تا وارد حالت انتقال (<span class="en">Transfer State</span>) شوید.</div>
+<div class="bl">۸. ارسال <span class="en">CMD8 (SEND_EXT_CSD)</span><br>برای خواندن ثبت <span class="en">Ext_CSD</span> به اندازۀ <span class="en">512</span> بایت به کار می‌رود؛ برای جزئیات به «<span class="en">Embedded Multi-Media Card (e•MMC) Electrical Standard (5.1)</span>» صفحهٔ <span class="en">P173</span> مراجعه کنید.<br>بازبینی مهمِ میدان <span class="en">[196] DEVICE_TYPEG</span>: انواع حالت‌های پشتیبانی‌شده؛ برای آن‌که معلوم شود در ادامه می‌توان برای سرعت بیشتر خواندن/نوشتن، حالت را تغییر داد یا نه.<br>بازبینی میدان <span class="en">[189] CMD_SET_REV</span>: نسخۀ پروتکل <span class="en">eMMC</span> پشتیبانی‌شده.<br>بازبینی میدان <span class="en">[215:212] SEC_COUNT</span>: تعداد بلوک‌های کارت <span class="en">eMMC</span>.<br>بازبینی میدان <span class="en">[61] DATA_SECTOR_SIZE</span>: ظرفیت هر بلوک؛ معمولاً <span class="en">512B</span>.<br>از تعداد بلوک‌ها و ظرفیت هر بلوک می‌توان ظرفیت کل کارت <span class="en">eMMC</span> را محاسبه کرد: <span class="en">SEC_COUNT * DATA_SECTOR_SIZE</span></div>
+<div class="bl">۹. ارسال فرمان تغییر حالت <span class="en">CMD6 (SWITCH_FUNCTION)</span>:<br>تنظیم پارامتر: <span class="en">Argument = 0x03B70200</span><br>عملکرد فرمان بالا آن است که به کارت <span class="en">eMMC</span> اعلام شود انتقال به حالت ۸ خطی تغییر یابد. (اگر از حالت ۴ خطی استفاده می‌کنید، فرمان را می‌توان به <span class="en">Argument = 0x03B70100</span> تغییر داد)<br>در این هنگام کنترلر <span class="en">SDMMC</span> را نیز جابه‌جا کنید؛ بیت <span class="en">RB_EMMC_LW_MASK</span> رجیستر <span class="en">R16_EMMC_CONTROL</span> را به‌گونه‌ای پیکربندی کنید که فرستنده–گیرنده از <span class="en">D[7:0]</span>، یعنی ۸ خط داده استفاده کند. (در حالت ۴ خطی، <span class="en">RB_EMMC_LW_MASK</span> نیز به‌گونه‌ای مشابه روی ۴ خط تنظیم می‌شود)</div>
+<div class="bl">۱۰. ارسال فرمان تغییر حالت <span class="en">CMD6 (SWITCH_FUNCTION)</span>:<br>تنظیم پارامتر: <span class="en">Argument = 0x03B90100</span><br><span class="en">[31:24] = 0x03</span>: حالت دسترسی (نوشتن <span class="en">Ext_CSD</span>)<br><span class="en">[23:16] = 0xB9</span>: ثبت هدف (<span class="en">HS_TIMING</span>)<br><span class="en">[15:8] = 0x01</span>: مقدار نوشته‌شده (<span class="en">0x01</span> = حالت <span class="en">HS</span>)<br>پیکربندی حالت <span class="en">High Speed SDR</span> کامل می‌شود. پس از پیکربندی می‌توان دوباره <span class="en">Ext_CSD</span> را خواند و بررسی کرد که مقدار متناظر واقعاً تنظیم شده است.</div>
+<div class="bl">۱۱. ساعت کنترلر <span class="en">SDMMC</span> را از فرکانس اولیه (<span class="en">400KHz</span>) به <span class="en">52MHz</span> ارتقا دهید.</div>
+<p>پس از انجام روند بالا می‌توان داده‌ها را به‌طور عادی ارسال و دریافت کرد.</p>
+
+<h3 class="h2x" id="sec-512"><span class="dm">◆</span>۵.۲ روند پیکربندی <span class="en">High Speed DDR</span></h3>
+<p>حالت نمونه‌برداری دولبۀ کم‌سرعت می‌تواند نرخ انتقال را دو برابر کند. با پیش‌شرطِ انجام روند بند ۵.۱، فرمان تغییر حالت <span class="en">CMD6 (SWITCH_FUNCTION)</span> را ارسال کنید؛ تنظیم پارامتر: <span class="en">Argument = 0x03B70600</span>؛ به کارت <span class="en">eMMC</span> اعلام می‌شود که به حالت <span class="en">DDR</span> با انتقال ۸ خطی، یعنی حالت <span class="en">High Speed DDR</span> تغییر یابد. توجه: پیکربندی حالت <span class="en">DDR</span> تنها زمانی ممکن است که مقدار <span class="en">HS_TIMING</span> برابر ۱ باشد. (شامل <span class="en">DDR</span> چهارخطی با <span class="en">Argument = 0x03B70500</span>)</p>
+
+<h3 class="h2x" id="sec-513"><span class="dm">◆</span>۵.۳ روند پیکربندی <span class="en">HS200</span></h3>
+<p>بر بستر حالت <span class="en">High Speed SDR</span> بند ۵.۱، اگر بخواهیم سرعت را باز هم بالاتر ببریم، باید پیکربندی را به پایین‌تر ادامه دهیم (به پیش‌شرط «پشتیبانی از حالت‌های پرسرعت‌تر» که در بند ۸ از بند ۵.۱ گفته شد):</p>
+<div class="bl">۱. ولتاژ <span class="en">IO</span> را به <span class="en">1.8/1.2V</span> تغییر دهید؛ برای این کار باید به دفترچۀ <span class="en">eMMC</span> مراجعه شود تا ولتاژهای قابل پیکربندی دیده شود.<br>در نمونۀ برنامه ولتاژ به <span class="en">1.8V</span> تغییر می‌کند: <span class="en">PWR_VIO18LevelCfg(PWR_VIO18Level_MODE1);</span></div>
+<div class="bl">۲. ارسال فرمان تغییر حالت <span class="en">CMD6 (SWITCH_FUNCTION)</span>:<br>تنظیم پارامتر: <span class="en">Argument = 0x03B90200</span><br><span class="en">[31:24] = 0x03</span>: حالت دسترسی (نوشتن <span class="en">Ext_CSD</span>)<br><span class="en">[23:16] = 0xB9</span>: ثبت هدف (<span class="en">HS_TIMING</span>)<br><span class="en">[15:8] = 0x02</span>: مقدار نوشته‌شده (<span class="en">0x02</span> = حالت <span class="en">HS200</span>)<br>پیکربندی حالت <span class="en">HS200</span> کامل می‌شود. پس از پیکربندی می‌توان دوباره <span class="en">Ext_CSD</span> را خواند و بررسی کرد که مقدار متناظر واقعاً تنظیم شده است.</div>
+<div class="bl">۳. ساعت کنترلر <span class="en">SDMMC</span> را جابه‌جا کنید.<br>در نمونۀ برنامه، بیت <span class="en">RB_EMMC_CLKMode</span> رجیستر <span class="en">R16_EMMC_CLK_DIV</span> روی حالت پرسرعت پیکربندی می‌شود؛ اگر <span class="en">SYSPLL_SEL</span> روی <span class="en">600M</span> و <span class="en">RB_EMMC_DIV_MASK</span> روی <span class="en">0x3</span> پیکربندی شده باشد، خروجی <span class="en">SDMMC_CLK</span> روی <span class="en">200MHz</span> قرار می‌گیرد.</div>
+<div class="bl">۴. <span class="en">CMD21 (Send Tuning Block)</span> را ارسال کنید و سپس حالت دریافت را پیکربندی کنید تا داده‌های <span class="en">128B</span> دریافت شود؛ این داده را با الگوی «<span class="en">Tuning block pattern for 8 bit mode</span>» در صفحهٔ <span class="en">P53</span> سند «<span class="en">Embedded Multi-Media Card (e•MMC) Electrical Standard (5.1)</span>» مقایسه کنید؛ اگر یکسان بود، تایمینگ حالت بهینه است، در غیر این صورت طبق بند ۴.۴ تنظیم کنید تا داده‌ها به‌درستی منطبق شوند.</div>
+
+<h3 class="h2x" id="sec-514"><span class="dm">◆</span>۵.۴ روند پیکربندی <span class="en">HS400</span></h3>
+<p>بر بستر بند ۵.۳ می‌توان سرعت را بار دیگر دو برابر کرد و وارد حالت <span class="en">HS400</span> شد؛ مطابق پیکربندی زیر:</p>
+<div class="bl">۱. <span class="en">SDMMC_CLK</span> را به زیر <span class="en">52M</span> پایین بیاورید و وارد حالت <span class="en">High Speed DDR</span> شوید؛ جزئیات روند در بند ۵.۲ آمده است.</div>
+<div class="bl">۲. ارسال فرمان تغییر حالت <span class="en">CMD6 (SWITCH_FUNCTION)</span>:<br>تنظیم پارامتر: <span class="en">Argument = 0x03B90300</span><br><span class="en">[31:24] = 0x03</span>: حالت دسترسی (نوشتن <span class="en">Ext_CSD</span>)<br><span class="en">[23:16] = 0xB9</span>: ثبت هدف (<span class="en">HS_TIMING</span>)<br><span class="en">[15:8] = 0x03</span>: مقدار نوشته‌شده (<span class="en">0x03</span> = حالت <span class="en">HS400</span>)</div>
+<div class="bl">۳. سرعت را دوباره به <span class="en">200MHz</span> ارتقا دهید و تایمینگ را طبق بند ۴ از بند ۵.۳ تنظیم کنید.</div>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN22000</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2025/09/15</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">CH32H417</span></td><td class="jt">میکروکنترلر همگانی‌منظورۀ میان‌بسته بر پایۀ دو هستۀ <span class="en">Qingke RISC-V5F</span> و <span class="en">RISC-V3F</span> با کنترلر میزبان <span class="en">SDMMC</span> سازگار با <span class="en">eMMC</span> و ساعت تا <span class="en">200MHz</span></td></tr>
+      <tr><td><span class="en">eMMC</span></td><td class="jt">کارت چندرسانه‌ای میان‌بسته؛ <span class="en">NAND Flash</span> و کنترلر در یک پکلۀ <span class="en">BGA</span> با رابط استاندارد <span class="en">MMC</span> و رابط دستگاه بلوکی شبیه کارت <span class="en">SD</span></td></tr>
+      <tr><td><span class="en">SDMMC</span></td><td class="jt">استاندارد رابط گسترش‌یافتۀ <span class="en">SD</span>؛ در این سند، کنترلر میزبان <span class="en">SD/EMMC</span> داخل <span class="en">CH32H417</span> که حالت میزبان و اسلیو دارد</td></tr>
+      <tr><td><span class="en">CMD / RSP</span></td><td class="jt">خط فرمان دوسویهٔ میزبان–کارت برای انتقال فرمان‌ها و پاسخ‌ها؛ قالب فرمان و متداول‌ترین پاسخ <span class="en">R1</span>، هر دو <span class="en">48</span> بیتی ثابت‌اند</td></tr>
+      <tr><td><span class="en">DAT[7:0] / STR</span></td><td class="jt">هشت خط دادۀ دوسویه (دست‌کم <span class="en">DAT0</span> الزامی است) و خط استروبِ بازگشتی که فقط برای حالت <span class="en">HS400</span> به کار می‌رود</td></tr>
+      <tr><td><span class="en">RCA</span></td><td class="jt">نشانی نسبی کارت (<span class="en">Relative Card Address</span>)؛ در جریان مقداردهی اولیه توسط میزبان اختصاص می‌یابد و برای آدرس‌دهی‌های بعدی به کار می‌رود</td></tr>
+      <tr><td><span class="en">CID / CSD</span></td><td class="jt">شناسۀ یکتای کارت شامل سازنده، شمارۀ سری و… / ثبت ویژگی‌های کارت مانند ظرفیت، اندازۀ بلوک و بیشترین سرعت انتقال</td></tr>
+      <tr><td><span class="en">OCR</span></td><td class="jt">ثبت شرایط عملکرد (<span class="en">Operating Conditions Register</span>)؛ دامنۀ ولتاژ و حالت‌های پشتیبانی‌شدۀ کارت</td></tr>
+      <tr><td><span class="en">EXT_CSD</span></td><td class="jt">ثبت پیکربندی گسترش‌یافتۀ <span class="en">512</span> بایتی که با <span class="en">CMD8</span> خوانده می‌شود؛ میدان‌هایی مانند <span class="en">DEVICE_TYPE</span>، <span class="en">SEC_COUNT</span>، <span class="en">HS_TIMING</span></td></tr>
+      <tr><td><span class="en">CMD6 / SWITCH_FUNCTION</span></td><td class="jt">فرمان تغییر حالت؛ با نوشتن میدان‌های <span class="en">EXT_CSD</span> گذار به <span class="en">High Speed</span>، <span class="en">High Speed DDR</span>، <span class="en">HS200</span> یا <span class="en">HS400</span> انجام می‌شود</td></tr>
+      <tr><td><span class="en">RB_EMMC_CLKMode</span></td><td class="jt">بیت انتخاب حالت ساعت در رجیستر <span class="en">R16_EMMC_CLK_DIV</span>؛ مسیر <span class="en">SYSPLL_SEL/RB_EMMC_DIV_MASK</span> یا همراه با تقسیم اضافی <span class="en">64</span></td></tr>
+      <tr><td><span class="en">SDR / DDR</span></td><td class="jt">انتقال با نرخ دادۀ تکی روی یک لبهٔ ساعت / انتقال با نرخ دادۀ دوگانه روی لبه‌های بالارونده و پایین‌رونده</td></tr>
+      <tr><td><span class="en">Tuning</span></td><td class="jt">توالی تنظیم نقطۀ نمونه‌برداری گذرگاه با <span class="en">CMD21</span> و تأخیرهای <span class="en">0.1ns/0.2ns</span> رجیسترهای <span class="en">R32_EMMC_TUNE_*</span> در فرکانس‌های بالای <span class="en">SDCLK</span></td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN22000 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۲۳</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN22000</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
