@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>راهنمای جامع جانبۀ مقایسه‌گر ولتاژ CMP در میکروکنترلرهای CH32 — ترجمۀ فارسی AN24001</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">راهنمای جامع جانبۀ</div>
+    <div class="t2">مقایسه‌گر ولتاژ <span class="en">CMP</span></div>
+    <div class="t3">در میکروکنترلرهای <span class="en">CH32</span></div>
+  </div>
+  <div class="c-sub">از مقایسۀ مستقیم دو کمیت آنالوگ با خروجی منطقی و شاخص‌های پایۀ <span class="en">CMP</span> برای انتخاب قطعه، تا خروجی تایمری، هیسترزیس قابل پیکربندی، بیداری کم‌مصرف با <span class="en">EXTI</span>، فیلتر دیجیتال و ماشۀ ترمز تایمر</div>
+  <div class="c-desc">در این جزوه، ترجمۀ فارسی سند رسمی <span class="en">AN24001</span> (نسخۀ ۱٫۰، منتشرۀ شرکت <span class="en">WCH</span>) را می‌خوانید: مقایسه‌گر ولتاژ <span class="en">CMP</span> در سری همگانی‌منظورۀ <span class="en">CH32</span> دو کمیت آنالوگ را مقایسه و سطح منطقی متناظر را در خروجی می‌گذارد و به لطف مصرف توان پایین و پاسخ سریع، جایگزین مناسبی برای مقایسۀ حلقه‌بازِ <span class="en">OPA</span> است. انتخاب پایه‌های ورودی و خروجی، اتصال داخلی به تایمر، بیداری کم‌مصرف با وقفه، فیلتر دیجیتال و مقایسۀ هیسترزیسی مرور می‌شود؛ سپس سه کاربرد حفاظت اضافه‌جریان با ماشۀ ترمز تایمر، رمزگشایی عرض پالس و مقایسۀ ولتاژ آنالوگ با <span class="en">DAC</span> داخلی بررسی می‌شود.</div>
+  <div class="c-tags">
+    <span class="c-tag">میکروکنترلرهای همگانی <span class="en">CH32</span></span>
+    <span class="c-tag">مقایسه‌گر ولتاژ <span class="en">CMP</span></span>
+    <span class="c-tag">انتخاب پایه‌های ورودی و خروجی</span>
+    <span class="c-tag">هیسترزیس <span class="en">12.5~50mV</span></span>
+    <span class="c-tag">بیداری کم‌مصرف با <span class="en">EXTI</span></span>
+    <span class="c-tag">فیلتر دیجیتال خروجی</span>
+    <span class="c-tag">ماشۀ ترمز تایمر <span class="en">BKIN</span></span>
+    <span class="c-tag">مقایسۀ ولتاژ با <span class="en">DAC</span> داخلی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN24001 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | معرفی حالت‌های کاری <span class="en">CMP</span></span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-111"><span class="s-id">1.1</span><span>معرفی جانبۀ <span class="en">CMP</span> در <span class="en">CH32</span></span><span class="s-dots"></span><span class="s-page">۳</span></a>
+    <a class="toc-sub" href="#sec-1111"><span class="s-id">1.1.1</span><span>خروجی تایمری <span class="en">CMP</span></span><span class="s-dots"></span><span class="s-page">۴</span></a>
+    <a class="toc-sub" href="#sec-1112"><span class="s-id">1.1.2</span><span>قابلیت هیسترزیس <span class="en">CMP</span></span><span class="s-dots"></span><span class="s-page">۵</span></a>
+    <a class="toc-sub" href="#sec-1113"><span class="s-id">1.1.3</span><span>بیداری کم‌مصرف <span class="en">CMP</span></span><span class="s-dots"></span><span class="s-page">۶</span></a>
+    <a class="toc-sub" href="#sec-1114"><span class="s-id">1.1.4</span><span>فیلتر دیجیتال <span class="en">CMP</span></span><span class="s-dots"></span><span class="s-page">۶</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | نمونه‌های کاربرد <span class="en">CMP</span></span><span class="t-dots"></span><span class="t-page">۸</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-211"><span class="s-id">2.1</span><span>نمونه‌های استفاده از <span class="en">CMP</span></span><span class="s-dots"></span><span class="s-page">۸</span></a>
+    <a class="toc-sub" href="#sec-2111"><span class="s-id">2.1.1</span><span>حفاظت در برابر اضافه‌جریان</span><span class="s-dots"></span><span class="s-page">۸</span></a>
+    <a class="toc-sub" href="#sec-2112"><span class="s-id">2.1.2</span><span>قابلیت رمزگشایی</span><span class="s-dots"></span><span class="s-page">۸</span></a>
+    <a class="toc-sub" href="#sec-2113"><span class="s-id">2.1.3</span><span>مقایسۀ ولتاژ آنالوگ</span><span class="s-dots"></span><span class="s-page">۹</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۴</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۱۰</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۵</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۱۰</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">شکل ۱-۱</span><span>نمودار قطعۀ مقایسه‌گر <span class="en">CMP</span></span><span class="f-dots"></span><span class="f-page">۳</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۲</span><span>نمودار بلوکی جانبۀ <span class="en">CMP1</span></span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۳</span><span>نتیجۀ خروجی هیسترزیس</span><span class="f-dots"></span><span class="f-page">۶</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۴</span><span>نتیجۀ فیلتر دیجیتال</span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۱</span><span>نمودار توپولوژی حفاظت اضافه‌جریان <span class="en">CMP</span></span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۲</span><span>نمودار نتیجۀ رمزگشایی</span><span class="f-dots"></span><span class="f-page">۹</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۳</span><span>نمودار توپولوژی مقایسۀ ولتاژ آنالوگ</span><span class="f-dots"></span><span class="f-page">۹</span></div>
+        <div class="frow"><span class="f-id">جدول ۱-۱</span><span>نتیجۀ نمونه‌برداری لبه در فیلتر دیجیتال</span><span class="f-dots"></span><span class="f-page">۷</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> سند <span class="en">AN24001</span> جانبۀ مقایسه‌گر ولتاژ <span class="en">CMP</span> در سری همگانی‌منظورۀ <span class="en">CH32</span> را معرفی می‌کند: نخست کارکرد پایۀ مقایسۀ دو کمیت آنالوگ و سطح منطقی متناظر در خروجی و تفاوت آن با مقایسۀ حلقه‌بازِ <span class="en">OPA</span> را بیان می‌کند و قابلیت‌های اصلی (انتخاب پایه‌های ورودی و خروجی، اتصال داخلی به تایمر، بیداری کم‌مصرف با وقفه، فیلتر دیجیتال و مقایسۀ دوگانه با هیسترزیس) را برمی‌شمارد؛ سپس با نمونۀ <span class="en">CH32V205</span> خروجی تایمری، هیسترزیس قابل پیکربندی، بیداری با خط اختصاصی <span class="en">EXTI</span> و فیلتر دیجیتال در <span class="en">CH32H417</span> را مرور می‌کند و در پایان سه کاربرد حفاظت اضافه‌جریان، رمزگشایی عرض پالس و مقایسۀ ولتاژ آنالوگ با <span class="en">DAC</span> داخلی را با نمودارهای توپولوژی توضیح می‌دهد.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>این سند به‌طور اصلی معرفی شیوۀ استفاده از جانبۀ <span class="en">CMP</span> در سری همگانی‌منظورۀ <span class="en">CH32</span> است؛ شاخص‌های پارامتری <span class="en">CMP</span> را برای انتخاب مدل مناسب در این سری به‌اجمال بیان می‌کند و چند حالت استفاده از <span class="en">CMP</span> را نیز معرفی می‌نماید.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>میکروکنترلرهای همگانی‌منظوره</td><td>سری همگانی‌منظورۀ <span class="en">CH32</span></td></tr>
+  </table>
+</div>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">معرفی حالت‌های کاری <span class="en">CMP</span></div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-111"><span class="dm">◆</span>۱.۱ معرفی جانبۀ <span class="en">CMP</span> در <span class="en">CH32</span></h3>
+<p>کاربرد مستقیم و پیش‌رویِ <span class="en">CMP</span> آن است که به‌عنوان مقایسه‌گری برای دو کمیت آنالوگ به کار رود؛ پایۀ خروجی بنا بر نتیجۀ مقایسه، سطح منطقی متناظر را می‌گذارد: وقتی <span class="en">INP</span> (ورودی مثبت) از <span class="en">INM</span> (ورودی منفی) بزرگ‌تر باشد سطح خروجی بالا و وقتی <span class="en">INP&lt;INM</span> باشد سطح خروجی پایین است.</p>
+
+<div class="fig" id="fig-11">
+  <div class="figbox">
+    <img src="assets/img/an24001-fig_p3_x31.jpeg" alt="شکل ۱-۱" style="max-width:520px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۱</span><span class="cap-text">نمودار قطعۀ مقایسه‌گر <span class="en">CMP</span></span></div>
+</div>
+
+<p>در مقایسه با مقایسۀ حلقه‌بازِ <span class="en">OPA</span>، مقایسه‌گر ویژگی‌های زیر را دارد:</p>
+<div class="bl">مصرف توان پایین.</div>
+<div class="bl">پاسخ سریع خروجی.</div>
+<p>در محصولات سری همگانی‌منظورۀ <span class="en">CH32</span> جانبۀ <span class="en">CMP</span> گنجانده شده است و قابلیت‌های اصلی آن عبارت‌اند از:</p>
+<div class="bl">پایه‌های ورودی و خروجی <span class="en">CMP</span> قابل انتخاب‌اند.</div>
+<div class="bl">خروجی <span class="en">CMP</span> را می‌توان به‌صورت داخلی به تایمر <span class="en">TIM</span> متصل کرد.</div>
+<div class="bl"><span class="en">CMP</span> از وقفه پشتیبانی می‌کند و از حالت کم‌مصرف بیدار می‌شود.</div>
+<div class="bl"><span class="en">CMP</span> از فیلتر دیجیتال پشتیبانی می‌کند.</div>
+<div class="bl"><span class="en">CMP</span> از مقایسۀ دوگانه با هیسترزیس پشتیبانی می‌کند.</div>
+<p>برای دیدن کارکردهای پشتیبانی‌شده در مدل‌های مختلف، به جدول پیوست سند اصلی مراجعه کنید.</p>
+
+<h4 class="h3x" id="sec-1111"><span class="dm">◆</span>۱.۱.۱ خروجی تایمری <span class="en">CMP</span></h4>
+<p>خروجی <span class="en">CMP</span> را می‌توان به تایمر متصل کرد و با قابلیت ورودی‌گیری، وضعیت سطح خروجی را تشخیص داد. برای نمونه در <span class="en">CH32V205</span>، نمودار بلوکی جانبۀ <span class="en">CMP1</span> چنین است:</p>
+
+<div class="fig" id="fig-12">
+  <div class="figbox">
+    <img src="assets/img/an24001-fig_p3_x32.jpeg" alt="شکل ۱-۲" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۲</span><span class="cap-text">نمودار بلوکی جانبۀ <span class="en">CMP1</span></span></div>
+</div>
+
+<p>با پیکربندی <span class="en">MODEx[1:0]</span> کانال خروجی <span class="en">CMPx</span> میان پورت معمولی <span class="en">I/O</span> و کانال داخلی تایمر انتخاب می‌شود؛ وقتی کانال تایمر انتخاب شود، با پیکربندی ورودی‌گیری تایمر می‌توان وضعیت سطح خروجی را تشخیص داد. کد زیر خروجی را برای ورودی‌گیریِ انتخابی تایمر پیکربندی می‌کند:</p>
+<div class="codeblk long">void Input_Capture_Init( u16 arr, u16 psc )
+{
+    TIM_ICInitTypeDef TIM_ICInitStructure={0};
+    TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStructure={0};
+
+    RCC_PB1PeriphClockCmd(RCC_PB1Periph_TIM4, ENABLE);
+
+    TIM_TimeBaseInitStructure.TIM_Period = arr;
+    TIM_TimeBaseInitStructure.TIM_Prescaler = psc;
+    TIM_TimeBaseInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
+    TIM_TimeBaseInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
+    TIM_TimeBaseInitStructure.TIM_RepetitionCounter = 0x00;
+    TIM_TimeBaseInit( TIM4, &amp;TIM_TimeBaseInitStructure);
+
+    TIM_ICInitStructure.TIM_Channel = TIM_Channel_4;
+    TIM_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;
+    TIM_ICInitStructure.TIM_ICFilter = 0x00;
+    TIM_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Rising;
+    TIM_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI;
+
+    TIM_ICInit( TIM4, &amp;TIM_ICInitStructure );
+
+    NVIC_EnableIRQ(TIM4_IRQn);
+    TIM_ITConfig( TIM4, TIM_IT_CC4, ENABLE );
+
+    TIM_SelectInputTrigger( TIM4, TIM_TS_TI1FP1 );
+    TIM_SelectSlaveMode( TIM4, TIM_SlaveMode_Reset );
+    TIM_SelectMasterSlaveMode( TIM4, TIM_MasterSlaveMode_Enable );
+    TIM_Cmd( TIM4, ENABLE );
+}</div>
+
+<h4 class="h3x" id="sec-1112"><span class="dm">◆</span>۱.۱.۲ قابلیت هیسترزیس <span class="en">CMP</span></h4>
+<p>قابلیت هیسترزیس <span class="en">CMP</span> برای آن است که از نوسان رفت‌وبرگشتی ولتاژ ورودی مثبت و منفی در اطراف نقطۀ مقایسه به سبب ریپل ورودی جلوگیری کند. در سری همگانی‌منظورۀ <span class="en">CH32</span> ولتاژ هیسترزیس قابل پیکربندی است و نیازی به افزودن قطعۀ اضافی برای مقایسۀ هیسترزیسی نیست. برای نمونه در <span class="en">CH32V205</span>، با تنظیم بیت <span class="en">HYENx</span> قابلیت هیسترزیس <span class="en">CMPx</span> فعال می‌شود و ولتاژ هیسترزیس <span class="en">12.5mV</span>، <span class="en">25mV</span> یا <span class="en">50mV</span> قابل انتخاب است.</p>
+
+<div class="fig" id="fig-13">
+  <div class="figbox">
+    <img src="assets/img/an24001-fig_p4_x54.png" alt="شکل ۱-۳" style="max-width:600px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۳</span><span class="cap-text">نتیجۀ خروجی هیسترزیس</span></div>
+</div>
+
+<h4 class="h3x" id="sec-1113"><span class="dm">◆</span>۱.۱.۳ بیداری کم‌مصرف <span class="en">CMP</span></h4>
+<p>مقایسه‌گر خط وقفۀ خارجی (<span class="en">EXTI</span>) اختصاصی دارد؛ این خط می‌تواند وقفه یا رویداد تولید کند و برای بیدارسازی در حالت‌های <span class="en">SLEEP</span> و <span class="en">STOP</span> به کار می‌رود. برای نمونه در <span class="en">CH32V205</span>، هنگام استفاده از بیداری با وقفۀ خارجی، شرایط لازم چنین است:</p>
+<div class="bl">فعال‌سازی قابلیت <span class="en">PVD</span>؛</div>
+<div class="bl">پیکربندی بیت فعال‌سازی رویداد کانال وقفۀ خارجی متناظر (<span class="en">EXTI_EVENR</span>)؛</div>
+<div class="bl">پیکربندی ماشۀ خروجی مقایسه‌گر؛</div>
+<div class="bl">پیکربندی وقفۀ <span class="en">EXTI</span> در <span class="en">PFIC</span> هسته تا پاسخ درست تضمین شود؛</div>
+<div class="bl">فعال‌سازی <span class="en">CMP</span>.</div>
+<div class="note"><span class="lbl">توجه:</span> هنگام استفاده از بیداری کم‌مصرف به این نکته دقت کنید که در حالت <span class="en">STOP</span> باید قابلیت فیلتر دیجیتال خاموش شود.</div>
+
+<h4 class="h3x" id="sec-1114"><span class="dm">◆</span>۱.۱.۴ فیلتر دیجیتال <span class="en">CMP</span></h4>
+<p>برای حذف لرزش ورودی <span class="en">CMP</span>، جانبۀ <span class="en">CMP</span> از قابلیت فیلتر دیجیتال پشتیبانی می‌کند؛ می‌توان با تنظیم پایۀ زمانی فیلتر دیجیتال، خروجی مقایسه را نمونه‌برداری و منتشر کرد تا تداخل سیگنال‌های فرکانس بالا حذف شود. برای نمونه در <span class="en">CH32H417</span>: با پیکربندی بیت‌های <span class="en">FILT_BASE[2:0]</span> مبنای زمانی نمونه‌برداری فیلتر دیجیتال خروجی <span class="en">CMP</span> تنظیم می‌شود و ساعتِ تقسیم‌شده از <span class="en">HSE</span> یا <span class="en">HSI</span> تأمین می‌شود (با روشن‌بودن <span class="en">HSE</span> از <span class="en">HSE</span> و در غیر این صورت از <span class="en">HSI</span>)؛ با پیکربندی بیت‌های <span class="en">FILT_CFG[8:0]</span> فاصلۀ نمونه‌برداری فیلتر تنظیم می‌شود و در پایان با تنظیم بیت <span class="en">FILT_EN</span> قابلیت فیلتر دیجیتال خروجی <span class="en">CMP</span> فعال می‌گردد. نتیجۀ خروجی چنین است:</p>
+
+<div class="fig" id="fig-14">
+  <div class="figbox">
+    <img src="assets/img/an24001-fig_p5_x59.png" alt="شکل ۱-۴" style="max-width:620px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۴</span><span class="cap-text">نتیجۀ فیلتر دیجیتال</span></div>
+</div>
+
+<p>فرکانس ساعت فیلتر دیجیتال برابر است با حاصل‌ضرب پایۀ زمانی فیلتر در فاصلۀ نمونه‌برداری فیلتر؛ نتیجۀ مؤثر، بر اساس نتیجۀ نمونه‌برداری تک‌لبه با ساعت به دست می‌آید و جدول نتایج نمونه‌برداری لبه چنین است:</p>
+<div class="formula">f<sub>FILT</sub> = T<sub>FILT_BASE</sub> * N<sub>FILT_CFG</sub></div>
+
+<div class="tblwrap" id="tab-11">
+  <div class="tblcap"><span class="cap-pill">جدول ۱-۱</span><span class="cap-text">نتیجۀ نمونه‌برداری لبه در فیلتر دیجیتال</span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:50%;">نمونه‌برداری لبه</th><th>نتیجۀ خروجی</th></tr></thead>
+    <tr><td><span class="en">000</span></td><td><span class="en">0</span></td></tr>
+    <tr><td><span class="en">001</span></td><td><span class="en">0</span></td></tr>
+    <tr><td><span class="en">010</span></td><td><span class="en">0</span></td></tr>
+    <tr><td><span class="en">011</span></td><td><span class="en">1</span></td></tr>
+    <tr><td><span class="en">100</span></td><td><span class="en">0</span></td></tr>
+    <tr><td><span class="en">101</span></td><td><span class="en">1</span></td></tr>
+    <tr><td><span class="en">110</span></td><td><span class="en">1</span></td></tr>
+    <tr><td><span class="en">111</span></td><td><span class="en">1</span></td></tr>
+  </table>
+</div>
+<div class="note"><span class="lbl">نکته:</span> برای درستیِ نتیجۀ خروجی، فاصلۀ نمونه‌برداری باید بزرگ‌تر از پهنای نویز و کمتر از دو برابر پهنای نویز تنظیم شود.</div>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">نمونه‌های کاربرد <span class="en">CMP</span></div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-211"><span class="dm">◆</span>۲.۱ نمونه‌های استفاده از <span class="en">CMP</span></h3>
+<p>بنا بر ویژگی‌های مقایسه‌گر <span class="en">CMP</span>، نمونه‌های رایج کاربرد شامل موارد زیر است:</p>
+<div class="bl">حفاظت در برابر اضافه‌جریان؛</div>
+<div class="bl">قابلیت رمزگشایی <span class="en">PWM</span>؛</div>
+<div class="bl">مقایسۀ ولتاژ آنالوگ.</div>
+
+<h4 class="h3x" id="sec-2111"><span class="dm">◆</span>۲.۱.۱ حفاظت در برابر اضافه‌جریان</h4>
+<p>در وقفۀ چرخش (استال) یا اضافه‌بار موتور، جریان بیش از اندازه تولید می‌شود و اگر به‌موقع کنترل نشود به آسیب قطعه می‌انجامد. در سری همگانی‌منظورۀ <span class="en">CH32</span>، پایۀ خروجی <span class="en">CMP</span> را می‌توان به‌صورت داخلی به سیگنال ترمز تایمر متصل کرد؛ وقتی سیگنال جریان از آستانۀ تنظیم‌شده فراتر رود، سطح بالای خروجی <span class="en">CMP</span> سیگنال ترمز را فعال می‌کند تا <span class="en">PWM</span> قطع شود. در این شرایط، خروجی بدون وابستگی به روند اجرای سیستم به‌سرعت قطع می‌شود.</p>
+
+<div class="fig" id="fig-21">
+  <div class="figbox">
+    <img src="assets/img/an24001-fig_p6_x68.png" alt="شکل ۲-۱" style="max-width:560px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۱</span><span class="cap-text">نمودار توپولوژی حفاظت اضافه‌جریان <span class="en">CMP</span></span></div>
+</div>
+
+<p>برای نمونه در <span class="en">CH32V205</span>، پیکربندی استفاده از خروجی <span class="en">CMP</span> به‌عنوان سیگنال ترمز چنین است: با تنظیم بیت <span class="en">BKIN_SEL</span> در رجیستر <span class="en">CMP_CTLR</span> منبع سیگنال ترمز تایمر انتخاب می‌شود؛ وقتی <span class="en">BKIN_SEL=0</span> خروجی <span class="en">CMP1</span> و وقتی <span class="en">BKIN_SEL=1</span> خروجی <span class="en">CMP2</span> به‌عنوان منبع ترمز تایمر انتخاب می‌شود.</p>
+
+<h4 class="h3x" id="sec-2112"><span class="dm">◆</span>۲.۱.۲ قابلیت رمزگشایی</h4>
+<p>هنگام استفاده از مقایسه‌گر می‌توان کانال ورودی‌گیری تایمر را برای جمع‌آوری سیگنال به کار گرفت و بر همین اساس پهنای پالس را اندازه گرفت. سیگنال ارتباطی پروتکل <span class="en">QI</span> پس از عبور از تقویت‌کنندۀ عملیاتی <span class="en">OPA</span> به‌وسیلۀ مقایسه‌گر به موج <span class="en">PWM</span> تبدیل می‌شود و با قابلیت ورودی‌گیری مقایسه‌گر، عرض پالس اندازه‌گیری می‌شود. روی ورودی منفی <span class="en">CMP</span> ولتاژ بایاس <span class="en">OPA</span> اعمال می‌شود تا ولتاژ مرجع مقایسه‌گر فراهم شود؛ هنگامی که ورودی مثبت <span class="en">CMP</span> از ولتاژ مرجع بالاتر باشد در پورت ورودی‌گیری تایمر یک لبه بالارونده تولید و در رجیستر تایمر ذخیره می‌شود و هنگامی که پایین‌تر از ولتاژ مرجع باشد یک لبه پایین‌رونده تولید می‌شود. زمان سپری‌شده میان دو پالس، پهنای پالس بالا/پایین است و بر همین اساس با دیوتای سطح بالا و پایین، رمزگشایی سیگنال <span class="en">QI</span> انجام می‌شود.</p>
+
+<div class="fig" id="fig-22">
+  <div class="figbox">
+    <img src="assets/img/an24001-fig_p6_x70.png" alt="شکل ۲-۲" style="max-width:600px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۲</span><span class="cap-text">نمودار نتیجۀ رمزگشایی</span></div>
+</div>
+
+<h4 class="h3x" id="sec-2113"><span class="dm">◆</span>۲.۱.۳ مقایسۀ ولتاژ آنالوگ</h4>
+<p>در مقایسه با گرفتن نمونه و مقایسه با <span class="en">ADC</span>، مقایسۀ ولتاژ با مقایسه‌گر پاسخ سریع‌تر و مصرف جریان کمتری دارد؛ می‌توان ولتاژ آنالوگ را مقایسه کرد و از آن در حفاظت اضافه‌ولتاژ/اضافه‌دما و بیداری ولتاژی بهره گرفت.</p>
+<p>برای نمونه در <span class="en">CH32V205</span>، منبع ورودی منفی <span class="en">CMP</span> مبدل <span class="en">DAC</span> است؛ <span class="en">DAC</span> داخلی ۴ بیتی به‌عنوان ولتاژ مرجع ورودی منفی به کار می‌رود و ورودی مثبت می‌تواند با مقسم مقاومتی، دامنۀ ولتاژ را پایش کند. اگر ولتاژ ورودی مثبت از ولتاژ مرجع بزرگ‌تر شود، می‌توان از طریق <span class="en">GPIO</span> مستقیماً منبع تغذیه را قطع کرد یا با ورود به وقفه، روند رسیدگی به اضافه‌ولتاژ را انجام داد؛ به همین ترتیب با قرار دادن یک مقاومت حرارتی به‌صورت سری، قابلیت حفاظت اضافه‌دما نیز فراهم می‌شود.</p>
+
+<div class="fig" id="fig-23">
+  <div class="figbox">
+    <img src="assets/img/an24001-fig_p7_x75.png" alt="شکل ۲-۳" style="max-width:560px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۳</span><span class="cap-text">نمودار توپولوژی مقایسۀ ولتاژ آنالوگ</span></div>
+</div>
+
+<p>وقتی <span class="en">MCU</span> در حالت خواب یا <span class="en">STOP</span> است، جانبۀ <span class="en">CMP</span> همچنان در حال کار می‌ماند؛ بنابراین می‌توان با رویداد یا وقفۀ اختصاصی <span class="en">CMP</span> آن را بیدار کرد. هنگامی که تغذیه از آستانۀ مرجع پایین‌تر است، <span class="en">MCU</span> برای صرفه‌جویی در مصرف باتری در حالت کم‌مصرف می‌ماند؛ به‌محض آنکه ولتاژ تغذیه از مقدار مرجع بالاتر برود، <span class="en">CMP</span> وقفه یا رویداد تولید می‌کند و <span class="en">MCU</span> برای کار عادی بیدار می‌شود. در این حالت پایش ولتاژ، نیازی به گرفتن نمونه با جانبۀ <span class="en">ADC</span> نیست و مصرف توان به‌طور مؤثر کاهش می‌یابد.</p>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN24001</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/07/08</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">CMP</span></td><td class="jt">مقایسه‌گر ولتاژ داخلی سری همگانی‌منظورۀ <span class="en">CH32</span>؛ دو کمیت آنالوگ را مقایسه می‌کند و طبق نتیجۀ مقایسه سطح منطقی متناظر را در خروجی می‌گذارد</td></tr>
+      <tr><td><span class="en">INP / INM</span></td><td class="jt">ورودی مثبت / منفی مقایسه‌گر؛ وقتی <span class="en">INP</span> از <span class="en">INM</span> بزرگ‌تر باشد خروجی در سطح بالا و در غیر این صورت در سطح پایین است</td></tr>
+      <tr><td><span class="en">PSEL / NSEL</span></td><td class="jt">انتخابگر مسیر ورودی مثبت / منفی؛ در نمودار بلوکی <span class="en">CMP1</span> میان پایه‌های <span class="en">GPIO</span> و منابع داخلی مانند <span class="en">OPA1_TO_COMP1</span> یا <span class="en">DAC_OUT1</span> انتخاب می‌کند</td></tr>
+      <tr><td><span class="en">MODE1 / MODEx[1:0]</span></td><td class="jt">بیت‌های انتخاب کانال خروجی <span class="en">CMPx</span>؛ خروجی را میان پورت معمولی <span class="en">I/O</span> و کانال داخلی تایمر (مانند <span class="en">TIM1_CH4</span> تا <span class="en">TIM4_CH4</span>) جابه‌جا می‌کند</td></tr>
+      <tr><td><span class="en">HYENx</span></td><td class="jt">بیت فعال‌سازی هیسترزیس <span class="en">CMPx</span>؛ ولتاژ هیسترزیس <span class="en">12.5mV</span>، <span class="en">25mV</span> یا <span class="en">50mV</span> را فعال می‌کند تا خروجی در اطراف نقطۀ مقایسه نوسان نکند</td></tr>
+      <tr><td><span class="en">Hysteresis</span></td><td class="jt">هیسترزیس؛ اختلاف عمدی آستانۀ بالا و پایین مقایسه که از کلیدزنی مکرر خروجی به سبب ریپل یا نویز ورودی جلوگیری می‌کند</td></tr>
+      <tr><td><span class="en">EXTI / PFIC</span></td><td class="jt">خط وقفۀ خارجی اختصاصی مقایسه‌گر / کنترل‌گر وقفۀ هسته؛ مسیر تولید وقفه یا رویداد و بیدارسازی از حالت‌های <span class="en">SLEEP</span> و <span class="en">STOP</span></td></tr>
+      <tr><td><span class="en">EXTI_EVENR</span></td><td class="jt">رجیستر فعال‌سازی رویداد کانال وقفۀ خارجی؛ در بیداری کم‌مصرف با <span class="en">CMP</span> باید بیت رویداد کانال متناظر پیکربندی شود</td></tr>
+      <tr><td><span class="en">PVD</span></td><td class="jt">آشکارساز ولتاژ تغذیه؛ در نمونۀ <span class="en">CH32V205</span> فعال‌سازی قابلیت آن پیش‌شرط استفاده از بیداری با وقفۀ خارجی است</td></tr>
+      <tr><td><span class="en">BKIN_SEL / CMP_CTLR</span></td><td class="jt">بیت انتخاب منبع سیگنال ترمز تایمر در رجیستر <span class="en">CMP_CTLR</span>؛ مقدار <span class="en">0</span> خروجی <span class="en">CMP1</span> و مقدار <span class="en">1</span> خروجی <span class="en">CMP2</span> را به‌عنوان منبع ترمز برمی‌گزیند</td></tr>
+      <tr><td><span class="en">TIM_BKIN</span></td><td class="jt">ورودی سیگنال ترمز تایمر؛ خروجی مقایسه‌گر به‌عنوان منبع ترمز، هنگام اضافه‌جریان <span class="en">PWM</span> را به‌سرعت قطع می‌کند</td></tr>
+      <tr><td><span class="en">Digital Filter</span></td><td class="jt">فیلتر دیجیتال خروجی <span class="en">CMP</span>؛ با <span class="en">FILT_BASE[2:0]</span> (پایۀ زمانی)، <span class="en">FILT_CFG[8:0]</span> (فاصلۀ نمونه‌برداری) و <span class="en">FILT_EN</span> (فعال‌سازی) پیکربندی می‌شود</td></tr>
+      <tr><td><span class="en">DAC</span></td><td class="jt">مبدل دیجیتال به آنالوگ؛ در <span class="en">CH32V205</span> مبدل داخلی ۴ بیتی منبع ولتاژ مرجع ورودی منفی مقایسه‌گر در مقایسۀ ولتاژ آنالوگ است</td></tr>
+      <tr><td><span class="en">OPA</span></td><td class="jt">تقویت‌کنندۀ عملیاتی داخلی <span class="en">CH32</span>؛ در رمزگشایی، سیگنال <span class="en">QI</span> را پیش از مقایسه‌گر آماده می‌کند و ولتاژ بایاس آن مرجع ورودی منفی می‌شود</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN24001 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۲۳</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN24001</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
