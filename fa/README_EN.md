@@ -18,8 +18,8 @@ The collection is intended for electronics engineers, hardware designers, firmwa
 
 At the time this README was prepared, the Persian directory contains **49 application-note folders**:
 
-- **20 notes have both Persian PDF and HTML editions**, suitable for offline reading/printing and online viewing.
-- **29 notes are awaiting translation and technical review.** Their individual guide pages and any available supporting media are present, but final Persian PDF and HTML editions have not yet been published.
+- **28 notes have both Persian PDF and HTML editions**, suitable for offline reading/printing and online viewing.
+- **21 notes are awaiting translation and technical review.** Their individual guide pages and any available supporting media are present, but final Persian PDF and HTML editions have not yet been published.
 - **49 individual README guides** describe each note and provide access to its original source.
 
 > **Important:** The presence of a directory or README does not mean that the full translation is complete. The table below reflects the files actually present in the repository. PDF and HTML links are provided only where those files exist.
