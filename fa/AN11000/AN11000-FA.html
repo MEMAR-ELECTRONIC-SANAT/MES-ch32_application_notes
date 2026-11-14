@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>راهنمای جامع تایمرها در میکروکنترلرهای WCH — ترجمۀ فارسی AN11000</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">راهنمای جامع تایمرها</div>
+    <div class="t2">در میکروکنترلرهای <span class="en">WCH</span></div>
+    <div class="t3">از <span class="en">TIM</span> و <span class="en">RTC</span> تا <span class="en">SysTick</span> و <span class="en">LPTIM</span></div>
+  </div>
+  <div class="c-sub">از ساختار، حالت‌های شمارش و امکانات تایمرهای پیشرفته/همگانی/پایه (<span class="en">TIM</span>)، ساعت واقعی (<span class="en">RTC</span>) و تایمر تیک سیستم (<span class="en">SysTick</span>) تا مقایسۀ کاربردی این سه تایمر با تایمر کم‌مصرف <span class="en">LPTIM</span> در سری‌های <span class="en">CH32L/CH32H</span> برای طراحی‌های باتری‌خور</div>
+  <div class="c-desc">در این جزوه، ترجمۀ فارسی سند رسمی <span class="en">AN11000</span> (نسخۀ ۱٫۰، منتشرۀ شرکت <span class="en">WCH</span>) را می‌خوانید: چهار نوع تایمر از نظر انگیزۀ طراحی و حانۀ کاربرد با هم سنجیده می‌شوند. تایمرهای <span class="en">TIM</span> با تولید <span class="en">PWM</span> و ورودی گرفتن سیگنال، <span class="en">RTC</span> با تغذیۀ پشتیبان <span class="en">Vbat</span> و کارکرد هشدار، <span class="en">SysTick</span> به‌عنوان زمان‌بنای درونی هسته و <span class="en">LPTIM</span> با شمارش پالس بی‌ساعت و بیداری کم‌مصرف، هر یک همراه با سناریوهای کاربرد و نکات پیکربندی مرور می‌شوند.</div>
+  <div class="c-tags">
+    <span class="c-tag">تایمرهای پیشرفته/همگانی/پایه <span class="en">TIM</span></span>
+    <span class="c-tag">ساعت واقعی <span class="en">RTC</span></span>
+    <span class="c-tag">تایمر تیک سیستم <span class="en">SysTick</span></span>
+    <span class="c-tag">تایمر کم‌مصرف <span class="en">LPTIM</span></span>
+    <span class="c-tag">تولید <span class="en">PWM</span> و ورودی گرفتن سیگنال</span>
+    <span class="c-tag">بیداری از حالت‌های کم‌مصرف</span>
+    <span class="c-tag">سری‌های <span class="en">CH32L/CH32H</span></span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN11000 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۰</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | تایمرهای <span class="en">TIM</span>، <span class="en">RTC</span> و <span class="en">SysTick</span></span><span class="t-dots"></span><span class="t-page">۰</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-111"><span class="s-id">1.1</span><span>تایمرهای پیشرفته/همگانی/پایه (<span class="en">TIM</span>)</span><span class="s-dots"></span><span class="s-page">۰</span></a>
+    <a class="toc-sub" href="#sec-112"><span class="s-id">1.2</span><span>ساعت واقعی (<span class="en">RTC</span>)</span><span class="s-dots"></span><span class="s-page">۰</span></a>
+    <a class="toc-sub" href="#sec-113"><span class="s-id">1.3</span><span>تایمر تیک سیستم (<span class="en">SysTick</span>)</span><span class="s-dots"></span><span class="s-page">۰</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | تایمر کم‌مصرف <span class="en">LPTIM</span></span><span class="t-dots"></span><span class="t-page">۰</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-211"><span class="s-id">2.1</span><span>مرور عملکرد</span><span class="s-dots"></span><span class="s-page">۰</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۴</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۰</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۵</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۰</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">شکل ۱-۱</span><span>نمونۀ پیکربندی هشدار <span class="en">RTC</span></span><span class="f-dots"></span><span class="f-page">۰</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۲</span><span>پیاده‌سازی تأخیر با <span class="en">SysTick</span></span><span class="f-dots"></span><span class="f-page">۰</span></div>
+        <div class="frow"><span class="f-id">جدول ۲-۱</span><span>مقایسۀ <span class="en">RTC/SysTick/TIM/LPTIM</span></span><span class="f-dots"></span><span class="f-page">۰</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> چهار نوع تایمر در میکروکنترلرهای <span class="en">WCH</span> — تایمرهای پیشرفته/همگانی/پایه (<span class="en">TIM</span>)، ساعت واقعی (<span class="en">RTC</span>)، تایمر تیک سیستم (<span class="en">SysTick</span>) و تایمر کم‌مصرف (<span class="en">LPTIM</span>) — هر یک برای هدف مشخصی طراحی شده‌اند: <span class="en">TIM</span> با حالت‌های شمارش متنوع، کانال‌های مستقل و تولید <span class="en">PWM</span> برای درایو موتور و اندازه‌گیری سیگنال؛ <span class="en">RTC</span> با تغذیۀ پشتیبان <span class="en">Vbat</span> برای تقویم و بیداری کم‌مصرف؛ <span class="en">SysTick</span> به‌عنوان زمان‌بنای درونی هسته برای تیک سیستم‌عامل و تأخیر دقیق؛ و <span class="en">LPTIM</span> — افزوده‌شده در سری‌های <span class="en">CH32L/CH32H</span> — برای شمارش پالس و بیداری کم‌مصرف هنگام خواب عمیق. این سند ویژگی‌ها، سناریوهای کاربرد و نکات پیکربندی هر چهار تایمر را مرور و در جدولی یک‌جا مقایسه می‌کند.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro"><i class="pgmark">MK:sec-intro</i>
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>تایمرها کاربردی بسیار گسترده دارند و از رایج‌ترین جانبی‌های میکروکنترلر به‌شمار می‌آیند. میکروکنترلرهای شرکت <span class="en">WCH</span> منابع تایمری متنوعی در اختیار کاربر می‌گذارند؛ از تایمرهای پیشرفته/همگانی/پایه (<span class="en">TIM</span>) و ساعت واقعی (<span class="en">RTC</span>) تا تایمر تیک سیستم (<span class="en">SysTick</span>). با سخت‌گیرانه‌ترشدنِ الزامات کاربران برای محصولات کم‌مصرف، <span class="en">WCH</span> در سری‌های <span class="en">CH32L/CH32H</span> تایمر کم‌مصرف (<span class="en">LPTIM</span>) را نیز به این مجموعه افزوده است. این چهار نوع تایمر در انگیزۀ طراحی و حانۀ کاربرد هر یک تمرکز متفاوتی دارند. سند حاضر این چهار تایمر را در کنار هم مقایسه می‌کند تا کاربر با ویژگی‌های خاص هر یک و سناریوهای کاربرد آن به‌درستی آشنا شود.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>میکروکنترلرهای همگانی‌منظوره</td><td><span class="en">CH32V/F/L/H/X</span></td></tr>
+  </table>
+</div>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1"><i class="pgmark">MK:sec-b1</i>
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">تایمرهای <span class="en">TIM</span>، <span class="en">RTC</span> و <span class="en">SysTick</span></div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-111"><i class="pgmark">MK:sec-111</i><span class="dm">◆</span>۱.۱ تایمرهای پیشرفته/همگانی/پایه (<span class="en">TIM</span>)</h3>
+<p>در میان تایمرها، خانوادۀ <span class="en">TIM</span> کامل‌ترین مجموعه را دارد و شامل تایمر پیشرفته، تایمر همگانی‌منظوره و تایمر پایه است. تایمر پیشرفته از <span class="en">PWM</span> مکمل، مرده‌زمان (<span class="en">Dead Time</span>) و ورودی ترمز (<span class="en">Brake</span>) پشتیبانی می‌کند و عمدتاً برای درایو موتور به‌کار می‌رود؛ تایمر همگانی‌منظوره از ورودی گرفتن سیگنال (<span class="en">Input Capture</span>)، مقایسۀ خروجی (<span class="en">Output Compare</span>)، رابط انکودر و تحریک <span class="en">DMA</span> پشتیبانی می‌کند. تایمر پایه فاقد امکانات پیشرفته‌ای مانند ورودی گرفتن، مقایسۀ خروجی و رابط انکودر است و تنها مأمور آن فراهم‌کردن رویداد به‌روزرسانی (<span class="en">Update Event</span>) دوره‌ای، دقیق و کم‌هزینه است؛ به همین دلیل تایمر پایه جانشینِ ایده‌آلِ تایمر تیک سیستم، تحریک همگامِ <span class="en">ADC/DAC</span> و کنترل ریتم جابه‌جایی داده با <span class="en">DMA</span> به‌شمار می‌آید.</p>
+<div class="bl">منبع ساعت: تایمرهای <span class="en">TIM</span> بسته به نوع تراشه روی گذرگاه <span class="en">PB1</span>، <span class="en">PB2</span> یا <span class="en">HB</span> قرار می‌گیرند و ساعت <span class="en">TIM</span> مستقیماً از گذرگاه میزبان تأمین می‌شود.</div>
+<div class="bl">رفتار کم‌مصرف: با ورود به حالت خواب <span class="en">Stop</span>، ساعت <span class="en">TIM</span> بسته می‌شود و شمارش بی‌درنگ متوقف می‌ماند؛ بنابراین <span class="en">TIM</span> در حالت خواب نمی‌تواند به شمارش ادامه دهد.</div>
+<p>ویژگی‌های اصلی <span class="en">TIM</span> عبارت‌اند از:</p>
+<div class="bl">حالت‌های شمارش متنوع: پشتیبانی از سه حالت شمارش صعودی، نزولی و مرکزآراسته (<span class="en">Center-Aligned</span>).</div>
+<div class="bl">چندکاناله بودن: هر تایمر معمولاً <span class="en">4</span> کانال مستقل دارد و از این امکانات پشتیبانی می‌کند:</div>
+<div class="bl">مقایسۀ خروجی: تولید پالس یا شکل‌موج مشخص.</div>
+<div class="bl">تولید <span class="en">PWM</span>: خروجی سیگنال <span class="en">PWM</span> با دورۀ کاری دلخواه.</div>
+<div class="bl">ورودی گرفتن: اندازه‌گیری پهنای پالس و فرکانس سیگنال ورودی.</div>
+<div class="bl">رابط انکودر (در برخی مدل‌ها): برای تشخیص موقعیت/سرعت موتور.</div>
+<div class="bl">پشتیبانی <span class="en">DMA</span>: همراهی با <span class="en">DMA</span> برای انتقال داده با بهره‌وری بالا.</div>
+<div class="bl">شمارش با ساعت خارجی: پشتیبانی از شمارش پالس روی پایۀ ورودی خارجی.</div>
+<div class="bl">کاسکید تایمرها: چند تایمر را می‌توان پشت‌سرهم به‌کار برد؛ برای نمونه رویداد به‌روزرسانی <span class="en">TIM2</span> می‌تواند شمارش <span class="en">TIM11</span> را تحریک کند.</div>
+<div class="bl">فیلتر دیجیتال: هنگامی که <span class="en">TIM</span> به‌عنوان شمارندۀ ورودی به‌کار می‌رود، امکان پیکربندی فیلتر دیجیتال وجود دارد.</div>
+
+<h4 class="h3x" id="sec-1111"><span class="dm">◆</span>۱.۱.۱ سناریوهای کاربرد</h4>
+<p>کنترل موتور (تایمر پیشرفته): تایمرهای پیشرفته (<span class="en">TIM1</span>، <span class="en">TIM8</span>) جانبۀ اصلی کنترل موتور هستند. در درایو موتور بدون جاروبک مستقیم (<span class="en">BLDC</span>):</p>
+<div class="bl">خروجی <span class="en">PWM</span> مکمل، پل اینورتر سه‌فاز را می‌راند.</div>
+<div class="bl">مرده‌زمان از اتصال مستقیم (سرریزش) ترانزیستورهای قدرت جلوگیری می‌کند.</div>
+<div class="bl">ورودی ترمز، حفاظت در برابر اضافه‌جریان را فراهم می‌کند.</div>
+<div class="bl">رابط انکودر، سرعت و موقعیت موتور را می‌خواند.</div>
+<p>در محصولاتی مانند جاروبرقی، سشوار پرسرعت و پنکۀ بدون پره، کنترل فنِ پرسرعت دقیقاً یکی از جهت‌گیری‌های مهم کاربرد این نوع تایمر است.</p>
+<p>اندازه‌گیری سیگنال (ورودی گرفتن): در حالت ورودی گرفتن، <span class="en">TIM</span> می‌تواند پهنای پالس سیگنال خارجی را اندازه بگیرد؛ کاربردهای نمونه عبارت‌اند از:</p>
+<div class="bl">رمزگشایی سیگنال ریموت مادون قرمز.</div>
+<div class="bl">اندازه‌گیری زمان بازتاب ماژول سنجش فاصله با امواج فراصوتی.</div>
+<div class="bl">تحلیل سیگنال حسگر هال.</div>
+<div class="bl">فرکانس‌سنج.</div>
+<p>جمع‌آوری دادۀ حسگرها: تایمر می‌تواند <span class="en">ADC</span> را برای نمونه‌برداری دوره‌ای تحریک کند تا داده‌های حسگرها در بازه‌های زمانی معلوم جمع‌آوری شود و دقت فاصلۀ نمونه‌برداری تضمین گردد.</p>
+<p>وقفۀ زمان‌بندی دقیق: <span class="en">TIM</span> می‌تواند وقفه‌های زمان‌بندی دقیق (مانند <span class="en">125μs</span> و <span class="en">1ms</span>) تولید کند؛ برای کنترل زمانیِ پروتکل‌های ارتباطی سفارشی، تولید پالس موتور پله‌ای و دیگر موقعیت‌های پرسرعت مناسب است.</p>
+<p>اثر چراغ تنفسی: با تغییر پویا در دورۀ کاری <span class="en">PWM</span> می‌توان اثر نرمِ چراغ تنفسی را ایجاد کرد.</p>
+
+<h4 class="h3x" id="sec-1112"><span class="dm">◆</span>۱.۱.۲ نکات مهم</h4>
+<div class="bl">ساعت همۀ جانبی‌های تایمر به‌صورت پیش‌فرض بسته است؛ پیش از استفاده باید ساعت جانبی مربوطه فعال شود.</div>
+<div class="bl">تایمر پیشرفته برای خروجی دادن سیگنال <span class="en">PWM</span> باید با فراخوانی <span class="en">TIM_CtrlPWMOutputs()</span> خروجی اصلی را فعال کند.</div>
+<div class="bl">تایمرهای متفاوت ممکن است روی گذرگاه‌های <span class="en">APB</span> مختلف (<span class="en">APB1</span> یا <span class="en">APB2</span>) قرار داشته باشند و فرکانس ساعتشان نیز می‌تواند متفاوت باشد؛ برای اطمینان به دیتاشیت مراجعه کنید.</div>
+<div class="bl">در حالت خروجی <span class="en">PWM</span> دقت کنید که پیکربندی کارکرد جایگزین (<span class="en">Alternate Function</span>) پایۀ <span class="en">GPIO</span> درست باشد.</div>
+<div class="bl">هنگام استفاده از ورودی گرفتن، به دامنۀ ولتاژ و سقف فرکانس سیگنال ورودی توجه کنید.</div>
+
+<h3 class="h2x" id="sec-112"><i class="pgmark">MK:sec-112</i><span class="dm">◆</span>۱.۲ ساعت واقعی (<span class="en">RTC</span>)</h3>
+<p>ساعت واقعی (<span class="en">Real-Time Clock</span>) می‌تواند ساعت خود را از <span class="en">HSI/LSI/LSE</span> انتخاب کند. <span class="en">LSE</span> و <span class="en">RTC</span> را می‌توان با <span class="en">Vbat</span> تغذیه کرد؛ یعنی هنگام قطع <span class="en">VDD</span>، تغذیۀ <span class="en">RTC</span> و <span class="en">LSE</span> به <span class="en">Vbat</span> سوئیچ می‌شود. تا وقتی <span class="en">Vbat</span> انرژی دارد، <span class="en">RTC</span> از کار نمی‌افتد. بر پایۀ همین ویژگی، <span class="en">RTC</span> عمدتاً در محصولاتی مانند ساعت/تقویم الکترونیکی به‌کار می‌رود.</p>
+<p>ویژگی‌های اصلی <span class="en">RTC</span> در <span class="en">CH32H417</span>:</p>
+<div class="bl">پهنای بیت: شمارندۀ قابل‌برنامۀ <span class="en">32</span>-بیتی.</div>
+<div class="bl">زمان‌بنا: از پیش‌تقسیم‌گر <span class="en">20</span>-بیتی پشتیبانی می‌کند.</div>
+<div class="bl">تغذیۀ پشتیبان: ماژول <span class="en">RTC</span> در زمینۀ تغذیۀ پشتیبان قرار دارد و پس از قطع منبع اصلی نیز می‌تواند با <span class="en">Vbat</span> به کار ادامه دهد.</div>
+<div class="bl">کارکرد هشدار: می‌توان هشداری پیکربندی کرد که سیستم را از حالت کم‌مصرف بیدار کند.</div>
+<div class="bl">خروجی ساعت: می‌تواند پالس ثانیه، پالس هشدار و ساعت <span class="en">RTC</span> را در خروجی بدهد.</div>
+
+<h4 class="h3x" id="sec-1121"><span class="dm">◆</span>۱.۲.۱ سناریوهای کاربرد</h4>
+<p>بیداری زمان‌بندی‌شدهٔ کم‌مصرف: <span class="en">RTC</span> یکی از رایج‌ترین منابع بیداری کم‌مصرف است. پس از ورود دستگاه به حالت توقف یا آماده‌به‌کار، <span class="en">RTC</span> به کار ادامه می‌دهد و در زمان هشدارِ از پیش تعیین‌شده، <span class="en">MCU</span> را بیدار می‌کند.</p>
+<p>کارکرد تقویم/ساعت: در کاربردهایی که ثبت زمان واقعی لازم است (مانند ساعت الکترونیکی، تقویم همیشگی و مُهر زمانیِ دیتالاگرها)، <span class="en">RTC</span> اطلاعات دقیق تاریخ و زمان را فراهم می‌کند. همراه با نمایشگر <span class="en">LCD</span> یا کنترل‌گر نمایش <span class="en">LTDC</span> می‌توان رابط نمایش کامل ساعت را پیاده‌سازی کرد.</p>
+<p>جمع‌آوری دادۀ دوره‌ای: در سناریوهایی مانند پایش محیط‌زیست و کشاورزی هوشمند، می‌توان <span class="en">RTC</span> را طوری پیکربندی کرد که هر ساعت یا هر روز دستگاه را بیدار کند؛ پس از بیداری، داده‌های دما، رطوبت و نور جمع‌آوری و ذخیره یا گزارش می‌شود و در بقیۀ زمان سیستم در خواب عمیق است؛ بدین ترتیب عمر باتری به‌شکل چشمگیری طولانی‌تر می‌شود.</p>
+
+<h4 class="h3x" id="sec-1122"><span class="dm">◆</span>۱.۲.۲ نمونۀ هشدار</h4>
+<p>به‌دلیل کاربرد خاص <span class="en">RTC</span>، رجیستر پیش‌تقسیم‌گر، مقدار بارگذاری دوبارۀ پیش‌تقسیم‌گر، شمارندۀ اصلی و هشدار همگی در زمینۀ پشتیبان (<span class="en">Backup Domain</span>) قرار دارند؛ بنابراین هنگام پیکربندی رجیسترهای مربوط به <span class="en">RTC</span> باید ساعت زمینۀ پشتیبان باز شود. رجیستر کنترل <span class="en">RTC</span> تحت کنترل ریست سیستم و ریست توان است.</p>
+<div class="fig" id="fig-11"><i class="pgmark">MK:fig-11</i>
+  <div class="figbox">
+    <img src="assets/img/an11000-fig_p5_x60.jpeg" alt="شکل ۱-۱" style="max-width:480px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۱</span><span class="cap-text">نمونۀ پیکربندی هشدار <span class="en">RTC</span></span></div>
+</div>
+
+<h4 class="h3x" id="sec-1123"><span class="dm">◆</span>۱.۲.۳ نکات مهم</h4>
+<div class="bl">۱. هنگامی که <span class="en">RTC</span> از <span class="en">LSE</span> خارجی به‌عنوان منبع ساعت استفاده می‌کند، به خازن‌های تطبیق کریستال و چیدمان <span class="en">PCB</span> توجه کنید تا آغاز نوسان مطمئن باشد.</div>
+<div class="bl">۲. هنگامی که <span class="en">RTC</span> از <span class="en">LSI/HSE</span> به‌عنوان منبع ساعت استفاده می‌کند، در شرایطی که تنها <span class="en">Vbat</span> تغذیه را برعهده دارد، <span class="en">RTC</span> هنگام شمارش از کار می‌ایستد (ساعت متوقف می‌شود).</div>
+
+<h3 class="h2x" id="sec-113"><i class="pgmark">MK:sec-113</i><span class="dm">◆</span>۱.۳ تایمر تیک سیستم (<span class="en">SysTick</span>)</h3>
+<p><span class="en">SysTick</span> تایمر زمان‌بنای درونیِ هسته است؛ جزو جانبی‌های هسته به‌شمار می‌آید و پایۀ خروجی خارجی ندارد. <span class="en">SysTick</span> به پیکربندی اضافیِ رجیسترهای جانبی نیاز ندارد و در حال حاضر همهٔ میکروکنترلرهای همگانی‌منظورۀ <span class="en">WCH</span> تایمر تیک دارند. انگیزۀ طراحی آن، فراهم‌کردن زمان‌بنای پایدار برای سیستم‌عامل است.</p>
+<p>ویژگی‌های <span class="en">SysTick</span> در <span class="en">CH32V407</span>:</p>
+<div class="bl">مجتمع در هسته: منابع گذرگاه جانبی‌ها را اشغال نمی‌کند، سرعت پاسخ بالاست و اولویت وقفه‌اش بالا است.</div>
+<div class="bl">شمارندۀ <span class="en">32</span>-بیتی: برخلاف SysTick متعارفِ <span class="en">24bit</span> در هسته‌های <span class="en">ARM</span>، SysTick در <span class="en">CH32V407</span> <span class="en">32bit</span> است و مدت‌زمان هر بار شمارش طولانی‌تر است؛ مبنایی برای زمان‌بندی بلندمدت فراهم می‌کند.</div>
+<div class="bl">منبع ساعت انعطاف‌پذیر: منبع ساعت <span class="en">SysTick</span> می‌تواند <span class="en">HCLK</span> یا <span class="en">HCLK/8</span> باشد و توسعه‌دهنده بسته به دقتِ موردنیاز، آن را آزادانه پیکربندی می‌کند.</div>
+
+<h4 class="h3x" id="sec-1131"><span class="dm">◆</span>۱.۳.۱ نحوۀ کار</h4>
+<p>رجیسترهای اصلی <span class="en">SysTick</span> در <span class="en">CH32V407</span> عبارت‌اند از:</p>
+<div class="bl"><span class="en">STK_CTLR</span> (رجیستر کنترل): کنترل فعال‌سازی تایمر، انتخاب ساعت و فعال‌سازی وقفه.</div>
+<div class="bl"><span class="en">STK_SR</span> (رجیستر وضعیت): پرچم وقفۀ مقایسۀ شمارش و بیت کنترل تحریک وقفۀ نرم‌افزاری تایمر تیک.</div>
+<div class="bl"><span class="en">STK_CNT</span> (رجیستر شمارش جاری): خواندن مقدار شمارش جاری.</div>
+<div class="bl"><span class="en">STK_CMP</span> (رجیستر مقایسۀ شمارش): تنظیم مقدار مقایسۀ شمارش.</div>
+<p>روند شمارش بدین شکل است: پس از فعال‌شدن <span class="en">SysTick</span>، اگر در <span class="en">STK_CTLR</span> حالت شمارش نزولی انتخاب شده باشد، در هر دورۀ ساعت <span class="en">STK_CNT</span> یکی کم می‌شود؛ با رسیدن <span class="en">STK_CNT</span> به صفر، وقفه تحریک می‌شود (در صورت فعال‌بودن وقفه). اگر حالت شمارش صعودی انتخاب شده باشد، در هر دورۀ ساعت یکی اضافه می‌شود و وقتی <span class="en">STK_CNT</span> با <span class="en">STK_CMP</span> برابر شود، وقفه تحریک می‌شود (در صورت فعال‌بودن وقفه).</p>
+<p>وقتی بازبارگذاری خودکار فعال باشد، در شمارش صعودی پس از رسیدن به مقدار مقایسه، <span class="en">STK_CNT</span> دوباره از ۰ شمارش را آغاز می‌کند؛ و در شمارش نزولی پس از رسیدن به صفر، دوباره از مقدار مقایسه شروع می‌کند.</p>
+
+<h4 class="h3x" id="sec-1132"><span class="dm">◆</span>۱.۳.۲ سناریوهای کاربرد</h4>
+<p>تیک سیستم <span class="en">RTOS</span>: کلاسیک‌ترین کاربرد <span class="en">SysTick</span> ایفای نقش تیک ساعت سیستم در <span class="en">RTOS</span> است. در سیستم‌عامل‌های زمان‌واقعی مانند <span class="en">FreeRTOS</span>، وقفۀ <span class="en">SysTick</span> مسئول این کارهاست:</p>
+<div class="bl">۱. به‌روزرسانی شمارندۀ ساعت سیستم.</div>
+<div class="bl">۲. تحریک زمان‌بندی وظایف.</div>
+<div class="bl">۳. بررسی فهرست وضعیت وظایف.</div>
+<p>در نمونۀ <span class="en">FreeRTOS</span> برای <span class="en">CH32H417</span>، هر دو هسته هر یک <span class="en">FreeRTOS</span> خودش را اجرا می‌کنند و هر یک از SysTick خودش به‌عنوان تیک ساعت بهره می‌گیرد.</p>
+<p>پیاده‌سازی تأخیر با <span class="en">SysTick</span>:</p>
+<div class="fig" id="fig-12"><i class="pgmark">MK:fig-12</i>
+  <div class="figbox">
+    <img src="assets/img/an11000-fig_p6_x64.jpeg" alt="شکل ۱-۲" style="max-width:390px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۲</span><span class="cap-text">پیاده‌سازی تأخیر با <span class="en">SysTick</span></span></div>
+</div>
+
+<h4 class="h3x" id="sec-1133"><span class="dm">◆</span>۱.۳.۳ نکات مهم</h4>
+<div class="bl">۱. برای خواب عمیق مناسب نیست: <span class="en">SysTick</span> به ساعت اصلی وابسته است؛ در حالت خواب عمیق ساعت اصلی می‌ایستد و <span class="en">SysTick</span> نیز با آن متوقف می‌شود.</div>
+<div class="bl">۲. پردازش وقفه در تراشۀ دو-هسته‌ای: در تراشۀ دو-هسته‌ای <span class="en">CH32H417</span> باید توجه شود کدام هسته به وقفه پاسخ می‌دهد.</div>
+<div class="bl">۳. انتخاب منبع ساعت: هنگامی که <span class="en">HCLK/8</span> به‌عنوان منبع ساعت انتخاب شود، مدت‌زمان تأخیر بیشتر می‌شود اما دقت زمان‌بندی پایین می‌آید.</div>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2"><i class="pgmark">MK:sec-b2</i>
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">تایمر کم‌مصرف <span class="en">LPTIM</span></div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-211"><i class="pgmark">MK:sec-211</i><span class="dm">◆</span>۲.۱ مرور عملکرد</h3>
+<p><span class="en">LPTIM</span> (<span class="en">Low-Power Timer</span>) ماژول تایمری است که ویژۀ سناریوهای فوق‌کم‌مصرف طراحی شده است. ارزش اصلی <span class="en">LPTIM</span> در آن است که هنگامی که <span class="en">MCU</span> وارد حالت خواب عمیق می‌شود، همچنان به کار ادامه می‌دهد و با مصرف بسیار اندک، کارکرد زمان‌بندی را نگه می‌دارد.</p>
+
+<h4 class="h3x" id="sec-2111"><span class="dm">◆</span>۲.۱.۱ ویژگی‌های اصلی</h4>
+<p><span class="en">LPTIM</span> منابع ساعت متعددی دارد:</p>
+<div class="bl">منابع ساعت داخلی: <span class="en">LSE</span> (<span class="en">32.768kHz</span>)، <span class="en">LSI</span> (حدود <span class="en">40kHz</span>)، <span class="en">HSI</span> یا ساعت <span class="en">HB</span>.</div>
+<div class="bl">منبع ساعت خارجی: ساعت خارجی روی ورودی <span class="en">LPTIM</span>.</div>
+<p>کار بدون ساعت: <span class="en">LPTIM</span> حتی بدون منبع ساعت داخلی نیز می‌تواند کار کند؛ به همین دلیل می‌توان از آن به‌عنوان «شمارندۀ پالس» استفاده کرد. این ویژگی امکان می‌دهد در خواب عمیق سیستم، پالس‌های خارجی بدون مشارکت فعال <span class="en">MCU</span> شمارش شوند.</p>
+<p>بیداری کم‌مصرف: <span class="en">LPTIM</span> می‌تواند سیستم را از حالت کم‌مصرف بیدار کند؛ از این رو برای پیاده‌سازی «کارکرد انقضا» با مصرف بسیار کم بسیار مناسب است. در حالت <span class="en">STOP2</span>، <span class="en">LPTIM</span> از معدود تایمرهایی است که همچنان می‌تواند کار کند.</p>
+<p>فیلتر دیجیتال: ورودی‌های <span class="en">LPTIM</span> — چه ورودی خارجی و چه ورودی داخلی — با فیلتر دیجیتال محافظت می‌شوند تا هیچ گلیچ و نویزی در درون <span class="en">LPTIM</span> منتقل نشود و از شمارش یا تحریک‌های غیرمنتظره جلوگیری شود.</p>
+<p>فیلتر دیجیتال به دو گروه تقسیم می‌شود:</p>
+<div class="bl">یک گروه از ورودی‌های خارجی <span class="en">LPTIM</span> محافظت می‌کند و حساسیت آن با بیت‌های <span class="en">CKFLT</span> کنترل می‌شود.</div>
+<div class="bl">گروه دیگر از ورودی‌های تحریک داخلی <span class="en">LPTIM</span> محافظت می‌کند و حساسیت آن با بیت‌های <span class="en">TRGFLT</span> کنترل می‌شود.</div>
+<p>حساسیت فیلتر تعیین می‌کند چه تعداد نمونۀ پیوستۀ یکسان باید روی ورودی <span class="en">LPTIM</span> دیده شود تا تغییر سطح سیگنال، گذارِ معتبر به‌شمار آید.</p>
+<p>در <span class="en">CH32H417</span> پیکربندی فیلتر دیجیتال بسیار ساده است و فقط کافی است بیت‌های <span class="en">bit[7:6]</span> رجیستر <span class="en">LPTIMx_CFGR</span> تنظیم شوند. شرح تفصیلی <span class="en">TRGFLT[1:0]</span> چنین است:</p>
+<div class="bl"><span class="en">00</span>: هر تغییر در وضعیت تحریک، تحریکِ معتبر به‌شمار می‌آید.</div>
+<div class="bl"><span class="en">01</span>: تغییر سطحِ تحریک‌کننده باید دست‌کم <span class="en">2</span> دورۀ ساعت پایدار بماند تا تحریکِ معتبر تلقی شود.</div>
+<div class="bl"><span class="en">10</span>: تغییر سطحِ تحریک‌کننده باید دست‌کم <span class="en">4</span> دورۀ ساعت پایدار بماند تا تحریکِ معتبر تلقی شود.</div>
+<div class="bl"><span class="en">11</span>: تغییر سطحِ تحریک‌کننده باید دست‌کم <span class="en">8</span> دورۀ ساعت پایدار بماند تا تحریکِ معتبر تلقی شود.</div>
+
+<h4 class="h3x" id="sec-2112"><span class="dm">◆</span>۲.۱.۲ سناریوهای کاربرد</h4>
+<p>گره‌های حسگر اینترنت اشیا با تغذیۀ باتری: این سناریوها می‌خواهند دستگاه با یک باتری چند ماه یا حتی چند سال کار کند. می‌توان <span class="en">LPTIM</span> را طوری پیکربندی کرد که با دورۀ ثابت <span class="en">MCU</span> را بیدار کند؛ برای نمونه در حسگر دما و رطوبت هر <span class="en">5</span> دقیقه یک بار بیدار می‌شود، <span class="en">MCU</span> پس از نمونه‌برداری بلافاصله وارد حالت خواب کم‌مصرف می‌شود و <span class="en">LPTIM</span> همچنان زمان را می‌شمارد و منتظر بیداری بعدی می‌ماند.</p>
+<p>شمارش کم‌مصرف در دستگاه‌های پوشیدنی هوشمند: نمونۀ شمارش قدم در دستبند هوشمند: <span class="en">LPTIM</span> از شمارش پالس غیرهمگام بدون مشارکت <span class="en">MCU</span> پشتیبانی می‌کند؛ پالس خارجی که از تشخیص قدم توسط شتاب‌سنج تولید می‌شود می‌تواند مستقیماً شمارش <span class="en">LPTIM</span> را پیش ببرد و در تمام این فرایند، <span class="en">MCU</span> در حالت کم‌مصرف <span class="en">STOP</span> می‌ماند و نیازی به بیداری و پردازش مکرر نیست.</p>
+<p>پایش وضعیت تجهیزات صنعتی: در سناریوِ پایش بی‌حضورِ ارتعاش تجهیزات کارخانه‌ای، کارکرد شمارش پالس غیرهمگام <span class="en">LPTIM</span> می‌تواند مستقیماً سیگنال پالس خروجی حسگر ارتعاش را دریافت کند و فرکانس ارتعاش دستگاه را بشمارد؛ در تمام مدت، <span class="en">MCU</span> لازم نیست فعال باشد و بدون افزودن مدار تغذیۀ اضافی می‌توان پایش کم‌مصرف بلندمدت را پیاده کرد.</p>
+<p>نمایشگرهای ایستای کم‌مصرف: برای نمونه ساخت تقویم رومیزی یا ساعت رومیزی با نمایشگر کاغذ الکترونیکی (<span class="en">E-ink</span>): فقط هر دقیقه یک بار بیدارشدن برای تازه‌سازی صفحه کافی است؛ در نمونۀ سند، <span class="en">LPTIM</span> با زمان‌بندیِ <span class="en">30</span> دقیقه <span class="en">MCU</span> را برای تازه‌سازی بیدار می‌کند و <span class="en">MCU</span> بلافاصله پس از آن وارد حالت کم‌مصرف <span class="en">STOP2</span> می‌شود؛ کل این طرح می‌تواند مصرف بسیار پایینی داشته باشد و یک باتری سکه‌ای چند ماه دوام می‌آورد.</p>
+<p>بیداری زمان‌بندی‌شده در حالت کم‌مصرف <span class="en">Tickless</span> در <span class="en">RTOS</span>: در حالت <span class="en">Tickless</span>ِ خواب عمیقِ <span class="en">RTOS</span>، پس از ورود <span class="en">MCU</span> به حالت کم‌مصرف، تایمر تیک سیستم سنتی (<span class="en">SysTick</span>) از کار می‌افتد. در این شرایط، <span class="en">LPTIM</span> — که در حالت <span class="en">STOP2</span> از معدود تایمرهای همچنان روشن است — می‌تواند مسئول بیداری زمان‌بندی‌شدهٔ سیستم شود، شمارندۀ ساعت سیستم را جبران کند و هم‌زمان مصرف آماده‌به‌کار را به‌شدت پایین نگه دارد.</p>
+
+<h4 class="h3x" id="sec-2113"><span class="dm">◆</span>۲.۱.۳ مقایسۀ <span class="en">RTC/SysTick/TIM</span> با <span class="en">LPTIM</span></h4>
+<p>هر یک از <span class="en">RTC</span>، <span class="en">SysTick</span> و <span class="en">TIM</span> در برابر <span class="en">LPTIM</span> تمرکز و حانۀ کاربرد خاص خود را دارند:</p>
+<div class="tblwrap" id="tab-21"><i class="pgmark">MK:tab-21</i>
+  <div class="tblcap"><span class="cap-pill">جدول ۲-۱</span><span class="cap-text">مقایسۀ <span class="en">RTC/SysTick/TIM/LPTIM</span></span></div>
+  <table class="tbl" style="font-size:11px;">
+    <thead><tr><th style="width:19%;">محور مقایسه</th><th style="width:20%;"><span class="en">SysTick</span></th><th style="width:17%;"><span class="en">TIM</span></th><th style="width:20%;"><span class="en">RTC</span></th><th><span class="en">LPTIM</span></th></tr></thead>
+    <tr><td>پهنای بیت</td><td><span class="en">32_bit (CH32H417)</span></td><td><span class="en">16_bit</span></td><td><span class="en">32_bit</span></td><td><span class="en">16_bit</span></td></tr>
+    <tr><td>منبع ساعت</td><td class="jt">ساعت هستۀ <span class="en">HCLK</span></td><td class="jt">ساعت گذرگاه <span class="en">APB</span></td><td class="jt"><span class="en">LSE/LSI/HSE</span></td><td class="jt"><span class="en">LSE/LSI/HSI/HB</span> / خارجی</td></tr>
+    <tr><td>کار در حالت کم‌مصرف</td><td>خیر</td><td>خیر</td><td>بله</td><td>بله</td></tr>
+    <tr><td>تغذیۀ <span class="en">Vbat</span></td><td>خیر</td><td>خیر</td><td>بله</td><td>خیر</td></tr>
+    <tr><td>خروجی <span class="en">PWM</span></td><td>خیر</td><td>بله</td><td>خیر</td><td>بله</td></tr>
+    <tr><td>ورودی گرفتن</td><td>خیر</td><td>بله</td><td>خیر</td><td>بله</td></tr>
+    <tr><td>پشتیبانی <span class="en">DMA</span></td><td>خیر</td><td>بله</td><td>خیر</td><td>خیر</td></tr>
+    <tr><td>شمارش پالس بدون ساعت</td><td>خیر</td><td>خیر</td><td>خیر</td><td>بله</td></tr>
+    <tr><td>فیلتر دیجیتال</td><td>خیر</td><td>بله</td><td>خیر</td><td>بله</td></tr>
+  </table>
+</div>
+<p><span class="en">SysTick</span> عمدتاً در تیک سیستم <span class="en">RTOS</span> و تأخیر دقیق به‌کار می‌رود. <span class="en">RTC</span> عمدتاً در تقویم همیشگی، بیداری کم‌مصرف و کاربردهای حفظ زمان هنگام قطع توان استفاده می‌شود. کاربرد <span class="en">TIM</span> بسیار گسترده است اما در حال حاضر پره‌کاربردترین حانۀ آن، حانۀ موتور است. <span class="en">LPTIM</span> عمدتاً در کاربردهای فوق‌کم‌مصرف، شمارش ساعت خارجی هنگام خواب و بیداری در شرایط خواب عمیق به‌کار می‌رود.</p>
+<p>در عمل ممکن است هم‌زمان از چند تایمر استفاده شود. در کاربرد موتور، <span class="en">TIM</span> موتور را می‌راند و کارکردهایی مانند حفاظت ترمز را انجام می‌دهد و <span class="en">RTC</span> در آماده‌به‌کار زمان را نگه می‌دارد و بیداری زمان‌بندی‌شده انجام می‌دهد. در سیستم جمع‌آوری داده، <span class="en">TIM</span> تحریک نمونه‌برداری دوره‌ای <span class="en">ADC</span> را برعهده دارد، <span class="en">RTC</span> به داده‌های جمع‌آوری‌شده مُهر زمانی می‌زند و <span class="en">LPTIM</span> هنگام خواب دستگاه، بیداری کم‌مصرف زمان‌بندی‌شده را حفظ می‌کند.</p>
+
+<h4 class="h3x" id="sec-2114"><span class="dm">◆</span>۲.۱.۴ نکات مهم</h4>
+<div class="bl">۱. انتخاب منبع ساعت: انتخاب منبع ساعت <span class="en">LPTIM</span> مستقیماً بر مصرف توان و دقت اثر می‌گذارد.</div>
+<div class="bl">۲. کار در حالت <span class="en">Stop</span>: برای استفاده از <span class="en">LPTIM</span> در حالت <span class="en">Stop</span> باید مطمئن شوید منبع ساعت انتخاب‌شده در این حالت همچنان روشن می‌ماند.</div>
+<div class="bl">۳. پیکربندی فیلتر دیجیتال: فعال‌کردن فیلتر دیجیتال مقداری دورۀ ساعت مصرف می‌کند و ممکن است بر دقت شمارش اثر بگذارد.</div>
+<div class="bl">۴. تأخیر در نوشتن رجیسترها: نوشتن رجیسترهای <span class="en">LPTIM</span> ممکن است نیازمند انتظار برای دورۀ ساعت باشد.</div>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver"><i class="pgmark">MK:sec-ver</i>
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN11000</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/08/26</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss"><i class="pgmark">MK:sec-gloss</i>
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">TIM</span></td><td class="jt">تایمرهای پیشرفته/همگانی/پایه؛ سه حالت شمارش صعودی/نزولی/مرکزآراسته، کانال‌های مستقل، <span class="en">PWM</span> مکمل، مرده‌زمان و ورودی ترمز در تایمر پیشرفته</td></tr>
+      <tr><td><span class="en">RTC</span></td><td class="jt">ساعت واقعی؛ شمارندۀ قابل‌برنامۀ <span class="en">32</span>-بیتی با پیش‌تقسیم‌گر <span class="en">20</span>-بیتی در زمینۀ پشتیبان، کارکرد هشدار و خروجی پالس</td></tr>
+      <tr><td><span class="en">SysTick</span></td><td class="jt">تایمر تیک سیستم؛ زمان‌بنای درونی هسته بدون پایۀ خروجی خارجی، برای تیک سیستم‌عامل زمان‌واقعی و تأخیر دقیق</td></tr>
+      <tr><td><span class="en">LPTIM</span></td><td class="jt">تایمر کم‌مصرف (<span class="en">Low-Power Timer</span>)؛ ادامهٔ کار در خواب عمیق، شمارش پالس بدون ساعت داخلی و بیداری سیستم از حالت‌های کم‌مصرف</td></tr>
+      <tr><td><span class="en">LSE / LSI</span></td><td class="jt">نوسان‌ساز خارجی <span class="en">32.768kHz</span> / نوسان‌ساز داخلی حدود <span class="en">40kHz</span>؛ منابع ساعت کم‌مصرف <span class="en">RTC</span> و <span class="en">LPTIM</span></td></tr>
+      <tr><td><span class="en">Vbat</span></td><td class="jt">تغذیۀ پشتیبان باتری؛ هنگام قطع <span class="en">VDD</span> روشن نگه‌داشتن <span class="en">RTC</span> و <span class="en">LSE</span> در زمینۀ پشتیبان</td></tr>
+      <tr><td><span class="en">Update Event</span></td><td class="jt">رویداد به‌روزرسانی؛ سرریز دوره‌ای شمارندۀ تایمر برای تولید وقفه، تحریک <span class="en">ADC/DAC</span> یا کاسکید تایمر دیگر</td></tr>
+      <tr><td><span class="en">PWM</span></td><td class="jt">مدولاسیون پهنای پالس؛ خروجی با دورۀ کاری دلخواه برای درایو موتور، نور و فن</td></tr>
+      <tr><td><span class="en">DMA</span></td><td class="jt">میسر دسترسی مستقیم به حافظه؛ جابه‌جایی داده بدون درگیری <span class="en">CPU</span>، قابل تحریک توسط تایمر</td></tr>
+      <tr><td><span class="en">STK_CTLR / STK_CMP</span></td><td class="jt">رجیستر کنترل <span class="en">SysTick</span> (فعال‌سازی، انتخاب ساعت و وقفه) / رجیستر مقایسۀ شمارش برای تعیین نقطۀ تحریک وقفه</td></tr>
+      <tr><td><span class="en">LPTIMx_CFGR</span></td><td class="jt">رجیستر پیکربندی <span class="en">LPTIM</span>؛ بیت‌های <span class="en">CKFLT</span> و <span class="en">TRGFLT</span> حساسیت فیلتر دیجیتال ورودی خارجی و تحریک داخلی را تعیین می‌کنند</td></tr>
+      <tr><td><span class="en">STOP2</span></td><td class="jt">پلۀ عمیق خواب با مصرف بسیار کم؛ <span class="en">LPTIM</span> از معدود تایمرهایی است که در آن همچنان می‌تواند کار کند</td></tr>
+      <tr><td><span class="en">BLDC</span></td><td class="jt">موتور بدون جاروبک مستقیم؛ درایو پل سه‌فاز با <span class="en">PWM</span> مکمل، مرده‌زمان و حفاظت ترمز</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN11000 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۲۳</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN11000</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
