@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>برد توسعۀ CH32H417QEU-R1-1v1 — ترجمۀ فارسی AN90000</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">برد توسعۀ <span class="en">CH32H417QEU6</span></div>
+    <div class="t2">پلتفرم نمایش و توسعهٔ کامل</div>
+    <div class="t3">هستۀ دوگانهٔ <span class="en">RISC-V5F / RISC-V3F</span> · <span class="en">QFN128</span></div>
+  </div>
+  <div class="c-sub">معرفی برد <span class="en">CH32H417QEU-R1-1v1</span>: ویژگی‌ها، چیدمان و پیکربندی سخت‌افزار (تغذیه، ساعت، <span class="en">eMMC</span>، اترنت، <span class="en">SDRAM</span>، فلش <span class="en">QSPI</span>، نمایشگر <span class="en">RGB</span>، <span class="en">LINK</span>، <span class="en">SAI</span>، <span class="en">DVP</span>، <span class="en">CAN</span>، <span class="en">USBPD</span> و <span class="en">USB</span>) و نقشۀ کامل ۱۲۸ پایه</div>
+  <div class="c-desc">ترجمۀ فارسی سند رسمی <span class="en">AN90000</span> (نسخۀ ۱٫۰، منتشرۀ <span class="en">WCH</span>): برد توسعۀ <span class="en">CH32H417QEU-R1-1v1</span> بستر نمایش و توسعهٔ کامل بر پایۀ میکروکنترلر <span class="en">CH32H417QEU6</span> با هستۀ دوگانهٔ <span class="en">RISC-V5F/RISC-V3F</span> است و برای ارزیابی تقریباً همۀ جانبی‌ها (USB 3.2 Gen1، اترنت ۱۰۰M، eMMC، SDRAM، فلش QSPI، نمایشگر RGB با پنل لمسی، دوربین DVP، صوت SAI و میکروفون DFSDM) طراحی شده است. <span class="en">LINKE</span> روی برد نقش اشکال‌زدا، برنامه‌ریز و پل پورت COM مجازی را دارد و بستۀ نرم‌افزاری همراه برد کتابخانه‌ها و نمونه‌های کامل را فراهم می‌کند.</div>
+  <div class="c-tags">
+    <span class="c-tag">برد توسعۀ <span class="en">CH32H417QEU-R1-1v1</span></span>
+    <span class="c-tag">میکروکنترلر <span class="en">CH32H417QEU6</span></span>
+    <span class="c-tag">هستۀ دوگانهٔ <span class="en">RISC-V</span></span>
+    <span class="c-tag"><span class="en">USB 3.2 Gen1 · ETH · SerDes</span></span>
+    <span class="c-tag">نقشۀ پایه‌ها (<span class="en">I/O</span>)</span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN90000 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">مقدمه | توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | طرح کلی ویژگی‌ها</span><span class="t-dots"></span><span class="t-page">۵</span></a>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | چیدمان و پیکربندی سخت‌افزار</span><span class="t-dots"></span><span class="t-page">۶</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-21"><span class="s-id">2.1</span><span>انتخاب تغذیۀ برد</span><span class="s-dots"></span><span class="s-page">۷</span></a>
+    <a class="toc-sub" href="#sec-22"><span class="s-id">2.2</span><span>انتخاب تغذیۀ MCU</span><span class="s-dots"></span><span class="s-page">۷</span></a>
+    <a class="toc-sub" href="#sec-23"><span class="s-id">2.3</span><span>منابع ساعت</span><span class="s-dots"></span><span class="s-page">۸</span></a>
+    <a class="toc-sub" href="#sec-24"><span class="s-id">2.4</span><span>eMMC</span><span class="s-dots"></span><span class="s-page">۸</span></a>
+    <a class="toc-sub" href="#sec-25"><span class="s-id">2.5</span><span>ETH</span><span class="s-dots"></span><span class="s-page">۸</span></a>
+    <a class="toc-sub" href="#sec-26"><span class="s-id">2.6</span><span>SDRAM</span><span class="s-dots"></span><span class="s-page">۹</span></a>
+    <a class="toc-sub" href="#sec-27"><span class="s-id">2.7</span><span>QSPI FLASH</span><span class="s-dots"></span><span class="s-page">۹</span></a>
+    <a class="toc-sub" href="#sec-28"><span class="s-id">2.8</span><span>RGB LCD</span><span class="s-dots"></span><span class="s-page">۱۰</span></a>
+    <a class="toc-sub" href="#sec-29"><span class="s-id">2.9</span><span>LINK</span><span class="s-dots"></span><span class="s-page">۱۰</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b3"><span class="t-num">۴</span><span class="t-title">بخش ۳ | تخصیص پایه‌های ورودی/خروجی برد</span><span class="t-dots"></span><span class="t-page">۱۶</span></a>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۵</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۲۲</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۶</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۲۲</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">شکل ۱</span><span>برد با شمارۀ اجزا</span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">شکل ۲</span><span>نمودار بلوکی سخت‌افزار</span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">شکل ۳</span><span>مدار eMMC</span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">شکل ۴</span><span>مدار SDRAM</span><span class="f-dots"></span><span class="f-page">۹</span></div>
+        <div class="frow"><span class="f-id">شکل ۵</span><span>مدار فلش QSPI</span><span class="f-dots"></span><span class="f-page">۹</span></div>
+        <div class="frow"><span class="f-id">شکل ۶</span><span>مدار LCD با رابط RGB</span><span class="f-dots"></span><span class="f-page">۱۰</span></div>
+        <div class="frow"><span class="f-id">شکل ۷</span><span>اتصال کوتاه P20/P21 برای LINK</span><span class="f-dots"></span><span class="f-page">۱۱</span></div>
+        <div class="frow"><span class="f-id">شکل ۸</span><span>پاک‌سازی کد با WCH-LinkUtility</span><span class="f-dots"></span><span class="f-page">۱۱</span></div>
+        <div class="frow"><span class="f-id">شکل ۹</span><span>مدار SAI</span><span class="f-dots"></span><span class="f-page">۱۲</span></div>
+      </div>
+      <div>
+        <div class="frow"><span class="f-id">شکل ۱۰</span><span>کانکتور دوربین DVP</span><span class="f-dots"></span><span class="f-page">۱۲</span></div>
+        <div class="frow"><span class="f-id">شکل ۱۱</span><span>سنسور وضعیت با رابط I3C</span><span class="f-dots"></span><span class="f-page">۱۳</span></div>
+        <div class="frow"><span class="f-id">شکل ۱۲</span><span>ماژول میکروفون DFSDM</span><span class="f-dots"></span><span class="f-page">۱۳</span></div>
+        <div class="frow"><span class="f-id">شکل ۱۳</span><span>مدار CAN</span><span class="f-dots"></span><span class="f-page">۱۴</span></div>
+        <div class="frow"><span class="f-id">شکل ۱۴</span><span>هدر LED</span><span class="f-dots"></span><span class="f-page">۱۵</span></div>
+        <div class="frow"><span class="f-id">شکل ۱۵</span><span>هدر KEY</span><span class="f-dots"></span><span class="f-page">۱۵</span></div>
+        <div class="frow"><span class="f-id">شکل ۱۶</span><span>نمای PCB</span><span class="f-dots"></span><span class="f-page">۱۶</span></div>
+        <div class="frow"><span class="f-id">جدول ۱</span><span>دامنۀ کاربرد سند</span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">جدول ۲</span><span>نقشۀ ۱۲۸ پایۀ برد</span><span class="f-dots"></span><span class="f-page">۱۶</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> برد توسعۀ <span class="en">CH32H417QEU-R1-1v1</span> بستر نمایش و توسعهٔ کامل بر پایۀ میکروکنترلر دو هسته‌ای <span class="en">CH32H417QEU6</span> (<span class="en">RISC-V5F + RISC-V3F</span>، <span class="en">QFN128</span>) است و <span class="en">LINKE</span> درون‌خطی آن اشکال‌زدا، برنامه‌ریز و پل پورت <span class="en">COM</span> مجازی است. ویژگی‌های برد، تغذیۀ <span class="en">5V/3.3V</span>، منابع ساعت، پیکربندی جانبی‌ها و نقشۀ کامل ۱۲۸ پایه در این سند شرح داده شده است.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>برد توسعۀ <span class="en">CH32H417QEU-R1-1v1</span> یک بستر نمایش و توسعهٔ کامل بر پایۀ میکروکنترلر <span class="en">CH32H417QEU6</span> با هستۀ دوگانهٔ <span class="en">Qingke RISC-V5F</span> و <span class="en">RISC-V3F</span> است.</p>
+<p>میکروکنترلر این برد ویژگی‌های زیر را دارد: <span class="en">CH32H417</span> کنترل‌کننده و فرستنده/گیرندۀ <span class="en">USB 3.2 Gen1</span>، <span class="en">MAC</span> و <span class="en">PHY</span> اترنت صدومگابیتی، فرستنده/گیرندۀ ایزولۀ پرسرعت <span class="en">SerDes</span> و کنترل‌کنندۀ <span class="en">Type-C/PD</span> به‌هم با <span class="en">PHY</span> آن را یکپارچه کرده و کنترل‌کنندۀ <span class="en">SD/EMMC</span>، رابط عمومی پرسرعت <span class="en">UHSIF</span> با ظرفیت <span class="en">500MBytes</span>، رابط تصویر دیجیتال <span class="en">DVP</span>، رابط اصلی پروتکل تک‌سیمه <span class="en">SWPMI</span>، کنترل‌کنندۀ I/O برنامه‌پذیر پروتکل <span class="en">PIOC</span>، کنترل‌کنندۀ حافظۀ منعطف <span class="en">FMC</span>، <span class="en">DFSDM</span>، <span class="en">LTDC</span>، <span class="en">GPHA</span>، کنترل‌کنندۀ <span class="en">DMA</span>، چند گروه تایمر، ۸ گروه پورت سریال، <span class="en">I3C</span>، ۴ گروه <span class="en">I2C</span>، ۲ گروه <span class="en">QSPI</span>، ۴ گروه <span class="en">SPI</span>، ۲ گروه <span class="en">I2S</span> و ۳ گروه <span class="en">CAN</span> و دیگر منابع جانبی را فراهم می‌سازد. منابع آنالوگ داخلی شامل واحد <span class="en">ADC</span> دوگانهٔ ۱۲ بیتی با نرخ نمونه‌برداری <span class="en">5M</span>، واحد <span class="en">HSADC</span> پرسرعت ۱۰ بیتی با نرخ نمونه‌برداری <span class="en">20M</span>، ۱۶ کانال <span class="en">Touchkey</span>، واحد <span class="en">DAC</span> دوگانه، ۳ گروه تقویت‌کنندۀ عملیاتی <span class="en">OPA</span> و مقایسه‌گر ولتاژ <span class="en">CMP</span> است؛ از ارتباط اترنت <span class="en">10M/100M</span>، از <span class="en">USB 2.0</span> و <span class="en">USB 3.0</span>، از کارکردهای میزبان <span class="en">USB Host</span> و دستگاه <span class="en">USB Device</span>، از شارژ سریع <span class="en">Type-C</span> و <span class="en">PDUSB</span>، از ایزولۀ پرسرعت و انتقال بلندبرد <span class="en">SerDes</span> و از تقسیم کار دو هسته برای افزایش کارایی پردازش پروتکل‌های شبکه و سرعت پاسخ ارتباطی پشتیبانی می‌کند. برد توسعۀ <span class="en">CH32H417QEU-R1-1v1</span> به کاربر کمک می‌کند به‌سرعت کار را آغاز کند و برنامه‌های کاربردی را توسعه دهد.</p>
+<p>برد توسعۀ <span class="en">CH32H417QEU-R1-1v1</span> که در شکل ۱ نشان داده شده، می‌تواند به‌عنوان مرجع نمونۀ اولیه (Prototype) برای انتقال برنامهٔ کاربردی کاربر به محصول نهایی باشد.</p>
+<div class="fig" id="fig-board">
+  <div class="figbox"><img src="assets/img/an90000-board.png" alt="برد با شمارۀ اجزا" style="max-width:470px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱</span><span class="cap-text">برد توسعۀ <span class="en">CH32H417QEU-R1-1v1</span> با شمارۀ اجزا (شمارۀ ماژول‌ها در ادامهٔ بخش ۱)</span></div>
+</div>
+<p>جانبی‌های سخت‌افزاری برد <span class="en">CH32H417QEU-R1-1v1</span> به کاربر کمک می‌کند با ارزیابی تقریباً همهٔ جانبی‌ها — مانند <span class="en">USB</span>، اترنت <span class="en">100Mb/s</span>، <span class="en">eMMC</span>، <span class="en">USART</span>، صدای استریو <span class="en">DAC</span> صوتی <span class="en">SAI</span> با ورودی/خروجی جک صدا، دوربین <span class="en">DVP</span>، میکروفون دیجیتال، <span class="en">SDRAM</span>، فلش <span class="en">QSPI</span> و نمایشگر <span class="en">LCD</span> با رابط <span class="en">RGB</span> و پنل لمسی خازنی چندنقطه‌ای — کارایی توسعهٔ برنامهٔ خود را بالا ببرد.</p>
+<p>برد <span class="en">CH32H417QEU-R1-1v1</span> یک <span class="en">LINKE</span> یکپارچه دارد که به‌عنوان اشکال‌زادای درون‌خطی (On-line Debugger)، برنامه‌ریز (Programmer) و پل پورت مجازی <span class="en">COM</span> از طریق <span class="en">USB</span> برای <span class="en">MCU</span> عمل می‌کند.</p>
+<p>برد توسعۀ <span class="en">CH32H417QEU-R1-1v1</span> همراه با بستۀ نرم‌افزاری <span class="en">MCU</span> عرضه می‌شود؛ این بسته کتابخانه‌های جامع و نمونه‌های نرم‌افزاری گوناگونی ارائه می‌دهد.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>برد توسعۀ واحد (Single Development Board)</td><td><span class="en">CH32H417QEU-R1-1v1</span></td></tr>
+  </table>
+</div>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">طرح کلی ویژگی‌ها</div>
+  <div class="sec-divider"></div>
+</div>
+<div class="bl">میکروکنترلر با هستۀ دوگانهٔ <span class="en">Qingke RISC-V5F</span> و <span class="en">RISC-V3F</span>؛ فراهم‌کنندۀ <span class="en">960KB</span> ناحیۀ ذخیرۀ برنامه <span class="en">CodeFlash</span> و <span class="en">896KB</span> <span class="en">SRAM</span>، در بسته‌بندی <span class="en">QFN128</span></div>
+<div class="bl">رابط نمایشگر <span class="en">LCD</span> با رابط <span class="en">RGB</span> اندازۀ ۴٫۳ اینچ، همراه با رابط کانکتور پنل لمسی <span class="en">I2C</span></div>
+<div class="bl">یک رابط دوربین <span class="en">DVP</span></div>
+<div class="bl">اتترنت صدومگابیتی مطابق استاندارد <span class="en">IEEE 802.3-2002</span></div>
+<div class="bl"><span class="en">USB OTG FS</span>؛ سازگار با مشخصات سرعت کامل <span class="en">USB 2.0</span></div>
+<div class="bl"><span class="en">USB HS</span> با پشتیبانی از مشخصات پروتکل <span class="en">USB 2.1</span>، <span class="en">USB 2.0</span>، <span class="en">USB 1.1</span> و <span class="en">USB 1.0</span>؛ همراه با کارکرد میزبان <span class="en">USB Host</span> و دستگاه <span class="en">USB Device</span></div>
+<div class="bl">سیگنال‌گذاری ابرسرعت <span class="en">USBSS</span> با نرخ <span class="en">5Gbps</span>؛ رابط <span class="en">USB 3.0</span></div>
+<div class="bl">کدک صوتی <span class="en">SAI</span></div>
+<div class="bl">یک میکروفون دیجیتال <span class="en">DFSDM</span></div>
+<div class="bl">دو رابط فلش <span class="en">QSPI NOR</span></div>
+<div class="bl">یک رابط <span class="en">SDRAM</span> با رابط موازی ۱۶ بیتی</div>
+<div class="bl">یک <span class="en">eMMC</span> با رابط <span class="en">SDMMC</span> هشت‌بیتی</div>
+<div class="bl">یک سنسور وضعیت با رابط <span class="en">I3C</span></div>
+<div class="bl">یک کلید کاربر و یک کلید ریست</div>
+<div class="bl">یک رابط <span class="en">HSADC</span></div>
+<div class="bl">یک رابط <span class="en">PIOC</span></div>
+<div class="bl">یک رابط <span class="en">SERDES</span></div>
+<div class="bl">یک رابط <span class="en">CAN</span></div>
+<div class="bl">کانکتورهای روی برد:
+<div class="bl" style="margin-right:24px;">کانکتور <span class="en">USB FS Type-C</span></div>
+<div class="bl" style="margin-right:24px;">کانکتور <span class="en">USB 3.0 Type-A Receptacle</span></div>
+<div class="bl" style="margin-right:24px;">کانکتور <span class="en">LINKE Type-C USB</span> با پشتیبانی تبدیل سریال به <span class="en">USB</span></div>
+<div class="bl" style="margin-right:24px;">کانکتور تغذیه <span class="en">POWER_JACK</span></div>
+<div class="bl" style="margin-right:24px;">رابط اترنت <span class="en">RJ45</span></div>
+<div class="bl" style="margin-right:24px;">جک هدفون استریو</div>
+<div class="bl" style="margin-right:24px;">پایه‌های <span class="en">GPIO</span></div>
+<div class="bl" style="margin-right:24px;">ترمینال <span class="en">CAN</span></div>
+<div class="bl" style="margin-right:24px;">رابط <span class="en">LED</span> با سوکت <span class="en">FPC</span> رو-بالا</div>
+</div>
+<div class="bl">گزینه‌های منعطف تغذیه:
+<div class="bl" style="margin-right:24px;">کانکتور <span class="en">LINKE USB</span>، کانکتور <span class="en">USB FS/USBPD</span>، کانکتور <span class="en">USB SS+HS</span></div>
+<div class="bl" style="margin-right:24px;">تأمین ولتاژ <span class="en">5V</span> از طریق <span class="en">POWER_JACK</span> (تغذیۀ برق‌دار اترنت)</div>
+<div class="bl" style="margin-right:24px;">تأمین ولتاژ <span class="en">5V</span> از طریق کانکتور خارجی هدر پین</div>
+</div>
+<div class="bl">اشکال‌زدا/برنامه‌ریز <span class="en">LINKE</span> روی برد با پشتیبانی اشکال‌زدایی <span class="en">debug</span> و بارگذاری از منبع خارجی.</div>
+<p style="margin-top:14px;">فهرست ماژول‌ها (شماره‌های روی تصویر برد در شکل ۱):</p>
+<div style="direction:rtl; margin:4px 0 6px;">
+  <span style="display:inline-block; background:#fff; border:1px solid #e5d5bd; border-radius:14px; padding:3px 11px; margin:3px; font-size:11.4px;"><b style="color:#b35309;">۱.</b> <span class="en">LINK</span></span>
+  <span style="display:inline-block; background:#fff; border:1px solid #e5d5bd; border-radius:14px; padding:3px 11px; margin:3px; font-size:11.4px;"><b style="color:#b35309;">۲.</b> رابط <span class="en">PIOC</span></span>
+  <span style="display:inline-block; background:#fff; border:1px solid #e5d5bd; border-radius:14px; padding:3px 11px; margin:3px; font-size:11.4px;"><b style="color:#b35309;">۳.</b> رابط <span class="en">HSADC</span></span>
+  <span style="display:inline-block; background:#fff; border:1px solid #e5d5bd; border-radius:14px; padding:3px 11px; margin:3px; font-size:11.4px;"><b style="color:#b35309;">۴.</b> میکروفون</span>
+  <span style="display:inline-block; background:#fff; border:1px solid #e5d5bd; border-radius:14px; padding:3px 11px; margin:3px; font-size:11.4px;"><b style="color:#b35309;">۵.</b> رابط دوربین <span class="en">DVP</span></span>
+  <span style="display:inline-block; background:#fff; border:1px solid #e5d5bd; border-radius:14px; padding:3px 11px; margin:3px; font-size:11.4px;"><b style="color:#b35309;">۶.</b> جک صدا</span>
+  <span style="display:inline-block; background:#fff; border:1px solid #e5d5bd; border-radius:14px; padding:3px 11px; margin:3px; font-size:11.4px;"><b style="color:#b35309;">۷.</b> تراشۀ پردازش صدا</span>
+  <span style="display:inline-block; background:#fff; border:1px solid #e5d5bd; border-radius:14px; padding:3px 11px; margin:3px; font-size:11.4px;"><b style="color:#b35309;">۸.</b> <span class="en">QSPI FLASH</span></span>
+  <span style="display:inline-block; background:#fff; border:1px solid #e5d5bd; border-radius:14px; padding:3px 11px; margin:3px; font-size:11.4px;"><b style="color:#b35309;">۹.</b> سوکت <span class="en">FPC</span> نمایشگر <span class="en">LCD</span></span>
+  <span style="display:inline-block; background:#fff; border:1px solid #e5d5bd; border-radius:14px; padding:3px 11px; margin:3px; font-size:11.4px;"><b style="color:#b35309;">۱۰.</b> سنسور وضعیت</span>
+  <span style="display:inline-block; background:#fff; border:1px solid #e5d5bd; border-radius:14px; padding:3px 11px; margin:3px; font-size:11.4px;"><b style="color:#b35309;">۱۱.</b> رابط <span class="en">SERDES</span></span>
+  <span style="display:inline-block; background:#fff; border:1px solid #e5d5bd; border-radius:14px; padding:3px 11px; margin:3px; font-size:11.4px;"><b style="color:#b35309;">۱۲.</b> <span class="en">KEY&amp;LED</span></span>
+  <span style="display:inline-block; background:#fff; border:1px solid #e5d5bd; border-radius:14px; padding:3px 11px; margin:3px; font-size:11.4px;"><b style="color:#b35309;">۱۳.</b> پورت اترنت</span>
+  <span style="display:inline-block; background:#fff; border:1px solid #e5d5bd; border-radius:14px; padding:3px 11px; margin:3px; font-size:11.4px;"><b style="color:#b35309;">۱۴.</b> پورت <span class="en">USBSS+HS</span></span>
+  <span style="display:inline-block; background:#fff; border:1px solid #e5d5bd; border-radius:14px; padding:3px 11px; margin:3px; font-size:11.4px;"><b style="color:#b35309;">۱۵.</b> <span class="en">MCU</span></span>
+  <span style="display:inline-block; background:#fff; border:1px solid #e5d5bd; border-radius:14px; padding:3px 11px; margin:3px; font-size:11.4px;"><b style="color:#b35309;">۱۶.</b> <span class="en">CAN</span></span>
+  <span style="display:inline-block; background:#fff; border:1px solid #e5d5bd; border-radius:14px; padding:3px 11px; margin:3px; font-size:11.4px;"><b style="color:#b35309;">۱۷.</b> <span class="en">USBFS/USBPD</span></span>
+  <span style="display:inline-block; background:#fff; border:1px solid #e5d5bd; border-radius:14px; padding:3px 11px; margin:3px; font-size:11.4px;"><b style="color:#b35309;">۱۸.</b> تراشۀ تغذیه</span>
+  <span style="display:inline-block; background:#fff; border:1px solid #e5d5bd; border-radius:14px; padding:3px 11px; margin:3px; font-size:11.4px;"><b style="color:#b35309;">۱۹.</b> کارت <span class="en">eMMC</span></span>
+  <span style="display:inline-block; background:#fff; border:1px solid #e5d5bd; border-radius:14px; padding:3px 11px; margin:3px; font-size:11.4px;"><b style="color:#b35309;">۲۰.</b> <span class="en">SDRAM</span></span>
+  <span style="display:inline-block; background:#fff; border:1px solid #e5d5bd; border-radius:14px; padding:3px 11px; margin:3px; font-size:11.4px;"><b style="color:#b35309;">۲۱.</b> رابط <span class="en">Debug/Download</span></span>
+</div>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">چیدمان و پیکربندی سخت‌افزار</div>
+  <div class="sec-divider"></div>
+</div>
+<p>برد توسعۀ <span class="en">CH32H417QEU-R1-1V1</span> بر پایۀ میکروکنترلر <span class="en">CH32H417QEU6</span> با بسته‌بندی <span class="en">QFN128</span> طراحی شده است. نمودار بلوکی سخت‌افزار (شکل ۲) ارتباط میکروکنترلر با جانبی‌های روی برد را نشان می‌دهد؛ شامل <span class="en">SDRAM</span>، <span class="en">eMMC</span>، <span class="en">QSPI</span>، <span class="en">CAN</span>، <span class="en">LTDC</span>، <span class="en">USBSS</span>، <span class="en">USBHS</span>، <span class="en">USBFS</span>، <span class="en">USBPD</span>، <span class="en">USART</span>، <span class="en">ETH</span>، <span class="en">SAI</span>، <span class="en">I3C</span>، <span class="en">DFSDM</span>، <span class="en">DVP</span> و بارگذار <span class="en">Link</span> روی برد.</p>
+<div class="fig" id="fig-block">
+  <div class="figbox"><img src="assets/img/an90000-block.png" alt="نمودار بلوکی سخت‌افزار" style="max-width:470px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۲</span><span class="cap-text">نمودار بلوکی سخت‌افزار (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+
+<h3 class="h2x" id="sec-21"><span class="dm">◆</span>۲.۱ انتخاب تغذیۀ برد</h3>
+<p>طراحی برد برای تغذیۀ مستقیم <span class="en">DC 5V</span> است. با پیکربندی مناسب برد، می‌توان هر یک از ورودی‌های زیر را برای <span class="en">5V DC</span> انتخاب کرد:</p>
+<div class="bl">پورت <span class="en">Type-C</span> بخش <span class="en">LINK</span> تا <span class="en">500mA</span> جریان به برد می‌دهد (موقعیت <span class="en">LINK_5V</span> روی محل‌های پرش نزدیک <span class="en">P6</span>).</div>
+<div class="bl">پورت <span class="en">Type-A Receptacle</span> بخش <span class="en">USBSS+HS</span> تا <span class="en">900mA</span> جریان به برد می‌دهد (موقعیت <span class="en">VBUS_SS</span> روی محل‌های پرش نزدیک <span class="en">P6</span>).</div>
+<div class="bl">پورت <span class="en">Type-C</span> بخش <span class="en">USBFS</span> تا <span class="en">500mA</span> جریان به برد می‌دهد (موقعیت <span class="en">VBUS_FS</span> روی محل‌های پرش نزدیک <span class="en">P6</span>)؛ در این حالت لازم است دیودهای <span class="en">D4/D5</span> به‌صورت اتصال کوتاه لحیم شوند. اگر تغذیۀ این رابط از شارژر سریع <span class="en">USBPD</span> تأمین شود، تنها می‌توان ولتاژ <span class="en">5V</span> را مذاکره کرد؛ برای ولتاژهای بالاتر باید دیود لحیم شود تا از آسیب <span class="en">DCDC</span> در برابر ولتاژ بیش از حد جلوگیری شود.</div>
+<div class="bl"><span class="en">POWER_JACK</span> می‌تواند مستقیماً <span class="en">DC 5V</span> تغذیه کند (موقعیت <span class="en">DC_5V</span> روی محل‌های پرش نزدیک <span class="en">P6</span>).</div>
+<div class="bl">هدر دو-ردیفۀ <span class="en">P9</span> می‌تواند مستقیماً <span class="en">DC 5V</span> تغذیه کند (موقعیت <span class="en">PIN_5V</span> روی محل‌های پرش نزدیک <span class="en">P6</span>).</div>
+
+<h3 class="h2x" id="sec-22"><span class="dm">◆</span>۲.۲ انتخاب تغذیۀ MCU</h3>
+<p>طراحی برای تغذیۀ مستقیم <span class="en">DC 3.3V</span> میکروکنترلر است. با پیکربندی مناسب برد، می‌توان هر یک از ورودی‌های زیر را برای <span class="en">3.3V DC</span> انتخاب کرد:</p>
+<div class="bl">هدر <span class="en">P5</span> می‌تواند مستقیماً <span class="en">DC_3V3</span> یا <span class="en">LDO_3V3</span> را تغذیه کند.</div>
+<div class="bl">روی هدر <span class="en">P5</span> می‌توان <span class="en">DC_3V3</span> و <span class="en">3V3</span> را مستقیماً به هم اتصال کوتاه کرد، یا <span class="en">LDO_3V3</span> و <span class="en">3V3</span> را.</div>
+<div class="scen"><span class="lbl">نکته: </span>هم <span class="en">CH2003V</span> و هم <span class="en">DCDC</span> می‌توانند از 5V خروجی 3.3V بسازند و بسته به نیاز واقعی جریان بار، یکی از این دو انتخاب می‌شود. هنگامی که روی خط تغذیۀ <span class="en">3V3</span> ولتاژ ظاهر شود، <span class="en">LED</span> نشانگر <span class="en">D3</span> روشن می‌شود. همۀ ولتاژهای تغذیۀ موردنیاز کار <span class="en">MCU</span> از همین خط <span class="en">3V3</span> ساخته می‌شوند.</div>
+
+<h3 class="h2x" id="sec-23"><span class="dm">◆</span>۲.۳ منابع ساعت</h3>
+<p>برد می‌تواند از <span class="en">HSI</span> داخلی با منبع ساعت <span class="en">25MHz</span> استفاده کند یا از <span class="en">HSE</span> خارجی؛ در حالت خارجی باید کریستال بی‌فعال <span class="en">25M</span> در موقعیت <span class="en">Y1</span> لحیم شود.</p>
+
+<h3 class="h2x" id="sec-24"><span class="dm">◆</span>۲.۴ eMMC</h3>
+<p><span class="en">MCU</span> برد از طریق رابط <span class="en">SDMMC</span> به <span class="en">eMMC</span> (<span class="en">U10</span>) با بسته‌بندی <span class="en">FBGA-153</span> (<span class="en">11.5x13</span>) متصل می‌شود. برای استفاده، لازم است مقاومت‌های <span class="en">0Ω</span> زیر لحیم شوند: <span class="en">R14</span>، <span class="en">R18</span>، <span class="en">R21</span>، <span class="en">R24</span>، <span class="en">R26</span>، <span class="en">R30</span>، <span class="en">R34</span>، <span class="en">R38</span>، <span class="en">R41</span>، <span class="en">R43</span>، <span class="en">R45</span>. قطعه‌های نشان‌دارد <span class="en">NC</span> در شکل ۳ نیز باید لحیم شوند.</p>
+<div class="fig" id="fig-emmc">
+  <div class="figbox"><img src="assets/img/an90000-emmc.png" alt="مدار eMMC" style="max-width:400px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۳</span><span class="cap-text">مدار <span class="en">eMMC</span> (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+
+<h3 class="h2x" id="sec-25"><span class="dm">◆</span>۲.۵ ETH</h3>
+<p><span class="en">MCU</span> برد دارای فرستنده/گیرندۀ لایۀ فیزیکی اترنت <span class="en">10/100Mbps</span> داخلی است؛ کابل شبکه به <span class="en">P13</span> وصل می‌شود و پس از بارگذاری کد، ارتباط برقرار می‌گردد.</p>
+
+<h3 class="h2x" id="sec-26"><span class="dm">◆</span>۲.۶ SDRAM</h3>
+<p>یک رابط <span class="en">SDRAM</span> با عرض باس ۱۶ بیت روی برد قرار دارد (بسته‌بندی <span class="en">TSOP-54</span>). برای استفاده، لازم است مقاومت‌های <span class="en">0Ω</span> زیر لحیم شوند: <span class="en">R11</span>، <span class="en">R46</span>، <span class="en">R48</span>، <span class="en">R50</span>، <span class="en">R52</span>، <span class="en">R54</span>، <span class="en">R76</span>. قطعه‌های نشان‌دارد <span class="en">NC</span> در شکل ۴ نیز باید لحیم شوند.</p>
+<div class="fig" id="fig-sdram">
+  <div class="figbox"><img src="assets/img/an90000-sdram.png" alt="مدار SDRAM" style="max-width:400px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۴</span><span class="cap-text">مدار <span class="en">SDRAM</span> (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+
+<h3 class="h2x" id="sec-27"><span class="dm">◆</span>۲.۷ QSPI FLASH</h3>
+<p>دو رابط فلش <span class="en">QSPI</span> روی برد قرار دارد (بسته‌بندی <span class="en">SOIC-8</span>، سازگار با بسته‌بندی <span class="en">WSON-8</span>). برای استفاده، لازم است مقاومت‌های <span class="en">0Ω</span> زیر لحیم شوند: <span class="en">R5</span>، <span class="en">R7</span>، <span class="en">R62</span>، <span class="en">R67</span>، <span class="en">R69</span>، <span class="en">R71</span>، <span class="en">R73</span>، <span class="en">R75</span>. قطعه‌های نشان‌دارد <span class="en">NC</span> در شکل ۵ نیز باید لحیم شوند.</p>
+<div class="fig" id="fig-qspi">
+  <div class="figbox"><img src="assets/img/an90000-qspi.png" alt="مدار فلش QSPI" style="max-width:400px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۵</span><span class="cap-text">مدار فلش <span class="en">QSPI</span> (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+
+<h3 class="h2x" id="sec-28"><span class="dm">◆</span>۲.۸ RGB LCD</h3>
+<p>یک رابط <span class="en">LCD</span> کنترل‌شده توسط <span class="en">LTDC</span> (با قالب <span class="en">RGB565</span>) روی برد قرار دارد؛ سوکت تست با بسته‌بندی <span class="en">FPC-40</span> رو به پایین که از طریق کابل <span class="en">FPC</span> می‌توان نمایشگر کریستال مایع را مستقیماً به آن وصل کرد. برای استفاده، لازم است مقاومت‌های <span class="en">0Ω</span> زیر لحیم شوند: <span class="en">R28</span>، <span class="en">R32</span>، <span class="en">R36</span>، <span class="en">R42</span>، <span class="en">R66</span>. قطعه‌های نشان‌دارد <span class="en">NC</span> در شکل ۶ نیز باید لحیم شوند.</p>
+<div class="fig" id="fig-lcd">
+  <div class="figbox"><img src="assets/img/an90000-lcd.png" alt="مدار LCD" style="max-width:390px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۶</span><span class="cap-text">مدار نمایشگر <span class="en">LCD</span> با رابط <span class="en">RGB</span> (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+
+<h3 class="h2x" id="sec-29"><span class="dm">◆</span>۲.۹ LINK</h3>
+<p>یک بارگذار و اشکال‌زادای <span class="en">LINK</span> روی برد قرار دارد؛ این بارگذار می‌تواند به میزبان — <span class="en">CH32H417</span> — کد دانلود کند و نیز از طریق رابط‌های خروجی‌شده، میکروکنترلرهای هم‌خانوادۀ <span class="en">LINKE</span> را اشکال‌زدایی و بارگذاری کند. اگر فقط میکروکنترلر روی برد عملیاتی شود، لازم است پایه‌های شکل ۷ به‌صورت اتصال کوتاه شوند (<span class="en">P20</span>: پایهٔ ۱ با ۲ و پایهٔ ۳ با ۴ اتصال کوتاه؛ <span class="en">P21</span>: پایهٔ ۱ با ۲ و پایهٔ ۳ با ۴ اتصال کوتاه). در طول استفاده، حالت پاک‌کردن <span class="en">FLASH</span> تراشه تنها به «پاک‌سازی با ریست» محدود است؛ همان‌طور که در شکل ۸ نشان داده شده است.</p>
+<div class="fig" id="fig-linkj">
+  <div class="figbox"><img src="assets/img/an90000-linkj.png" alt="اتصال کوتاه LINK" style="max-width:370px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۷</span><span class="cap-text">اتصال کوتاه هدرهای <span class="en">P20/P21</span> برای کار با <span class="en">MCU</span> روی برد</span></div>
+</div>
+<div class="fig" id="fig-erase">
+  <div class="figbox"><img src="assets/img/an90000-erase.png" alt="پاک‌سازی کد با WCH-LinkUtility" style="max-width:430px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۸</span><span class="cap-text">انتخاب گزلۀ «پاک‌سازی کامل کد با تغذیه» در <span class="en">WCH-LinkUtility</span></span></div>
+</div>
+
+<h3 class="h2x" id="sec-210"><span class="dm">◆</span>۲.۱۰ SAI</h3>
+<p>یک رابط صوتی سریال روی برد قرار دارد که صدا را از جک هدفون استریو خروجی می‌دهد. برای استفاده، لازم است مقاومت‌های <span class="en">0Ω</span> زیر لحیم شوند: <span class="en">R68</span>، <span class="en">R70</span>. قطعه‌های نشان‌دارد <span class="en">NC</span> در شکل ۹ نیز باید لحیم شوند.</p>
+<div class="fig" id="fig-sai">
+  <div class="figbox"><img src="assets/img/an90000-sai.png" alt="مدار SAI" style="max-width:430px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۹</span><span class="cap-text">مدار رابط صوتی <span class="en">SAI</span> (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+
+<h3 class="h2x" id="sec-211"><span class="dm">◆</span>۲.۱۱ DVP</h3>
+<p>یک رابط تصویر دیجیتال <span class="en">DVP</span> روی برد قرار دارد که برای اتصال ماژول دوربین و گرفتن جریان دادۀ تصویر استفاده می‌شود؛ می‌توان دوربین خارجی به آن متصل کرد. برای استفاده، لازم است مقاومت‌های <span class="en">0Ω</span> زیر لحیم شوند: <span class="en">R1</span>، <span class="en">R13</span>، <span class="en">R16</span>، <span class="en">R19</span>، <span class="en">R23</span>، <span class="en">R44</span>، <span class="en">R56</span>، <span class="en">R58</span>، <span class="en">R60</span>، <span class="en">R74</span>، <span class="en">R79</span>. قطعه‌های نشان‌دارد <span class="en">NC</span> در شکل ۱۰ نیز باید لحیم شوند.</p>
+<div class="fig" id="fig-dvp">
+  <div class="figbox"><img src="assets/img/an90000-dvp.png" alt="کانکتور DVP" style="max-width:380px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱۰</span><span class="cap-text">کانکتور دوربین <span class="en">DVP</span> (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+
+<h3 class="h2x" id="sec-212"><span class="dm">◆</span>۲.۱۲ I3C</h3>
+<p>یک باس سریال دومسیره چندشاخه‌ای <span class="en">I3C</span> روی برد قرار دارد که می‌تواند به سنسور وضعیت متصل شود. برای استفاده، لازم است مقاومت‌های <span class="en">0Ω</span> زیر لحیم شوند: <span class="en">R6</span>، <span class="en">R8</span>. قطعه‌های نشان‌دارد <span class="en">NC</span> در شکل ۱۱ نیز باید لحیم شوند.</p>
+<div class="fig" id="fig-i3c">
+  <div class="figbox"><img src="assets/img/an90000-i3c.png" alt="سنسور I3C" style="max-width:380px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱۱</span><span class="cap-text">سنسور وضعیت با رابط <span class="en">I3C</span> (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+
+<h3 class="h2x" id="sec-213"><span class="dm">◆</span>۲.۱۳ DFSDM</h3>
+<p>یک ماژول کارای <span class="en">DFSDM</span> روی برد قرار دارد که مخصوص اتصال مدولاتور <span class="en">ΣΔ</span> خارجی به <span class="en">MCU</span> است؛ می‌توان ماژول میکروفون خارجی را به آن متصل کرد و سیگنال صوتی دریافتی را پردازش نمود. قطعه‌های نشان‌دارد <span class="en">NC</span> در شکل ۱۲ باید لحیم شوند.</p>
+<div class="fig" id="fig-dfsdm">
+  <div class="figbox"><img src="assets/img/an90000-dfsdm.png" alt="ماژول DFSDM" style="max-width:420px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱۲</span><span class="cap-text">ماژول میکروفون <span class="en">DFSDM</span> (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+
+<h3 class="h2x" id="sec-214"><span class="dm">◆</span>۲.۱۴ CAN</h3>
+<p>یک رابط <span class="en">CAN</span> روی برد قرار دارد؛ سازگار با مشخصات <span class="en">2.0A</span> و <span class="en">2.0B</span> (حالت فعال) با نرخ بیت تا <span class="en">1Mbits/s</span> و پشتیبانی از کارکرد ارتباط زمان‌محور. برای استفاده، لازم است مقاومت‌های <span class="en">0Ω</span> زیر لحیم شوند: <span class="en">R77</span>، <span class="en">R80</span>. قطعه‌های نشان‌دارد <span class="en">NC</span> در شکل ۱۳ نیز باید لحیم شوند.</p>
+<div class="fig" id="fig-can">
+  <div class="figbox"><img src="assets/img/an90000-can.png" alt="مدار CAN" style="max-width:360px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱۳</span><span class="cap-text">مدار رابط <span class="en">CAN</span> (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+
+<h3 class="h2x" id="sec-215"><span class="dm">◆</span>۲.۱۵ USBPD</h3>
+<p>یک کنترل‌کنندۀ <span class="en">USB Power Delivery</span> و فرستنده/گیرندۀ لایۀ فیزیکی <span class="en">PD</span> روی برد قرار دارد. برای استفاده، لازم است مقاومت‌های <span class="en">0Ω</span> زیر لحیم شوند: <span class="en">R51</span>، <span class="en">R53</span>. هنگام استفاده در نقش <span class="en">SINK</span>، لازم است مقاومت‌های پول‌داون <span class="en">5.1K</span> یعنی <span class="en">R90</span> و <span class="en">R91</span> لحیم شوند.</p>
+
+<h3 class="h2x" id="sec-216"><span class="dm">◆</span>۲.۱۶ USB</h3>
+<div class="bl">یک رابط <span class="en">USB OTG FS</span> روی برد قرار دارد؛ برای استفاده لازم است مقاومت‌های <span class="en">0Ω</span> یعنی <span class="en">R47</span> و <span class="en">R49</span> لحیم شوند.</div>
+<div class="bl">یک رابط <span class="en">USBSS+USBHS</span> روی برد قرار دارد که به‌صورت پیش‌فرض قابل استفاده است و نیازی به اتصال کوتاه مقاومت‌ها نیست.</div>
+
+<h3 class="h2x" id="sec-217"><span class="dm">◆</span>۲.۱۷ KEY &amp; LED</h3>
+<p>دو گروه رابط <span class="en">LED</span> روی برد قرار دارد که <span class="en">LED</span>ها با چراغ‌های پورت شبکه مشترک‌اند و <span class="en">GPIO</span> رزروشدۀ <span class="en">PA2</span> و <span class="en">PC12</span> دارند. برای استفاده، کافی است رابط مربوطۀ <span class="en">P1</span> در شکل ۱۴ اتصال کوتاه شود. در سطح پایین چراغ روشن و در سطح بالا خاموش می‌شود.</p>
+<div class="fig" id="fig-led">
+  <div class="figbox"><img src="assets/img/an90000-led.png" alt="هدر LED" style="max-width:340px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱۴</span><span class="cap-text">هدر <span class="en">LED</span> (<span class="en">P1</span>)</span></div>
+</div>
+<p>یک کلید <span class="en">KEY</span> روی برد قرار دارد با <span class="en">GPIO</span> رزروشدۀ <span class="en">PC13</span>. برای استفاده، کافی است رابط مربوطۀ <span class="en">P2</span> در شکل ۱۵ اتصال کوتاه شود. هنگام فشردن کلید سطح پایین و هنگام رهاکردن، سطح بالا تشخیص داده می‌شود.</p>
+<div class="fig" id="fig-key">
+  <div class="figbox"><img src="assets/img/an90000-key.png" alt="هدر KEY" style="max-width:320px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱۵</span><span class="cap-text">هدر کلید <span class="en">KEY</span> (<span class="en">P2</span>)</span></div>
+</div>
+
+<h3 class="h2x" id="sec-218"><span class="dm">◆</span>۲.۱۸ PCB</h3>
+<p>کل <span class="en">PCB</span> برد به‌صورت چهارلایه طراحی شده است؛ مقاومت‌ها و خازن‌ها به‌طور معمول با بسته‌بندی <span class="en">0402</span>، هدرها با گام <span class="en">2.54mm</span> و در چهار گوشه سوراخ پست پیچ برای نصب آسان پیش‌بینی شده است. چیدمان کلی در شکل ۱۶ نشان داده شده است.</p>
+<div class="fig" id="fig-pcb">
+  <div class="figbox"><img src="assets/img/an90000-pcb.png" alt="نمای PCB" style="max-width:460px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱۶</span><span class="cap-text">نمای کلی <span class="en">PCB</span> برد</span></div>
+</div>
+
+<!-- ================= بخش ۳ ================= -->
+<div class="chapter-header" id="sec-b3">
+  <span class="sec-pill">بخش ۳</span>
+  <div class="sec-title">تخصیص پایه‌های ورودی/خروجی برد</div>
+  <div class="sec-divider"></div>
+</div>
+<h3 class="h2x" id="sec-31"><span class="dm">◆</span>۳.۱ کارکرد و تخصیص چندگانۀ پایه‌ها</h3>
+<p>جدول ۲ نقشۀ کامل ۱۲۸ پایۀ میکروکنترلر <span class="en">CH32H417QEU6</span> را نشان می‌دهد: ستون «<span class="en">IO</span> پیش‌فرض» نام پایه، ستون‌های «کارکرد» و «<span class="en">AF</span>» تابع پیش‌فرض و شمارۀ تابع جایگزین آن، و ستون‌های بعدی تابع جایگزین دوم را مشخص می‌کنند. برای پایه‌های تغذیه و پایه‌های ویژه (مانند <span class="en">XI/XO</span> و خطوط <span class="en">USB</span> و <span class="en">SerDes</span>) فقط نام نقش آمده است. نام سیگنال‌ها مطابق سند اصلی به انگلیسی حفظ شده‌اند.</p>
+<div class="tblwrap" id="tab-pins" style="break-inside:auto;">
+  <div class="tblcap"><span class="cap-pill">جدول ۲</span><span class="cap-text">کارکرد و تخصیص چندگانۀ ۱۲۸ پایۀ <span class="en">CH32H417QEU6</span></span></div>
+  <table class="tbl">
+    <thead><tr><th style="width:8%;">پایه</th><th style="width:14%;">IO پیش‌فرض</th><th style="width:29%;">کارکرد</th><th style="width:9%;">AF</th><th style="width:30%;">کارکرد دوم</th><th style="width:10%;">AF</th></tr></thead>
+<tr><td>۰</td><td><span class="en">VSS</span></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>۱</td><td><span class="en">PE2</span></td><td><span class="en">SAI_MCLK_A</span></td><td><span class="en">AF6</span></td><td></td><td></td></tr>
+<tr><td>۲</td><td><span class="en">PE3</span></td><td><span class="en">SDRAM DQM1</span></td><td><span class="en">AF1</span></td><td><span class="en">SDRAM_DQM1</span></td><td><span class="en">AF1</span></td></tr>
+<tr><td>۳</td><td><span class="en">PE4</span></td><td><span class="en">DVP D4</span></td><td><span class="en">AF13</span></td><td><span class="en">SERDES_TXN</span></td><td></td></tr>
+<tr><td>۴</td><td><span class="en">PE5</span></td><td><span class="en">DVP D6</span></td><td><span class="en">AF13</span></td><td><span class="en">SERDES_RXP</span></td><td></td></tr>
+<tr><td>۵</td><td><span class="en">PE6</span></td><td><span class="en">DVP D7</span></td><td><span class="en">AF13</span></td><td><span class="en">SERDES_RXN</span></td><td></td></tr>
+<tr><td>۶</td><td><span class="en">VDDIO</span></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>۷</td><td><span class="en">VBAT</span></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>۸</td><td><span class="en">PC13</span></td><td><span class="en">RTC</span></td><td></td><td><span class="en">KEY</span></td><td></td></tr>
+<tr><td>۹</td><td><span class="en">PC14</span></td><td><span class="en">OSC32_IN</span></td><td></td><td><span class="en">DVP_RESET</span></td><td></td></tr>
+<tr><td>۱۰</td><td><span class="en">PC15</span></td><td><span class="en">OSC32_OUT</span></td><td></td><td><span class="en">TOUCH INT</span></td><td></td></tr>
+<tr><td>۱۱</td><td><span class="en">VDDK</span></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>۱۲</td><td><span class="en">MDIRN</span></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>۱۳</td><td><span class="en">MDIRP</span></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>۱۴</td><td><span class="en">MDITN</span></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>۱۵</td><td><span class="en">MDITP</span></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>۱۶</td><td><span class="en">VDD33</span></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>۱۷</td><td><span class="en">PF6</span></td><td><span class="en">QSPI2 SCK</span></td><td><span class="en">AF4</span></td><td><span class="en">I3C_SCL</span></td><td><span class="en">AF5</span></td></tr>
+<tr><td>۱۸</td><td><span class="en">PF7</span></td><td><span class="en">QSPI2 SCSN</span></td><td><span class="en">AF4</span></td><td><span class="en">I3C_SDA</span></td><td><span class="en">AF5</span></td></tr>
+<tr><td>۱۹</td><td><span class="en">PF8</span></td><td><span class="en">QSPI2 SIO0</span></td><td><span class="en">AF4</span></td><td></td><td></td></tr>
+<tr><td>۲۰</td><td><span class="en">PF9</span></td><td><span class="en">QSPI2 SIO1</span></td><td><span class="en">AF4</span></td><td></td><td></td></tr>
+<tr><td>۲۱</td><td><span class="en">PF10</span></td><td><span class="en">QSPI2 SIO2</span></td><td><span class="en">AF4</span></td><td></td><td></td></tr>
+<tr><td>۲۲</td><td><span class="en">VSS</span></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>۲۳</td><td><span class="en">XI</span></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>۲۴</td><td><span class="en">XO</span></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>۲۵</td><td><span class="en">NRST</span></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>۲۶</td><td><span class="en">PC0</span></td><td><span class="en">QSPI2 SIO3</span></td><td><span class="en">AF10</span></td><td><span class="en">HSADC</span></td><td></td></tr>
+<tr><td>۲۷</td><td><span class="en">PC1</span></td><td><span class="en">LTDC G5</span></td><td><span class="en">AF14</span></td><td><span class="en">QSPI_SCSXN</span></td><td><span class="en">AF10</span></td></tr>
+<tr><td>۲۸</td><td><span class="en">PC2</span></td><td><span class="en">SAI_SCK_A</span></td><td><span class="en">AF7</span></td><td><span class="en">QSPI_SIOX0</span></td><td><span class="en">AF10</span></td></tr>
+<tr><td>۲۹</td><td><span class="en">PC3</span></td><td><span class="en">SAI_FS_A</span></td><td><span class="en">AF7</span></td><td><span class="en">QSPI_SIOX1</span></td><td><span class="en">AF10</span></td></tr>
+<tr><td>۳۰</td><td><span class="en">VDDIO</span></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>۳۱</td><td><span class="en">VSSA</span></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>۳۲</td><td><span class="en">VREFP</span></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>۳۳</td><td><span class="en">VDD33A</span></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>۳۴</td><td><span class="en">PA0</span></td><td><span class="en">USART6 TX</span></td><td><span class="en">AF8</span></td><td><span class="en">PIOC_IO0</span></td><td><span class="en">AF5</span></td></tr>
+<tr><td>۳۵</td><td><span class="en">PA1</span></td><td><span class="en">DVP_SDA</span></td><td></td><td><span class="en">QSPI_SIOX3</span></td><td><span class="en">AF9</span></td></tr>
+<tr><td>۳۶</td><td><span class="en">PA2</span></td><td><span class="en">KEY</span></td><td></td><td></td><td></td></tr>
+<tr><td>۳۷</td><td><span class="en">PA3</span></td><td><span class="en">LTDC B5</span></td><td><span class="en">AF14</span></td><td></td><td></td></tr>
+<tr><td>۳۸</td><td><span class="en">VDDIO</span></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>۳۹</td><td><span class="en">PA4</span></td><td><span class="en">DVP HSYNC</span></td><td><span class="en">AF13</span></td><td></td><td></td></tr>
+<tr><td>۴۰</td><td><span class="en">PA5</span></td><td><span class="en">LTDC R4</span></td><td><span class="en">AF14</span></td><td></td><td></td></tr>
+<tr><td>۴۱</td><td><span class="en">PA6</span></td><td><span class="en">LTDC G2</span></td><td><span class="en">AF14</span></td><td></td><td></td></tr>
+<tr><td>۴۲</td><td><span class="en">PA7</span></td><td><span class="en">SDRAM SDNWE</span></td><td><span class="en">AF12</span></td><td></td><td></td></tr>
+<tr><td>۴۳</td><td><span class="en">PC4</span></td><td><span class="en">DVP_SCL</span></td><td></td><td></td><td></td></tr>
+<tr><td>۴۴</td><td><span class="en">PC5</span></td><td><span class="en">LTDC DE</span></td><td><span class="en">AF14</span></td><td></td><td></td></tr>
+<tr><td>۴۵</td><td><span class="en">PB0</span></td><td><span class="en">DFS_CLK</span></td><td><span class="en">AF6</span></td><td></td><td></td></tr>
+<tr><td>۴۶</td><td><span class="en">PB1</span></td><td><span class="en">SDRAM BA0</span></td><td><span class="en">AF7</span></td><td></td><td></td></tr>
+<tr><td>۴۷</td><td><span class="en">PB2</span></td><td><span class="en">SAI_SD_A</span></td><td><span class="en">AF6</span></td><td></td><td></td></tr>
+<tr><td>۴۸</td><td><span class="en">PF11</span></td><td><span class="en">SDRAM RAS</span></td><td><span class="en">AF12</span></td><td></td><td></td></tr>
+<tr><td>۴۹</td><td><span class="en">PF12</span></td><td><span class="en">SDRAM CAS</span></td><td><span class="en">AF12</span></td><td></td><td></td></tr>
+<tr><td>۵۰</td><td><span class="en">PF13</span></td><td><span class="en">DVP PCLK</span></td><td><span class="en">AF11</span></td><td></td><td></td></tr>
+<tr><td>۵۱</td><td><span class="en">VDDIO</span></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>۵۲</td><td><span class="en">PE7</span></td><td><span class="en">SDRAM D4</span></td><td><span class="en">AF12</span></td><td></td><td></td></tr>
+<tr><td>۵۳</td><td><span class="en">PE8</span></td><td><span class="en">SDRAM D5</span></td><td><span class="en">AF12</span></td><td></td><td></td></tr>
+<tr><td>۵۴</td><td><span class="en">PE9</span></td><td><span class="en">SDRAM D6</span></td><td><span class="en">AF12</span></td><td></td><td></td></tr>
+<tr><td>۵۵</td><td><span class="en">PE10</span></td><td><span class="en">SDRAM D7</span></td><td><span class="en">AF12</span></td><td></td><td></td></tr>
+<tr><td>۵۶</td><td><span class="en">PE11</span></td><td><span class="en">SDRAM D8</span></td><td><span class="en">AF12</span></td><td></td><td></td></tr>
+<tr><td>۵۷</td><td><span class="en">PE12</span></td><td><span class="en">SDRAM D9</span></td><td><span class="en">AF12</span></td><td></td><td></td></tr>
+<tr><td>۵۸</td><td><span class="en">PE13</span></td><td><span class="en">SDRAM D10</span></td><td><span class="en">AF12</span></td><td></td><td></td></tr>
+<tr><td>۵۹</td><td><span class="en">PE14</span></td><td><span class="en">SDRAM A3</span></td><td><span class="en">AF15</span></td><td></td><td></td></tr>
+<tr><td>۶۰</td><td><span class="en">PE15</span></td><td><span class="en">SDRAM D12</span></td><td><span class="en">AF12</span></td><td></td><td></td></tr>
+<tr><td>۶۱</td><td><span class="en">PB10</span></td><td><span class="en">LTDC G4</span></td><td><span class="en">AF15</span></td><td></td><td></td></tr>
+<tr><td>۶۲</td><td><span class="en">PB11</span></td><td><span class="en">SDRAM A6</span></td><td><span class="en">AF0</span></td><td></td><td></td></tr>
+<tr><td>۶۳</td><td><span class="en">VIO18</span></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>۶۴</td><td><span class="en">VDDIO</span></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>۶۵</td><td><span class="en">PB12</span></td><td><span class="en">DFS_DOUT</span></td><td><span class="en">AF6</span></td><td></td><td></td></tr>
+<tr><td>۶۶</td><td><span class="en">PB13</span></td><td><span class="en">I2C_SDA</span> (پنل لمسی)</td><td></td><td><span class="en">QSPI_SIOX2</span></td><td><span class="en">AF11</span></td></tr>
+<tr><td>۶۷</td><td><span class="en">PB14</span></td><td><span class="en">SDRAM A9</span></td><td><span class="en">AF0</span></td><td></td><td></td></tr>
+<tr><td>۶۸</td><td><span class="en">PB15</span></td><td><span class="en">LTDC G7</span></td><td><span class="en">AF14</span></td><td></td><td></td></tr>
+<tr><td>۶۹</td><td><span class="en">PD8</span></td><td><span class="en">SDRAM D13</span></td><td><span class="en">AF12</span></td><td></td><td></td></tr>
+<tr><td>۷۰</td><td><span class="en">PD9</span></td><td><span class="en">SDRAM D14</span></td><td><span class="en">AF12</span></td><td></td><td></td></tr>
+<tr><td>۷۱</td><td><span class="en">PD10</span></td><td><span class="en">SDRAM A10</span></td><td><span class="en">AF0</span></td><td></td><td></td></tr>
+<tr><td>۷۲</td><td><span class="en">PD11</span></td><td><span class="en">SDRAM A11</span></td><td><span class="en">AF0</span></td><td></td><td></td></tr>
+<tr><td>۷۳</td><td><span class="en">PD12</span></td><td><span class="en">SDRAM A12</span></td><td><span class="en">AF0</span></td><td></td><td></td></tr>
+<tr><td>۷۴</td><td><span class="en">PD13</span></td><td><span class="en">SDRAM D0</span></td><td><span class="en">AF0</span></td><td></td><td></td></tr>
+<tr><td>۷۵</td><td><span class="en">PD14</span></td><td><span class="en">SDRAM D1</span></td><td><span class="en">AF0</span></td><td></td><td></td></tr>
+<tr><td>۷۶</td><td><span class="en">PD15</span></td><td><span class="en">SDRAM D2</span></td><td><span class="en">AF0</span></td><td></td><td></td></tr>
+<tr><td>۷۷</td><td><span class="en">PF0</span></td><td>چراغ اترنت</td><td><span class="en">AF10</span></td><td><span class="en">I2C_SCL</span> (پنل لمسی)</td><td></td></tr>
+<tr><td>۷۸</td><td><span class="en">PF1</span></td><td><span class="en">LTDC CLK</span></td><td><span class="en">AF14</span></td><td></td><td></td></tr>
+<tr><td>۷۹</td><td><span class="en">PF2</span></td><td>چراغ اترنت</td><td><span class="en">AF10</span></td><td><span class="en">SDRAM_SDCLK</span></td><td><span class="en">AF12</span></td></tr>
+<tr><td>۸۰</td><td><span class="en">VDDK</span></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>۸۱</td><td><span class="en">VIO18</span></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>۸۲</td><td><span class="en">VDDIO</span></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>۸۳</td><td><span class="en">PC6</span></td><td><span class="en">SDMMC D6</span></td><td></td><td><span class="en">DVP D0</span></td><td><span class="en">AF13</span></td></tr>
+<tr><td>۸۴</td><td><span class="en">PC7</span></td><td><span class="en">SDMMC D7</span></td><td></td><td><span class="en">DVP D1</span></td><td><span class="en">AF13</span></td></tr>
+<tr><td>۸۵</td><td><span class="en">PC8</span></td><td><span class="en">SDMMC D0</span></td><td></td><td><span class="en">DVP D2</span></td><td><span class="en">AF13</span></td></tr>
+<tr><td>۸۶</td><td><span class="en">PC9</span></td><td><span class="en">SDMMC D1</span></td><td></td><td><span class="en">DVP D3</span></td><td><span class="en">AF13</span></td></tr>
+<tr><td>۸۷</td><td><span class="en">PA8</span></td><td><span class="en">LTDC R6</span></td><td><span class="en">AF14</span></td><td></td><td></td></tr>
+<tr><td>۸۸</td><td><span class="en">PA9</span></td><td><span class="en">LTDC R5</span></td><td><span class="en">AF14</span></td><td></td><td></td></tr>
+<tr><td>۸۹</td><td><span class="en">PA10</span></td><td><span class="en">SDRAM D11</span></td><td><span class="en">AF0</span></td><td></td><td></td></tr>
+<tr><td>۹۰</td><td><span class="en">PA11</span></td><td><span class="en">SDRAM A7</span></td><td><span class="en">AF10</span></td><td><span class="en">OTG_FS_DM</span></td><td></td></tr>
+<tr><td>۹۱</td><td><span class="en">PA12</span></td><td><span class="en">SDRAM A8</span></td><td><span class="en">AF10</span></td><td><span class="en">OTG_FS_DP</span></td><td></td></tr>
+<tr><td>۹۲</td><td><span class="en">PA13</span></td><td><span class="en">SDRAM BA1</span></td><td><span class="en">AF3</span></td><td></td><td></td></tr>
+<tr><td>۹۳</td><td><span class="en">VDD33</span></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>۹۴</td><td><span class="en">PA14</span></td><td><span class="en">SDMMC D4</span></td><td></td><td><span class="en">TOUCH RST</span> (پنل لمسی)</td><td></td></tr>
+<tr><td>۹۵</td><td><span class="en">PA15</span></td><td><span class="en">SDMMC D5</span></td><td></td><td><span class="en">LTDC B6</span></td><td><span class="en">AF14</span></td></tr>
+<tr><td>۹۶</td><td><span class="en">PC10</span></td><td><span class="en">SDMMC D2</span></td><td></td><td><span class="en">LTDC HSYNC</span></td><td><span class="en">AF15</span></td></tr>
+<tr><td>۹۷</td><td><span class="en">PC11</span></td><td><span class="en">SDMMC D3</span></td><td></td><td><span class="en">LTDC VSYNC</span></td><td><span class="en">AF15</span></td></tr>
+<tr><td>۹۸</td><td><span class="en">PC12</span></td><td><span class="en">SDMMC CLK</span></td><td></td><td><span class="en">GPIO_PC12</span></td><td></td></tr>
+<tr><td>۹۹</td><td><span class="en">PD0</span></td><td><span class="en">LTDC R3</span></td><td><span class="en">AF15</span></td><td></td><td></td></tr>
+<tr><td>۱۰۰</td><td><span class="en">PD1</span></td><td><span class="en">SDRAM D3</span></td><td><span class="en">AF12</span></td><td></td><td></td></tr>
+<tr><td>۱۰۱</td><td><span class="en">PD2</span></td><td><span class="en">SDMMC CMD</span></td><td></td><td><span class="en">LTDC B7</span></td><td><span class="en">AF9</span></td></tr>
+<tr><td>۱۰۲</td><td><span class="en">PD3</span></td><td><span class="en">SDMMC DQS</span></td><td></td><td><span class="en">DVP_PWDN</span></td><td></td></tr>
+<tr><td>۱۰۳</td><td><span class="en">PD4</span></td><td><span class="en">LTDC R7</span></td><td><span class="en">AF15</span></td><td></td><td></td></tr>
+<tr><td>۱۰۴</td><td><span class="en">PD5</span></td><td><span class="en">SDRAM D15</span></td><td><span class="en">AF1</span></td><td></td><td></td></tr>
+<tr><td>۱۰۵</td><td><span class="en">VIO18</span></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>۱۰۶</td><td><span class="en">PD6</span></td><td><span class="en">LTDC G3</span></td><td><span class="en">AF15</span></td><td></td><td></td></tr>
+<tr><td>۱۰۷</td><td><span class="en">PD7</span></td><td><span class="en">LTDC B3</span></td><td><span class="en">AF14</span></td><td></td><td></td></tr>
+<tr><td>۱۰۸</td><td><span class="en">PF3</span></td><td><span class="en">SDRAM_SDCKE0</span></td><td><span class="en">AF4</span></td><td></td><td></td></tr>
+<tr><td>۱۰۹</td><td><span class="en">PF4</span></td><td><span class="en">LTDC G6</span></td><td><span class="en">AF15</span></td><td></td><td></td></tr>
+<tr><td>۱۱۰</td><td><span class="en">PF5</span></td><td><span class="en">SDRAM A0</span></td><td><span class="en">AF15</span></td><td></td><td></td></tr>
+<tr><td>۱۱۱</td><td><span class="en">PE0</span></td><td><span class="en">LTDC B4</span></td><td><span class="en">AF9</span></td><td></td><td></td></tr>
+<tr><td>۱۱۲</td><td><span class="en">PE1</span></td><td><span class="en">SDRAM A4</span></td><td><span class="en">AF0</span></td><td></td><td></td></tr>
+<tr><td>۱۱۳</td><td><span class="en">PF14</span></td><td><span class="en">DVP D5</span></td><td><span class="en">AF11</span></td><td></td><td></td></tr>
+<tr><td>۱۱۴</td><td><span class="en">VDDIO</span></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>۱۱۵</td><td><span class="en">PB3</span></td><td><span class="en">SDRAM A1</span></td><td><span class="en">AF12</span></td><td><span class="en">CC1</span></td><td><span class="en">AF4</span></td></tr>
+<tr><td>۱۱۶</td><td><span class="en">PB4</span></td><td><span class="en">SDRAM A2</span></td><td><span class="en">AF12</span></td><td><span class="en">CC2</span></td><td><span class="en">AF4</span></td></tr>
+<tr><td>۱۱۷</td><td><span class="en">PB5</span></td><td><span class="en">LTDC BL</span></td><td></td><td></td><td></td></tr>
+<tr><td>۱۱۸</td><td><span class="en">PB6</span></td><td><span class="en">SDRAM A5</span></td><td><span class="en">AF11</span></td><td><span class="en">CAN1_RX</span></td><td><span class="en">AF3</span></td></tr>
+<tr><td>۱۱۹</td><td><span class="en">PB7</span></td><td><span class="en">DVP VSYNC</span></td><td><span class="en">AF13</span></td><td><span class="en">CAN1_TX</span></td><td><span class="en">AF3</span></td></tr>
+<tr><td>۱۲۰</td><td><span class="en">PB8</span></td><td><span class="en">USB2DP</span></td><td></td><td><span class="en">SWCLK</span></td><td></td></tr>
+<tr><td>۱۲۱</td><td><span class="en">PB9</span></td><td><span class="en">USB2DM</span></td><td></td><td><span class="en">SWDIO</span></td><td></td></tr>
+<tr><td>۱۲۲</td><td><span class="en">VSS</span></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>۱۲۳</td><td><span class="en">SSTXB</span></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>۱۲۴</td><td><span class="en">SSTXA</span></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>۱۲۵</td><td><span class="en">VDD12A</span></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>۱۲۶</td><td><span class="en">SSRXB</span></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>۱۲۷</td><td><span class="en">SSRXA</span></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>۱۲۸</td><td><span class="en">VDD33</span></td><td></td><td></td><td></td><td></td></tr>
+  </table>
+</div>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN90000</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/3/17</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">CH32H417QEU6</span></td><td class="jt">میکروکنترلر دو هسته‌ای (<span class="en">Qingke RISC-V5F + RISC-V3F</span>) با بسته‌بندی <span class="en">QFN128</span>، 960KB ناحیۀ ذخیرۀ برنامه (<span class="en">CodeFlash</span>) و 896KB <span class="en">SRAM</span>؛ قلب برد توسعۀ <span class="en">CH32H417QEU-R1-1v1</span></td></tr>
+      <tr><td><span class="en">LINKE (LINK)</span></td><td class="jt">اشکال‌زدا و بارگذار درون‌خطی روی برد؛ همچنین پل پورت <span class="en">COM</span> مجازی <span class="en">USB</span> و قابل اتصال به <span class="en">MCU</span>های هم‌خانوادۀ <span class="en">LINKE</span></td></tr>
+      <tr><td><span class="en">QFN128</span></td><td class="jt">بسته‌بندی مربعی ۱۲۸ پایه بدون پایۀ بیرون‌زده (Leadless)</td></tr>
+      <tr><td><span class="en">eMMC / SDMMC</span></td><td class="jt">حافظۀ فلش چندرسانه‌ای با رابط <span class="en">SDMMC</span> هشت‌بیتی؛ روی برد قطعۀ <span class="en">U10</span> با بسته‌بندی <span class="en">FBGA-153</span></td></tr>
+      <tr><td><span class="en">SDRAM</span></td><td class="jt">حافظۀ پویای همگام با رابط ۱۶ بیتی روی برد (بسته‌بندی <span class="en">TSOP-54</span>)</td></tr>
+      <tr><td><span class="en">QSPI FLASH</span></td><td class="jt">فلش سریال چهارمسی از نوع <span class="en">NOR</span>؛ دو رابط روی برد (بسته‌بندی <span class="en">SOIC-8</span> سازگار با <span class="en">WSON-8</span>)</td></tr>
+      <tr><td><span class="en">LTDC / RGB LCD</span></td><td class="jt">کنترل‌کنندۀ نمایشگر TFT با قالب پیکسلی <span class="en">RGB565</span> و پنل لمسی <span class="en">I2C</span>؛ خروجی نمایشگر با سوکت <span class="en">FPC-40</span></td></tr>
+      <tr><td><span class="en">DVP</span></td><td class="jt">رابط تصویر دیجیتال برای اتصال ماژول دوربین و دریافت جریان دادۀ تصویر</td></tr>
+      <tr><td><span class="en">SAI</span></td><td class="jt">رابط صوتی سریال با خروجی از جک هدفون استریو</td></tr>
+      <tr><td><span class="en">DFSDM</span></td><td class="jt">ماژول فیلتر دلتا-سیگمای مخصوص اتصال مدولاتور ΣΔ خارجی (میکروفون دیجیتال) به <span class="en">MCU</span></td></tr>
+      <tr><td><span class="en">I3C</span></td><td class="jt">باس سریال دومسیره چندشاخه‌ای نسل جدید؛ روی برد برای اتصال سنسور وضعیت</td></tr>
+      <tr><td><span class="en">SerDes</span></td><td class="jt">فرستنده/گیرندۀ سریال‌ساز/موازی‌ساز پرسرعت با ایزولۀ برق‌کاری و پشتیبانی از انتقال بلندبرد</td></tr>
+      <tr><td><span class="en">PIOC / UHSIF / SWPMI / FMC</span></td><td class="jt">کنترل‌کنندۀ I/O برنامه‌پذیر پروتکل، رابط عمومی پرسرعت 500MB، رابط اصلی پروتکل تک‌سیمه و کنترل‌کنندۀ حافظۀ منعطف</td></tr>
+      <tr><td><span class="en">USBPD</span></td><td class="jt">کنترل‌کنندۀ <span class="en">USB Power Delivery</span>؛ در نقش <span class="en">SINK</span> لازم است مقاومت پول‌داون 5.1K روی خطوط <span class="en">CC</span> لحیم شود</td></tr>
+      <tr><td><span class="en">OTG FS / HS / SS</span></td><td class="jt">حالت‌های سرعت کامل / پرسرعت / ابرسرعت <span class="en">USB</span>؛ رابط <span class="en">USBSS</span> با نرخ 5Gbps مطابق <span class="en">USB 3.0</span></td></tr>
+      <tr><td><span class="en">HSI / HSE</span></td><td class="jt">منبع ساعت داخلی 25MHz یا خارجی؛ برای <span class="en">HSE</span> کریستال بی‌فعال 25M باید در موقعیت <span class="en">Y1</span> لحیم شود</td></tr>
+      <tr><td><span class="en">مقاومت 0Ω و NC</span></td><td class="jt">برای فعال‌سازی هر رابط، مقاومت‌های 0Ω فهرست‌شده در سند باید لحیم شوند و قطعه‌های نشان‌دارد <span class="en">NC</span> نیز باید نصب شوند</td></tr>
+      <tr><td><span class="en">AF (Alternate Function)</span></td><td class="jt">شمارۀ تابع جایگزین هر پایه؛ در نقشۀ جدول ۲ کنار هر کارکرد ذکر شده است</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN90000 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۲۴</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN90000</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
