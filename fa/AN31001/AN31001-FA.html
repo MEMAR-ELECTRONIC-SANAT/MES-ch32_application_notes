@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>فیلتر دیجیتال سیگما-دلتا (DFSDM) در میکروکنترلر CH32H417 — ترجمۀ فارسی AN31001</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">فیلتر دیجیتال سیگما-دلتا</div>
+    <div class="t2">در میکروکنترلر <span class="en">CH32H417</span></div>
+    <div class="t3"><span class="en">DFSDM</span> · جمع‌آوری <span class="en">PDM</span> · خروجی <span class="en">SAI</span></div>
+  </div>
+  <div class="c-sub">از دیاگرام بلوکی و اجزای فیلتر دیجیتال برای مدولاتور سیگما-دلتا (ترانسسیورهای سریال و موازی، فیلتر <span class="en">Sinc</span>، انتگرال‌گیر، سگ‌بان آنالوگ و آشکارسازهای حافظت)، تا جمع‌آوری صدای استریوی میکروفون <span class="en">PDM</span> و خروجی آن از رابط <span class="en">SAI</span> همراه با نمونۀ کد</div>
+  <div class="c-desc">در این جزوه، ترجمۀ فارسی سند رسمی <span class="en">AN31001</span> (نسخۀ ۱٫۰، منتشرۀ شرکت <span class="en">WCH</span>) را می‌خوانید: میکروکنترلر <span class="en">CH32H417</span> ماژول فیلتر دیجیتال با کارایی بالای <span class="en">DFSDM</span> را که برای مدولاتورهای خارجی سیگما-دلتا (ΣΔ) طراحی شده، در درون خود یکپارچه کرده است؛ این ماژول با رابط سریال دیجیتال و دو فیلتر دیجیتال خود، جریان دادۀ سریال مدولاتور را فیلتر می‌کند و ورودی جریان دادۀ موازیِ انتخابی از جانبی <span class="en">ADC</span> داخلی یا حافظۀ دستگاه را نیز دارد. در ادامه، پیکربندی جمع‌آوری صدای استریوی <span class="en">PDM</span> و خروجی صدا از طریق رابط <span class="en">SAI</span> همراه با نمونۀ کد رسمی بررسی می‌شود.</div>
+  <div class="c-tags">
+    <span class="c-tag">میکروکنترلر <span class="en">CH32H417</span></span>
+    <span class="c-tag">فیلتر دیجیتال <span class="en">DFSDM</span></span>
+    <span class="c-tag">مدولاتور سیگما-دلتا <span class="en">ΣΔ</span></span>
+    <span class="c-tag">میکروفون <span class="en">PDM</span></span>
+    <span class="c-tag">فیلتر <span class="en">Sinc / FastSinc</span></span>
+    <span class="c-tag"><span class="en">FOSR / FORD / IOSR</span></span>
+    <span class="c-tag">رابط صوتی <span class="en">SAI</span></span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN31001 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | توصیف عملکرد <span class="en">DFSDM</span></span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-111"><span class="s-id">1.1</span><span>دیاگرام بلوکی DFSDM</span><span class="s-dots"></span><span class="s-page">۳</span></a>
+    <a class="toc-sub" href="#sec-112"><span class="s-id">1.2</span><span>اجزای DFSDM</span><span class="s-dots"></span><span class="s-page">۴</span></a>
+    <a class="toc-sub" href="#sec-113"><span class="s-id">1.3</span><span>مدولاتور سیگما-دلتا</span><span class="s-dots"></span><span class="s-page">۶</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | نمونۀ جمع‌آوری صدا</span><span class="t-dots"></span><span class="t-page">۷</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-211"><span class="s-id">2.1</span><span>طرح کلی</span><span class="s-dots"></span><span class="s-page">۷</span></a>
+    <a class="toc-sub" href="#sec-212"><span class="s-id">2.2</span><span>انتخاب ورودی کانال</span><span class="s-dots"></span><span class="s-page">۷</span></a>
+    <a class="toc-sub" href="#sec-213"><span class="s-id">2.3</span><span>دیاگرام جمع‌آوری استریو</span><span class="s-dots"></span><span class="s-page">۸</span></a>
+    <a class="toc-sub" href="#sec-214"><span class="s-id">2.4</span><span>ساعت و نرخ نمونه‌برداری صدا</span><span class="s-dots"></span><span class="s-page">۹</span></a>
+    <a class="toc-sub" href="#sec-215"><span class="s-id">2.5</span><span>پیکربندی جانبی</span><span class="s-dots"></span><span class="s-page">۹</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۴</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۱۳</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۵</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۱۳</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">شکل ۱-۱</span><span>دیاگرام بلوکی جانبی <span class="en">DFSDM</span></span><span class="f-dots"></span><span class="f-page">۳</span></div>
+        <div class="frow"><span class="f-id">شکل ۱-۲</span><span>دیاگرام اتصال <span class="en">DFSDM</span> و مدولاتور <span class="en">ΣΔ</span></span><span class="f-dots"></span><span class="f-page">۶</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۱</span><span>دیاگرام اتصال میکروفون و <span class="en">DFSDM</span></span><span class="f-dots"></span><span class="f-page">۷</span></div>
+      </div>
+      <div>
+        <div class="frow"><span class="f-id">شکل ۲-۲</span><span>دیاگرام جمع‌آوری استریو</span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">کد ۱</span><span>مقداردهی اولیۀ جانبی <span class="en">DFSDM</span></span><span class="f-dots"></span><span class="f-page">۱۰</span></div>
+        <div class="frow"><span class="f-id">کد ۲</span><span>پیکربندی رابط <span class="en">SAI</span></span><span class="f-dots"></span><span class="f-page">۱۲</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> جانبی <span class="en">DFSDM</span> در <span class="en">CH32H417</span> یک فیلتر دیجیتال با کارایی بالا برای مدولاتورهای خارجی سیگما-دلتا (ΣΔ) است؛ با یک رابط سریال دیجیتال و دو فیلتر دیجیتال، جریان دادۀ سریال مدولاتور را با عمل استخراج، انباشت و میانگین‌گیری فیلتر می‌کند و ورودی موازی از <span class="en">ADC</span> داخلی یا حافظۀ دستگاه را نیز پشتیبانی می‌کند. در کنار فیلترینگ پایه، سگ‌بان آنالوگ، آشکارساز اتصال کوتاه و آشکارساز مقدار حدی نیز در هر کانال تعبیه شده است. این سند دیاگرام بلوکی و اجزای اصلی <span class="en">DFSDM</span> را تشریح می‌کند و روش جمع‌آوری دادۀ میکروفون استریوی <span class="en">PDM</span> و خروجی صدا از طریق رابط <span class="en">SAI</span> را همراه با نمونۀ کد آموزش می‌دهد.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>میکروکنترلر <span class="en">CH32H417</span> یک ماژول فیلتر دیجیتال با کارایی بالا (<span class="en">DFSDM</span>) مخصوص مدولاتورهای خارجی سیگما-دلتا (ΣΔ) را در درون خود یکپارچه کرده است. <span class="en">DFSDM</span> شامل یک رابط سریال دیجیتال و ۲ فیلتر دیجیتال است و از طریق رابط سریال می‌تواند جریان دادۀ سریال خروجی مدولاتور خارجی ΣΔ را فیلتر کند. افزون بر این، <span class="en">DFSDM</span> ورودی جریان دادۀ موازیِ قابل‌انتخاب از جانبی <span class="en">ADC</span> داخلی یا حافظۀ دستگاه را نیز دارد. این سند دیاگرام بلوکی و اجزای اصلی <span class="en">DFSDM</span> را تشریح می‌کند و روش جمع‌آوری دادۀ میکروفون استریوی <span class="en">PDM</span> و خروجی صدا از طریق رابط <span class="en">SAI</span> را معرفی می‌نماید.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>میکروکنترلرهای همگانی‌منظوره</td><td>سری <span class="en">CH32H417</span></td></tr>
+  </table>
+</div>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">توصیف عملکرد <span class="en">DFSDM</span></div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-111"><span class="dm">◆</span>۱.۱ دیاگرام بلوکی DFSDM</h3>
+<div class="fig" id="fig-11">
+  <div class="figbox">
+    <img src="assets/img/an31001-vcrop_p3_0.png" alt="شکل ۱-۱" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۱</span><span class="cap-text">دیاگرام بلوکی جانبی <span class="en">DFSDM</span></span></div>
+</div>
+<p>شکل بالا دیاگرام بلوکی جانبی <span class="en">DFSDM</span> سری <span class="en">CH32H417</span> را نشان می‌دهد؛ ترانسسیور سریال، داده و ساعت مدولاتور خارجی ΣΔ را دریافت می‌کند (پروتکل <span class="en">SPI</span>) و مسیر موازی می‌تواند داده را از <span class="en">ADC</span> داخلی یا حافظه انتخاب کند. کانال‌های ورودی از طریق مالتی‌پلکسر به کانال‌های فیلتر متصل می‌شوند؛ لایۀ فیلتر در هر کانال شامل فیلتر <span class="en">Sinc</span> با مرتبۀ قابل‌پیکربندی و انتگرال‌گیر اختیاری است که روی جریان دادۀ ۱ بیتی عمل استخراج (Decimation)، انباشت و میانگین‌گیری انجام می‌دهد، نرخ داده را کاهش و تفکیک‌پذیری را افزایش می‌دهد. دادۀ پردازش‌شده از طریق گذرگاه <span class="en">HB</span> برای خواندن <span class="en">CPU/DMA</span> فراهم می‌شود. همچنین قابلیت‌های کمکی مانند سگ‌بان آنالوگ (پایش آستانه)، آشکارساز اتصال کوتاه (پایش مقدارهای منطقی یکسانِ متوالی) و آشکارساز مقدار حدی (ثبت مقدارهای حدی خروجی) فراهم است.</p>
+
+<h3 class="h2x" id="sec-112"><span class="dm">◆</span>۱.۲ اجزای DFSDM</h3>
+<p><b>● ترانسسیور سریال:</b></p>
+<div class="bl">این جانبی ۲ کانال دادۀ سریال چندگانه دارد که می‌توان هر یک را برای تبدیل، از میان فیلترها، سگ‌بان آنالوگ یا آشکارساز اتصال کوتاه انتخاب کرد. این ترانسسیورها جریان دادۀ مدولاتور خارجی ΣΔ را دریافت می‌کنند و داده می‌تواند در قالب <span class="en">SPI</span> ارسال شود.</div>
+<p><b>● ترانسسیور موازی:</b></p>
+<div class="bl">ترانسسیور موازی یک رجیستر ورودی موازی داخلی ۱۶ بیتی است که از طریق گذرگاه <span class="en">HB</span> توسط <span class="en">CPU/DMA</span> یا مستقیماً توسط <span class="en">ADC</span> داخلی در دسترس است و نقش آن پس‌پردازش سیگنال‌های داخلی است. دو نمونۀ استفاده:</div>
+<div class="bl">فیلترکردن دادۀ نمونه‌برداری‌شده توسط <span class="en">ADC</span> داخلی؛</div>
+<div class="bl">فیلترکردن هر دادۀ ۱۶ بیتی ذخیره‌شده در بافر حافظه (انتقال با <span class="en">DMA</span> به ترانسسیور موازی <span class="en">DFSDM</span>).</div>
+<p><b>● فیلتر دیجیتال:</b></p>
+<div class="bl"><span class="en">DFSDM</span> فیلترهای دیجیتال از نوع <span class="en">Sincx</span> را پیاده‌سازی می‌کند. این فیلتر روی جریان دادۀ دیجیتال ورودی فیلترینگ انجام می‌دهد؛ در نتیجه نرخ دادۀ خروجی کاهش (استخراج) و تفکیک‌پذیری دادۀ خروجی افزایش می‌یابد. فیلتر دیجیتال <span class="en">Sincx</span> را می‌توان برای رسیدن به نرخ داده و تفکیک‌پذیری موردنیاز پیکربندی کرد. پارامترهای قابل‌پیکربندی عبارت‌اند از:</div>
+<div class="bl">مرتبه/نوع فیلتر: <span class="en">FastSinc</span> و <span class="en">Sinc1~Sinc5</span>.</div>
+<div class="bl">نرخ نمونه‌برداری بیش از حد (نرخ استخراج) فیلتر: <span class="en">FOSR=1-1024</span> برای فیلتر <span class="en">FastSinc</span> و فیلترهای <span class="en">Sincx</span> با <span class="en">x=FORD=1..3</span>؛ <span class="en">FOSR=1-215</span> برای <span class="en">x=FORD=4</span>؛ <span class="en">FOSR=1-73</span> برای <span class="en">x=FORD=5</span>.</div>
+<div class="bl">نوع فیلتر <span class="en">Sinc</span> و نوع فیلتر <span class="en">FastSinc</span>؛ تابع انتقال <span class="en">H(z)</span> هر نوع در شکل زیر آمده است.</div>
+<div class="fig" id="fig-hz">
+  <div class="figbox">
+    <img src="assets/img/an31001-formula_p4_hz.png" alt="توابع انتقال" style="max-width:620px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-الف</span><span class="cap-text">تابع انتقال فیلتر <span class="en">Sinc</span> (چپ) و <span class="en">FastSinc</span> (راست)</span></div>
+</div>
+<p><b>● انتگرال‌گیر:</b></p>
+<div class="bl">انتگرال‌گیر نرخ استخراج و تفکیک‌پذیری دادۀ خروجی از فیلتر دیجیتال را باز هم بالاتر می‌برد. برای تعداد معینی نمونۀ دادۀ دریافتی از فیلتر، انتگرال‌گیر جمع ساده‌ای از آن‌ها به‌عمل می‌آورد. پارامتر نرخ نمونه‌برداری بیش از حد انتگرال‌گیر تعیین می‌کند حاصل جمع چند نمونه به‌عنوان یک دادۀ خروجی منتشر شود؛ <span class="en">IOSR</span> را می‌توان در بازۀ ۱ تا ۲۵۶ تنظیم کرد.</div>
+<p><b>● واحد دادۀ خروجی:</b></p>
+<div class="bl">واحد دادۀ خروجی تصحیح نهایی را انجام می‌دهد؛ شامل شیفت به راست و تصحیح آفست روی دادۀ خروجی از انتگرال‌گیر. شیفت به راست برای دو منظور است: جادادن خروجی داخلی ۳۲ بیتی در رجیستر نهایی ۲۴ بیتی و محدودسازی بیشتر تفکیک‌پذیری نهایی (برای مثال ۱۶ بیت در مورد دادۀ صوتی). تصحیح آفست نیز خطای آفست مدولاتور خارجی ΣΔ را کالیبره می‌کند.</div>
+<p><b>● سگ‌بان آنالوگ:</b></p>
+<div class="bl">سگ‌بان آنالوگ وقتی سیگنال به آستانۀ بالای معین برسد یا از آن فراتر رود یا به آستانۀ پایین معین برسد یا زیر آن تنزل یابد، سیگنال بیرونی (مقدار بیرونی یا وقفه) را راه می‌اندازد. می‌توان دادهٔ سریال را مستقیماً از ترانسسیور سریال با یک فیلتر دیجیتال اختصاصیِ قابل‌پیکربندی (<span class="en">FOSR=1...32</span> و <span class="en">FORD=1...3</span>) پایش کرد؛ کارکرد تبدیل فیلتر سگ‌بان آنالوگ شبیه تبدیل پیوستهٔ سریع معمولی (بدون انتگرال‌گیر) است.</div>
+<p><b>● آشکارساز اتصال کوتاه:</b></p>
+<div class="bl">هدف از آشکارساز اتصال کوتاه آن است که وقتی سیگنال آنالوگ از دامنۀ کامل فراتر رود و مدتی معین بر همان حال بماند، در کمترین زمان واکنش نشان دهد و آن را اعلام کند؛ این قابلیت خطاهای اتصال کوتاه یا گسست (مانند اضافه‌جریان یا اضافه‌ولتاژ) را آشکار می‌کند.</div>
+<div class="bl">دادۀ ورودی آشکارساز اتصال کوتاه از خروجی ترانسسیور کانال گرفته می‌شود. روی هر کانال ورودی یک شمارندۀ افزایشی قرار دارد که تعداد ۰ یا ۱های متوالی روی خروجی گیرندۀ دادۀ سریال را می‌شمارد؛ اگر شمارنده به مقدار رجیستر آستانۀ اتصال کوتاه برسد، رویداد اتصال کوتاه فراخوانی می‌شود، در غیر این صورت شمارش از نو آغاز می‌شود.</div>
+<p><b>● آشکارساز مقدار حدی:</b></p>
+<div class="bl">آشکارساز مقدار حدی به‌سادگی نمونه‌های دادۀ خروجی نهایی را تحلیل می‌کند و کوچک‌ترین و بزرگ‌ترین مقدار را در رجیسترهای مقدار حدی ذخیره می‌نماید. با خواندن این رجیسترها می‌توان بیشینه و کمینۀ سطح سیگنال تبدیل‌شده را در بازۀ زمانی پایش کرد.</div>
+
+<h3 class="h2x" id="sec-113"><span class="dm">◆</span>۱.۳ مدولاتور سیگما-دلتا</h3>
+<p>مدولاتور خارجی ΣΔ پیش‌آنالوگِ موردنیاز جانبی <span class="en">DFSDM</span> میکروکنترلر <span class="en">CH32H417</span> است و مسئولیت اصلی تبدیل آنالوگ به دیجیتال را بر دوش دارد. این مدولاتور با <span class="en">ADC</span> ۱ بیتی درونی خود سیگنال آنالوگ ورودی را با نرخ بالا نمونه‌برداری می‌کند و جریان دادۀ سریالی متشکل از توالی منطق ۰ و ۱ (سیگنال‌های <span class="en">DATA</span> و <span class="en">CLK</span>) تولید می‌کند. در بازۀ مشاهده به‌قدر کافی بلند، نسبت میانگین منطق ۱ در این جریان بیت، دامنۀ متوسط سیگنال آنالوگ ورودی در همان بازه را بازتاب می‌دهد و طول این بازۀ میانگین‌گیری، مستقیماً دقت نتیجۀ نمونه‌برداری را تعیین می‌کند.</p>
+<div class="fig" id="fig-12">
+  <div class="figbox">
+    <img src="assets/img/an31001-vcrop_p4_1.png" alt="شکل ۱-۲" style="max-width:640px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱-۲</span><span class="cap-text">دیاگرام اتصال <span class="en">DFSDM</span> و مدولاتور <span class="en">ΣΔ</span></span></div>
+</div>
+<p>پس از آن، <span class="en">DFSDM</span> این جریان ۱ بیتی را می‌گیرد و پردازش می‌کند و از مسیر فیلترینگ دیجیتال و عملیات میانگین‌گیری، نمونه‌های دادۀ خروجی تولید می‌کند. <span class="en">DFSDM</span> نسبت به نرخ جریان بیت ورودی، نتیجه را با نرخ دادۀ خروجی پایین‌تر و تفکیک‌پذیری بالاتر ارائه می‌دهد؛ کاربر می‌تواند با پیکربندی پارامترهای فیلتر دیجیتال، تفکیک‌پذیری و نرخ دادۀ خروجی دلخواه را به‌صورت منعطف تنظیم کند تا نیازمندی‌های سناریوهای مختلف از نظر تفکیک‌پذیری و نرخ داده برآورده شود.</p>
+<p>علاوه بر کارکرد پایۀ فیلترینگ، <span class="en">DFSDM</span> قابلیت‌های کمکی متعدد مرتبط با <span class="en">ADC</span> را نیز یکپارچه کرده است: هر کانال سگ‌بان آنالوگ مستقل خود را دارد که تشخیص می‌دهد سیگنال ورودی از آستانۀ ولتاژ کمینه یا بیشمای پیش‌فرض گذشته است یا نه؛ هر کانال آشکارساز اتصال کوتاه نیز دارد که وقتی ولتاژ ورودی به حدی از دامنۀ آنالوگ برسد و بیش از مدت پیش‌فرض بر همان حال بماند، اعلام می‌کند؛ افزون بر این، آشکارساز مقدار حدی کوچک‌ترین و بزرگ‌ترین مقدار افت ولتاژ ورودی را ثبت می‌کند تا دامنۀ پویای سیگنال به‌سادگی ردیابی شود.</p>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">نمونۀ جمع‌آوری صدا</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-211"><span class="dm">◆</span>۲.۱ طرح کلی</h3>
+<p>در مقررات استاندارد حوزۀ کاربردهای صوتی، <span class="en">PDM</span> (تعدیل چگالی پالس) قالب خروجی رایج میکروفون‌های دیجیتال است. از آنجا که سیگنال <span class="en">PDM</span> در ماهیت معادل سیگنال تعدیل‌شدۀ ΣΔ است، <span class="en">DFSDM</span> می‌تواند از آن مستقیماً پشتیبانی کند.</p>
+<p>میکروفون دیجیتال برای کارکردن به سیگنال ساعت بیرونی نیاز دارد (یعنی ورودی <span class="en">CLK</span> میکروفون) و داده به‌صورت سیگنال تعدیل‌شدۀ <span class="en">PDM</span> از طریق خط <span class="en">DATA</span> ارسال می‌شود؛ فرکانس ساعت معمولاً بین ۱ مگاهرتز تا ۳٫۲ مگاهرتز است. ماژول <span class="en">DFSDM</span> از طریق سیگنال خروجی خود <span class="en">DFSDM_CKOUT</span> این ساعت را برای میکروفون فراهم می‌کند؛ این ساعت نرخ خروجی دادۀ میکروفون را تعیین می‌نماید و <span class="en">DFSDM</span> با لُب همین ساعت، دادۀ <span class="en">PDM</span> روی خط <span class="en">DATA</span> را به‌صورت هم‌گام نمونه‌برداری و پردازش می‌کند. نمونۀ رایج سیم‌کشی میان میکروفون دیجیتال استریو و <span class="en">DFSDM</span> در شکل زیر آمده است.</p>
+<div class="fig" id="fig-21">
+  <div class="figbox">
+    <img src="assets/img/an31001-vcrop_p6_2.png" alt="شکل ۲-۱" style="max-width:560px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۱</span><span class="cap-text">دیاگرام اتصال میکروفون و <span class="en">DFSDM</span></span></div>
+</div>
+
+<h3 class="h2x" id="sec-212"><span class="dm">◆</span>۲.۲ انتخاب ورودی کانال</h3>
+<p>ورودی سریال پین‌های <span class="en">DATINy</span> و <span class="en">CKINy</span> (سیگنال‌های داده و ساعت) را می‌توان از پین‌های کانال بعدی بازآدرس‌دهی کرد. این بازآدرس‌دهی کانال برای جمع‌آوری دادۀ صوتی از میکروفون استریوی <span class="en">PDM</span> (تعدیل چگالی پالس) به‌کار می‌رود. میکروفون استریوی <span class="en">PDM</span> یک سیگنال داده و یک سیگنال ساعت دارد که در آن سیگنال داده اطلاعات هر دو کانال صوتی چپ و راست را فراهم می‌کند (نمونه‌برداری با لُب بالاروندۀ ساعت برای کانال چپ و با لُب پایین‌رونده برای کانال راست انجام می‌شود).</p>
+<p><b>پیکربندی کانال سریال ورودی میکروفون PDM:</b></p>
+<div class="bl">سیگنال‌های میکروفون <span class="en">PDM</span> (داده، ساعت) به کانال سریال ورودی <span class="en">y</span> جانبی <span class="en">DFSDM</span> (پین‌های <span class="en">DATINy</span> و <span class="en">CKINy</span>) متصل می‌شوند.</div>
+<div class="bl">کانال <span class="en">y</span> به‌صورت زیر پیکربندی می‌شود: <span class="en">CHINSEL=0</span> (ورودی از پین‌های همان کانال معین: <span class="en">DATINy</span> و <span class="en">CKINy</span>).</div>
+<div class="bl">کانال <span class="en">(y-1)</span> (پیمانۀ ۲) به‌صورت زیر پیکربندی می‌شود: <span class="en">CHINSEL=1</span> (ورودی از پین‌های کانال بعدی، یعنی <span class="en">(y-1)+1</span>: <span class="en">DATINy</span> و <span class="en">CKINy</span>).</div>
+<div class="bl">کانال <span class="en">y</span>: <span class="en">SITP=0</span> (گزینش داده با لُب بالارونده)؛ یعنی کانال چپِ صوتیِ کانال <span class="en">y</span>.</div>
+<div class="bl">کانال <span class="en">(y-1)</span>: <span class="en">SITP=1</span> (گزینش داده با لُب پایین‌رونده)؛ یعنی کانال راستِ صوتیِ کانال <span class="en">(y-1)</span>.</div>
+<div class="bl">دو فیلتر <span class="en">DFSDM</span> به کانال <span class="en">y</span> و کانال <span class="en">(y-1)</span> تخصیص می‌یابند (برای فیلترکردن کانال‌های چپ و راست میکروفون <span class="en">PDM</span>).</div>
+
+<h3 class="h2x" id="sec-213"><span class="dm">◆</span>۲.۳ دیاگرام جمع‌آوری استریو</h3>
+<p>ماژول <span class="en">DFSDM</span> از دو کانال سریال برای اتصال به دو مدولاتور خارجی ΣΔ استفاده می‌کند و خطوط سیگنال یک مجموعۀ مشترک از <span class="en">DATA</span> و <span class="en">CLK</span> را به اشتراک می‌گذارند.</p>
+<div class="fig" id="fig-22">
+  <div class="figbox">
+    <img src="assets/img/an31001-vcrop_p7_3.png" alt="شکل ۲-۲" style="max-width:520px; max-height:560px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۲</span><span class="cap-text">دیاگرام جمع‌آوری استریو</span></div>
+</div>
+
+<h3 class="h2x" id="sec-214"><span class="dm">◆</span>۲.۴ ساعت و نرخ نمونه‌برداری صدا</h3>
+<p>برای آنکه <span class="en">DFSDM</span> دادۀ صوتی با فرکانس نمونه‌برداری معین خروجی بدهد، لازم است ساعت <span class="en">CKOUT</span> ماژول، پارامترهای فیلتر کانال و پارامترهای انتگرال‌گیر پیکربندی شوند. با استفاده از جریان دادۀ سریال به‌عنوان منبع ورودی، فرمول محاسبۀ دادۀ صوتی خروجی <span class="en">DFSDM</span> در جدول زیر آمده است.</p>
+<div class="fig" id="tab-21">
+  <div class="figbox">
+    <img src="assets/img/an31001-tab_p8_formulas.png" alt="جدول ۲-۱" style="max-width:620px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">جدول ۲-۱</span><span class="cap-text">نرخ خروجی دادۀ صوتی (تعداد نمونه بر ثانیه)</span></div>
+</div>
+<div class="note"><span class="lbl">توجه:</span> در جدول، <span class="en">FOSR</span> نرخ نمونه‌برداری بیش از حد فیلتر <span class="en">Sinc</span> است، نرخ نمونه‌برداری بیش از حد انتگرال‌گیر <span class="en">2×IOSR</span> است و <span class="en">fCKOUT</span> ساعتی است که <span class="en">DFSDM</span> به‌صورت <span class="en">CKOUT</span> خروجی می‌دهد.</div>
+
+<h3 class="h2x" id="sec-215"><span class="dm">◆</span>۲.۵ پیکربندی جانبی</h3>
+<p>با مثال حالت سریع پیش می‌رویم: فرض کنید نرخ نمونه‌برداری صوتی موردنظر <span class="en">FS = 16KHz</span> باشد، فیلتر ماژول <span class="en">DFSDM</span> فیلتر <span class="en">Sinc</span> مرتبۀ ۳ انتخاب شود، نرخ نمونه‌برداری بیش از حد ۱۲۸ و نرخ نمونه‌برداری انتگرال ۱ باشد (انتگرال‌گیر میان‌راهی می‌شود)؛ در این صورت <span class="en">fCKOUT = FS × FOSR = 2.048MHz</span> خواهد بود. اگر منبع ساعت سریال خروجی <span class="en">DFSDM</span> ساعت صوتی باشد و ساعت سیستم <span class="en">SYSCLK = 295MHz</span>، ضریب تقسیم ساعت سریال خروجی باید ۱۴۴ تنظیم شود (<span class="en">295MHz / 2.048MHz ≈ 144</span>). تقسیم‌کنندۀ ساعت اصلی <span class="en">SAI</span> نیز <span class="en">MCLKDIV = (SYSCLK / 6) / (FS × 256) = 12</span> به‌دست می‌آید.</p>
+<p>پیکربندی <span class="en">DFSDM</span> و <span class="en">SAI</span> به‌صورت زیر است:</p>
+<div class="fig" id="code-1">
+  <div class="codeblk long"><span class="cm">/*********************************************************************
+* @fn      DFSDM_Function_Init
+*
+* @brief   Initializes DFSDM collection.
+*
+* @return  none
+*********************************************************************/
+void DFSDM_Function_Init(void)
+{
+DFSDM_ChannelInitTypeDef DFSDM_ChannelInitStructure = {0};
+DFSDM_FilterInitTypeDef DFSDM_FilterInitStructure = {0};
+DFSDM_RcInitTypeDef DFSDM_RcInitStructure = {0};
+RCC_HB2PeriphClockCmd(RCC_HB2Periph_DFSDM, ENABLE);
+
+/* Configure output serial clock source and divider */
+DFSDM_OutSerialClkConfig(DFSDM_AudioClk, ClkoutDiv);
+/* initialize the parameters of DFSDM */
+DFSDM_ChannelStructInit(&DFSDM_ChannelInitStructure);
+DFSDM_FilterStructInit(&DFSDM_FilterInitStructure);
+DFSDM_RcStructInit(&DFSDM_RcInitStructure);
+
+/* initialize DFSDM channel 0 */
+DFSDM_ChannelInitStructure.DFSDM_ChAWDSincFilterOrder = DFSDM_AWD_FastSinc;
+DFSDM_ChannelInitStructure.DFSDM_ChAWDFilterOverSample = DFSDM_AWD_FLT_Bypass;
+DFSDM_ChannelInitStructure.DFSDM_ChSPIClockSource = DFSDM_InternalClkOut;
+DFSDM_ChannelInitStructure.DFSDM_ChSerialInterface = DFSDM_SPIFalling;
+DFSDM_ChannelInitStructure.DFSDM_ChCalibrationOffset = 0;
+DFSDM_ChannelInitStructure.DFSDM_ChDataPackMode = DFSDM_StandardMode;
+DFSDM_ChannelInitStructure.DFSDM_ChDataMultiplexer = DFSDM_SerialInput;
+DFSDM_ChannelInitStructure.DFSDM_ChInPinSelect = DFSDM_SelectNext;
+DFSDM_ChannelInitStructure.DFSDM_ChShortCircuitDetMode = ENABLE;
+DFSDM_ChannelInitStructure.DFSDM_ChSCDCntthreshold = SCDCntthreshold;
+DFSDM_ChannelInitStructure.DFSDM_ChDataRightBitShift = DataRightBitShift;
+DFSDM_ChannelInit(DFSDM_Channel0, &DFSDM_ChannelInitStructure);
+
+/* initialize DFSDM channel 1 */
+DFSDM_ChannelInitStructure.DFSDM_ChAWDSincFilterOrder = DFSDM_AWD_FastSinc;
+DFSDM_ChannelInitStructure.DFSDM_ChAWDFilterOverSample = DFSDM_AWD_FLT_Bypass;
+DFSDM_ChannelInitStructure.DFSDM_ChSPIClockSource = DFSDM_InternalClkOut;
+DFSDM_ChannelInitStructure.DFSDM_ChSerialInterface = DFSDM_SPIRising;
+DFSDM_ChannelInitStructure.DFSDM_ChInPinSelect = DFSDM_SelectCurrent;
+DFSDM_ChannelInitStructure.DFSDM_ChSCDCntthreshold = SCDCntthreshold;
+DFSDM_ChannelInitStructure.DFSDM_ChDataRightBitShift = DataRightBitShift;
+DFSDM_ChannelInit(DFSDM_Channel1, &DFSDM_ChannelInitStructure);
+
+/* initialize DFSDM filter 0 and filter 1 */
+DFSDM_FilterInitStructure.DFSDM_FltSincOrder = FLT_SincOrder;
+DFSDM_FilterInitStructure.DFSDM_FltOverSample = FLT_OverSample;
+DFSDM_FilterInitStructure.DFSDM_FltIntegratorOverSample = FLT_IntegrOverSample;
+DFSDM_FilterInit(DFSDM_FLT0, &DFSDM_FilterInitStructure);
+DFSDM_FilterInit(DFSDM_FLT1, &DFSDM_FilterInitStructure);
+
+/* initialize DFSDM filter 0 regular conversions */
+DFSDM_RcInitStructure.DFSDM_RcChannel = DFSDM_RC_Channel0;
+DFSDM_RcInitStructure.DFSDM_RcContinuousMode = ENABLE;
+DFSDM_RcInitStructure.DFSDM_RcFastMode = ENABLE;
+DFSDM_RcInitStructure.DFSDM_RcDMAMode = ENABLE;
+DFSDM_RcInit(DFSDM_FLT0, &DFSDM_RcInitStructure);
+
+/* initialize DFSDM filter 1 regular conversions */
+DFSDM_RcInitStructure.DFSDM_RcChannel = DFSDM_RC_Channel1;
+DFSDM_RcInitStructure.DFSDM_RcContinuousMode = ENABLE;
+DFSDM_RcInitStructure.DFSDM_RcFastMode = ENABLE;
+DFSDM_RcInitStructure.DFSDM_RcDMAMode = ENABLE;
+DFSDM_RcInit(DFSDM_FLT1, &DFSDM_RcInitStructure);
+
+/* enable DFSDM channel 0 and channel 1 */
+DFSDM_ChannelCmd(DFSDM_Channel0, ENABLE);
+DFSDM_ChannelCmd(DFSDM_Channel1, ENABLE);
+
+/* enable DFSDM filter 0 and filter 1 */
+DFSDM_FilterCmd(DFSDM_FLT0, ENABLE);
+DFSDM_FilterCmd(DFSDM_FLT1, ENABLE);
+
+/* enable DFSDM interface */
+DFSDM_Cmd(ENABLE);
+/* enable regular channel conversion by software */
+DFSDM_RcSoftStartConversion(DFSDM_FLT0);
+DFSDM_RcSoftStartConversion(DFSDM_FLT1);
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۱</span><span class="cap-text">مقداردهی اولیۀ جانبی <span class="en">DFSDM</span> برای جمع‌آوری استریو</span></div>
+</div>
+<div class="fig" id="code-2">
+  <div class="codeblk long">void SAI_Config(uint32_t SampleRate)
+{
+SAI_InitTypeDef SAI_InitStructure = {0};
+SAI_FrameInitTypeDef SAI_FrameInitStructure = {0};
+SAI_SlotInitTypeDef SAI_SlotInitStructure = {0};
+
+RCC_HB2PeriphClockCmd(RCC_HB2Periph_SAI, ENABLE);
+/* The SAI Clock configuration is calculated as follows:
+SAI_CK_x  = SysClk / 6
+MCLK_x = SAI_CK_x / MCKDIV[5:0] with MCLK_x = 256 * FS
+FS = SAI_CK_x / (MCKDIV[5:0] * 256)
+MCKDIV[5:0] = (SysClk / 6) / (FS * 256) */
+RCC_ClocksTypeDef RCC_ClocksStatus = {0};
+RCC_GetClocksFreq(&RCC_ClocksStatus);
+const uint32_t tmpdiv = (RCC_ClocksStatus.SYSCLK_Frequency / 6) / (SampleRate * 256);
+
+SAI_InitStructure.SAI_NoDivider = SAI_MasterDivider_Enabled;
+SAI_InitStructure.SAI_MasterDivider = tmpdiv;
+SAI_InitStructure.SAI_AudioMode = SAI_Mode_MasterTx;
+SAI_InitStructure.SAI_Protocol = SAI_Free_Protocol;
+SAI_InitStructure.SAI_DataSize = SAI_DataSize_16b;
+SAI_InitStructure.SAI_FirstBit = SAI_FirstBit_MSB;
+SAI_InitStructure.SAI_ClockStrobing = SAI_ClockStrobing_RisingEdge;
+SAI_InitStructure.SAI_Synchro = SAI_Asynchronous;
+SAI_InitStructure.SAI_FIFOThreshold = SAI_FIFOThreshold_HalfFull;
+SAI_Init(SAI_Block_A, &SAI_InitStructure);
+
+SAI_FrameInitStructure.SAI_FrameLength = 32;
+SAI_FrameInitStructure.SAI_ActiveFrameLength = 16;
+SAI_FrameInitStructure.SAI_FSDefinition = SAI_FS_StartFrame;
+SAI_FrameInitStructure.SAI_FSPolarity = SAI_FS_ActiveLow;
+SAI_FrameInitStructure.SAI_FSOffset = SAI_FS_FirstBit;
+SAI_FrameInit(SAI_Block_A, &SAI_FrameInitStructure);
+
+SAI_SlotInitStructure.SAI_FirstBitOffset = 0;
+SAI_SlotInitStructure.SAI_SlotSize = SAI_SlotSize_DataSize;
+SAI_SlotInitStructure.SAI_SlotNumber = 2;
+SAI_SlotInitStructure.SAI_SlotActive = SAI_SlotActive_ALL;
+SAI_SlotInit(SAI_Block_A, &SAI_SlotInitStructure);
+SAI_FlushFIFO(SAI_Block_A);
+NVIC_EnableIRQ(SAI_IRQn);
+NVIC_SetPriority(SAI_IRQn, 1);
+SAI_Cmd(SAI_Block_A, ENABLE);
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۲</span><span class="cap-text">پیکربندی رابط <span class="en">SAI</span> برای خروجی صدا</span></div>
+</div>
+<p>در این نمونه، <span class="en">DFSDM</span> دادۀ میکروفون خارجی <span class="en">PDM</span> را جمع‌آوری می‌کند. در مقداردهی اولیه نخست ساعت <span class="en">DFSDM</span> فعال می‌شود و ساعت خروجی <span class="en">CKOUT</span> طوری پیکربندی می‌شود که از تقسیم ساعت صوتی به‌دست آید و میکروفون خارجی <span class="en">PDM</span> را تغذیه کند. کانال‌های ۰ و ۱ <span class="en">DFSDM</span> به‌ترتیب برای جمع‌آوری دادهٔ کانال‌های چپ و راست پیکربندی می‌شوند؛ منبع ساعت کانال داخلی انتخاب می‌شود، ورودی داده در حالت سریال قرار می‌گیرد، فیلترها با پارامترهای استخراج <span class="en">Sinc</span> یکسان پیکربندی می‌شوند و نتیجۀ تبدیل به‌صورت پیوسته با <span class="en">DMA</span> منتقل می‌شود. در نهایت، جریان بیت <span class="en">PDM</span> پس از فیلترینگ با <span class="en">DFSDM</span> به دادۀ <span class="en">PCM</span> تبدیل می‌شود. <span class="en">SAI</span> برای خروجی دادۀ صوتی <span class="en">PCM</span> به‌کار می‌رود: ضریب تقسیم ساعت اصلی بر اساس نرخ نمونه‌برداری هدف محاسبه می‌شود، <span class="en">SAI</span> در حالت فرستندۀ master با عرض دادۀ <span class="en">16bit</span> و خروجی دوکاناله پیکربندی می‌شود؛ طول فریم <span class="en">32bit</span> است و هر فریم شامل دو <span class="en">Slot</span> ۱۶ بیتی چپ و راست است که برای انتقال استاندارد صدای استریو مناسب است.</p>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN31001</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/06/01</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">DFSDM</span></td><td class="jt">فیلتر دیجیتال برای مدولاتور سیگما-دلتا؛ ماژول فیلترینگ دیجیتال با رابط سریال و دو فیلتر، برای پردازش جریان دادۀ ۱ بیتی مدولاتورهای خارجی ΣΔ</td></tr>
+      <tr><td><span class="en">ΣΔ Modulator</span></td><td class="jt">مدولاتور سیگما-دلتا؛ پیش‌آنالوگ جمع‌آوری که با ۱ بیت ADC داخلی، دامنۀ سیگنال را به‌صورت تراکم منطق ۱ در جریان سریال DATA/CLK بازنمایی می‌کند</td></tr>
+      <tr><td><span class="en">PDM</span></td><td class="jt">تعدیل چگالی پالس؛ قالب خروجی رایج میکروفون‌های دیجیتال، معادل سیگنال تعدیل‌شدۀ ΣΔ</td></tr>
+      <tr><td><span class="en">Serial Transceiver</span></td><td class="jt">ترانسسیور سریال؛ ۲ کانال دادۀ سریال چندگانه که جریان دادۀ مدولاتور را دریافت و به فیلتر/سگ‌بان/آشکارساز تخصیص می‌دهد</td></tr>
+      <tr><td><span class="en">Parallel Transceiver</span></td><td class="jt">ترانسسیور موازی؛ رجیستر ورودی موازی ۱۶ بیتی روی گذرگاه HB برای فیلترینگ سیگنال‌های داخلی (ADC یا حافظه)</td></tr>
+      <tr><td><span class="en">Sinc / FastSinc</span></td><td class="jt">انواع فیلتر دیجیتال؛ مرتبۀ <span class="en">Sinc1~Sinc5</span> و <span class="en">FastSinc</span> قابل انتخاب است</td></tr>
+      <tr><td><span class="en">FOSR / FORD / IOSR</span></td><td class="jt">نرخ نمونه‌برداری بیش از حد فیلتر / مرتبۀ فیلتر / نرخ نمونه‌برداری بیش از حد انتگرال‌گیر؛ پارامترهای تفکیک‌پذیری و نرخ خروجی</td></tr>
+      <tr><td><span class="en">Integrator</span></td><td class="jt">انتگرال‌گیر؛ با جمع سادهٔ نمونه‌های خروجی فیلتر، تفکیک‌پذیری و تفکیک را باز هم بیشتر بالا می‌برد (<span class="en">IOSR = 1~256</span>)</td></tr>
+      <tr><td><span class="en">Analog Watchdog</span></td><td class="jt">سگ‌بان آنالوگ؛ عبور سیگنال از آستانۀ بالا یا پایین را با فیلتر اختصاصی (<span class="en">FOSR=1~32، FORD=1~3</span>) آشکار و رویداد/وقفه می‌سازد</td></tr>
+      <tr><td><span class="en">Short-Circuit Detector</span></td><td class="jt">آشکارساز اتصال کوتاه؛ شمارش مقادیر منطقی یکسانِ متوالی و اعلام رویداد با رسیدن به آستانۀ ثبت‌شده در رجیستر</td></tr>
+      <tr><td><span class="en">Extreme-Value Detector</span></td><td class="jt">آشکارساز مقدار حدی؛ ثبت کوچک‌ترین و بزرگ‌ترین نمونۀ خروجی در رجیسترهای مقدار حدی برای پایش دامنۀ سیگنال</td></tr>
+      <tr><td><span class="en">DATINy / CKINy</span></td><td class="jt">پین‌های ورودی داده و ساعت سریال کانال y؛ با انتخاب «کانال بعدی» برای جمع‌آوری استریوی PDM بازآدرس‌دهی می‌شوند</td></tr>
+      <tr><td><span class="en">CHINSEL / SITP</span></td><td class="jt">انتخاب منبع ورودی کانال و لُبِ ساعت گزینش داده؛ لُب بالارونده برای کانال چپ و لُب پایین‌رونده برای کانال راست</td></tr>
+      <tr><td><span class="en">DFSDM_CKOUT</span></td><td class="jt">ساعت خروجی DFSDM برای تغذیۀ میکروفون PDM؛ معمولاً ۱ تا ۳٫۲ مگاهرتز و تعیین‌کنندۀ نرخ دادۀ میکروفون</td></tr>
+      <tr><td><span class="en">SAI</span></td><td class="jt">رابط صوتی سریال؛ در این نمونه در حالت فرستندۀ master با قالب ۱۶ بیتی و دو اسلات برای انتقال خروجی PCM به‌کار می‌رود</td></tr>
+      <tr><td><span class="en">MCLKDIV</span></td><td class="jt">تقسیم‌کنندۀ ساعت اصلی SAI؛ برابر (SYSCLK/6)/(FS×256) محاسبه می‌شود</td></tr>
+      <tr><td><span class="en">HB Bus</span></td><td class="jt">گذرگاه پهن‌باند بالای سیستم؛ مسیر دسترسی CPU/DMA به دادۀ پردازش‌شدۀ DFSDM</td></tr>
+      <tr><td><span class="en">PCM</span></td><td class="jt">مدولاسیون کد پالس؛ خروجی نهایی فیلترینگ DFSDM که قالب استاندارد صدای دیجیتال است</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN31001 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۲۵</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN31001</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
