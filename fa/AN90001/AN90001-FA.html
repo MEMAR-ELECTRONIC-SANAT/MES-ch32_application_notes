@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>کتابخانۀ گرافیکی WCHGUI — ترجمۀ فارسی AN90001</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">کتابخانۀ گرافیکی <span class="en">WCHGUI</span></div>
+    <div class="t2">رابط کاربری چندصفحه‌ای روی میکروکنترلر</div>
+    <div class="t3">همراه ابزار <span class="en">WCHGUIDesigner</span> · تولید خودکار کد <span class="en">C</span></div>
+  </div>
+  <div class="c-sub">از طراحی UI در ابزار میزبان تا تولید کد، انتقال به پروژۀ <span class="en">CH32V203CCT6</span> و پیاده‌سازی صفحات کنترلی (زمان، تهویه، سناریو، روشنایی، پرده) با کُدساز چرخان و لمس</div>
+  <div class="c-desc">ترجمۀ فارسی سند رسمی <span class="en">AN90001</span> (نسخۀ ۱٫۰، منتشرۀ <span class="en">WCH</span>): کتابخانۀ سبک <span class="en">WCHGUI</span> با رویکرد «UI اعلانی + تولید خودکار کد + لایۀ انتزاع سخت‌افزار» اجرای رابط چندصفحه‌ای را حتی روی دستگاه‌های چند-KB ممکن می‌کند. سند چرخۀ کامل از خروجی منابع در Designer تا به‌روزرسانی فریم در main را با مثال CH32V203CCT6 + نمایشگر ST77916 + فلش SPI مرور می‌کند و الگوی نوشتن لایۀ کسب‌وکار برای کنترل‌های پرکاربرد (نوار پیشرفت، کلید، دکمه، تصویر) را می‌دهد.</div>
+  <div class="c-tags">
+    <span class="c-tag">کتابخانۀ <span class="en">WCHGUI</span></span>
+    <span class="c-tag">ابزار <span class="en">WCHGUIDesigner</span></span>
+    <span class="c-tag"><span class="en">CH32V203CCT6</span></span>
+    <span class="c-tag">نمایشگر <span class="en">ST77916</span></span>
+    <span class="c-tag">فلش خارجی <span class="en">SPI</span></span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN90001 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">مقدمه | توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | طراحی UI</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-11"><span class="s-id">1.1</span><span>توصیف نواحی رابط ابزار میزبان</span><span class="s-dots"></span><span class="s-page">۳</span></a>
+    <a class="toc-sub" href="#sec-12"><span class="s-id">1.2</span><span>گزینش کنترل‌ها</span><span class="s-dots"></span><span class="s-page">۴</span></a>
+    <a class="toc-sub" href="#sec-13"><span class="s-id">1.3</span><span>ترسیم UI</span><span class="s-dots"></span><span class="s-page">۵</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | خروجی منابع و یکپارچه‌سازی کد لایۀ پایین</span><span class="t-dots"></span><span class="t-page">۱۱</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-21"><span class="s-id">2.1</span><span>خروجی گرفتن منابع</span><span class="s-dots"></span><span class="s-page">۱۱</span></a>
+    <a class="toc-sub" href="#sec-22"><span class="s-id">2.2</span><span>یکپارچه‌سازی کد لایۀ پایین</span><span class="s-dots"></span><span class="s-page">۱۲</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b3"><span class="t-num">۴</span><span class="t-title">بخش ۳ | پروژۀ عملی: جعبهٔ کنترل</span><span class="t-dots"></span><span class="t-page">۱۴</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-31"><span class="s-id">3.1</span><span>تعریف نیازهای کارکردی سیستم</span><span class="s-dots"></span><span class="s-page">۱۴</span></a>
+    <a class="toc-sub" href="#sec-32"><span class="s-id">3.2</span><span>پیاده‌سازی کارکردهای سیستم</span><span class="s-dots"></span><span class="s-page">۱۵</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b4"><span class="t-num">۵</span><span class="t-title">بخش ۴ | پرسش‌های رایج و ترفندهای اشکال‌زدایی</span><span class="t-dots"></span><span class="t-page">۲۵</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-41"><span class="s-id">4.1</span><span>کندی UI</span><span class="s-dots"></span><span class="s-page">۲۵</span></a>
+    <a class="toc-sub" href="#sec-42"><span class="s-id">4.2</span><span>کم‌حساسی لمس</span><span class="s-dots"></span><span class="s-page">۲۶</span></a>
+    <a class="toc-sub" href="#sec-43"><span class="s-id">4.3</span><span>نمایش نادرست کنترل‌ها</span><span class="s-dots"></span><span class="s-page">۲۶</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۶</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۲۶</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۷</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۲۶</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">شکل ۱</span><span>تقسیم‌بندی نواحی رابط ابزار میزبان</span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">شکل ۲</span><span>کشیدن و رهاکردن کنترل</span><span class="f-dots"></span><span class="f-page">۶</span></div>
+        <div class="frow"><span class="f-id">شکل ۳</span><span>تنظیم ویژگی‌های کنترل</span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">شکل ۴</span><span>نمایش کنترل در نمای UI</span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">شکل ۵</span><span>نمایش چند کنترل کلید</span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">شکل ۶</span><span>تنظیم کنترل متن هنری</span><span class="f-dots"></span><span class="f-page">۹</span></div>
+        <div class="frow"><span class="f-id">شکل ۷</span><span>تنظیم کنترل متن ایستا</span><span class="f-dots"></span><span class="f-page">۹</span></div>
+      </div>
+      <div>
+        <div class="frow"><span class="f-id">شکل ۸</span><span>نمای صفحۀ کنترل سناریو</span><span class="f-dots"></span><span class="f-page">۱۰</span></div>
+        <div class="frow"><span class="f-id">شکل ۹</span><span>نمای صفحۀ کنترل روشنایی</span><span class="f-dots"></span><span class="f-page">۱۰</span></div>
+        <div class="frow"><span class="f-id">شکل ۱۰</span><span>نمای صفحۀ کنترل پرده</span><span class="f-dots"></span><span class="f-page">۱۱</span></div>
+        <div class="frow"><span class="f-id">شکل ۱۱</span><span>نمای صفحۀ آغاز</span><span class="f-dots"></span><span class="f-page">۱۱</span></div>
+        <div class="frow"><span class="f-id">شکل ۱۲</span><span>تولید کد C برای MCU</span><span class="f-dots"></span><span class="f-page">۱۲</span></div>
+        <div class="frow"><span class="f-id">شکل ۱۳</span><span>ایجاد پروژۀ کد WCHGUI</span><span class="f-dots"></span><span class="f-page">۱۲</span></div>
+        <div class="frow"><span class="f-id">شکل ۱۴</span><span>انتقال کد UI</span><span class="f-dots"></span><span class="f-page">۱۳</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> کتابخانۀ <span class="en">WCHGUI</span> با ابزار <span class="en">WCHGUIDesigner</span> و رویکرد «UI اعلانی + تولید خودکار کد + لایۀ انتزاع سخت‌افزار»، اجرای رابط کاربری چندصفحه‌ای روی میکروکنترلرهای سری <span class="en">CH32</span> را ممکن می‌کند. این سند با مثال <span class="en">CH32V203CCT6</span> + نمایشگر <span class="en">ST77916</span> + فلش <span class="en">SPI</span>، طراحی صفحات، خروجی منابع، یکپارچه‌سازی کد در پروژۀ MCU و پیاده‌سازی لایۀ کسب‌وکار کنترل‌های پرکاربرد را پوشش می‌دهد.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p><span class="en">WCHGUI</span> کتابخانۀ گرافیکی سبکی است که شرکت WCH برای همراهی با میکروکنترلرهای سری <span class="en">CH32</span> عرضه کرده است؛ این کتابخانه همراه ابزار میزبان <span class="en">WCHGUIDesigner</span> با رویکرد «UI اعلانی + تولید خودکار کد + لایۀ انتزاع سخت‌افزار» کار می‌کند و حتی روی دستگاه‌های توکار با چند کیلوبایت RAM نیز می‌تواند رابط کاربری چندصفحه‌ای را اجرا کند. در این سند با مثال <span class="en">CH32V203CCT6</span> + نمایشگر <span class="en">ST77916 LCD</span> + فلش <span class="en">SPI</span>، چرخۀ کامل از خروجی Designer تا به‌روزرسانی فریم در تابع main مرور می‌شود و شیوۀ نوشتن لایۀ کسب‌وکار برای کنترل‌های پرکاربرد مانند نوار پیشرفت، کلید، دکمه و تصویر ارائه می‌گردد تا توسعه‌دهندگان به‌سرعت آن را بیاموزند.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>MCU عمومی</td><td><span class="en">CH32L103</span>، <span class="en">CH32V006</span>، <span class="en">CH32V203</span> و …</td></tr>
+  </table>
+</div>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">طراحی UI</div>
+  <div class="sec-divider"></div>
+</div>
+<h3 class="h2x" id="sec-11"><span class="dm">◆</span>۱.۱ توصیف نواحی رابط ابزار میزبان</h3>
+<p>نواحی اصلی کارکردی ابزار میزبان را می‌توان به نواحی مدیریت منابع، نمای نمایش UI، جعبه‌ابزار کنترل‌ها، پنل ویژگی‌ها و درخت سلسلۀ کنترل‌ها تقسیم کرد؛ همان‌طور که در شکل ۱ نشان داده شده است.</p>
+<div class="fig" id="fig-11">
+  <div class="figbox"><img src="assets/img/an90001-ui1.png" alt="تقسیم‌بندی نواحی ابزار میزبان" style="max-width:500px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱</span><span class="cap-text">تقسیم‌بندی نواحی رابط ابزار میزبان (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<div class="bl"><b style="color:#8a4a12;">مدیریت منابع</b> — کارکرد: برای ورود منابع خارجی (مانند تصاویر <span class="en">PNG/JPG</span> و انیمیشن‌های <span class="en">GIF</span>)، تقسیم‌بندی منابع، پاک‌سازی منابع و حذف. نقش: کاربر منابع موردنیاز را وارد می‌کند تا مفهومی مانند «استخر منابع» شکل بگیرد که برای توسعه و بارگذاری بعدی کنترل‌ها به کار می‌رود. منابع واردشده در این بخش حافظۀ فلش خارجی را اشغال نمی‌کنند و لازم نیست نگرانی باشد؛ همچنین هنگام بارگذاری تصاویر GIF، ابزار میزبان می‌تواند جداسازی خودکار فریم‌ها را انجام دهد.</div>
+<div class="bl"><b style="color:#8a4a12;">نمای نمایش UI</b> — کارکرد: ارائهٔ پیش‌نمایش زندهٔ رابط برای قضاوت و پردازش آسان رابط واقعی. نقش: توسعه‌دهنده بدون رایت مکرر MCU می‌تواند چیدمان، رنگ‌بندی و اثر هم‌پوشانی تصاویر را به‌طور شهودی تأیید کند و تجربۀ «هرچه می‌بینی همان را می‌گیری» محقق می‌شود.</div>
+<div class="bl"><b style="color:#8a4a12;">جعبه‌ابزار کنترل‌ها</b> — کارکرد: کتابخانۀ غنی از کنترل‌های داخلی مانند برچسب (<span class="en">Label</span>)، دکمه (<span class="en">Button</span>)، نوار پیشرفت (<span class="en">Progress Bar</span>)، کلید (<span class="en">Switch</span>) و تصویر ایستا (<span class="en">Image</span>) و … . نقش: افزودن کنترل‌ها با کشیدن و رهاکردن برای ساخت سریع رابط.</div>
+<div class="bl"><b style="color:#8a4a12;">پنل ویژگی‌ها</b> — کارکرد: پیکربندی پارامترهای تفصیلی کنترل انتخاب‌شده؛ شامل شناسۀ یکتای کنترل در آن صفحه، مختصات کنترل، ناحیۀ کنترل، کنترل لمسی، رنگ پس‌زمینه و نام صفحه و … . نقش: کنترل دقیق رفتار کنترل‌ها؛ در نهایت همهٔ پیکربندی‌ها به ساختار <span class="en">wui_widget_desc_t</span> در زبان C تبدیل می‌شوند. اطلاعات کنترل‌های هر صفحه در فایل h مربوطه ذخیره می‌شود و کاربر می‌تواند ویژگی‌های تنظیم‌شده را به‌طور شهودی در کد ببیند.</div>
+<div class="bl"><b style="color:#8a4a12;">درخت سلسلۀ کنترل‌ها</b> — کارکرد: نمایش ترتیب قرارگیری کنترل‌های صفحۀ جاری به‌صورت درختی. نقش: مدیریت آسان روابط پوشانیدگی کنترل‌ها در رابط‌های پیچیده؛ لایۀ کنترل‌ها برای ویرایش قابل تنظیم است.</div>
+
+<h3 class="h2x" id="sec-12"><span class="dm">◆</span>۱.۲ گزینش کنترل‌ها</h3>
+<p>انتخاب کنترل‌ها در <span class="en">WCHGUI</span> مستقیماً بر توسعۀ منطق کسب‌وکار بعدی اثر می‌گذارد؛ رعایت اصول زیر توصیه می‌شود:</p>
+<div class="bl">آیکن‌های حالت‌دار (روشن/خاموش): اولویت با کنترل کلید (Switch) است نه دنبالۀ تصاویر؛ این انتخاب منطق کسب‌وکار را ساده می‌کند.</div>
+<div class="bl">آیکن‌های راه‌اندازِ کنش: دکمه (Button) و کلید (Switch) هر دو می‌توانند به‌صورت آیکن قابل کلیک به نظر برسند، اما معنای تعامل و مدل دادۀ آن‌ها کاملاً متفاوت است. کلید (Switch) برای تغییر حالت پایدار به کار می‌رود و پس از تغییر، حالت به‌صورت پایدار باقی می‌ماند؛ دکمه (Button) برای اجرای یک کنش یک‌باره مانند جابه‌جایی صفحه، ارسال فرمان یا تأیید پنجرۀ بازشو است.</div>
+<div class="bl">نمایش عددی: اولویت با متن هنری (<span class="en">ExString</span>) است و از متن ایستا پرهیز کنید؛ زیرا متن ایستا به‌صورت تصویر در فلش <span class="en">SPI</span> ذخیره می‌شود و مقدار آن قابل تغییر نیست.</div>
+<div class="bl">کنترل‌های انیمیشنی: تصاویر GIF به‌طور خودکار توسط ابزار میزبان به فریم‌هایی جدا می‌شوند؛ برای انیمیشن آغاز و انیمیشن‌های کسب‌وکار مناسب‌اند.</div>
+<div class="bl">کنترل نوار پیشرفت: از پس‌زمینه و ناحیۀ پرشده تشکیل شده و به‌طور پیش‌فرض با رنگ یکدست (رنگ پس‌زمینه + رنگ پیش‌زمینه) پر می‌شود؛ برای صحنه‌هایی که زیبایی‌شناسی بالایی نمی‌خواهند مناسب است.</div>
+<div class="bl">کنترل لغزنده: ماهیتش شبیه نوار پیشرفت است اما از دو تصویر «تصویر پس‌زمینه» و «تصویر لغزنده» ساخته می‌شود: تصویر پس‌زمینه نقش ریل و تصویر لغزنده نقش دستگیرۀ متحرک را دارد؛ برای صحنه‌هایی که باید موقعیت دستگیره را بازتاب دهند مناسب است و قابلیت بهره‌برداری بالاتری دارد.</div>
+<div class="scen"><span class="lbl">نکته: </span>ناحیۀ لمسی: به‌طور پیش‌فرض ناحیۀ لمسی کنترل برابر با ناحیۀ نمایش آن است؛ برای آیکن‌های کوچک توصیه می‌شود ناحیۀ لمسی <span class="en">touch_areas_page_x</span> را به‌صورت دستی بزرگ‌تر کنید تا تجربۀ کاربر بهبود یابد.</div>
+
+<h3 class="h2x" id="sec-13"><span class="dm">◆</span>۱.۳ ترسیم UI</h3>
+<p>در این بخش با مثال نمایشگر دایره‌ای، فرایند ترسیم رابط UI معرفی می‌شود. برای عملیات پایه مانند ایجاد پروژه و پیکربندی محیط، به «راهنمای استفاده از <span class="en">WCHGUIDesigner</span>» زیر منوی «کمک» در ابزار میزبان مراجعه کنید؛ در ادامه روش ساخت رابط بر پایۀ کتابخانۀ کنترل‌ها توضیح داده می‌شود.</p>
+<p>با در نظر گرفتن رابط شکل ۱ به‌عنوان نمونه، فرایند ترسیم UI به این صورت است:</p>
+<div class="bl">۱. ایجاد صفحه جدید: پیکربندی ویژگی‌های صفحه بر اساس اندازۀ صفحه‌نمایش.</div>
+<div class="bl">۲. افزودن تصویر: کنترل تصویر (<span class="en">Image</span>) را از کتابخانۀ کنترل‌ها در سمت راست به نمای نمایش UI بکشید.</div>
+<div class="fig" id="fig-12">
+  <div class="figbox"><img src="assets/img/an90001-ui2.png" alt="کشیدن کنترل" style="max-width:500px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۲</span><span class="cap-text">کشیدن و رهاکردن کنترل</span></div>
+</div>
+<div class="bl">۳. تعیین منبع تصویر: در پنل ویژگی‌ها برای این کنترل تصویر، منبع تصویر خارجی متناظر مشخص می‌شود. در اینجا ابتدا تصویر پس‌زمینۀ صفحه انتخاب می‌شود و مختصات کنترل (<span class="en">X, Y</span>) برابر (<span class="en">0, 0</span>) قرار می‌گیرد تا کنترل کامل کل ناحیۀ نمایش را بپوشاند.</div>
+<p>دربارۀ نوع تصویر: تک‌تصویر برای پس‌زمینۀ ایستا یا آیکن ثابت مناسب است؛ دنبالۀ تصاویر برای صحنه‌هایی به کار می‌رود که محتوای نمایش باید به‌صورت پویا عوض شود (مانند انیمیشن و تغییر حالت). پس‌زمینۀ این مثال ایستاست؛ بنابراین «تک‌تصویر» انتخاب می‌شود.</p>
+<p>دربارۀ روش فشرده‌سازی: <span class="en">WCHGUIDesigner</span> از فشرده‌سازی منابع تصویری پشتیبانی می‌کند تا حجم نهایی <span class="en">images.bin</span> کوچک‌تر شود. هرچه نرخ فشرده‌سازی بالاتر باشد اشغال منابع کمتر است اما کیفیت تصویر متناسب افت می‌کند؛ توسعه‌دهنده باید بر اساس رزولوشن صفحه‌نمایش، غنای رنگی و ظرفیت فلش توازن برقرار کند.</p>
+<p>دربارۀ پیکربندی لمس: همهٔ کنترل‌های کتابخانه به‌طور پیش‌فرض از لمس پشتیبانی می‌کنند و پس از فعال‌سازی، ناحیۀ لمسی پیش‌فرض همان ناحیۀ نمایش خود کنترل است. چون این کنترل لایۀ پس‌زمینه است و در تعامل شرکت نمی‌کند، لازم نیست فعال‌سازی لمس روشن شود تا پاسخ رویدادهای لمسیِ کنترل‌های عملکردیِ لایه‌های بالاتر پوشانده نشود.</p>
+<div class="fig" id="fig-13">
+  <div class="figbox"><img src="assets/img/an90001-ui3.png" alt="تنظیم ویژگی‌های کنترل" style="max-width:500px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۳</span><span class="cap-text">تنظیم ویژگی‌های کنترل</span></div>
+</div>
+<p>همان‌طور که در شکل ۴ نشان داده شده، آیکن‌های عملکردی رابط (مانند حالت خنک‌کننده) باید پس از لمس حالت عوض کنند. هرچند این نیاز با کنترل «دنبالۀ تصاویر (<span class="en">MultiState</span>)» هم قابل پیاده‌سازی است، اما چون حالت خنک‌کننده تنها دو حالت گسستۀ «روشن» و «خاموش» دارد، از منظر سادگی منطق، انتخاب کنترل کلید (<span class="en">Switch</span>) معقول‌تر است و پیچیدگی توسعۀ منطق کسب‌وکار بعدی را به‌طور چشمگیر کاهش می‌دهد.</p>
+<p>در پنل ویژگی‌ها، علاوه بر مختصات و پیکربندی معمول لمس، باید پارامترهای زیر را با تأکید تنظیم کرد: تصاویر حالت‌ها: تصویر نمایشی هر یک از حالت‌های «روشن» و «خاموش» را جداگانه مشخص کنید؛ روش فشرده‌سازی: بر اساس نیازِ کیفیت نمایش، نرخ فشرده‌سازی را متوازن کنید؛ حالت اولیه: توسعه‌دهنده می‌تواند بر اساس رفتار پیش‌فرض محصول، حالت اولیۀ کلید (روشن/خاموش) را از پیش تعیین کند.</p>
+<p><span class="en">WCHGUIDesigner</span> از شبیه‌سازی حالت اجرا در مرحلۀ طراحی پشتیبانی می‌کند؛ با کلیک مستقیم روی همین کنترل کلید در نمای نمایش UI می‌توانید اثر تغییر حالت روشن/خاموش را به‌صورت زنده پیش‌نمایش بگیرید و بدون رایت مکرر فریم‌ور، تجربۀ طراحی «هرچه می‌بینی همان را می‌گیری» واقعاً محقق می‌شود. چون کنترل کلید روی تصویر پس‌زمینه قرار دارد و لمس آن فعال است، نگرانی دربارهٔ پوشانده‌شدن رویداد لمسی توسط پس‌زمینه وجود ندارد.</p>
+<div class="fig" id="fig-14">
+  <div class="figbox"><img src="assets/img/an90001-ui4.png" alt="نمایش کنترل در نمای UI" style="max-width:500px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۴</span><span class="cap-text">نمایش کنترل در نمای UI</span></div>
+</div>
+
+<div class="bl">۴. با همان روش طراحی فوق، ترسیم بقیۀ آیکن‌های عملکردی به ترتیب کامل می‌شود. پس از کشیدن کنترل‌ها، تنظیم تصاویر حالت و ناحیه‌های لمسی، چیدمان کل صفحه کامل می‌شود؛ اثر نهایی رابط پس از ترسیم در شکل ۵ نشان داده شده است.</div>
+<div class="fig" id="fig-15">
+  <div class="figbox"><img src="assets/img/an90001-ui5.png" alt="نمایش چند کنترل کلید" style="max-width:500px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۵</span><span class="cap-text">نمایش چند کنترل کلید</span></div>
+</div>
+<div class="bl">۵. مقدار دما در مرکز رابط یک متغیر پویاست و باید در زمان اجرا به‌روزرسانی شود؛ بنابراین برای ترسیم آن از کنترل متن هنری استفاده می‌شود. در پنل ویژگی‌ها ابتدا ناحیۀ نمایش تعیین می‌شود و سپس ویژگی‌هایی مانند نوع فونت، اندازۀ فونت، تراز، وزن فونت (پُررنگ)، رنگ فونت و رنگ پس‌زمینه پیکربندی می‌گردد.</div>
+<p>علاوه بر این، کنترل متن هنری و کنترل کلید پیش‌گفته در منطق تعامل مکمل یکدیگرند: کلید مسئول تغییر حالت (روشن/خاموش) است و متن هنری مسئول بازخورد حالت (مقدار دمای جاری)؛ این دو با هم چرخۀ تعاملی اصلی صفحۀ کنترل تهویه را می‌سازند.</p>
+<div class="fig" id="fig-16">
+  <div class="figbox"><img src="assets/img/an90001-ui6.png" alt="تنظیم کنترل متن هنری" style="max-width:500px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۶</span><span class="cap-text">تنظیم کنترل متن هنری</span></div>
+</div>
+<div class="bl">۶. در مقایسه با مقدار پویای دما، نماد واحد «℃» محتوای نمایشی ثابت است؛ پس با کنترل متن ایستا پیاده‌سازی می‌شود. پس از پیکربندی معمول فونت و چیدمان در پنل ویژگی‌ها، حتماً گزینۀ «پس‌زمینۀ شفاف» را فعال کنید. این کار از پوشانده‌شدن بافت تزئینی زیرین توسط پس‌زمینۀ ماتِ خودِ کنترل متن ایستا جلوگیری می‌کند و لایه‌بندی رابط تمیز و طبیعی می‌ماند.</div>
+<div class="fig" id="fig-17">
+  <div class="figbox"><img src="assets/img/an90001-ui7.png" alt="تنظیم کنترل متن ایستا" style="max-width:500px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۷</span><span class="cap-text">تنظیم کنترل متن ایستا</span></div>
+</div>
+<p>تا اینجا فرایند ترسیم UI صفحۀ ۱ به‌طور کامل ارائه شد. <span class="en">WCHGUI</span> از منطق پیکربندی یکپارچه برای کنترل‌ها بهره می‌برد؛ روش کار با نوار پیشرفت، لغزنده یا دنبالۀ تصاویر نیز با همین گام‌ها یکسان است. با پیروی از اصل ساخت لایه‌ها «از پایین به بالا»، طراحی بقیۀ صفحات را به ترتیب کامل کنید. اثر نهایی هر صفحه در شکل‌های زیر نشان داده شده است.</p>
+<div class="fig" id="fig-18">
+  <div class="figbox"><img src="assets/img/an90001-ui8.png" alt="نمای صفحۀ کنترل سناریو" style="max-width:500px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۸</span><span class="cap-text">نمای صفحۀ کنترل سناریو</span></div>
+</div>
+<div class="fig" id="fig-19">
+  <div class="figbox"><img src="assets/img/an90001-ui9.png" alt="نمای صفحۀ کنترل روشنایی" style="max-width:500px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۹</span><span class="cap-text">نمای صفحۀ کنترل روشنایی</span></div>
+</div>
+<div class="fig" id="fig-110">
+  <div class="figbox"><img src="assets/img/an90001-ui10.png" alt="نمای صفحۀ کنترل پرده" style="max-width:500px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱۰</span><span class="cap-text">نمای صفحۀ کنترل پرده</span></div>
+</div>
+<div class="fig" id="fig-111">
+  <div class="figbox"><img src="assets/img/an90001-ui11.png" alt="نمای صفحۀ آغاز" style="max-width:500px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱۱</span><span class="cap-text">نمای صفحۀ آغاز</span></div>
+</div>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">خروجی منابع و یکپارچه‌سازی کد لایۀ پایین</div>
+  <div class="sec-divider"></div>
+</div>
+<h3 class="h2x" id="sec-21"><span class="dm">◆</span>۲.۱ خروجی گرفتن منابع</h3>
+<p>پس از تکمیل ترسیم UI باید عملیات خروجی منابع اجرا شود. همان‌طور که در شکل ۱۲ نشان داده شده، در صفحۀ قابلیت «تولید» ابتدا اعتبارسنجی فایل انجام می‌شود و پس از تأیید درستی، دکمۀ «تولید» کلیک می‌گردد. این عملیات در مسیر خروجی، پوشۀ <span class="en">generated/wui_user/</span> را می‌سازد که شامل دو خروجی کلیدی است:</p>
+<div class="bl">فایل منابع: <span class="en">images.bin</span>؛ بستۀ فشردهٔ همهٔ تصاویر، فونت‌ها و دیگر منابع که باید روی فلش خارجی <span class="en">SPI</span> رایت شود.</div>
+<div class="bl">کد منبع: فایل‌های توصیف صفحات، تعریف کنترل‌ها و نمایۀ منابع (مانند <span class="en">wui_page.c/.h</span>) برای یکپارچه‌سازی در پروژۀ <span class="en">MCU</span>.</div>
+<p>تا اینجا فرایند توسعه در ابزار میزبان پایان می‌یابد و کارهای بعدی به مرحلۀ یکپارچه‌سازی نرم‌افزار توکار منتقل می‌شود.</p>
+<div class="fig" id="fig-21">
+  <div class="figbox"><img src="assets/img/an90001-gen.png" alt="تولید کد C" style="max-width:500px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱۲</span><span class="cap-text">تولید کد <span class="en">C</span> برای <span class="en">MCU</span></span></div>
+</div>
+<h3 class="h2x" id="sec-22"><span class="dm">◆</span>۲.۲ یکپارچه‌سازی کد لایۀ پایین</h3>
+<p>همۀ فایل‌های منبع و سرآیند زیر شاخۀ <span class="en">generated/wui_user/</span> را به پوشۀ <span class="en">User/wui_user</span> در پروژۀ <span class="en">CH32V203CCT6</span> کپی کنید. این پروژه بر اساس <span class="en">MounRiver Studio II</span> به‌تازگی ساخته شده و «<span class="en">DEMO</span> نمایشگری» رسمی به‌عنوان قالب انتخاب شده است. پس از کپی فایل‌ها، انتقال کد UI ابزار میزبان به پروژۀ توکار کامل می‌شود.</p>
+<div class="fig" id="fig-22">
+  <div class="figbox"><img src="assets/img/an90001-proj.png" alt="ایجاد پروژۀ WCHGUI" style="max-width:440px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱۳</span><span class="cap-text">ایجاد پروژۀ کد <span class="en">WCHGUI</span></span></div>
+</div>
+<div class="fig" id="fig-23">
+  <div class="figbox"><img src="assets/img/an90001-port.png" alt="انتقال کد UI" style="max-width:460px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱۴</span><span class="cap-text">انتقال کد UI (فایل‌های صفحات در پروژه)</span></div>
+</div>
+<h3 class="h2x" id="sec-221"><span class="dm">◆</span>۲.۲.۱ توصیف ساختار فایل‌های تولیدشده</h3>
+<p>فایل‌های تولیدشده به سه دسته تقسیم می‌شوند:</p>
+<div class="bl">لایۀ منابع: <span class="en">wui_asset.c/h</span>؛ نگاشت تصاویر، فونت‌ها و شناسۀ کنترل‌ها را تعریف می‌کند.</div>
+<div class="bl">لایۀ صفحات: <span class="en">wui_page_page_x.c/h</span>؛ هر صفحه یک فایل متناظر دارد که شامل جدول کنترل‌ها و منطق صفحه است.</div>
+<div class="bl">لایۀ مدیریت: <span class="en">wui_page.c/h</span>؛ جابه‌جایی صفحات و چرخۀ حیات آن‌ها را نگهداری می‌کند.</div>
+<h3 class="h2x" id="sec-222"><span class="dm">◆</span>۲.۲.۲ توصیف نقش رابط‌های HAL</h3>
+<p><span class="en">WCHGUI</span> از طریق <span class="en">HAL</span> (لایۀ انتزاع سخت‌افزار) از سخت‌افزار لایۀ پایین جدا می‌شود؛ کاربر تنها باید رابط‌های زیر را پیاده‌سازی کند:</p>
+<div class="bl"><span class="en">touch_read</span>: خواندن مختصات صفحه‌نمایش مقاومتی/خازنی.</div>
+<div class="bl"><span class="en">flash_read</span>: خواندن قطعۀ <span class="en">images.bin</span> از فلش <span class="en">SPI</span>؛ رمزگشایی و ذخیرۀ موقت بر عهدۀ WCHGUI است.</div>
+<div class="bl"><span class="en">lcd_set_windows</span>: تعیین پنجۀ ترسیم LCD؛ پایۀ به‌روزرسانی موضعی است.</div>
+<div class="bl"><span class="en">lcd_dma_*</span>: WCHGUI داده‌های <span class="en">RGB565</span> را با <span class="en">DMA</span> به‌صورت دسته‌ای می‌فرستد تا CPU نقطه‌به‌نقطه روی نمایشگر ننویسد.</div>
+<div class="codeblk"><span class="cm">/*********************************************************************
+* @fn       wui_get_hal
+*
+* @brief    Get WUI HAL interface structure.
+*           User should register implemented HAL functions in this function.
+*
+* @return   Pointer to HAL interface structure.
+*/</span>
+const wui_hal_t* wui_get_hal(void)
+{
+    static const wui_hal_t hal = {
+        .touch_read      = touch_read,
+        .flash_read      = spi_flash_read,
+        .lcd_set_windows = lcd_set_windows,
+        .lcd_dma_start   = lcd_dma_start,
+        .lcd_dma_send    = lcd_dma_send,
+        .lcd_dma_wait    = lcd_dma_wait,
+        .lcd_dma_end     = lcd_dma_end,
+    };
+
+    return &amp;hal;
+}</div>
+<h3 class="h2x" id="sec-223"><span class="dm">◆</span>۲.۲.۳ خلاصۀ سازوکار به‌روزرسانی</h3>
+<p><span class="en">WCHGUI</span> از سازوکار «مستطیل کثیف» بهره می‌برد: تنها هنگامی که محتوای کنترل تغییر کند، با <span class="en">lcd_set_windows()</span> ناحیۀ به‌روزرسانی مشخص و انتقال <span class="en">DMA</span> آغاز می‌شود. بنابراین در کد کسب‌وکار هرگز توابع ترسیم پایین‌دستی مانند <span class="en">LCD_DrawPoint()</span> را مستقیماً صدا نزنید؛ چنین کاری سازگاری GUI را خراب می‌کند و توسعه‌دهنده نباید برای ترسیم به‌طور مستقیم توابع لایۀ پایین را به کار ببرد.</p>
+
+<!-- ================= بخش ۳ ================= -->
+<div class="chapter-header" id="sec-b3">
+  <span class="sec-pill">بخش ۳</span>
+  <div class="sec-title">پروژۀ عملی: جعبهٔ کنترل</div>
+  <div class="sec-divider"></div>
+</div>
+<h3 class="h2x" id="sec-31"><span class="dm">◆</span>۳.۱ تعریف نیازهای کارکردی سیستم</h3>
+<p>سیستم در مجموع ۵ صفحۀ کارکردی دارد؛ منطق جابه‌جایی صفحات هم‌زمان توسط جهت کُدساز چرخان و رویدادهای لمسی رانده می‌شود. رابطۀ صفحات به این صورت است:</p>
+<div class="bl">صفحۀ ۵ (صفحۀ آغاز/خانه): صفحه‌ای که پس از روشن‌شدن سیستم به‌طور پیش‌فرض نمایش داده می‌شود.</div>
+<div class="bl">صفحۀ ۱ (صفحۀ کنترل تهویه): عهده‌دار تنظیم دمای تهویه، انتخاب حالت کاری و مدیریت سرعت باد.</div>
+<div class="bl">صفحۀ ۲ (صفحۀ کنترل سناریو): ورودیِ روشنایی و پرده را فراهم می‌کند.</div>
+<div class="bl">صفحۀ ۳ (صفحۀ کنترل روشنایی): برای تنظیم نوع نور و شدت روشنایی.</div>
+<div class="bl">صفحۀ ۴ (صفحۀ کنترل پرده): برای تنظیم درجۀ باز/بسته‌بودن پرده.</div>
+<p>در این بخش بر پایۀ چارچوب <span class="en">WCHGUI</span> پیش‌گفته و نیازهای کارکردی جعبهٔ کنترل، روش پیاده‌سازی نرم‌افزاری منطق کسب‌وکار به‌تفصیل شرح داده می‌شود. برای توضیح تفصیلی APIها به «سند توضیح نرم‌افزار <span class="en">WCHGUI</span>» شرکت WCH مراجعه کنید. چون پروژۀ <span class="en">WCHGUI</span> ساخته‌شده با <span class="en">MounRiver Studio II</span> پیش‌تر رانندۀ <span class="en">ST77916 LCD</span> و فلش <span class="en">Nor</span> را یکپارچه کرده است، این بخش بر توسعۀ لایۀ کسب‌وکار WCHGUI تمرکز دارد و به جزئیات پیاده‌سازی رانندگان جانبیِ لایۀ پایین نمی‌پردازد.</p>
+<h3 class="h2x" id="sec-32"><span class="dm">◆</span>۳.۲ پیاده‌سازی کارکردهای سیستم</h3>
+<h3 class="h2x" id="sec-321"><span class="dm">◆</span>۳.۲.۱ صفحۀ آغاز</h3>
+<p>صفحۀ آغاز اثر انیمیشن چرخشی (کاروسل) دارد. این اثر نیازی به نوشتن کد کسب‌وکار ندارد؛ کافی است در ابزار میزبان <span class="en">WCHGUIDesigner</span> کنترل انیمیشن را انتخاب و در پنل ویژگی‌ها چک‌باکس «حلقه» را تیک بزنید تا انیمیشن به‌طور خودکار به‌صورت حلقه‌ای پخش شود.</p>
+<div class="bl">نمایش پیش‌فرض: پس از روشن‌شدن یا ریست سیستم، صفحۀ ۵ به‌طور خودکار بارگذاری و نمایش داده می‌شود.</div>
+<div class="bl">منطق پرش: منتظر ورودی کُدساز بماند؛ چرخش به چپ به صفحۀ ۱ و چرخش به راست به صفحۀ ۲ پرش می‌کند.</div>
+<p>در <span class="en">wui_page.h</span> صفحۀ آغاز را صفحۀ ۵ قرار دهید؛ این گام تنها تغییر مقدار یک ماکرو است.</p>
+<div class="codeblk">#define WUI_START_PAGE WUI_PAGE_5</div>
+<p>وقتی سیستم به صفحۀ ۵ می‌رود، <span class="en">WCHGUI</span> به‌طور خودکار تابع <span class="en">wui_page_page_5_init()</span> را برای مقداردهی اولیۀ صفحه فرا می‌خواند. این تابع عهده‌دار سه وظیفه است:</p>
+<div class="bl">۱. مقداردهی اولیۀ حالت کنترل‌ها: بازگرداندن حالت نمایش پیش‌فرض هنگام ورود به صفحه.</div>
+<div class="bl">۲. ثبت فراخوان رویدادها: ثبت تابع پردازش رویداد دستگاه‌های ورودی مانند کُدساز یا کلید (مانند <span class="en">page_5_on_key</span>).</div>
+<div class="bl">۳. پیش‌پردازش منطق کسب‌وکار: اجرای عملیات مقداردهی ویژۀ کسب‌وکار موردنیاز صفحه.</div>
+<p>برای نمونه نمایش زمان، با صدا زدن رابط <span class="en">wui_widget_exstring_set_str()</span> مقدار ساعت و دقیقۀ جاری در کنترل متن هنری متناظر نوشته می‌شود و نخستین به‌روزرسانی اطلاعات زمان صفحۀ آغاز کامل می‌گردد.</p>
+<div class="codeblk long"><span class="cm">/*********************************************************************
+* @fn        wui_page_page_5_init
+*
+* @brief     Initialize page 5.
+*            Displays current time from RTC.
+*
+* @return    none
+*/</span>
+void wui_page_page_5_init(void)
+{
+    /* Initialize page widgets */
+    wui_page_init(widgets_page_5, sizeof(widgets_page_5) / sizeof(widgets_page_5[0]));
+
+    /* Register event handlers */
+    wui_register_key_handler(page_5_on_key);
+
+    /* Initialize time display from RTC */
+    time_hour = calendar.hour;
+    time_min = calendar.min;
+
+    sprintf(page5_hourstr, "%d", time_hour);
+    wui_widget_exstring_set_str(COMPONENT_005, page5_hourstr);
+
+    sprintf(page5_minstr, "%d", time_min);
+    wui_widget_exstring_set_str(COMPONENT_006, page5_minstr);
+}</div>
+<p>هنگام بارگذاری صفحۀ ۵، فراخوان <span class="en">page_5_on_key()</span> پیش‌تر با <span class="en">wui_register_key_handler()</span> ثبت شده است. این فراخوان توسط هستۀ <span class="en">WCHGUI</span> مدیریت می‌شود و هنگام چرخش کُدساز به‌طور خودکار فعال می‌گردد؛ نیازی به پایش چرخه‌ای مقدار کلید در کد کسب‌وکار نیست.</p>
+<p>در تابع فراخوان، با تشخیص مقدار کلیدِ دریافتی، جهت چرخش کُدساز شناسایی و با رابط <span class="en">wui_page_switch()</span> منطق جابه‌جایی صفحه انجام می‌شود: چرخش به چپ به صفحۀ ۱ (صفحۀ کنترل تهویه) و چرخش به راست به صفحۀ ۲ (صفحۀ کنترل سناریو).</p>
+<div class="codeblk long"><span class="cm">/*********************************************************************
+* @fn        page_5_on_key
+*
+* @brief     Key event handler for page 5.
+*            - 'R' key: Navigate to page 2
+*            - 'L' key: Navigate to page 1
+*
+* @param     key - Key code
+*
+* @return    none
+*/</span>
+static void page_5_on_key(uint32_t key)
+{
+    switch (key) {
+    case 'R':
+        wui_page_switch(WUI_PAGE_2);
+        break;
+
+    case 'L':
+        wui_page_switch(WUI_PAGE_1);
+        break;
+
+    case 'S':
+        /* Reserved for future use */
+        printf("key s\r\n");
+        break;
+
+    default:
+        break;
+    }
+}</div>
+<p><span class="en">RTC</span> باید به‌صورت لحظه‌ای به‌روزرسانی شود؛ بنابراین پس از فعال‌سازی سخت‌افزار RTC می‌توان زمانِ نیازمند نمایش را در تابع <span class="en">wui_page_page_5_loop</span> قرار داد. (این تابع فقط یک اشاره‌گر تابع معمولی است و ریتم فراخوانی آن را خود کاربر تنظیم می‌کند. ریتم به‌روزرسانی از طریق <span class="en">wui_page_ui_update()</span> است که درون آن <span class="en">page_loop()</span> صفحۀ جاری صدا زده می‌شود؛ بنابراین توسعه‌دهنده باید از اجرای تأخیر مسدودکننده یا محاسبات پیچیده در این تابع بپرهیزد تا رابط به‌صورت روان به‌روزرسانی شود. این تابع در کل چرخۀ حیات صفحۀ جاری ادامه دارد و پس از جابه‌جایی صفحه به‌طور خودکار متوقف می‌شود.) هنگامی که نیاز به به‌روزرسانی مقدار کنترل تشخیص داده شد، با تابع <span class="en">wui_widget_exstring_set_str</span> مقدار متن هنری تغییر می‌کند. منطق کد به این صورت است:</p>
+<div class="codeblk long"><span class="cm">/*********************************************************************
+* @fn        wui_page_page_5_loop
+*
+* @brief     Page 5 main loop function.
+*            Updates time display when RTC minute changes.
+*
+* @return    none
+*/</span>
+void wui_page_page_5_loop(void)
+{
+    /* Check if update is needed */
+    if (!need_updata) {
+        return;
+    }
+
+    /* Clear update flag */
+    need_updata = 0;
+
+    /* Check if minute has changed */
+    if (time_min == calendar.min) {
+        return;
+    }
+
+    /* Update time cache and display */
+    time_hour = calendar.hour;
+    time_min = calendar.min;
+
+    sprintf(page5_hourstr, "%d", time_hour);
+    wui_widget_exstring_set_str(COMPONENT_005, page5_hourstr);
+
+    sprintf(page5_minstr, "%d", time_min);
+    wui_widget_exstring_set_str(COMPONENT_006, page5_minstr);
+}</div>
+<h3 class="h2x" id="sec-322"><span class="dm">◆</span>۳.۲.۲ صفحۀ کنترل تهویه</h3>
+<div class="bl">تنظیم دما: افزایش و کاهش مقدار دما با کُدساز چرخان.</div>
+<div class="bl">کنترل سرعت باد: پشتیبانی از تغییر سرعت باد در سه وضعیت کم، متوسط و زیاد.</div>
+<div class="bl">منطق بازگشت خودکار: وقتی سرعت باد روی وضعیت ۲ (متوسط) است، اگر تغییرِ وضعیت کارکرد تهویه شناسایی شود (مانند تغییر کلید یا تنظیم وضعیت)، سیستم به‌طور خودکار به صفحۀ ۵ برمی‌گردد. این منطق برای شبیه‌سازی تجربۀ کاربریِ «بازگشت خودکار به صفحهٔ خانه پس از پایان تنظیمات» است.</div>
+<p>در مرحلۀ طراحی UI، کارکردهای تهویه با کنترل کلید (<span class="en">Switch</span>) انتخاب شده و لمس آن‌ها فعال شده است؛ ابزار میزبان توصیف‌گر ناحیۀ لمسی متناظر را در <span class="en">wui_page_page_1.h</span> به‌طور خودکار تولید می‌کند. اما برای آیکن‌های عملکردی کوچک، ناحیۀ لمسی پیش‌فرض (همان ناحیۀ نمایش کنترل) ممکن است برای تجربۀ تعامل خوب کافی نباشد و به بی‌اثری لمس یا لمس اشتباه منجر شود.</p>
+<p>برای حل این مشکل توصیه می‌شود در مرحلۀ مقداردهی اولیۀ صفحه، ناحیۀ لمسی با ساختار <span class="en">wui_touch_area_t</span> به‌صورت دستی تنظیم شود. با بزرگ‌کردن مناسب مختصات (<span class="en">x, y</span>) و عرض/ارتفاع، بدون تغییر ظاهر بصری، نرخ موفقیت لمس و تجربۀ کاربر به‌طور چشمگیر بالا می‌رود.</p>
+<div class="codeblk">static const wui_touch_area_t touch_areas_page_1[] = {
+    {
+        .widget_id = COMPONENT_015,
+        .x          = 80,
+        .y          = 66,
+        .w          = 45,
+        .h          = 45,
+    },
+    /* other widgets ... */
+}</div>
+<p>در تابع مقداردهی اولیۀ صفحۀ ۱ یعنی <span class="en">wui_page_page_1_init()</span> ابتدا باید با <span class="en">wui_register_touch_layer()</span> ناحیه‌های لمسی تعریف‌شده و فراخوان آن یعنی <span class="en">page_1_on_touch</span> ثبت شوند تا ناحیۀ پاسخ لمسیِ بزرگ‌شده به‌صورت دستی فعال گردد.</p>
+<p>سپس باید حالت کنترل‌های صفحه هم‌گام به‌روزرسانی شود؛ شامل حالت کاری تهویه و وضعیت سرعت باد. هدف این است که حالت نمایش صفحه با متغیرهای سراسری سیستم (یعنی آخرین حالت هنگام خروج از صفحه) یکسان بماند تا پرش حالت یا ابهام نمایش رخ ندهد.</p>
+<p>در این مثال راهبرد «هم‌گام‌سازی اجباری حالت در مرحلۀ مقداردهی اولیه» به کار رفته است؛ منطقی شفاف با پیاده‌سازی ساده. توسعه‌دهنده می‌تواند بر اساس پیچیدگی پروژه این منطق را در تابع مستقلی مانند <span class="en">app_functions_refresh</span> بسته‌بندی کند یا از معماری‌های بهتری مانند مدیریت ماشین حالت بهره گیرد.</p>
+<div class="codeblk long"><span class="cm">/*********************************************************************
+* @fn        wui_page_page_1_init
+*
+* @brief     Initialize page 1.
+*            This function initializes widgets, registers event handlers.
+*
+* @return    none
+*/</span>
+void wui_page_page_1_init(void) {
+    /* Initialize page widgets */
+    wui_page_init(widgets_page_1, sizeof(widgets_page_1) / sizeof(widgets_page_1[0]));
+
+    /* Register key event handler */
+    wui_register_key_handler(page_1_on_key);
+
+    /* Register touch layer */
+    wui_register_touch_layer(touch_areas_page_1,
+                             sizeof(touch_areas_page_1) / sizeof(touch_areas_page_1[0]),
+                             page_1_on_touch);
+
+    /* USER CODE BEGIN: Init */
+    sprintf(label_str, "%d", Temperature_value);
+    wui_widget_exstring_set_str(COMPONENT_014, label_str);
+    app_functions_refresh();
+    app_windspeed_refresh();
+
+    /* USER CODE END: Init */
+}</div>
+<p>مقداردهی اولیه و منطق به‌روزرسانی صفحۀ ۱ شبیه صفحۀ آغاز است؛ در این بخش پیاده‌سازی فراخوان لمسی <span class="en">page_1_on_touch()</span> تحلیل می‌شود. وقتی کاربر صفحه‌نمایش را لمس می‌کند، <span class="en">WCHGUI</span> به‌طور خودکار این تابع را با شناسۀ کنترلِ عامل رویداد فرا می‌خواند.</p>
+<p>فراخوان با مقایسۀ شناسۀ کنترل، موضوع عملیات جاری را تشخیص می‌دهد. اگر کنترلِ حالت کاری یا وضعیت سرعت باد باشد، با <span class="en">wui_widget_switch_set_on()</span> وضعیت کلید به‌روزرسانی می‌شود. هدف اصلی این منطق پیاده‌سازی «سازوکار انحصار متقابل» است: تضمین اینکه در هر لحظه تنها یک حالت کاری (مانند خنک‌کننده) و یک وضعیت سرعت باد (مانند متوسط) فعال باشد.</p>
+<p>نکتۀ مهم: اگر تنها اثر «کلیک برای تغییر تصویر» لازم باشد، <span class="en">WCHGUI</span> پس از پیکربندی در ابزار میزبان بدون هیچ کد کسب‌وکاری آن را به‌طور خودکار انجام می‌دهد. منطق کد این مثال برای پیاده‌سازی قواعد پیچیدۀ کسب‌وکار (کنترل انحصاری) است و از جنس تقویت لایۀ کسب‌وکار محسوب می‌شود.</p>
+<div class="codeblk long"><span class="cm">/*********************************************************************
+* @fn        page_1_on_touch
+*
+* @brief     Touch event handler for page 1.
+*
+* @param     widget_id - Widget ID that triggered the event.
+* @param     event - Event type.
+*
+* @return    none
+*/</span>
+static void page_1_on_touch(uint16_t widget_id, uint16_t event)
+{
+    /* Check if touched widget is a function mode button */
+    for (uint8_t i = 0; i &lt; FUNCTIONS_COUNT; i++) {
+        if (functions_item_ids[i] == widget_id) {
+            /* Update function mode state */
+            functions_last = functions_current;
+            functions_current = (Functions_Index_e)i;
+
+            /* Update all function mode switches */
+            for (uint8_t j = 0; j &lt; FUNCTIONS_COUNT; j++) {
+                wui_widget_switch_set_on(functions_item_ids[j],
+                                          (functions_item_ids[j] == widget_id));
+            }
+            return;
+        }
+    }
+
+    /* Check if touched widget is an airspeed level button */
+    for (uint8_t i = 0; i &lt; AIRSPEED_LEVEL; i++) {
+        if (airspeed_ids[i] == widget_id) {
+            /* Update airspeed level state */
+            speed_last = speed_current;
+            speed_current = (Speed_Level_e)i;
+
+            /* Update all airspeed level switches */
+            for (uint8_t j = 0; j &lt; AIRSPEED_LEVEL; j++) {
+                wui_widget_switch_set_on(airspeed_ids[j],
+                                           (speed_last != speed_current) ?
+                                           (airspeed_ids[j] == widget_id) : 0);
+            }
+            return;
+        }
+    }
+}</div>
+
+<h3 class="h2x" id="sec-323"><span class="dm">◆</span>۳.۲.۳ صفحۀ کنترل سناریو</h3>
+<div class="bl">ورودی دستگاه‌ها: چیدمان صفحه شامل دو آیکن مستقل «چراغ مطالعه» و «پرده» است.</div>
+<div class="bl">جابه‌جایی صفحه: با کلیک روی آیکن چراغ مطالعه به صفحۀ ۳ (صفحۀ کنترل روشنایی) و با کلیک روی آیکن پرده به صفحۀ ۴ (صفحۀ کنترل پرده) پرش می‌شود.</div>
+<div class="bl">کنترل دستگاه: کنترل کلید در صفحه ادغام شده و روشن/خاموش‌کردن مستقیم نور و پرده ممکن است.</div>
+<p>صفحۀ ۲ همان شیوۀ استفاده از کنترل کلید را ادامه می‌دهد و از تکرار مراحل پایه مانند ثبت فراخوان لمسی چشم‌پوشی می‌کنیم. تمرکز اصلی طراحی این صفحه بر سازوکار هم‌پیوندی حالت‌هاست.</p>
+<p>در فراخوان لمسی، با رابط <span class="en">wui_widget_switch_is_on()</span> وضعیت جاری کلیدهای چراغ مطالعه و پرده به‌صورت لحظه‌ای خوانده و بر اساس آن، سخت‌افزار رانده یا متغیرهای حالت سراسری به‌روزرسانی می‌شود. نکتۀ کلیدی آن است که صفحۀ ۲ مرکز کنترل است و تغییرات حالت آن باید به صفحات مرتبط دیگر (مانند صفحۀ ۳ کنترل روشنایی و صفحۀ ۴ کنترل پرده) هم‌گام شود.</p>
+<p>برای این منظور در این طراحی متغیر حالت سراسری برای نگهداری وضعیت روشن/خاموش چراغ مطالعه و پرده معرفی شده است. هنگام تغییر حالت در صفحۀ ۲، متغیر سراسری هم‌زمان تغییر می‌کند؛ وقتی سیستم به صفحۀ ۳ یا ۴ می‌رود، تابع مقداردهی اولیه (مانند <span class="en">wui_page_page_3_init()</span>) آن متغیر را خوانده و حالت کنترل‌ها را تازه می‌کند. این راهبرد مدیریتی بر پایۀ حالت سراسری، مشکل ناسازگاری منطق ناشی از عملیات میان‌صفحه‌ای را به‌طور مؤثر برطرف می‌کند.</p>
+<div class="codeblk long">static void page_2_on_touch(uint16_t widget_id, uint16_t event)
+{
+    /* Light control button */
+    if (widget_id == COMPONENT_008) {
+        uint8_t is_on = wui_widget_switch_is_on(COMPONENT_008);
+        wui_widget_switch_set_on(COMPONENT_009, is_on);
+        set_Intensity_percent(is_on ? 100 : 0);
+    }
+    /* Curtain control button */
+    else if (widget_id == COMPONENT_006) {
+        uint8_t is_on = wui_widget_switch_is_on(COMPONENT_006);
+        wui_widget_switch_set_on(COMPONENT_010, is_on);
+        set_CurtainDegree(is_on ? 0 : 100);
+    }
+    /* Light intensity adjustment button */
+    else if (widget_id == COMPONENT_009) {
+        wui_page_switch(WUI_PAGE_3);
+    }
+    /* Curtain degree adjustment button */
+    else if (widget_id == COMPONENT_010) {
+        wui_page_switch(WUI_PAGE_4);
+    }
+}</div>
+<h3 class="h2x" id="sec-324"><span class="dm">◆</span>۳.۲.۴ صفحۀ کنترل روشنایی</h3>
+<div class="bl">نوع نور: پشتیبانی از تغییر چند حالت نور (مانند نور گرم، نور سرد).</div>
+<div class="bl">تنظیم روشنایی: تنظیم شدت روشنایی حالت جاری نور با نوار پیشرفت.</div>
+<div class="bl">بازخورد حالت: مقدار روشنایی به‌صورت لحظه‌ای به کنترل تصویر این صفحه نگاشته می‌شود و بر اساس مقدار نوار پیشرفت، تصویر متفاوتی نمایش داده می‌شود.</div>
+<p>هنگام بارگذاری این صفحه، علاوه بر ثبت فراخوان لمسی باید مطمئن شد نسبت نوار پیشرفت با مقدار متن هنری هم‌خوان است و هم‌زمان بر اساس نسبت، شدت نور تنظیم می‌شود.</p>
+<p>این صفحه سازوکار هم‌پیوندی چند کنترل در <span class="en">WCHGUI</span> را نشان می‌دهد: نوار پیشرفت ← درصد روشنایی، متن هنری ← نمایش عدد روشنایی، دنبالۀ تصاویر ← تصویرسازی شدت نور؛ هر سه با یک منبع دادهٔ مشترک رانده می‌شوند و سازگاری نمایش تضمین می‌شود. برای کنترل نوار پیشرفت، تابع <span class="en">wui_widget_pb_set_value</span> نسبت را تنظیم می‌کند و برای دنبالۀ تصاویر از <span class="en">wui_widget_multistate_set_index</span> برای تعیین تصویر مشخص استفاده می‌شود.</p>
+<div class="codeblk long"><span class="cm">/*********************************************************************
+* @fn        wui_page_page_3_init
+*
+* @brief     Initialize page 3.
+*            Sets up light control UI with current intensity and type.
+*
+* @return    none
+*/</span>
+void wui_page_page_3_init(void)
+{
+    /* Initialize page widgets */
+    wui_page_init(widgets_page_3, sizeof(widgets_page_3) / sizeof(widgets_page_3[0]));
+
+    /* Register event handlers */
+    wui_register_key_handler(page_3_on_key);
+    wui_register_touch_layer(touch_areas_page_3,
+                             sizeof(touch_areas_page_3) / sizeof(touch_areas_page_3[0]),
+                             page_3_on_touch);
+
+    /* Initialize intensity display */
+    uint8_t Intensity_percent = get_Intensity_percent();
+    wui_widget_pb_set_value(COMPONENT_004, Intensity_percent);
+    sprintf(Intensity_str, "%d", Intensity_percent);
+    wui_widget_exstring_set_str(COMPONENT_011, Intensity_str);
+
+    /* Set light image based on current state */
+    if (Intensity_percent == 0) {
+        wui_widget_multistate_set_index(COMPONENT_010, 0);
+    } else {
+        if (lightingtype == Cold_light) {
+            wui_widget_multistate_set_index(COMPONENT_010, Intensity_percent / 5);
+            wui_widget_multistate_set_index(COMPONENT_006, Warm_light);
+            wui_widget_multistate_set_index(COMPONENT_007, 0);
+        } else {
+            wui_widget_multistate_set_index(COMPONENT_010, Intensity_percent / 5 + 20);
+            wui_widget_multistate_set_index(COMPONENT_006, Cold_light);
+            wui_widget_multistate_set_index(COMPONENT_007, 1);
+        }
+    }
+}</div>
+<p>در فراخوان لمسی، علاوه بر تشخیص کنترل باید رویداد لمسی نیز تشخیص داده شود. برای بیشتر کنترل‌ها رویداد لمسی به ۴ نوع تقسیم می‌شود: فشردن لمس، جابه‌جایی لمس، نگه‌داشتن طولانی لمس و رهاسازی لمس؛ کنترل‌های این صفحه از «فشردن لمس» برای ضدلرزش استفاده می‌کنند. کنترل کلید و کنترل نوار پیشرفت نوع لمس مخصوص خود را دارند و در ۴ نوع بالا نمی‌گنجند. با <span class="en">wui_widget_multistate_next()</span> نمایۀ دنبالۀ تصاویر جابه‌جا می‌شود و تغییر چرخه‌ای نوع نور پیاده‌سازی می‌گردد؛ این رابط مرز نمایه را درون خود مدیریت می‌کند و نیازی به تشخیص اضافی کاربر نیست. برای گرفتن نمایۀ جاری دنبالۀ تصاویر می‌توان از <span class="en">wui_widget_multistate_get_index</span> استفاده کرد. بدین ترتیب پس از گرفتن نوع جاری نور، رنگ و شدت نور تنظیم می‌شود.</p>
+<div class="codeblk long"><span class="cm">/*********************************************************************
+* @fn        page_3_on_touch
+*
+* @brief     Touch event handler for page 3.
+*            Handles light type switching and intensity adjustment.
+*
+* @param     widget_id - Widget ID that triggered the event
+* @param     event - Event type
+*
+* @return    none
+*/</span>
+static void page_3_on_touch(uint16_t widget_id, uint16_t event)
+{
+    /* Light type toggle buttons (COMPONENT_006 and COMPONENT_007) */
+    if ((widget_id == COMPONENT_006 || widget_id == COMPONENT_007) &amp;&amp;
+        (event == WUI_TOUCH_DOWN)) {
+        /* Toggle light type */
+        wui_widget_multistate_next(COMPONENT_006);
+        wui_widget_multistate_next(COMPONENT_007);
+        lightingtype = (lightingtype == Warm_light) ? Cold_light : Warm_light;
+
+        /* Update light image based on type and intensity */
+        uint8_t light_type = wui_widget_multistate_get_index(COMPONENT_006);
+        uint8_t img_index = wui_widget_multistate_get_index(COMPONENT_010);
+
+        if (img_index &gt; 0) {
+            img_index = (light_type == 1) ? (img_index - 20) : (img_index + 20);
+        }
+
+        wui_widget_multistate_set_index(COMPONENT_010, img_index);
+    }
+    /* Intensity adjustment progress bar */
+    else if (widget_id == COMPONENT_004) {
+        uint8_t Intensity_percent = wui_widget_pb_get_value(COMPONENT_004);
+
+        /* Update intensity state and display */
+        set_Intensity_percent(Intensity_percent);
+        sprintf(Intensity_str, "%d", Intensity_percent);
+        wui_widget_exstring_set_str(COMPONENT_011, Intensity_str);
+
+        /* Update light image based on intensity */
+        if (Intensity_percent != 0) {
+            uint8_t light_type = wui_widget_multistate_get_index(COMPONENT_006);
+            uint8_t img_index = (light_type == 0) ? (Intensity_percent / 5 + 20)
+                                                  : (Intensity_percent / 5);
+            wui_widget_multistate_set_index(COMPONENT_010, img_index);
+        } else {
+            wui_widget_multistate_set_index(COMPONENT_010, 0);
+        }
+    }
+    /* Navigate to page 2 */
+    else if (widget_id == COMPONENT_001) {
+        wui_page_switch(WUI_PAGE_2);
+    }
+    /* Navigate to page 4 */
+    else if (widget_id == COMPONENT_002) {
+        wui_page_switch(WUI_PAGE_4);
+    }
+}</div>
+<h3 class="h2x" id="sec-325"><span class="dm">◆</span>۳.۲.۵ صفحۀ کنترل پرده</h3>
+<div class="bl">کنترل باز/بسته: تنظیم درصد بازوبسته‌شدن پرده با کُدساز چرخان.</div>
+<div class="bl">بازخورد لحظه‌ای: درجۀ بازوبسته‌شدن پرده با کنترل متن هنری به‌صورت لحظه‌ای نمایش داده می‌شود؛ در فرایند تنظیم پرش صفحه رخ نمی‌دهد تا کاربر از صفحه خارج شود.</div>
+<p>تنظیم درجۀ پرده با کُدساز چرخان انجام می‌شود نه با عملیات لمس. این طراحی مزیت معماری اصلی <span class="en">WCHGUI</span> را نشان می‌دهد: جدایی منطق UI از دستگاه ورودی. هستۀ WCHGUI از منبع دقیق ورودی بی‌اطلاع است (چه کُدساز، چه کلید، چه لمس) و تنها به تغییر «مقدار کنترل» توجه می‌کند. توسعه‌دهنده تنها باید چرخش فیزیکی کُدساز را به افزایش/کاهش مقدار کنترل نگاشت کند تا به‌روزرسانی UI رخ دهد؛ بدون آنکه لازم باشد هستۀ GUI را برای سخت‌افزار خاص تغییر دهد.</p>
+<p>در این صفحه چرخش کُدساز به تغییر مقدار کنترل تصویر تبدیل می‌شود. پس از دریافت تغییر مقدار، <span class="en">WCHGUI</span> به‌طور خودکار بازترسیم دنبالۀ تصاویر و به‌روزرسانی نمایش را انجام می‌دهد. این جریان دادۀ یک‌سویه «دستگاه ورودی ← منطق کسب‌وکار ← مقدار کنترل ← به‌روزرسانی UI» قابلیت حمل و نگهداشت کد را به‌طور چشمگیری بالا می‌برد.</p>
+<p>دربارۀ منطق جابه‌جایی صفحه با لمس، چون در صفحات ۲ و ۳ به‌تفصیل شرح داده شد، در این بخش تکرار نمی‌شود.</p>
+<div class="codeblk long"><span class="cm">/*********************************************************************
+* @fn        page_4_on_key
+*
+* @brief     Key event handler for page 4.
+*            - 'R' key: Increase curtain degree by 5
+*            - 'L' key: Decrease curtain degree by 5
+*
+* @param     key - Key code
+*
+* @return    none
+*/</span>
+static void page_4_on_key(uint32_t key)
+{
+    uint8_t Degree = get_CurtainDegree();
+
+    switch (key) {
+    case 'R':
+        /* Increase degree with limit */
+        Degree = (Degree &gt;= DEGREE_MAX) ? DEGREE_MAX : Degree + DEGREE_STEP;
+        break;
+
+    case 'L':
+        /* Decrease degree with limit */
+        Degree = (Degree &lt;= DEGREE_MIN) ? DEGREE_MIN : Degree - DEGREE_STEP;
+        break;
+
+    case 'S':
+        /* Reserved for future use */
+        break;
+
+    default:
+        return;
+    }
+
+    /* Update degree state and display */
+    set_CurtainDegree(Degree);
+    sprintf(Degree_str, "%d", Degree);
+    wui_widget_exstring_set_str(COMPONENT_007, Degree_str);
+
+    /* Update curtain image */
+    uint8_t img_index = (Degree == 0) ? 0 : Degree / DEGREE_STEP;
+    wui_widget_multistate_set_index(COMPONENT_005, img_index);
+}</div>
+
+<!-- ================= بخش ۴ ================= -->
+<div class="chapter-header" id="sec-b4">
+  <span class="sec-pill">بخش ۴</span>
+  <div class="sec-title">پرسش‌های رایج و ترفندهای اشکال‌زدایی</div>
+  <div class="sec-divider"></div>
+</div>
+<h3 class="h2x" id="sec-41"><span class="dm">◆</span>۴.۱ کندی UI</h3>
+<div class="bl">بررسی کنید آیا در <span class="en">page_loop()</span> تأخیر مسدودکننده وجود دارد.</div>
+<div class="bl">مطمئن شوید انتقال <span class="en">DMA</span> با وقفه قطع نمی‌شود.</div>
+<h3 class="h2x" id="sec-42"><span class="dm">◆</span>۴.۲ کم‌حساسی لمس</h3>
+<div class="bl">بررسی کنید آیا <span class="en">wui_touch_area_t</span> بیش از حد کوچک است.</div>
+<div class="bl">مطمئن شوید مختصات لمس با جهت نمایشگر LCD سازگار است.</div>
+<h3 class="h2x" id="sec-43"><span class="dm">◆</span>۴.۳ نمایش نادرست کنترل‌ها</h3>
+<div class="bl">مطمئن شوید <span class="en">images.bin</span> به‌درستی روی فلش <span class="en">SPI</span> رایت شده است.</div>
+<div class="bl">بررسی کنید پیاده‌سازی <span class="en">lcd_set_windows()</span> درست باشد.</div>
+<div class="bl">اگر از رانندۀ نمایشگر دیگری استفاده می‌کنید، بررسی کنید تابع مقداردهی اولیه اصلاح شده باشد.</div>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN90001</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/8/20</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">WCHGUI</span></td><td class="jt">کتابخانۀ گرافیکی سبک WCH برای میکروکنترلرهای سری CH32 با معماری «UI اعلانی + تولید خودکار کد + HAL»؛ اجرای رابط چندصفحه‌ای با چند کیلوبایت RAM</td></tr>
+      <tr><td><span class="en">WCHGUIDesigner</span></td><td class="jt">ابزار میزبان طراحی UI؛ مدیریت منابع، چیدمان کنترل‌ها، پیش‌نمایش زنده و تولید کد C با دکمۀ «تولید»</td></tr>
+      <tr><td><span class="en">کنترل (Widget)</span></td><td class="jt">عضو رابط مانند برچسب (Label)، دکمه (Button)، نوار پیشرفت (Progress Bar)، کلید (Switch) و تصویر (Image)؛ هر کنترل شناسۀ یکتا در صفحه دارد</td></tr>
+      <tr><td><span class="en">ExString (متن هنری)</span></td><td class="jt">کنترل نمایش عدد/متن پویا؛ مقدار در زمان اجرا با <span class="en">wui_widget_exstring_set_str()</span> تغییر می‌کند</td></tr>
+      <tr><td><span class="en">MultiState (دنبالۀ تصاویر)</span></td><td class="jt">نمایش یکی از چند تصویر به‌تفاوت مقدار؛ جابه‌جایی با <span class="en">wui_widget_multistate_next/set_index/get_index()</span></td></tr>
+      <tr><td><span class="en">Switch</span></td><td class="jt">کلید تغییر حالت پایدار روشن/خاموش با دو تصویر حالت؛ تنظیم وضعیت با <span class="en">wui_widget_switch_set_on()</span></td></tr>
+      <tr><td><span class="en">images.bin</span></td><td class="jt">بستۀ فشردهٔ همهٔ منابع (تصاویر و فونت‌ها) که باید روی فلش خارجی SPI رایت شود</td></tr>
+      <tr><td><span class="en">wui_user</span></td><td class="jt">پوشۀ خروجی Designer با سه لایه: منابع (<span class="en">wui_asset.c/h</span>)، صفحات (<span class="en">wui_page_page_x.c/h</span>) و مدیریت (<span class="en">wui_page.c/h</span>)</td></tr>
+      <tr><td><span class="en">wui_widget_desc_t</span></td><td class="jt">ساختار C توصیف‌گر کنترل که حاصل نهایی پیکربندی پنل ویژگی‌هاست و در فایل h هر صفحه ذخیره می‌شود</td></tr>
+      <tr><td><span class="en">HAL</span></td><td class="jt">لایۀ انتزاع سخت‌افزار؛ کاربر رابط‌های <span class="en">touch_read</span>، <span class="en">flash_read</span>، <span class="en">lcd_set_windows</span> و <span class="en">lcd_dma_*</span> را پیاده‌سازی و در <span class="en">wui_get_hal()</span> ثبت می‌کند</td></tr>
+      <tr><td><span class="en">مستطیل کثیف (Dirty Rectangle)</span></td><td class="jt">سازوکار به‌روزرسانی موضعی WCHGUI؛ فقط ناحیۀ تغییرکرده با lcd_set_windows() مشخص و با DMA بازترسیم می‌شود</td></tr>
+      <tr><td><span class="en">touch_area_t</span></td><td class="jt">ساختار گسترش دستی ناحیۀ لمسی برای آیکن‌های کوچک؛ ثبت با <span class="en">wui_register_touch_layer()</span></td></tr>
+      <tr><td><span class="en">کُدساز چرخان</span></td><td class="jt">دستگاه ورودی ناوبری صفحات؛ رویدادهای R/L/S با <span class="en">wui_register_key_handler()</span> به فراخوان صفحه متصل می‌شوند</td></tr>
+      <tr><td><span class="en">page_loop / wui_page_ui_update</span></td><td class="jt">حلقۀ صفحۀ جاری؛ در چرخۀ حیات صفحه می‌چرخد و از تأخیر مسدودکننده یا محاسبات سنگین باید پرهیز شود</td></tr>
+      <tr><td><span class="en">MounRiver Studio II</span></td><td class="jt">محیط توسعۀ رسمی WCH؛ پروژۀ نمونه از قالب «DEMO نمایشگری» ساخته شده است</td></tr>
+      <tr><td><span class="en">ST77916</span></td><td class="jt">نمایشگر LCD دایره‌ای هدف مثال سند؛ رانندۀ آن به‌همراه فلش Nor از پیش در پروژه ادغام شده است</td></tr>
+      <tr><td><span class="en">RTC</span></td><td class="jt">ساعت واقعی؛ مقدار آن در حلقهٔ صفحۀ آغاز خوانده و با کنترل متن هنری نمایش داده می‌شود</td></tr>
+      <tr><td><span class="en">RGB565</span></td><td class="jt">قالب رنگ پیکسل ارسالی به LCD؛ انتقال داده‌ها با DMA به‌صورت دسته‌ای انجام می‌شود</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN90001 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۲۴</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN90001</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
