@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>پیاده‌سازی USB PD در میکروکنترلرهای سری CH32 — ترجمۀ فارسی AN37000</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">پیاده‌سازی <span class="en">USB PD</span></div>
+    <div class="t2">در میکروکنترلرهای سری <span class="en">CH32</span></div>
+    <div class="t3"><span class="en">Source · Sink · DRP</span></div>
+  </div>
+  <div class="c-sub">از معرفی کنترل‌کنندۀ <span class="en">PD</span> و طراحی سخت‌افزار، اصول پروتکل و پیکربندی رجیسترها و طراحی نرم‌افزار (ماشین حالت، روند ارسال/دریافت و روتین سرویس وقفه) تا دیباگ و مقایسۀ <span class="en">MCU</span>های دارای PD برای انتخاب سریع</div>
+  <div class="c-desc">در این جزوه، ترجمۀ فارسی سند رسمی <span class="en">AN37000</span> (نسخۀ ۱٫۰، منتشرۀ شرکت <span class="en">WCH</span>) را می‌خوانید: نحوۀ پیکربندی رابط <span class="en">USB PD</span> (Power Delivery) سری <span class="en">CH32</span> به‌صورت سمت تأمین‌کنندۀ توان (Source) یا دریافت‌کنندۀ توان (Sink) برای پاسخ به درخواست‌های مذاکرۀ توان و انتقال برق. در این سند نخست قابلیت‌های کنترل‌کنندۀ <span class="en">USB PD</span> مرور می‌شود، سپس نمونۀ طراحی سخت‌افزار (دیاگرام اتصال، روش پیکربندی رجیسترها، سازوکار پاسخ فرمان‌های پروتکل و روند ارسال/دریافت داده) تحلیل می‌شود و در پایان ویژگی‌های هر یک از <span class="en">MCU</span>های دارای PD و تمرکز انتخابی آن‌ها شرح داده می‌شود تا توسعه‌دهنده سریع انتخاب کند و وارد توسعه شود.</div>
+  <div class="c-tags">
+    <span class="c-tag"><span class="en">USB PD 3.0 / 3.2 + EPR</span></span>
+    <span class="c-tag">تأمین‌کنندۀ توان <span class="en">(Source)</span></span>
+    <span class="c-tag">دریافت‌کنندۀ توان <span class="en">(Sink)</span></span>
+    <span class="c-tag">درگاه دو‌نقش <span class="en">(DRP)</span></span>
+    <span class="c-tag">کدگذاری <span class="en">BMC</span> سخت‌افزاری</span>
+    <span class="c-tag"><span class="en">CH32X035 · CH32M030 · CH32H417</span></span>
+    <span class="c-tag">مذاکرۀ توان تا <span class="en">240W</span></span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN37000 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۴</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | مروری بر کنترل‌کنندۀ USB PD</span><span class="t-dots"></span><span class="t-page">۴</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-111"><span class="s-id">1.1</span><span>معرفی رابط USB PD</span><span class="s-dots"></span><span class="s-page">۴</span></a>
+    <a class="toc-sub" href="#sec-112"><span class="s-id">1.2</span><span>قابلیت‌های اصلی کنترل‌کنندۀ USB PD</span><span class="s-dots"></span><span class="s-page">۴</span></a>
+    <a class="toc-sub" href="#sec-113"><span class="s-id">1.3</span><span>سناریوهای کاربردی نمونه</span><span class="s-dots"></span><span class="s-page">۵</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | طراحی سخت‌افزار</span><span class="t-dots"></span><span class="t-page">۵</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-211"><span class="s-id">2.1</span><span>تعریف پین‌ها و اتصال</span><span class="s-dots"></span><span class="s-page">۵</span></a>
+    <a class="toc-sub" href="#sec-212"><span class="s-id">2.2</span><span>نکات طراحی سخت‌افزار</span><span class="s-dots"></span><span class="s-page">۶</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b3"><span class="t-num">۴</span><span class="t-title">بخش ۳ | اصول کارکرد پروتکل</span><span class="t-dots"></span><span class="t-page">۷</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-311"><span class="s-id">3.1</span><span>قالب بستهٔ داده</span><span class="s-dots"></span><span class="s-page">۷</span></a>
+    <a class="toc-sub" href="#sec-312"><span class="s-id">3.2</span><span>سازوکار انتقال فرمان (SOP*)</span><span class="s-dots"></span><span class="s-page">۷</span></a>
+    <a class="toc-sub" href="#sec-313"><span class="s-id">3.3</span><span>سازوکار پاسخ</span><span class="s-dots"></span><span class="s-page">۸</span></a>
+    <a class="toc-sub" href="#sec-314"><span class="s-id">3.4</span><span>روند ارسال و دریافت داده</span><span class="s-dots"></span><span class="s-page">۸</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b4"><span class="t-num">۵</span><span class="t-title">بخش ۴ | پیکربندی رجیسترها</span><span class="t-dots"></span><span class="t-page">۹</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-411"><span class="s-id">4.1</span><span>رجیستر کنترل PD</span><span class="s-dots"></span><span class="s-page">۹</span></a>
+    <a class="toc-sub" href="#sec-412"><span class="s-id">4.2</span><span>رجیستر آشکارسازی وضعیت CC</span><span class="s-dots"></span><span class="s-page">۹</span></a>
+    <a class="toc-sub" href="#sec-413"><span class="s-id">4.3</span><span>FIFO ارسال و دریافت</span><span class="s-dots"></span><span class="s-page">۹</span></a>
+    <a class="toc-sub" href="#sec-414"><span class="s-id">4.4</span><span>رجیستر وقفه و وضعیت</span><span class="s-dots"></span><span class="s-page">۱۰</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b5"><span class="t-num">۶</span><span class="t-title">بخش ۵ | نمونۀ طراحی نرم‌افزار</span><span class="t-dots"></span><span class="t-page">۱۰</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-511"><span class="s-id">5.1</span><span>روند مقداردهی اولیه</span><span class="s-dots"></span><span class="s-page">۱۰</span></a>
+    <a class="toc-sub" href="#sec-512"><span class="s-id">5.2</span><span>دریافت و تحلیل فرمان (ماشین حالت پروتکل)</span><span class="s-dots"></span><span class="s-page">۱۱</span></a>
+    <a class="toc-sub" href="#sec-513"><span class="s-id">5.3</span><span>روند ارسال داده</span><span class="s-dots"></span><span class="s-page">۱۲</span></a>
+    <a class="toc-sub" href="#sec-514"><span class="s-id">5.4</span><span>روند دریافت داده</span><span class="s-dots"></span><span class="s-page">۱۳</span></a>
+    <a class="toc-sub" href="#sec-515"><span class="s-id">5.5</span><span>طراحی روتین سرویس وقفه</span><span class="s-dots"></span><span class="s-page">۱۴</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b6"><span class="t-num">۷</span><span class="t-title">بخش ۶ | دیباگ و مسائل رایج</span><span class="t-dots"></span><span class="t-page">۱۵</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-611"><span class="s-id">6.1</span><span>عدم آشکارسازی اتصال دستگاه</span><span class="s-dots"></span><span class="s-page">۱۵</span></a>
+    <a class="toc-sub" href="#sec-612"><span class="s-id">6.2</span><span>شکست مذاکره و تعویض‌نشدن ولتاژ</span><span class="s-dots"></span><span class="s-page">۱۶</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b7"><span class="t-num">۸</span><span class="t-title">بخش ۷ | مقایسۀ جایگاه و انتخاب</span><span class="t-dots"></span><span class="t-page">۱۶</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-711"><span class="s-id">7.1</span><span>مزیت‌ها و تمرکز انتخابی هر مدل</span><span class="s-dots"></span><span class="s-page">۱۷</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b8"><span class="t-num">۹</span><span class="t-title">بخش ۸ | جمع‌بندی</span><span class="t-dots"></span><span class="t-page">۲۰</span></a>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۱۰</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۲۰</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۱۱</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۲۰</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">شکل ۲-۱</span><span>کاربرد به‌عنوان <span class="en">Source</span> (سمت تغذیه)</span><span class="f-dots"></span><span class="f-page">۶</span></div>
+        <div class="frow"><span class="f-id">شکل ۲-۲</span><span>کاربرد به‌عنوان <span class="en">Sink</span> (سمت دریافت)</span><span class="f-dots"></span><span class="f-page">۶</span></div>
+        <div class="frow"><span class="f-id">شکل ۳-۱</span><span>سازوکار پاسخ</span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">کد ۱</span><span>مقداردهی اولیۀ <span class="en">PD</span> در حالت <span class="en">Sink</span></span><span class="f-dots"></span><span class="f-page">۱۱</span></div>
+      </div>
+      <div>
+        <div class="frow"><span class="f-id">کد ۲</span><span>ماشین حالت پروتکل (<span class="en">PD_Main_Proc</span>)</span><span class="f-dots"></span><span class="f-page">۱۲</span></div>
+        <div class="frow"><span class="f-id">کد ۳</span><span>ارسال قابلیت‌های منبع (<span class="en">SendSourceCapabilities</span>)</span><span class="f-dots"></span><span class="f-page">۱۳</span></div>
+        <div class="frow"><span class="f-id">کد ۴</span><span>تحلیل <span class="en">PDO</span> و ارسال درخواست (<span class="en">HandleSourceCap</span>)</span><span class="f-dots"></span><span class="f-page">۱۴</span></div>
+        <div class="frow"><span class="f-id">کد ۵</span><span>روتین سرویس وقفۀ <span class="en">PD</span></span><span class="f-dots"></span><span class="f-page">۱۵</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> <span class="en">USB PD</span> استاندارد شارژ سریع <span class="en">USB-IF</span> است که با بهره‌گیری از پین‌های <span class="en">CC</span> در رابط <span class="en">Type-C</span> مذاکرۀ توان میان سمت تأمین (Source) و سمت دریافت (Sink) را انجام می‌دهد و تا <span class="en">240W</span> با تنظیم پویای ولتاژ/جریان پشتیبانی می‌کند. سری <span class="en">CH32</span> لایۀ فیزیکی <span class="en">PD</span> (با کدگذاری/رمزگشایی <span class="en">BMC</span> سخت‌افزاری) را درون تراشه یکپارچه کرده است؛ نرم‌افزار فقط محتوای بسته‌ها را پردازش می‌کند و هزینه و پیچیدگی طراحی به‌شدت کاهش می‌یابد. این سند طراحی سخت‌افزار، اصول پروتکل، پیکربندی رجیسترها، نمونۀ طراحی نرم‌افزار (ماشین حالت و رویدادها)، دیباگ و مقایسۀ جامع <span class="en">MCU</span>های دارای PD برای انتخاب سریع را پوشش می‌دهد.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>این سند کاربردی شرح می‌دهد چگونه با رابط <span class="en">USB PD</span> (Power Delivery) تراشه‌های سری <span class="en">CH32</span>، تراشه به‌عنوان سمت تأمین‌کنندۀ توان (Source) یا دریافت‌کنندۀ توان (Sink) پیکربندی شود تا به درخواست‌های مذاکرۀ توان دستگاه‌های بیرونی پاسخ دهد و انتقال توان انجام شود. بدین منظور در این سند ابتدا قابلیت‌های کنترل‌کنندۀ <span class="en">USB PD</span> به‌اختصار مرور می‌شود، سپس نمونۀ طراحی کاربرد <span class="en">USB PD</span> تحلیل می‌شود؛ شامل دیاگرام اتصال سخت‌افزار، روش پیکربندی رجیسترها، سازوکار پاسخ به فرمان‌های پروتکل و روند ارسال/دریافت داده. در پایان نیز ویژگی‌های هر یک از <span class="en">MCU</span>های دارای قابلیت PD و تمرکز انتخابی آن‌ها شرح داده می‌شود تا توسعه‌دهنده بتواند سریع انتخاب و توسعه را آغاز کند.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>میکروکنترلرهای همگانی‌منظوره</td><td><span class="en">CH32X035</span>، <span class="en">CH32L103</span>، <span class="en">CH32V205</span>، <span class="en">CH32H417</span>، <span class="en">CH32M030</span> و مانند آن‌ها</td></tr>
+  </table>
+</div>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">مروری بر کنترل‌کنندۀ <span class="en">USB PD</span></div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-111"><span class="dm">◆</span>۱.۱ معرفی رابط USB PD</h3>
+<p><span class="en">USB PD</span> (Power Delivery) استاندارد پروتکل شارژ سریعِ تدوین‌شدۀ انجمن <span class="en">USB-IF</span> است که از پین‌های <span class="en">CC</span> (Configuration Channel) در رابط <span class="en">Type-C</span> به‌عنوان بستر ارتباط بهره می‌گیرد و مذاکرۀ توان میان سمت تأمین‌کنندۀ توان (Source) و سمت دریافت‌کنندۀ توان (Sink) را تحقق می‌بخشد. این پروتکل از انتقال توان تا <span class="en">240W</span> پشتیبانی می‌کند و اجازۀ تنظیم پویای ولتاژ و جریان را می‌دهد. در مقایسه با طرح سنتیِ استفاده از تراشۀ پروتکل PD بیرونی، سری <span class="en">MCU</span> شرکت <span class="en">WCH</span> لایۀ فیزیکی PD (<span class="en">PHY</span>) را درون تراشه یکپارچه کرده است؛ کدگذاری/رمزگشایی <span class="en">BMC</span> به‌صورت سخت‌افزاری انجام می‌شود، نرم‌افزار فقط لازم است محتوای بسته‌ها را پردازش کند و ارتباط PD را می‌توان مستقیماً از طریق خط <span class="en">CC</span> برقرار کرد؛ به این ترتیب هزینه سیستم و پیچیدگی طراحی به‌طور محسوسی کاهش می‌یابد.</p>
+
+<h3 class="h2x" id="sec-112"><span class="dm">◆</span>۱.۲ قابلیت‌های اصلی کنترل‌کنندۀ USB PD</h3>
+<p>با مثال <span class="en">CH32X035</span> پیش می‌رویم؛ کنترل‌کنندۀ <span class="en">USB PD</span> آن قابلیت‌های زیر را دارد:</p>
+<div class="bl"><b>یکپارچگی لایۀ فیزیکی:</b> کدگذار/رمزگشای <span class="en">BMC</span> داخلی و پشتیبانی از ارسال/دریافت سیگنال خط <span class="en">CC</span>؛ بدون نیاز به تراشۀ <span class="en">PHY</span> بیرونی.</div>
+<div class="bl"><b>پشتیبانی از نقش‌ها:</b> پیکربندی به‌صورت <span class="en">Source</span> (تأمین‌کننده)، <span class="en">Sink</span> (دریافت‌کننده) یا <span class="en">DRP</span> (درگاه دو‌نقش).</div>
+<div class="bl"><b>سازگاری پروتکل:</b> پشتیبانی از مشخصۀ <span class="en">USB PD 3.0</span> (دامنۀ توان استاندارد <span class="en">SPR</span>)؛ با پیکربندی نرم‌افزاری به دامنۀ توان گسترش‌یافته (<span class="en">EPR</span>) قابل توسعه است.</div>
+<div class="bl"><b>بیشمای توان:</b> پشتیبانی از <span class="en">100W</span> ‏(<span class="en">20V/5A</span>)؛ همراه با <span class="en">DC-DC</span> بیرونی تا <span class="en">240W</span> قابل توسعه است.</div>
+<div class="bl"><b>آشکارسازی کم‌مصرف:</b> منطق آشکارسازی اتصال <span class="en">Type-C</span> داخلی و شناسایی خودکار اتصال دستگاه.</div>
+<div class="bl"><b>پشتیبانی وقفه:</b> سازوکار وقفۀ کامل برای پیاده‌سازی آسان پردازش پروتکل رویدادمحور.</div>
+
+<h3 class="h2x" id="sec-113"><span class="dm">◆</span>۱.۳ سناریوهای کاربردی نمونه</h3>
+<div class="bl">شارژر سریع تک‌درگاهه (حالت <span class="en">Source</span>)</div>
+<div class="bl">دستگاه‌های دریافت‌کنندۀ توان مانند موبایل، تبلت و لپ‌تاپ (حالت <span class="en">Sink</span>)</div>
+<div class="bl">پاوربانک شارژ سریع دور‌طرفه (حالت <span class="en">DRP</span>)</div>
+<div class="bl">ابزار تحلیل پروتکل PD (حالت شنود)</div>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">طراحی سخت‌افزار</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-211"><span class="dm">◆</span>۲.۱ تعریف پین‌ها و اتصال</h3>
+<p>با مثال <span class="en">CH32X035</span> پیش می‌رویم؛ قابلیت <span class="en">USB PD</span> از پین‌های زیر استفاده می‌کند:</p>
+<div class="tblwrap" id="tab-21">
+  <div class="tblcap"><span class="cap-pill">جدول ۲-۱</span><span class="cap-text">پین‌های PD</span></div>
+  <table class="tbl">
+    <tr><th style="width:26%;">نام پین</th><th style="width:22%;">شمارۀ پین</th><th>شرح کارکرد</th></tr>
+    <tr><td><span class="en">CC1</span></td><td><span class="en">PC14</span></td><td>خط <span class="en">CC1</span> رابط <span class="en">Type-C</span> (ارتباط PD و آشکارسازی اتصال)</td></tr>
+    <tr><td><span class="en">CC2</span></td><td><span class="en">PC15</span></td><td>خط <span class="en">CC2</span> رابط <span class="en">Type-C</span> (ارتباط PD و آشکارسازی اتصال)</td></tr>
+  </table>
+</div>
+<p>در طراحی سخت‌افزار باید <span class="en">CC1</span> و <span class="en">CC2</span> به ترتیب به پدهای <span class="en">CC1/CC2</span> متناظر سوکت <span class="en">Type-C</span> متصل شوند. تخصیص پین‌های <span class="en">CC</span> در تراشه‌های مختلف متفاوت است: <span class="en">CH32X035</span> از <span class="en">PC14/PC15</span> استفاده می‌کند؛ <span class="en">CH32M030</span> چهار پین <span class="en">CC</span> با تحمل ولتاژ فشار‌قوی <span class="en">28V</span> دارد (پشتیبانی از PD دو‌راهه)؛ تخصیص پین‌های CC مدل‌هایی مانند <span class="en">CH32V205</span> را در دیتاشیت مربوطه مراجعه کنید.</p>
+<p>نمودار اتصال کاربرد PD به‌عنوان <span class="en">Source</span> و <span class="en">Sink</span> در شکل‌های زیر آمده است:</p>
+<div class="fig" id="fig-21">
+  <div class="figbox">
+    <img src="assets/img/an37000-vcrop_p5_0.png" alt="شکل ۲-۱" style="max-width:560px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۱</span><span class="cap-text">کاربرد به‌عنوان <span class="en">Source</span> (سمت تغذیه)</span></div>
+</div>
+<div class="fig" id="fig-22">
+  <div class="figbox">
+    <img src="assets/img/an37000-vcrop_p5_1.png" alt="شکل ۲-۲" style="max-width:560px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲-۲</span><span class="cap-text">کاربرد به‌عنوان <span class="en">Sink</span> (سمت دریافت)</span></div>
+</div>
+<p><b>طرح تغذیۀ VCONN:</b></p>
+<p>لایۀ فیزیکی PD تعبیه‌شده در سری <span class="en">CH32</span> مستقیماً خروجی تغذیۀ <span class="en">VCONN</span> فراهم نمی‌کند. اگر لازم است تراشۀ <span class="en">eMarker</span> درون کابل تغذیه شود (پشتیبانی از <span class="en">VCONN</span>)، طرح ترکیبی <span class="en">CH32 + CH211</span> پیشنهاد می‌شود. ‏<span class="en">CH211</span> تراشۀ رابط فشار‌قوی <span class="en">Type-C/PD</span> است و <span class="en">LDO</span> فشار‌قوی، حفاظت فشار‌قوی پین‌های <span class="en">CC</span> و مدیریت تغذیۀ <span class="en">VCONN</span> را یکپارچه کرده است.</p>
+
+<h3 class="h2x" id="sec-212"><span class="dm">◆</span>۲.۲ نکات طراحی سخت‌افزار</h3>
+<div class="bl"><b>سطح منطقی پین‌های CC:</b> سطح منطقی ارتباط عادی خط <span class="en">CC</span> برابر ۱٫۲ ولت است، اما پین‌ها می‌توانند ولتاژ بالاتری را تحمل کنند (مثلاً پین‌های PC در <span class="en">CH32X035</span> تا <span class="en">VDD+6V</span> را تحمل می‌کنند). در کاربردهای شارژ سریع فشار‌قوی به تطابق سطح‌ها توجه شود.</div>
+<div class="bl"><b>نمونه‌برداری VBUS:</b> در حالت <span class="en">Sink</span> لازم است ولتاژ <span class="en">VBUS</span> با شبکۀ مقسوم مقاومتی به بازۀ ورودی <span class="en">ADC</span> کاهش یابد؛ پیشنهاد می‌شود نسبت تقسیم با توجه به بیشمای ولتاژ ورودی انتخاب شود.</div>
+<div class="bl"><b>کنترل DC-DC:</b> در حالت <span class="en">Source</span> تعویض ولتاژ معمولاً از طریق <span class="en">PWM</span> یا <span class="en">DAC</span> روی سرِ بازخورد <span class="en">DC-DC</span> بیرونی انجام می‌شود؛ مطمئن شوید سیگنال کنترل با بازۀ ولتاژ <span class="en">DC-DC</span> سازگار است.</div>
+<div class="bl"><b>مدار حفاظت:</b> پیشنهاد می‌شود روی مسیر <span class="en">VBUS</span> حفاظت اضافه‌ولتاژ/اضافه‌جریان (مانند فیوز و دیود <span class="en">TVS</span>) افزوده شود.</div>
+<div class="bl"><b>چینش PCB:</b> مسیر خط <span class="en">CC</span> باید تا حد ممکن کوتاه و هم‌طول باشد و از گذر از میان ویاها پرهیز شود؛ فاصلۀ کافی میان نواحی فشار‌قوی و نواحی کنترل کم‌ولتاژ حفظ شود.</div>
+
+<!-- ================= بخش ۳ ================= -->
+<div class="chapter-header" id="sec-b3">
+  <span class="sec-pill">بخش ۳</span>
+  <div class="sec-title">اصول کارکرد پروتکل</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-311"><span class="dm">◆</span>۳.۱ قالب بستۀ داده</h3>
+<p>بستۀ دادۀ پروتکل <span class="en">USB PD</span> از میدان‌های زیر تشکیل می‌شود:</p>
+<div class="tblwrap" id="tab-31">
+  <div class="tblcap"><span class="cap-pill">جدول ۳-۱</span><span class="cap-text">بستۀ دادۀ پروتکل</span></div>
+  <table class="tbl">
+    <tr><th style="width:34%;">میدان</th><th style="width:20%;">طول</th><th>شرح</th></tr>
+    <tr><td>پیش‌درآمد (<span class="en">Preamble</span>)</td><td><span class="en">64 bits</span></td><td>توالی ۰/۱ متناوب برای هم‌گام‌سازی</td></tr>
+    <tr><td><span class="en">SOP*</span></td><td><span class="en">20 bits</span></td><td>شناسایی شیء ارتباط (<span class="en">SOP/SOP'/SOP''</span>)</td></tr>
+    <tr><td>کد عملکرد (<span class="en">Message Header</span>)</td><td><span class="en">16 bits</span></td><td>شامل نوع پیام، نقش، نسخه و…</td></tr>
+    <tr><td>کد داده (<span class="en">Byte0-n</span>)</td><td><span class="en">0~7×32 bits</span></td><td>بار مفید پیام‌های دادهای</td></tr>
+    <tr><td><span class="en">CRC32</span></td><td><span class="en">32 bits</span></td><td>کد درستی‌آزمایی</td></tr>
+    <tr><td>کد پایان (<span class="en">EOP</span>)</td><td><span class="en">5 bits</span></td><td>ثابت و برابر <span class="en">01101</span></td></tr>
+  </table>
+</div>
+<p>علاوه بر پیش‌درآمد، همۀ داده‌ها باید پیش از انتقال روی خط <span class="en">CC</span> از کدگذاری <span class="en">4b5b</span> و کدگذاری <span class="en">BMC</span> بگذرند. لایۀ فیزیکی PD سخت‌افزاری تراشه‌های <span class="en">CH32</span> کدگذاری/رمزگشایی <span class="en">BMC</span> و <span class="en">4b5b</span> را به‌طور خودکار انجام می‌دهد و نرم‌افزار فقط لازم است محتوای بستۀ خام را پردازش کند.</p>
+
+<h3 class="h2x" id="sec-312"><span class="dm">◆</span>۳.۲ سازوکار انتقال فرمان (SOP*)</h3>
+<p>میدان <span class="en">SOP</span> برای شناسایی شیء ارتباط به‌کار می‌رود:</p>
+<div class="bl"><span class="en">SOP</span>: ارتباط میان <span class="en">Source</span> و <span class="en">Sink</span></div>
+<div class="bl"><span class="en">SOP'</span>: ارتباط <span class="en">Source</span> با <span class="en">E-Marker</span> سرِ نزدیک کابل</div>
+<div class="bl"><span class="en">SOP''</span>: ارتباط <span class="en">Source</span> با <span class="en">E-Marker</span> سرِ دور کابل</div>
+<p>وقتی تراشه نقش <span class="en">Sink</span> دارد، فرمان‌های <span class="en">SOP</span> دریافتی از <span class="en">Source</span> را دریافت می‌کند؛ و وقتی نقش <span class="en">Source</span> دارد، فرمان‌های <span class="en">SOP</span> را فعالانه ارسال می‌کند.</p>
+
+<h3 class="h2x" id="sec-313"><span class="dm">◆</span>۳.۳ سازوکار پاسخ</h3>
+<p>پس از هر بار دریافت درست یک بستۀ داده (عبور از درستی‌آزمایی <span class="en">CRC</span>)، گیرنده باید پیام <span class="en">GoodCRC</span> (پیام کنترلی) را پاسخ دهد تا به فرستنده اعلام شود داده درست دریافت شده است. پیام <span class="en">GoodCRC</span> همان <span class="en">Message ID</span> پیام دریافتی را با خود حمل می‌کند.</p>
+<p>وقتی فرستنده در بازۀ زمان‌آخر <span class="en">GoodCRC</span> دریافت نکند، با همان <span class="en">Message ID</span> دوباره ارسال می‌کند و شمار پیش‌فرض ارسال دوباره توسط پشته پروتکل پیکربندی می‌شود.</p>
+<p>برای فرمان‌های خاص (مانند <span class="en">Request</span>)، گیرنده (<span class="en">Source</span>) همچنین لازم است پاسخ وضعیتی مانند <span class="en">Accept</span> یا <span class="en">Reject</span> بدهد.</p>
+<div class="fig" id="fig-31">
+  <div class="figbox">
+    <img src="assets/img/an37000-vcrop_p7_2.png" alt="شکل ۳-۱" style="max-width:600px;">
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۳-۱</span><span class="cap-text">سازوکار پاسخ</span></div>
+</div>
+
+<h3 class="h2x" id="sec-314"><span class="dm">◆</span>۳.۴ روند ارسال و دریافت داده</h3>
+<p>روند کامل مذاکرۀ توان PD شامل گام‌های زیر است:</p>
+<div class="bl">۱. <b>آشکارسازی اتصال:</b> ‏<span class="en">Source</span> روی پین <span class="en">CC</span> مقاومت پایین‌کش (<span class="en">Rd</span>) متعلق به <span class="en">Sink</span> را آشکار و اتصال دستگاه را شناسایی می‌کند.</div>
+<div class="bl">۲. <b>ارسال داده:</b> ‏<span class="en">Source</span> پیام دادۀ <span class="en">Source_Capabilities</span> را می‌فرستد که شامل چندین <span class="en">PDO</span> (شیء دادۀ توان) است.</div>
+<div class="bl">۳. <b>تأیید پاسخ:</b> ‏<span class="en">Sink</span> با <span class="en">GoodCRC</span> پاسخ می‌دهد.</div>
+<div class="bl">۴. <b>درخواست (دریافت داده):</b> ‏<span class="en">Sink</span> از فهرست <span class="en">PDO</span> ردیف مناسب را انتخاب و پیام دادۀ <span class="en">Request</span> را می‌فرستد.</div>
+<div class="bl">۵. <b>تأیید پاسخ:</b> ‏<span class="en">Source</span> با <span class="en">GoodCRC</span> پاسخ می‌دهد.</div>
+<div class="bl">۶. <b>پذیرش/رد (ارسال پیام کنترلی):</b> ‏<span class="en">Source</span> قابلیت‌برآورده‌شدن درخواست را داوری و <span class="en">Accept</span> یا <span class="en">Reject</span> را پاسخ می‌دهد.</div>
+<div class="bl">۷. <b>آمادۀ شدن توان (ارسال پیام کنترلی):</b> اگر پذیرفته شود، <span class="en">Source</span> پس از تنظیم ولتاژ/جریان، <span class="en">PS_Ready</span> را می‌فرستد.</div>
+<div class="bl"><b>پایان مذاکره:</b> ‏<span class="en">Sink</span> با <span class="en">GoodCRC</span> پاسخ می‌دهد و <span class="en">VBUS</span> به ولتاژ هدف تغییر می‌کند.</div>
+
+<!-- ================= بخش ۴ ================= -->
+<div class="chapter-header" id="sec-b4">
+  <span class="sec-pill">بخش ۴</span>
+  <div class="sec-title">پیکربندی رجیسترها</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-411"><span class="dm">◆</span>۴.۱ رجیستر کنترل PD</h3>
+<p>کنترل‌کنندۀ <span class="en">USB PD</span> سری <span class="en">CH32</span> مجموعه‌ای از رجیسترهای اختصاصی برای پیکربندی حالت کارکرد لایۀ فیزیکی PD، نقش و پارامترهای پروتکل فراهم کرده است:</p>
+<div class="tblwrap" id="tab-41">
+  <div class="tblcap"><span class="cap-pill">جدول ۴-۱</span><span class="cap-text">شرح رجیسترها</span></div>
+  <table class="tbl">
+    <tr><th style="width:36%;">رجیستر</th><th>شرح کارکرد</th></tr>
+    <tr><td><span class="en">R32_USBPD_CONTROL</span></td><td>رجیستر کنترل PD؛ پیکربندی نقش (<span class="en">Source/Sink/DRP</span>) و فعال‌سازی قابلیت PD</td></tr>
+    <tr><td><span class="en">R32_USBPD_PORT</span></td><td>پیکربندی پین‌های CC؛ تنظیم مقاومت پایین‌کش (<span class="en">Rd</span>) و قابلیت جریان بالاکش</td></tr>
+    <tr><td><span class="en">R32_USBPD_CONFIG</span></td><td>رجیستر فعال‌سازی وقفه؛ تعیین اینکه کدام رویدادها وقفه بسازند</td></tr>
+    <tr><td><span class="en">R32_USBPD_STATUS</span></td><td>رجیستر وضعیت وقفه؛ نشان‌دادن منبع وقفۀ کنونی</td></tr>
+  </table>
+</div>
+
+<h3 class="h2x" id="sec-412"><span class="dm">◆</span>۴.۲ رجیستر آشکارسازی وضعیت CC</h3>
+<p>رجیستر <span class="en">PD_CC_STA</span> برای خواندن وضعیت کنونی پین‌های <span class="en">CC</span> به‌کار می‌رود؛ شامل:</p>
+<div class="bl">آیا اتصال دستگاه مقابل آشکار شده است یا نه.</div>
+<div class="bl">جهت اتصال مستقیم/معکوس (کدام خط <span class="en">CC1</span> یا <span class="en">CC2</span> فعال است).</div>
+<div class="bl">اینکه دستگاه مقابل <span class="en">Source</span> است یا <span class="en">Sink</span>.</div>
+
+<h3 class="h2x" id="sec-413"><span class="dm">◆</span>۴.۳ FIFO ارسال و دریافت</h3>
+<p>درون کنترل‌کنندۀ PD یک <span class="en">FIFO</span> ارسال و یک <span class="en">FIFO</span> دریافت برای بافرکردن بسته‌های در انتظار ارسال و دریافته‌شده وجود دارد.</p>
+<div class="bl"><b><span class="en">FIFO</span> ارسال:</b> نرم‌افزار بستۀ در انتظار ارسال (شامل کد عملکرد و کد داده) را واژه‌به‌واژه (۳۲ بیتی) در <span class="en">FIFO</span> ارسال می‌نویسد و سخت‌افزار خودکار کدگذاری <span class="en">BMC</span> را انجام داده و ارسال می‌کند.</div>
+<div class="bl"><b><span class="en">FIFO</span> دریافت:</b> سخت‌افزار پس از دریافت و رمزگشایی بسته، بار مفید را در <span class="en">FIFO</span> دریافت می‌گذارد و نرم‌افزار از آن می‌خواند.</div>
+
+<h3 class="h2x" id="sec-414"><span class="dm">◆</span>۴.۴ رجیستر وقفه و وضعیت</h3>
+<p>سیستم وقفه از رویدادهای زیر پشتیبانی می‌کند:</p>
+<div class="bl">تکمیل دریافت بستۀ داده (شامل پاسخ <span class="en">GoodCRC</span>)</div>
+<div class="bl">تکمیل ارسال بستۀ داده</div>
+<div class="bl">تغییر وضعیت اتصال (وصل/جدا شدن)</div>
+<div class="bl">خطای زمان‌آخر</div>
+<div class="bl">خطای <span class="en">CRC</span></div>
+<p>نرم‌افزار باید در روتین سرویس وقفه <span class="en">PD_INT_STA</span> را بخواند تا نوع رویداد مشخص و سپس پردازش متناظر انجام شود.</p>
+
+<!-- ================= بخش ۵ ================= -->
+<div class="chapter-header" id="sec-b5">
+  <span class="sec-pill">بخش ۵</span>
+  <div class="sec-title">نمونۀ طراحی نرم‌افزار</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-511"><span class="dm">◆</span>۵.۱ روند مقداردهی اولیه</h3>
+<p>گام‌های مقداردهی اولیه عبارت‌اند از:</p>
+<div class="bl">۱. فعال‌سازی ساعت کنترل‌کنندۀ PD</div>
+<div class="bl">۲. پیکربندی پین‌های CC در کارکرد PD (کارکرد چندگانه)</div>
+<div class="bl">۳. تنظیم نقش (<span class="en">Source/Sink/DRP</span>)</div>
+<div class="bl">۴. پیکربندی فعال‌سازی وقفه</div>
+<div class="bl">۵. راه‌اندازی کنترل‌کنندۀ PD</div>
+<p>کد نمونه (حالت <span class="en">Sink</span>):</p>
+<div class="fig" id="code-1">
+  <div class="codeblk long">void PD_Sink_Init(void)
+{
+// 1. فعال‌سازی ساعت PD (بر اساس دفترچۀ رجیسترهای MCU)
+RCC->APB2ENR |= RCC_APB2ENR_PDEN;
+
+// 2. پیکربندی کارکرد چندگانۀ پین‌های CC
+GPIO_InitTypeDef gpio;
+gpio.Pin = GPIO_PIN_14 | GPIO_PIN_15;
+gpio.Mode = GPIO_MODE_AF_PP;
+gpio.Pull = GPIO_NOPULL;
+gpio.Speed = GPIO_SPEED_FREQ_HIGH;
+gpio.Alternate = GPIO_AF_PD;          <span class="cm">// چندگانه به کارکرد PD</span>
+HAL_GPIO_Init(GPIOC, &amp;gpio);
+
+// 3. تنظیم نقش Sink و فعال‌سازی PD
+PD->CTL = PD_ROLE_SINK | PD_ENABLE;
+
+// 4. پیکربندی وقفه‌ها
+NVIC_EnableIRQ(PD_IRQn);
+PD->INT_EN = PD_INT_RX_DONE | PD_INT_CONNECT | PD_INT_ERROR;
+
+// 5. راه‌اندازی PD
+PD->CTL |= PD_START;
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۱</span><span class="cap-text">مقداردهی اولیۀ <span class="en">PD</span> در حالت <span class="en">Sink</span></span></div>
+</div>
+
+<h3 class="h2x" id="sec-512"><span class="dm">◆</span>۵.۲ دریافت و تحلیل فرمان (ماشین حالت پروتکل)</h3>
+<p>پشته پروتکل PD معمولاً به‌صورت ماشین حالت پیاده‌سازی می‌شود. در حلقۀ اصلی یا وقفۀ تایمر، لازم است تابع پردازش پروتکل به‌صورت دوره‌ای فراخوانی شود:</p>
+<div class="fig" id="code-2">
+  <div class="codeblk long">void PD_Main_Proc(void)
+{
+// بررسی وضعیت اتصال
+PD_Det_Proc();
+
+// پردازش پیام‌های دریافتی
+if (PD_RxReady()) {
+uint32_t header = PD_GetRxHeader();
+uint8_t msgType = (header &gt;&gt; 8) &amp; 0x1F;   <span class="cm">// Message Type</span>
+uint8_t numData = (header &gt;&gt; 12) &amp; 0x07;  <span class="cm">// Number of Data Objects</span>
+
+switch(msgType) {
+case MSG_SOURCE_CAP:
+<span class="cm">// قابلیت‌های Source دریافت شد؛ ذخیرهٔ فهرست PDO</span>
+SaveSourceCap(PD_GetRxData());
+<span class="cm">// انتخاب ولتاژ مناسب و ارسال Request</span>
+SendRequest(selected_pdo_index);
+break;
+case MSG_ACCEPT:
+<span class="cm">// درخواست پذیرفته شد؛ در انتظار PS_Ready</span>
+break;
+case MSG_PS_READY:
+<span class="cm">// توان آماده است؛ ولتاژ VBUS تغییر کرده است</span>
+OnPowerReady();
+break;
+<span class="cm">// ... پردازش پیام‌های دیگر</span>
+}
+}
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۲</span><span class="cap-text">ماشین حالت پروتکل (<span class="en">PD_Main_Proc</span>)</span></div>
+</div>
+
+<h3 class="h2x" id="sec-513"><span class="dm">◆</span>۵.۳ روند ارسال داده</h3>
+<p>در حالت <span class="en">Source</span> لازم است پیام دادۀ <span class="en">Source_Capabilities</span> فعالانه ارسال شود. روند ارسال چنین است:</p>
+<div class="fig" id="code-3">
+  <div class="codeblk long">void SendSourceCapabilities(void)
+{
+uint32_t pdo_list[] = {0x1A21912C, 0x0002D12C, 0x0003C12C}; <span class="cm">// 5V/3A, 9V/3A, 12V/3A</span>
+uint8_t num_pdo = 3;
+
+// 1. ساخت کد عملکرد (Message Header)
+uint16_t header = (MSG_SOURCE_CAP &lt;&lt; 8) | (num_pdo &lt;&lt; 12) |
+(PD_VERSION &lt;&lt; 4) | (PORT_ROLE_SOURCE &lt;&lt; 2);
+
+// 2. نوشتن در FIFO ارسال: نخست کد عملکرد
+PD->TX_FIFO = header;
+
+// 3. نوشتن کد داده (هر PDO سی و دو بیت)
+for (int i = 0; i &lt; num_pdo; i++) {
+PD->TX_FIFO = pdo_list[i];
+}
+
+// 4. آغاز ارسال
+PD->CTL |= PD_TX_START;
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۳</span><span class="cap-text">ارسال قابلیت‌های منبع (<span class="en">SendSourceCapabilities</span>)</span></div>
+</div>
+
+<h3 class="h2x" id="sec-514"><span class="dm">◆</span>۵.۴ روند دریافت داده</h3>
+<p>پس از دریافت <span class="en">Source_Capabilities</span>، سمت <span class="en">Sink</span> باید <span class="en">PDO</span>ها را تحلیل و <span class="en">Request</span> را ارسال کند:</p>
+<div class="fig" id="code-4">
+  <div class="codeblk long">void HandleSourceCap(void)
+{
+uint32_t pdo[7];
+uint8_t num = PD_GetRxDataCount();
+for (int i = 0; i &lt; num; i++) {
+pdo[i] = PD_GetRxDataWord(i);
+}
+
+<span class="cm">// انتخاب بهترین ردیف (مثلاً بیشترین ولتاژ)</span>
+int chosen = ChooseBestPDO(pdo, num);
+
+<span class="cm">// ساخت پیام Request</span>
+uint16_t req_header = (MSG_REQUEST &lt;&lt; 8) | (1 &lt;&lt; 12) |
+(PD_VERSION &lt;&lt; 4) | (PORT_ROLE_SINK &lt;&lt; 2);
+uint32_t req_data = (chosen &lt;&lt; 16) |          <span class="cm">// شاخص PDO هدف</span>
+(desired_voltage &lt;&lt; 8) | desired_current;
+
+PD->TX_FIFO = req_header;
+PD->TX_FIFO = req_data;
+PD->CTL |= PD_TX_START;
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۴</span><span class="cap-text">تحلیل <span class="en">PDO</span> و ارسال درخواست (<span class="en">HandleSourceCap</span>)</span></div>
+</div>
+
+<h3 class="h2x" id="sec-515"><span class="dm">◆</span>۵.۵ طراحی روتین سرویس وقفه</h3>
+<p>روتین سرویس وقفه مسئول پاسخ سریع به رویدادهای سخت‌افزاری است؛ پیشنهاد می‌شود با صف رویداد یا پرچم‌ها، پردازش به حلقۀ اصلی موکول شود:</p>
+<div class="fig" id="code-5">
+  <div class="codeblk long">void PD_IRQHandler(void)
+{
+uint32_t status = PD->INT_STA;
+
+if (status &amp; PD_INT_RX_DONE) {
+<span class="cm">// دریافت کامل شد؛ تنظیم پرچم</span>
+pd_rx_done = 1;
+PD->INT_STA = PD_INT_RX_DONE;   <span class="cm">// پاک‌کردن وقفه</span>
+}
+if (status &amp; PD_INT_TX_DONE) {
+pd_tx_done = 1;
+PD->INT_STA = PD_INT_TX_DONE;
+}
+if (status &amp; PD_INT_CONNECT) {
+<span class="cm">// تغییر وضعیت اتصال (وصل/جدا شدن)</span>
+connection_state = (PD->CC_STA &amp; CC_CONNECTED) ? 1 : 0;
+PD->INT_STA = PD_INT_CONNECT;
+}
+if (status &amp; PD_INT_ERROR) {
+<span class="cm">// پردازش خطا (زمان‌آخر، خطای CRC و...)</span>
+HandleError();
+PD->INT_STA = PD_INT_ERROR;
+}
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۵</span><span class="cap-text">روتین سرویس وقفۀ <span class="en">PD</span></span></div>
+</div>
+
+<!-- ================= بخش ۶ ================= -->
+<div class="chapter-header" id="sec-b6">
+  <span class="sec-pill">بخش ۶</span>
+  <div class="sec-title">دیباگ و مسائل رایج</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-611"><span class="dm">◆</span>۶.۱ عدم آشکارسازی اتصال دستگاه</h3>
+<p><b>پدیدۀ مسئله:</b> در حالت <span class="en">Source</span>، مقاومت پایین‌کش <span class="en">Sink</span> روی پین <span class="en">CC</span> آشکار نمی‌شود.</p>
+<p><b>علت‌های احتمالی:</b></p>
+<div class="bl">۱. وضعیت بالا‌کش/پایین‌کش پین‌های CC درست نیست.</div>
+<div class="bl">۲. تماس ناکافی کابل یا سوکت <span class="en">Type-C</span>.</div>
+<p><b>راه‌حل:</b> اتصال سخت‌افزاری را تأیید کنید؛ بررسی کنید تراشه مقاومت پایین‌کش داخلی دارد یا نه و اگر دارد، لازم است با پیکربندی رجیستر به‌صورت دستی پایین‌کش بسته و جریان بالاکش پیکربندی شود. همچنین بررسی کنید <span class="en">GPIO</span> پین‌های CC در کارکرد چندگانه پیکربندی شده باشد.</p>
+
+<h3 class="h2x" id="sec-612"><span class="dm">◆</span>۶.۲ شکست مذاکره و تعویض‌نشدن ولتاژ</h3>
+<p><b>پدیدۀ مسئله:</b> ‏<span class="en">VBUS</span> همیشه روی ۵ ولت می‌ماند.</p>
+<p><b>علت‌های احتمالی:</b></p>
+<div class="bl">۱. فهرست <span class="en">PDO</span> سمت <span class="en">Sink</span> شامل ردیف‌های پشتیبانی‌شدۀ Source نیست.</div>
+<div class="bl">۲. قالب پیام <span class="en">Request</span> ارسالی اشتباه است (مثلاً شاخص بیرون از بازه).</div>
+<div class="bl">۳. مدار کنترل <span class="en">DC-DC</span> بیرونی به‌درستی پاسخ نمی‌دهد.</div>
+<p><b>راه‌حل:</b> با تحلیل‌گر PD گزارش ارتباط روی خط CC را بگیرید و توالی پیام‌ها در فرایند مذاکره را تأیید کنید؛ شاخص <span class="en">PDO</span> و مقدارهای ولتاژ/جریان در کد دادۀ <span class="en">Request</span> را بررسی کنید.</p>
+
+<!-- ================= بخش ۷ ================= -->
+<div class="chapter-header" id="sec-b7">
+  <span class="sec-pill">بخش ۷</span>
+  <div class="sec-title">مقایسۀ جایگاه و انتخاب</div>
+  <div class="sec-divider"></div>
+</div>
+<p>شرکت چین‌هنگ بر پایۀ هستۀ <span class="en">RISC-V</span> خانوادۀ QingKe که خود آن را توسعه داده، محصولات <span class="en">MCU</span> متعددی با لایۀ فیزیکی <span class="en">USB PD</span> داخلی عرضه کرده است. بر اساس سناریوهای کاربردی مختلف، این محصولات به دو دسته تقسیم می‌شوند:</p>
+<div class="bl"><b>PD MCU (طرح تخصصی Type-C):</b> با نمایندگان <span class="en">CH32M030</span>، <span class="en">CH32M103</span> و <span class="en">CH641</span>؛ متمرکز بر کاربردهای صرف انتقال توان PD با جانبی‌های کمینه‌شده؛ برخی مدل‌ها <span class="en">LDO</span> فشار‌قوی داخلی دارند و می‌توانند مستقیماً در ولتاژ نسبتاً بالا کار کنند.</div>
+<div class="bl"><b>PDUSB MCU (یکپارچگی توان + انتقال داده):</b> با نمایندگان <span class="en">CH32V205</span>، <span class="en">CH32H417</span>، <span class="en">CH32L103</span> و <span class="en">CH32X035</span>؛ کنترل‌کنندۀ PD PHY و <span class="en">USB 2.0</span> یا <span class="en">USB 3.0</span> داخلی دارند و می‌توانند هم‌زمان انتقال توان <span class="en">Type-C</span> و ارتباط داده را پشتیبانی کنند.</div>
+<p>مقایسۀ سری‌های مختلف در جدول زیر آمده است:</p>
+<div class="tblwrap" id="tab-71">
+  <div class="tblcap"><span class="cap-pill">جدول ۷-۱</span><span class="cap-text">مقایسۀ <span class="en">MCU</span>های دارای PD سری CH32</span></div>
+  <table class="tbl">
+    <tr><th style="width:14%;">تراشه</th><th style="width:13%;">دسته</th><th style="width:26%;">مزیت اصلی PD</th><th style="width:25%;">تفکیک‌کنندۀ کلیدی</th><th>سناریوی نمونه</th></tr>
+    <tr><td><span class="en">CH32M030</span></td><td><span class="en">PD MCU</span></td><td>دو لایۀ فیزیکی PD، چهار پین CC با تحمل <span class="en">28V</span>، توان بومی <span class="en">140W</span></td><td><span class="en">LDO</span> فشار‌قوی <span class="en">28V</span> داخلی + ۴ جفت پیش‌رانش N + جریان‌کش برنامه‌پذیر</td><td>شارژر دو C، منبع تغذیۀ PD پرتوان</td></tr>
+    <tr><td><span class="en">CH641</span></td><td><span class="en">PD MCU</span></td><td>طراحی‌شده مخصوص PD + شارژ بی‌سیم، کمترین جانبی بیرونی</td><td><span class="en">IO</span> فشار‌قوی <span class="en">12V</span> داخلی، نمونه‌برداری جریان تفاضلی، رمزگشای سیگنال کوچک</td><td>کابل شارژ سریع PD، شارژ بی‌سیم، ابزار برقی</td></tr>
+    <tr><td><span class="en">CH32H417</span></td><td><span class="en">PDUSB MCU</span></td><td><span class="en">PD 3.2 + EPR</span>، دو‌هسته‌ای <span class="en">400MHz</span></td><td><span class="en">USB 3.2 Gen1</span> + <span class="en">PHY</span> اترنت صد‌مگابیتی داخلی</td><td>دستگاه ترکیبی PD + داده فوق‌سریع + شبکه</td></tr>
+    <tr><td><span class="en">CH32V205</span></td><td><span class="en">PDUSB MCU</span></td><td><span class="en">PD 3.2 + EPR</span>، ‏<span class="en">USB</span> پرسرعت <span class="en">480Mbps</span></td><td>هستۀ <span class="en">192MHz</span>، فلش <span class="en">256KB</span>، ‏۸ درگاه سریال</td><td>PD + انتقال دادۀ پرسرعت USB (حافظه، داک توسعه)</td></tr>
+    <tr><td><span class="en">CH32X315</span></td><td><span class="en">PDUSB MCU</span></td><td><span class="en">PD 3.2 + EPR</span>، ‏<span class="en">USB 3.0</span> + ‏۴ مجموعۀ <span class="en">ADC</span> ‏<span class="en">5Msps</span></td><td>هستۀ <span class="en">480MHz</span>، ‏۴۸ کانال ADC</td><td>PD + انتقال USB + جمع‌آوری داده پرسرعت چند‌کاناله</td></tr>
+    <tr><td><span class="en">CH32L103</span></td><td><span class="en">PDUSB MCU</span></td><td><span class="en">PDUSB</span> با طراحی کم‌مصرف</td><td>تغذیۀ <span class="en">1.8~3.6V</span>، حالت‌های خواب/توقف/آماده‌به‌کار</td><td>دستگاه PD باتری‌خور قابل حمل</td></tr>
+    <tr><td><span class="en">CH32X035</span></td><td><span class="en">PDUSB MCU</span></td><td>بیشترین بهصرفه در میان <span class="en">PDUSB</span>های پایه</td><td><span class="en">48MHz</span>، بازۀ وسیع <span class="en">2~5.5V</span>، ‏۲ تقویت‌کنندۀ عملیاتی + ۳ مقایسه‌گر</td><td>شارژر تک‌درگاهه، دستگاه دریافت‌کننده، ابزار تحلیل PD</td></tr>
+  </table>
+</div>
+
+<h3 class="h2x" id="sec-711"><span class="dm">◆</span>۷.۱ مزیت‌ها و تمرکز انتخابی هر مدل</h3>
+<p><b>۱. CH32M030 — انتخاب تخصصی پرتوان برای دو درگاه C:</b></p>
+<p>این مدل بالاترین جایگاه را در خط محصول PD MCU شرکت دارد. مزیت اصلی آن PD دور‌اهۀ بومی است: دو مجموعۀ لایۀ فیزیکی PD داخلی و ۴ پین CC که بدون تراشۀ PD بیرونی از دو رابط <span class="en">Type-C</span> پشتیبانی می‌کند؛ به‌صورت بومی <span class="en">140W</span> ‏(<span class="en">28V@5A</span>) و همراه با <span class="en">DC-DC</span> بیرونی تا <span class="en">240W</span> قابل توسعه است.</p>
+<p>ولتاژ کار تراشه تا <span class="en">28V</span> می‌رسد و با <span class="en">LDO</span> فشار‌قوی داخلی می‌تواند مستقیماً از <span class="en">VBUS</span> تغذیه شود. همچنین دو ماژول جریان‌کش برنامه‌پذیر دارد که کنترل بلادرنگ، پویا و دقیق ولتاژ خروجی دو <span class="en">DC-DC</span> بیرونی را ممکن می‌سازد و پیاده‌سازی راهبرد تنظیم پویای ولتاژ <span class="en">PPS</span> را بسیار ساده می‌کند. افزون بر این، ۴ تقویت‌کنندۀ عملیاتی، ۳ مقایسه‌گر و ۴ جفت پیش‌رانش گیت N داخلی دارد و حلقهٔ سیگنال آنالوگ و جانبی‌های پیش‌رانش توان هر دو به‌طور محسوسی کمینه می‌شوند.</p>
+<p><b>تمرکز:</b> اگر قرار است شارژر چند‌درگاهه بسازید یا به طرحی نیاز دارید که PD با رانندگی موتور/کنترل پرتوان ترکیب شود، ‏<span class="en">CH32M030</span> تنها انتخابی است که بدون تراشۀ PD بیرونی از دو درگاه C به‌صورت بومی پشتیبانی می‌کند.</p>
+<p><b>۲. CH641 — تراشۀ اختصاصی PD با کمینه‌سازی نهایی:</b></p>
+<p>جایگاه <span class="en">CH641</span> بسیار خاص است: این تراشه <span class="en">MCU</span> همگانی‌منظوره نیست بلکه کنترل‌کنندۀ اختصاصی PD و شارژ بی‌سیم است. هسته فقط <span class="en">48MHz</span>، فلش فقط <span class="en">16KB</span> و <span class="en">SRAM</span> فقط <span class="en">2KB</span> است، اما یکپارچگی جانبی‌های آن بسیار بالا است.</p>
+<p>لایۀ فیزیکی PD، رابط BC، نمونه‌برداری جریان تفاضلی ورودی (<span class="en">ISP/ISN</span>) و رمزگشای تقویت سیگنال کوچک AC (<span class="en">QII</span>) در درون آن تعبیه شده و ۴ پین پیش‌رانش فشار‌قوی نیز دارد که می‌تواند مستقیماً ترانزیستور <span class="en">MOS</span> را برانید. این یعنی برای طرح کابل شارژ سریع PD یا شارژ بی‌سیم تقریباً به پیش‌حلقه آنالوگ و مدار پیش‌رانش اضافی نیاز نیست. حفاظت اضافه‌ولتاژ <span class="en">OVP</span> و حفاظت دمای بیش از حد <span class="en">OTP</span> را نیز پشتیبانی می‌کند و در سطح سخت‌افزار افزونگی امنیتی معینی دارد.</p>
+<p><b>تمرکز:</b> اگر محصول شما کابل شارژ سریع PD (یک کابل، چند شارژ)، پایۀ شارژ بی‌سیم یا کاربرد PD با مساحت PCB بسیار کوچک و هزینۀ BOM بسیار پایین است، ‏<span class="en">CH641</span> تخصصی‌ترین انتخاب است. اما منابع آن محدود است و برای سناریوهایی که به پشته پروتکل پیچیده یا پردازش حجیم داده نیاز دارند مناسب نیست.</p>
+<p><b>۳. CH32H417 — تراشۀ ترکیبی پرچم‌دار PD + داده فوق‌سریع + شبکه:</b></p>
+<p><span class="en">CH32H417</span> توانمندترین مدل میان <span class="en">PDUSB MCU</span>هاست. از معماری دو‌هسته‌ای <span class="en">RISC-V5F + V3F</span> بهره می‌برد؛ هستۀ <span class="en">V5F</span> تا <span class="en">400MHz</span>، ‏<span class="en">SRAM</span> تا <span class="en">896KB</span> و فلش تا <span class="en">960KB</span>.</p>
+<p>در بخش PD، از <span class="en">PD 3.2</span> و <span class="en">EPR</span> پشتیبانی می‌کند، شارژ سریع <span class="en">100W</span> یا <span class="en">240W</span> را پشتیبانی می‌نماید و همۀ نقش‌های <span class="en">DRP</span>، ‏<span class="en">Sink</span> و <span class="en">Source</span> را دارد. اما ارزش واقعی آن در غنای رابط‌های داده است: کنترل‌کنندۀ و <span class="en">PHY</span> ‏<span class="en">USB 3.2 Gen1</span> ‏(<span class="en">5Gbps</span>)، ‏<span class="en">PHY</span> پرسرعت <span class="en">USB 2.0</span>، ‏<span class="en">MAC</span> و <span class="en">PHY</span> اترنت صد‌مگابیتی، ترانسسیور ایزولۀ پرسرعت <span class="en">SerDes</span>، کنترل‌کنندۀ <span class="en">SD/eMMC</span>، رابط دوربین <span class="en">DVP</span>، کنترل‌کنندۀ LCD و… .</p>
+<p><b>تمرکز:</b> اگر لازم است روی یک تراشه هم‌زمان شارژ PD + انتقال داده فوق‌سریع + ارتباط شبکه پیاده شود — مثلاً گیت‌وۀ صنعتی، داک توسعه سطح بالا یا دوربین صنعتی دارای PD — ‏<span class="en">CH32H417</span> تنها انتخاب است. کارکرد PD آن بخشی از کل سامانۀ میان‌بندی پرسرعت است.</p>
+<p><b>۴. CH32V205 — انتخاب متوازن برای PD + انتقال دادۀ پرسرعت USB:</b></p>
+<p><span class="en">CH32V205</span> را می‌توان «نسخۀ ارتقایافته به پرسرعت» <span class="en">CH32X035</span> دانست. بر پایۀ هستۀ <span class="en">RISC-V3B</span> با فرکانس <span class="en">192MHz</span>، فلش <span class="en">256KB</span> و <span class="en">SRAM 32KB</span>.</p>
+<p>در بخش PD از <span class="en">PD 3.2</span> و <span class="en">EPR</span> پشتیبانی می‌کند، نقش‌های <span class="en">DRP</span>، ‏<span class="en">Sink</span> و <span class="en">Source</span> را دارد و لایۀ فیزیکی PD و کنترل‌کنندۀ <span class="en">Type-C</span> داخلی است. تفکیک‌کنندۀ اصلی آن <span class="en">PHY</span> پرسرعت <span class="en">USB 2.0</span> با <span class="en">480Mbps</span> داخلی است که می‌تواند هم‌زمان یک رابط USB پرسرعت برای انتقال داده و یک رابط PD برای مذاکرۀ توان فراهم کند. جانبی‌های فراوانی مانند ۸ درگاه <span class="en">USART</span>، ‏<span class="en">QSPI</span>، ‏<span class="en">CAN</span>، دو <span class="en">SPI</span> و دو <span class="en">I2C</span> نیز دارد.</p>
+<p><b>تمرکز:</b> اگر شارژ PD + انتقال دادۀ <span class="en">USB 480Mbps</span> لازم دارید اما به سرعت فوق‌بالای <span class="en">USB 3.0</span> و پیچیدگی <span class="en">CH32H417</span> نیاز ندارید، ‏<span class="en">CH32V205</span> انتخابی متوازن‌تر با هزینۀ کنترل‌شدنی‌تر است. سناریوهای نمونه شامل حافظه‌های USB دارای PD و داک توسعه قابل حمل است.</p>
+<p><b>۵. CH32X315 — PD + جمع‌آوری داده پرسرعت چند‌کاناله:</b></p>
+<p>جایگاه <span class="en">CH32X315</span> نسبتاً منحصربه‌فرد است. بر پایۀ هستۀ <span class="en">RISC-V</span> خانوادۀ QingKe با هستۀ <span class="en">480MHz</span> و سیستم <span class="en">313MHz</span>؛ ‏<span class="en">PHY</span> فوق‌سریع <span class="en">USB 3.0</span> ‏(<span class="en">5Gbps</span>) و <span class="en">PHY</span> پرسرعت <span class="en">USB 2.0</span> داخلی دارد و هم‌زمان کنترل‌کنندۀ <span class="en">Type-C/PD</span> را یکپارچه کرده و از <span class="en">PD 3.2</span> و <span class="en">EPR</span> پشتیبانی می‌کند.</p>
+<p>اما بارزترین ویژگی آن قابلیت جمع‌آوری آنالوگ است: ۴ مجموعۀ <span class="en">ADC</span> ‏۱۲ بیتی پرسرعت <span class="en">5Msps</span> داخلی، ‏۴۸ کانال ورودی ADC با پشتیبانی اسکن خودکار و نیز پشتیبانی از کنترل نوار نور تک‌خطی <span class="en">ARGB</span>. ‏<span class="en">CH32X305</span> نسخۀ کمینه‌شدۀ آن است که ماژول <span class="en">USB 3.0</span> را ندارد.</p>
+<p><b>تمرکز:</b> اگر کاربرد PD شما هم‌زمان به جمع‌آوری سیگنال آنالوگ پرسرعت و چند‌کاناله نیاز دارد — مثلاً پایش دقیق ولتاژ/جریان منبع تغذیۀ PD یا یکپارچه‌سازی جمع‌آوری داده چند‌کانالۀ حسگرها با شارژ PD — منابع <span class="en">ADC</span> در <span class="en">CH32X315</span> با هیچ مدل دیگری جایگزین‌شدنی نیست.</p>
+<p><b>۶. CH32L103 — طرح PDUSB با اولویت کم‌مصرف:</b></p>
+<p>جایگاه <span class="en">CH32L103</span> بسیار روشن است: میکروکنترلر PDUSB کم‌مصرف. بر پایۀ هستۀ <span class="en">RISC-V4C</span> با بیشمای <span class="en">96MHz</span>، فلش <span class="en">64KB</span> و <span class="en">SRAM 20KB</span>.</p>
+<p>تفکیک‌کنندۀ اصلی آن بازۀ تغذیه و مدیریت توان است: بازۀ تغذیۀ سیستم <span class="en">1.8~3.6V</span> و پشتیبانی از حالت‌های کم‌مصرف خواب، توقف و آماده‌به‌کار. در بخش PD، لایۀ فیزیکی PD داخلی دارد و از <span class="en">USB Host/Device</span>، ‏<span class="en">PD</span> و شارژ سریع <span class="en">Type-C</span> و نقش‌های <span class="en">DRP</span>، ‏<span class="en">Sink</span> و <span class="en">Source</span> پشتیبانی می‌کند. جانبی‌هایی مانند ۱ مجموعۀ <span class="en">OPA</span>، ‏۳ مجموعۀ <span class="en">CMP</span>، رابط <span class="en">CAN</span> و ۱۰ کانال <span class="en">TouchKey</span> نیز دارد.</p>
+<p><b>تمرکز:</b> اگر محصول شما دستگاه قابل حمل باتری‌خور است یا محدودیت سخت‌گیری روی توان سیستم دارید، ‏<span class="en">CH32L103</span> تنها مدلی در سری PDUSB است که کم‌مصرف‌بودن را صریحاً نقطۀ فروش اصلی خود کرده است. کارکرد PD آن کامل است؛ فرکانس و منابع ذخیره‌سازی آن اندکی از <span class="en">X035</span> بالاتر و کنترل توان آن بهتر است.</p>
+<p><b>۷. CH32X035 — بیشترین بهصرفه در میان PDUSBهای پایه:</b></p>
+<p><span class="en">CH32X035</span> کم‌هزینه‌ترین مدل و بالغ‌ترین اکوسیستم را در سری PDUSB شرکت دارد. بر پایۀ هستۀ <span class="en">RISC-V4C</span>، ‏<span class="en">48MHz</span>، فلش <span class="en">64KB</span>، ‏<span class="en">SRAM 20KB</span> و بازۀ تغذیۀ <span class="en">2.0~5.5V</span> (ولتاژ وسیع).</p>
+<p>‏<span class="en">USB</span> و <span class="en">PD PHY</span> داخلی دارد، از <span class="en">USB Host/Device</span>، ‏<span class="en">PDUSB</span> و شارژ سریع <span class="en">Type-C</span>، پروتکل‌های <span class="en">PD 2.0/3.0</span> و نقش‌های <span class="en">DRP</span>، ‏<span class="en">Sink</span> و <span class="en">Source</span> پشتیبانی می‌کند. تراشه جانبی‌هایی مانند ۲ مجموعۀ <span class="en">OPA</span>، ‏۳ مجموعۀ <span class="en">CMP</span>، ‏۴ مجموعۀ <span class="en">USART</span>، ‏<span class="en">I2C</span>، ‏<span class="en">SPI</span>، ‏<span class="en">ADC</span> ‏۱۲ بیتی، ‏۱۴ کانال <span class="en">TouchKey</span> و کنترل‌کنندۀ ورودی/خروجی پروتکل‌محور برنامه‌پذیر (<span class="en">PIOC</span>) را نیز فراهم می‌کند. تنوع بسته‌بندی بسیار بالاست و از <span class="en">LQFP64</span> تا <span class="en">QFN12</span> موجود است.</p>
+<p><b>تمرکز:</b> ‏<span class="en">CH32X035</span> تراشۀ ورودیِ نخستِ انتخابی برای شارژر PD تک‌درگاهه، دستگاه‌های دریافت‌کنندۀ توان (مانند ماژول‌های <span class="en">PD Trigger</span>) و ابزارهای تحلیل PD است. مستندات آن کامل‌ترین، نمونه‌کدهای <span class="en">EVT</span> آن غنی‌ترین و پروژه‌های متن‌باز جامعۀ کاربران نیز بیشترین است. اگر به ولتاژ فشار‌قوی، چند‌درگاه یا داده پرسرعت نیاز ندارید، انتخاب آن مطمئن‌ترین طرح است.</p>
+
+<!-- ================= بخش ۸ ================= -->
+<div class="chapter-header" id="sec-b8">
+  <span class="sec-pill">بخش ۸</span>
+  <div class="sec-title">جمع‌بندی</div>
+  <div class="sec-divider"></div>
+</div>
+<p>سری <span class="en">CH32</span> با لایۀ فیزیکی PD داخلی و پشتیبانی کامل رجیستری، راه‌حل <span class="en">USB PD</span> کم‌هزینه و با یکپارچگی بالا در اختیار توسعه‌دهندگان قرار می‌دهد. این سند با مثال <span class="en">CH32X035</span>، از اتصال سخت‌افزار و اصول پروتکل تا پیکربندی رجیسترها و پیاده‌سازی نرم‌افزار، به‌صورت نظام‌مند شرح داد که چگونه تراشۀ <span class="en">CH32</span> به‌عنوان دستگاه <span class="en">USB PD</span> در نقش <span class="en">Source</span> یا <span class="en">Sink</span> پیکربندی شود و روند کامل مذاکرۀ توان و انتقال پیاده شود. با بهره‌گیری از نمونه‌کدهای <span class="en">EVT</span> و کتابخانه ایستای پروتکل که رسمی فراهم شده، توسعه‌دهنده می‌تواند به‌سرعت ساخت نمونۀ اولیۀ محصول را به پایان برساند و آن را به‌صورت منعطف به سناریوهای کاربردی پیشرفته‌تری مانند شارژ چند‌درگاهه و منبع تغذیۀ برنامه‌پذیر <span class="en">PPS</span> توسعه دهد.</p>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN37000</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/09/21</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">USB PD</span></td><td class="jt">استاندارد شارژ سریع Power Delivery از انجمن <span class="en">USB-IF</span>؛ مذاکرۀ توان روی خطوط <span class="en">CC</span> با حداکثر <span class="en">240W</span></td></tr>
+      <tr><td><span class="en">Source / Sink / DRP</span></td><td class="jt">سمت تغذیۀ توان / سمت دریافت توان / درگاه دو‌نقش که می‌تواند هر دو نقش را بر عهده گیرد</td></tr>
+      <tr><td><span class="en">CC (Configuration Channel)</span></td><td class="jt">کانال پیکربندی <span class="en">Type-C</span>؛ خط ارتباط <span class="en">PD</span> و آشکارسازی اتصال و جهت اتصال</td></tr>
+      <tr><td><span class="en">PD PHY</span></td><td class="jt">لایۀ فیزیکی <span class="en">PD</span>؛ در سری <span class="en">CH32</span> درون تراشه است و کدگذاری/رمزگشایی <span class="en">BMC</span> و <span class="en">4b5b</span> را سخت‌افزاری انجام می‌دهد</td></tr>
+      <tr><td><span class="en">BMC</span></td><td class="jt">کدگذاری بای‌فاز مارک؛ مدولاسیون خط <span class="en">CC</span> در <span class="en">USB PD</span></td></tr>
+      <tr><td><span class="en">4b5b</span></td><td class="jt">کدگذاری گروهی ۴ بیت به ۵ بیت پیش از <span class="en">BMC</span>؛ همگام‌سازی و توازن خط</td></tr>
+      <tr><td><span class="en">Preamble / SOP* / EOP</span></td><td class="jt">پیش‌درآمد ۶۴ بیتی هم‌گام‌سازی / شناساگر شیء ارتباط (<span class="en">SOP</span>، ‏<span class="en">SOP’</span>، ‏<span class="en">SOP’’</span>) / کد پایان ۵ بیتی ثابت <span class="en">01101</span></td></tr>
+      <tr><td><span class="en">Message Header</span></td><td class="jt">کد عملکرد ۱۶ بیتی؛ نوع پیام، نقش، شمار اشیاء داده و نسخه در آن است</td></tr>
+      <tr><td><span class="en">PDO</span></td><td class="jt">شیء توان (Power Data Object)؛ هر ردیف از فهرست قابلیت‌های توان منبع (ولتاژ/جریان)</td></tr>
+      <tr><td><span class="en">GoodCRC</span></td><td class="jt">پیام کنترلی پاسخ؛ با دریافت درست هر بسته (عبور <span class="en">CRC</span>) با همان <span class="en">Message ID</span> فرستاده می‌شود</td></tr>
+      <tr><td><span class="en">Rd / Rp</span></td><td class="jt">مقاومت پایین‌کش سمت <span class="en">Sink</span> و جریان‌کش/منبع جریان بالاکش سمت <span class="en">Source</span> برای آشکارسازی اتصال</td></tr>
+      <tr><td><span class="en">E-Marker</span></td><td class="jt">تراشۀ شناسایی کابل؛ ارتباط با آن از طریق <span class="en">SOP’</span> (نزدیک) و <span class="en">SOP’’</span> (دور) انجام می‌شود</td></tr>
+      <tr><td><span class="en">VCONN</span></td><td class="jt">تغذیۀ تراشۀ <span class="en">eMarker</span> داخل کابل؛ در سری <span class="en">CH32</span> با ترکیب <span class="en">CH32 + CH211</span> فراهم می‌شود</td></tr>
+      <tr><td><span class="en">CH211</span></td><td class="jt">تراشۀ رابط فشار‌قوی <span class="en">Type-C/PD</span>؛ شامل <span class="en">LDO</span> فشار‌قوی، حفاظت <span class="en">CC</span> و مدیریت تغذیۀ <span class="en">VCONN</span></td></tr>
+      <tr><td><span class="en">PS_Ready</span></td><td class="jt">پیام کنترلی «توان آماده»؛ پس از تنظیم ولتاژ/جریان توسط منبع ارسال می‌شود</td></tr>
+      <tr><td><span class="en">PPS</span></td><td class="jt">منبع تغذیۀ برنامه‌پذیر (Programmable Power Supply)؛ تنظیم پویا و دقیق ولتاژ/جریان</td></tr>
+      <tr><td><span class="en">EPR / SPR</span></td><td class="jt">دامنۀ توان گسترش‌یافته / استاندارد؛ <span class="en">EPR</span> تا <span class="en">240W</span> را پوشش می‌دهد</td></tr>
+      <tr><td><span class="en">PD MCU / PDUSB MCU</span></td><td class="jt">دو دستۀ محصولات PD شرکت WCH: تخصصی توان (<span class="en">CH32M030</span>، <span class="en">CH641</span>) و توان+داده (<span class="en">CH32V205</span>، <span class="en">CH32H417</span>، <span class="en">CH32L103</span>، <span class="en">CH32X035</span>)</td></tr>
+      <tr><td><span class="en">PIOC</span></td><td class="jt">کنترل‌کنندۀ ورودی/خروجی پروتکل‌محورِ برنامه‌پذیر در <span class="en">CH32X035</span></td></tr>
+      <tr><td><span class="en">EVT</span></td><td class="jt">بستۀ ارزیابی و نمونه‌کدهای رسمی WCH برای توسعه سریع</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN37000 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۲۵</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN37000</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
