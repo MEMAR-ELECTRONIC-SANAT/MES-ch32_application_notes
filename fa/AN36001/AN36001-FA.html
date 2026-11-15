@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>اجرای کد از حافظۀ PSRAM در CH32V467 — ترجمۀ فارسی AN36001</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">اجرای کد از حافظۀ <span class="en">PSRAM</span></div>
+    <div class="t2">در میکروکنترلر <span class="en">CH32V467</span></div>
+    <div class="t3">لینکر اسکریپت · فایل راه‌اندازی</div>
+  </div>
+  <div class="c-sub">با اصلاح لینکر اسکریپت (<span class="en">Link.ld</span>) و توابع قلاب فایل راه‌اندازی (<span class="en">startup</span>) و تابع <span class="en">PSRAM_Prepare</span>، ماژول‌های منتخب (مانند تست کارایی <span class="en">CoreMark</span>) از فلش به <span class="en">PSRAM</span> منتقل و در آن اجرا می‌شوند</div>
+  <div class="c-desc">در این جزوه، ترجمۀ فارسی سند رسمی <span class="en">AN36001</span> (نسخۀ ۱٫۰، منتشرۀ شرکت <span class="en">WCH</span>) را می‌خوانید: این سند برای توسعه‌دهندگان چارچوب <span class="en">CH32V467</span> توضیح می‌دهد چگونه با اصلاح لینکر اسکریپت و بهره‌گیری از توابع قلاب فایل راه‌اندازی، ماژول‌های مشخص (برای مثال کد تست کارایی <span class="en">CoreMark</span>) از فلش داخلی به <span class="en">PSRAM</span> منتقل و در آن اجرا شوند تا با بهره‌گیری از ظرفیت و پهنای باند بالای <span class="en">PSRAM</span>، بهره‌وری اجرای کد بالا برود. شرح بر پایۀ نمونۀ <span class="en">RunInPSRAM</span> از پیکربندی <span class="en">EVT</span> و پرونده‌های واقعی پروژه (<span class="en">Link.ld</span>، <span class="en">startup_ch32v4x7.s</span> و <span class="en">PSRAM_Prepare</span>) انجام شده است.</div>
+  <div class="c-tags">
+    <span class="c-tag">میکروکنترلر <span class="en">CH32V467</span></span>
+    <span class="c-tag">اجرای کد از <span class="en">PSRAM</span></span>
+    <span class="c-tag">لینکر اسکریپت <span class="en">Link.ld</span></span>
+    <span class="c-tag">فایل راه‌اندازی <span class="en">startup</span></span>
+    <span class="c-tag"><span class="en">LMA / VMA</span></span>
+    <span class="c-tag">قطعۀ <span class="en">.psramtext</span></span>
+    <span class="c-tag">نمونۀ <span class="en">RunInPSRAM</span> و <span class="en">CoreMark</span></span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN36001 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | چینش حافظه و تحلیل لینکر اسکریپت</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-111"><span class="s-id">1.1</span><span>تعریف نواحی حافظه</span><span class="s-dots"></span><span class="s-page">۳</span></a>
+    <a class="toc-sub" href="#sec-112"><span class="s-id">1.2</span><span>تعریف قطعه‌های کلیدی (Section)</span><span class="s-dots"></span><span class="s-page">۴</span></a>
+    <a class="toc-sub" href="#sec-113"><span class="s-id">1.3</span><span>قطعۀ داده و BSS</span><span class="s-dots"></span><span class="s-page">۵</span></a>
+    <a class="toc-sub" href="#sec-114"><span class="s-id">1.4</span><span>پشته و کپه</span><span class="s-dots"></span><span class="s-page">۵</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | روند راه‌اندازی و مقداردهی اولیۀ PSRAM</span><span class="t-dots"></span><span class="t-page">۵</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-211"><span class="s-id">2.1</span><span>مرور روند اولیۀ راه‌اندازی</span><span class="s-dots"></span><span class="s-page">۶</span></a>
+    <a class="toc-sub" href="#sec-212"><span class="s-id">2.2</span><span>تحلیل تابع PSRAM_Prepare</span><span class="s-dots"></span><span class="s-page">۶</span></a>
+    <a class="toc-sub" href="#sec-213"><span class="s-id">2.3</span><span>پیاده‌سازی C انتقال کد</span><span class="s-dots"></span><span class="s-page">۷</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b3"><span class="t-num">۴</span><span class="t-title">بخش ۳ | پیکربندی کامپایل و برنامه‌ریزی</span><span class="t-dots"></span><span class="t-page">۸</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-311"><span class="s-id">3.1</span><span>تنظیمات کامپایل</span><span class="s-dots"></span><span class="s-page">۸</span></a>
+    <a class="toc-sub" href="#sec-312"><span class="s-id">3.2</span><span>روش برنامه‌ریزی (Flash)</span><span class="s-dots"></span><span class="s-page">۸</span></a>
+    <a class="toc-sub" href="#sec-313"><span class="s-id">3.3</span><span>توالی اجرا</span><span class="s-dots"></span><span class="s-page">۸</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b4"><span class="t-num">۵</span><span class="t-title">بخش ۴ | مسائل و راه‌حل‌ها</span><span class="t-dots"></span><span class="t-page">۹</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-411"><span class="s-id">4.1</span><span>عیب‌یابی مسائل رایج</span><span class="s-dots"></span><span class="s-page">۹</span></a>
+    <a class="toc-sub" href="#sec-412"><span class="s-id">4.2</span><span>نکات مهم</span><span class="s-dots"></span><span class="s-page">۱۰</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۶</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۱۰</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۷</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۱۰</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">کد ۱</span><span>تعریف نواحی حافظه با فرمان <span class="en">MEMORY</span></span><span class="f-dots"></span><span class="f-page">۳</span></div>
+        <div class="frow"><span class="f-id">کد ۲</span><span>قطعه‌های کلیدی لینکر اسکریپت برای <span class="en">PSRAM</span></span><span class="f-dots"></span><span class="f-page">۴</span></div>
+      </div>
+      <div>
+        <div class="frow"><span class="f-id">کد ۳</span><span>تابع <span class="en">PSRAM_Prepare</span></span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">کد ۴</span><span>حلقۀ انتقال کد با <span class="en">C</span></span><span class="f-dots"></span><span class="f-page">۸</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> این سند برای توسعه‌دهندگان سری <span class="en">CH32V467</span> شرح می‌دهد چگونه با اصلاح لینکر اسکریپت (<span class="en">Link.ld</span>) و توابع قلاب فایل راه‌اندازی (<span class="en">startup</span>)، ماژول‌های منتخب مانند کد تست کارایی <span class="en">CoreMark</span> از فلش داخلی به <span class="en">PSRAM</span> منتقل و در آن اجرا شوند تا بهره‌وری اجرای کد با ظرفیت و پهنای باند بالای <span class="en">PSRAM</span> افزایش یابد. چینش حافظه و تفکیک آدرس بارگذاری/اجرا (<span class="en">LMA/VMA</span>)، تابع <span class="en">PSRAM_Prepare</span> در روند راه‌اندازی، پیکربندی کامپایل و برنامه‌ریزی، توالی اجرا و عیب‌یابی مسائل رایج بر پایۀ نمونۀ <span class="en">RunInPSRAM</span> شرح داده شده است.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>این سند برای توسعه‌دهندگان سیستم‌های نهفته‌ای که از میکروکنترلرهای سری <span class="en">CH32V467</span> استفاده می‌کنند نوشته شده و به‌تفصیل شرح می‌دهد چگونه با اصلاح لینکر اسکریپت (<span class="en">Link.ld</span>) و بهره‌گیری از توابع قلاب فایل راه‌اندازی (<span class="en">startup</span>)، ماژول‌های مشخص (برای مثال کد تست کارایی <span class="en">CoreMark</span>) از فلش داخلی به <span class="en">PSRAM</span> منتقل و در آن اجرا شوند؛ به این ترتیب با بهره‌گیری از مزیت ظرفیت بالا و پهنای باند بالای <span class="en">PSRAM</span>، بهره‌وری اجرای کد افزایش می‌یابد. این سند کاربردی شرح خود را بر نمونۀ <span class="en">EVT\EXAM\APPLICATION\RunInPSRAM</span> از بستۀ <span class="en">EVT</span> استوار کرده و راهنمای تفصیلی بر اساس پرونده‌های واقعی پروژه (شامل <span class="en">Link.ld</span>، <span class="en">startup_ch32v4x7.s</span> و پیاده‌سازی <span class="en">PSRAM_Prepare</span>) ارائه می‌دهد.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>میکروکنترلرهای همگانی‌منظوره</td><td>سری <span class="en">CH32V467</span></td></tr>
+  </table>
+</div>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">چینش حافظه و تحلیل لینکر اسکریپت</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-111"><span class="dm">◆</span>۱.۱ تعریف نواحی حافظه</h3>
+<p>در لینکر اسکریپت (<span class="en">.ld</span>) با فرمان <span class="en">MEMORY</span> سه ناحیۀ مستقل حافظه تعریف شده است:</p>
+<div class="fig" id="code-1">
+  <div class="codeblk">MEMORY
+{
+FLASH (rx)  : ORIGIN = 0x00000000, LENGTH = 576K
+RAM   (xrw) : ORIGIN = 0x20000000+1024, LENGTH = 136K-1K
+PSRAM (xrw) : ORIGIN = 0x80000000, LENGTH = 1M
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۱</span><span class="cap-text">تعریف نواحی حافظه با فرمان <span class="en">MEMORY</span></span></div>
+</div>
+<div class="bl"><b><span class="en">FLASH</span>:</b> آدرس آغاز <span class="en">0x00000000</span> با ظرفیت <span class="en">576KB</span> (متناظر با پیکربندی بیشمای فلش <span class="en">CH32V467</span>)؛ ویژگی <span class="en">rx</span> (خواندنی، اجراشدنی) و محل نگهداری کد پیش‌فرض و مقدارهای ثابت است.</div>
+<div class="bl"><b><span class="en">RAM</span>:</b> آدرس آغاز <span class="en">0x20000000+1024</span> (یعنی با آفست <span class="en">1KB</span>) با ظرفیت <span class="en">135KB</span> (<span class="en">136K-1K</span>)؛ <span class="en">1KB</span> کنارگذاشته‌شده می‌تواند برای بوت‌لودر یا پیش‌بینی خاص سیستم به‌کار رود. ویژگی <span class="en">xrw</span> (خواندنی، نوشتنی، اجراشدنی) و محل متغیرهای سراسری و پشته است.</div>
+<div class="bl"><b><span class="en">PSRAM</span>:</b> آدرس آغاز <span class="en">0x80000000</span> با ظرفیت <span class="en">1MB</span> (بر اساس ظرفیت واقعی تراشه قابل تنظیم است)؛ ویژگی <span class="en">xrw</span> نشان می‌دهد کد می‌تواند در آن اجرا شود و داده‌ها نیز خواندنی/نوشتنی‌اند.</div>
+
+<h3 class="h2x" id="sec-112"><span class="dm">◆</span>۱.۲ تعریف قطعه‌های کلیدی (Section)</h3>
+<p>در لینکر اسکریپت چند قطعۀ اختصاصی برای <span class="en">PSRAM</span> طراحی شده تا آدرس بارگذاری (<span class="en">LMA</span>) و آدرس اجرا (<span class="en">VMA</span>) کد از هم تفکیک شوند:</p>
+<div class="fig" id="code-2">
+  <div class="codeblk long"><span class="cm">/* ① تعریف آدرس آغاز اجرا (VMA) قطعۀ کد PSRAM */</span>
+.dalign :
+{
+. = ALIGN(4);
+PROVIDE(_psram_vma = .);
+} &gt;PSRAM AT&gt;FLASH
+
+<span class="cm">/* ② تعریف آدرس آغاز بارگذاری (LMA) قطعۀ کد PSRAM */</span>
+.dlalign :
+{
+. = ALIGN(4);
+PROVIDE(_psram_lma = .);
+} &gt;FLASH AT&gt;FLASH
+
+<span class="cm">/* ③ بدنۀ قطعۀ کد PSRAM */</span>
+.psramtext :
+{
+. = ALIGN(4);
+./User/coremark/*(.text)
+./User/coremark/*(.text.*)
+./User/coremark/*(.rodata)
+./User/coremark/*(.rodata*)
+./User/coremark/*(.gnu.linkonce.t.*)
+. = ALIGN(4);
+} &gt;PSRAM AT&gt;FLASH
+
+<span class="cm">/* ④ نشانه‌گذاری آدرس پایان بارگذاری (پایان LMA) */</span>
+.dlalign :
+{
+. = ALIGN(4);
+PROVIDE(_psram_lma_end = .);
+} &gt;FLASH AT&gt;FLASH</div>
+  <div class="figcap"><span class="cap-pill">کد ۲</span><span class="cap-text">قطعه‌های کلیدی لینکر اسکریپت برای <span class="en">PSRAM</span></span></div>
+</div>
+<div class="bl"><b><span class="en">_psram_vma</span>:</b> آدرس آغاز اجرای <span class="en">.psramtext</span> در <span class="en">PSRAM</span> (در نهایت مقدار هم‌ترازشده از <span class="en">0x80000000</span>).</div>
+<div class="bl"><b><span class="en">_psram_lma</span> و <span class="en">_psram_lma_end</span>:</b> آدرس آغاز و پایان جای‌گیری <span class="en">.psramtext</span> در فلش؛ برای انتقال در زمان راه‌اندازی به‌کار می‌روند.</div>
+<div class="bl">قطعۀ <span class="en">.psramtext</span> همه فایل‌های شیء دایرکتوری <span class="en">./User/coremark/</span> را از نظر بخش‌های <span class="en">.text</span>، <span class="en">.text.*</span>، <span class="en">.rodata</span>، <span class="en">.rodata*</span> و <span class="en">.gnu.linkonce.t.*</span> جمع می‌کند. این محتوا هم‌زمان در فلش (نسخۀ پشتیبان) و <span class="en">PSRAM</span> (نسخۀ اجرا) حضور دارد.</div>
+
+<h3 class="h2x" id="sec-113"><span class="dm">◆</span>۱.۳ قطعۀ داده و BSS</h3>
+<div class="codeblk">.data : { ... } &gt;RAM AT&gt;FLASH
+.bss  : { ... } &gt;RAM AT&gt;FLASH</div>
+<p>همۀ متغیرهای سراسری و ایستای خواندنی/نوشتنی در <span class="en">RAM</span> داخلی جای می‌گیرند؛ مقدار اولیۀ آن‌ها در فلش ذخیره می‌شود و کد راه‌اندازی پس از ریست آن را منتقل می‌کند. قطعۀ <span class="en">.bss</span> (متغیرهای سراسری بدون مقدار اولیه) در <span class="en">RAM</span> تخصیص می‌یابد و کد راه‌اندازی مسئول صفرکردن آن است.</p>
+
+<h3 class="h2x" id="sec-114"><span class="dm">◆</span>۱.۴ پشته و کپه</h3>
+<div class="codeblk">.stack ORIGIN(RAM) + LENGTH(RAM) - __stack_size :
+{
+PROVIDE( _heap_end = . );
+. = ALIGN(4);
+PROVIDE(_susrstack = . );
+. = . + __stack_size;
+PROVIDE( _eusrstack = .);
+} &gt;RAM</div>
+<div class="bl">بالای پشته در انتهای <span class="en">RAM</span> (<span class="en">ORIGIN(RAM) + LENGTH(RAM)</span>) قرار دارد و به سمت پایین رشد می‌کند.</div>
+<div class="bl">اندازۀ پشته ثابت و برابر ۲۰۴۸ بایت است (<span class="en">__stack_size = 2048</span>).</div>
+<div class="bl">نماد <span class="en">_eusrstack</span> به‌عنوان آدرس بالای پشته، در فایل راه‌اندازی مقدار اولیۀ <span class="en">sp</span> را تشکیل می‌دهد.</div>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">روند راه‌اندازی و مقداردهی اولیۀ <span class="en">PSRAM</span></div>
+  <div class="sec-divider"></div>
+</div>
+<p>فایل راه‌اندازی <span class="en">startup_ch32v4x7.s</span> نخستین کدی است که پس از ریست تراشه اجرا می‌شود و مسئول مقداردهی اولیۀ سخت‌افزار، انتقال داده و پرش به <span class="en">main</span> است. برای پشتیبانی از اجرا از <span class="en">PSRAM</span>، تابع <span class="en">PSRAM_Prepare</span> را در لایۀ <span class="en">C</span> پیاده‌سازی کرده‌ایم که توسط فایل راه‌اندازی در روند ریست فراخوانی می‌شود؛ این تابع مقداردهی اولیۀ سخت‌افزار <span class="en">PSRAM</span> و انتقال کد را انجام می‌دهد.</p>
+
+<h3 class="h2x" id="sec-211"><span class="dm">◆</span>۲.۱ مرور روند اولیۀ راه‌اندازی</h3>
+<p>تابع <span class="en">handle_reset</span> اصلی (در قطعۀ <span class="en">.text.handle_reset</span>) گام‌های زیر را اجرا می‌کند:</p>
+<div class="bl">۱. تنظیم اشاره‌گر سراسری <span class="en">gp</span>.</div>
+<div class="bl">۲. تنظیم اشاره‌گر پشته <span class="en">sp</span> روی <span class="en">_eusrstack</span>.</div>
+<div class="bl">۳. انتقال قطعۀ <span class="en">.data</span> از فلش به <span class="en">RAM</span>.</div>
+<div class="bl">۴. صفرکردن قطعۀ <span class="en">.bss</span>.</div>
+<div class="bl">۵. پیکربندی رجیسترهای سیستم (<span class="en">Prefetch</span>، تودرتویی وقفه‌ها، <span class="en">mstatus</span>، <span class="en">mtvec</span> و…).</div>
+<div class="bl">۶. فراخوانی <span class="en">PSRAM_Prepare</span> برای مقداردهی اولیۀ سخت‌افزار <span class="en">PSRAM</span> (این تابع توسط کاربر پیاده‌سازی می‌شود و باید در فلش قرار داشته باشد).</div>
+<div class="bl">۷. پرش به <span class="en">main</span> (با <span class="en">mret</span> از حالت ماشین به حالت کاربر).</div>
+
+<h3 class="h2x" id="sec-212"><span class="dm">◆</span>۲.۲ تحلیل تابع PSRAM_Prepare</h3>
+<p><span class="en">PSRAM_Prepare</span> تابع کلیدی فراخوانی‌شده در روند راه‌اندازی است؛ پیاده‌سازی نمونۀ آن (در <span class="en">PSRAM.c</span>) چنین است:</p>
+<div class="fig" id="code-3">
+  <div class="codeblk long">void PSRAM_Prepare() {
+SystemCoreClockUpdate();        <span class="cm">// گرفتن ساعت فعلی سیستم</span>
+
+PSRAM_200MHz_HSE();             <span class="cm">// پیکربندی PLL روی 200MHz (با HSE)</span>
+
+SystemCoreClockUpdate();        <span class="cm">// به‌روزرسانی متغیر ساعت</span>
+
+Delay_Init();                   <span class="cm">// مقداردهی اولیۀ توابع تأخیر</span>
+
+PSRAM_INIT();                   <span class="cm">// مقداردهی اولیۀ کنترل‌کننده (زمان‌بندی، حالت و...)</span>
+
+USART_Printf_Init(115200);      <span class="cm">// مقداردهی اولیۀ درگاه سریال (خروجی دیباگ)</span>
+
+<span class="cm">// انتقال کد با نمادهای خروجی لینکر اسکریپت</span>
+uint32_t *rp = _psram_lma, *wp = _psram_vma;
+printf("%#x %#x %#x\n", rp, wp, _psram_lma_end);
+Delay_Ms(10);
+while (rp &lt; _psram_lma_end) {
+*wp = *rp;
+wp++;
+rp++;
+}
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۳</span><span class="cap-text">تابع <span class="en">PSRAM_Prepare</span></span></div>
+</div>
+<p><b>شرح گام‌ها:</b></p>
+<div class="bl"><b>پیکربندی ساعت:</b> ‏<span class="en">PSRAM_200MHz_HSE()</span> ساعت سیستم را روی <span class="en">200MHz</span> تنظیم می‌کند (<span class="en">HSE 25MHz × 8</span>) تا نیاز دسترسی پرسرعت <span class="en">PSRAM</span> برآورده شود.</div>
+<div class="bl"><b>مقداردهی اولیۀ سخت‌افزار PSRAM:</b> ‏<span class="en">PSRAM_INIT()</span> پارامترهای زمان‌بندی (<span class="en">trc</span>، <span class="en">tcph</span>، <span class="en">txlpd</span>)، ظرفیت (<span class="en">PSRAM_CAPCFG_32M</span>) و… را پیکربندی و ساعت جانبی <span class="en">PSRAM</span> را فعال می‌کند.</div>
+<div class="bl"><b>انتقال کد:</b> با سه نماد بیرونی (<span class="en">_psram_lma</span>، <span class="en">_psram_vma</span>، <span class="en">_psram_lma_end</span>)، قطعۀ <span class="en">.psramtext</span> با حلقۀ C از فلش به <span class="en">PSRAM</span> کپی می‌شود؛ این گام کلیدی، بارگذاری کد زمان اجرا را کامل می‌کند.</div>
+<div class="bl"><b>خروجی دیباگ:</b> چاپ آدرس سه نماد برای راستی‌آزمایی آسان.</div>
+
+<h3 class="h2x" id="sec-213"><span class="dm">◆</span>۲.۳ پیاده‌سازی C انتقال کد</h3>
+<p>حلقۀ انتقال به‌صورت کپی واژه‌به‌واژه (۴ بایتی) انجام می‌شود؛ ساده و کارآمد:</p>
+<div class="fig" id="code-4">
+  <div class="codeblk">uint32_t *rp = _psram_lma;   <span class="cm">// آدرس مبدأ (فلش)</span>
+uint32_t *wp = _psram_vma;   <span class="cm">// آدرس مقصد (PSRAM)</span>
+
+while (rp &lt; _psram_lma_end) {
+*wp = *rp;
+wp++;
+rp++;
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۴</span><span class="cap-text">حلقۀ انتقال کد با <span class="en">C</span></span></div>
+</div>
+<p><b>مزیت‌ها:</b></p>
+<div class="bl">نیازی به اصلاح فایل راه‌اندازی اسمبلی نیست؛ تمام منطق در لایۀ C پیاده‌سازی می‌شود و نگهداری و دیباگ آسان است.</div>
+<div class="bl">زمان کپی پس از مقداردهی اولیۀ سخت‌افزار <span class="en">PSRAM</span> است و امنیت نوشتن تضمین می‌شود.</div>
+<div class="bl">با عملیات اشاره‌گر، می‌توان از بهینه‌سازی کامپایلر برای سرعت بیشتر کپی بهره گرفت.</div>
+
+<!-- ================= بخش ۳ ================= -->
+<div class="chapter-header" id="sec-b3">
+  <span class="sec-pill">بخش ۳</span>
+  <div class="sec-title">پیکربندی کامپایل و برنامه‌ریزی</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-311"><span class="dm">◆</span>۳.۱ تنظیمات کامپایل</h3>
+<div class="bl">مطمئن شوید پروژه شامل همۀ فایل‌های منبع زیر <span class="en">User/coremark</span> به‌همراه <span class="en">PSRAM.c</span> و <span class="en">PSRAM_Init.c</span> باشد.</div>
+<div class="bl">لینکر اسکریپت از <span class="en">Ld/LinkId</span> استفاده می‌کند (بر اساس محتوای بخش‌های قبل پیکربندی شده است).</div>
+<div class="bl">پس از کامپایل، پرونده‌های <span class="en">.elf</span>، <span class="en">.hex</span> یا <span class="en">.bin</span> تولید می‌شود.</div>
+
+<h3 class="h2x" id="sec-312"><span class="dm">◆</span>۳.۲ روش برنامه‌ریزی (Flash)</h3>
+<p>از آنجا که کد در دو ناحیۀ فلش و <span class="en">PSRAM</span> پخش است، هنگام برنامه‌ریزی توجه شود:</p>
+<div class="bl"><b>فلش (<span class="en">0x00000000</span>):</b> باید تصویر کامل میان‌افزار — شامل نسخۀ پشتیبان اصلی <span class="en">.psramtext</span> — برنامه‌ریزی شود.</div>
+<div class="bl"><b><span class="en">PSRAM</span> (<span class="en">0x80000000</span>):</b> نیازی به برنامه‌ریزی از پیش نیست؛ زیرا در راه‌اندازی، <span class="en">PSRAM_Prepare</span> آن را از فلش کپی می‌کند.</div>
+
+<h3 class="h2x" id="sec-313"><span class="dm">◆</span>۳.۳ توالی اجرا</h3>
+<div class="bl">تراشه روشن می‌شود و از قطعۀ <span class="en">.init</span> در آدرس <span class="en">0x00000000</span> فلش اجرا آغاز و به <span class="en">_start</span> ← <span class="en">handle_reset</span> می‌رود.</div>
+<div class="bl">مقداردهی‌های اولیۀ معمول (پشته، داده، <span class="en">BSS</span>، رجیسترهای سیستم) انجام می‌شود.</div>
+<div class="bl"><span class="en">PSRAM_Prepare</span> فراخوانی می‌شود (اجرا در فلش): ارتقای ساعت سیستم به <span class="en">200MHz</span>؛ مقداردهی اولیۀ سخت‌افزار <span class="en">PSRAM</span>؛ انتقال <span class="en">.psramtext</span> از فلش به <span class="en">PSRAM</span>.</div>
+<div class="bl">بازگشت به <span class="en">handle_reset</span> و پرش با <span class="en">mret</span> به <span class="en">main</span> (در این حالت <span class="en">main</span> در <span class="en">coremark/main.c</span> قرار دارد، در <span class="en">PSRAM</span> است و عادی اجرا می‌شود).</div>
+
+<!-- ================= بخش ۴ ================= -->
+<div class="chapter-header" id="sec-b4">
+  <span class="sec-pill">بخش ۴</span>
+  <div class="sec-title">مسائل و راه‌حل‌ها</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-411"><span class="dm">◆</span>۴.۱ عیب‌یابی مسائل رایج</h3>
+<div class="tblwrap" id="tab-41">
+  <div class="tblcap"><span class="cap-pill">جدول ۴-۱</span><span class="cap-text">تحلیل مسائل</span></div>
+  <table class="tbl">
+    <tr><th style="width:28%;">پدیدۀ مسئله</th><th style="width:30%;">علت احتمالی</th><th>راه‌حل</th></tr>
+    <tr><td>پس از راه‌افت، برنامه از کنترل خارج می‌شود؛ <span class="en">PC</span> به <span class="en">0x80000000</span> اشاره می‌کند ولی محتوا همۀ صفر است</td><td><span class="en">PSRAM</span> مقداردهی اولیه نشده یا انتقال اجرا نشده است</td><td>بررسی کنید <span class="en">PSRAM_Prepare</span> فراخوانی شده باشد؛ موفقیت اجرای <span class="en">PSRAM_INIT</span> را تأیید کنید (خواندن رجیستر وضعیت).</td></tr>
+    <tr><td>نوشتن در <span class="en">PSRAM</span> در حلقۀ انتقال باعث خرابی سخت (Hard Fault) می‌شود</td><td>کنترل‌کنندۀ <span class="en">PSRAM</span> فعال نشده یا زمان‌بندی اشتباه است</td><td>پارامترهای زمان‌بندی <span class="en">PSRAM_INIT</span> را بر اساس دیتاشیت تراشه کامل کنید؛ مطمئن شوید آدرس پایۀ <span class="en">PSRAM</span> برابر <span class="en">0x80000000</span> است.</td></tr>
+    <tr><td><span class="en">_psram_lma</span> و <span class="en">_psram_lma_end</span> برابرند</td><td>فایل‌های منبع دایرکتوری coremark کامپایل نشده‌اند</td><td>تنظیمات پروژه را بررسی کنید تا فایل‌های coremark در کامپایل شرکت کنند.</td></tr>
+    <tr><td>خودِ <span class="en">PSRAM_Prepare</span> اجرا نمی‌شود (<span class="en">PC</span> غیرعادی)</td><td>تابع به‌اشتباه در دایرکتوری coremark قرار گرفته و به <span class="en">PSRAM</span> لینک شده است</td><td>فایل‌هایی مانند <span class="en">PSRAM.c</span> را از دایرکتوری coremark خارج کنید یا با <span class="en">__attribute__((section(".text")))</span> آن را اجباراً در فلش جای دهید.</td></tr>
+    <tr><td>پس از انتقال، کد همچنان از فلش اجرا می‌شود (<span class="en">PC</span> تغییر نمی‌کند)</td><td><span class="en">main</span> در دایرکتوری coremark نیست یا لینک آن را به <span class="en">PSRAM</span> نبرده است</td><td>مطمئن شوید <span class="en">main</span> در <span class="en">coremark/main.c</span> است؛ در غیر این صورت به تابع <span class="en">main</span> ویژگی <span class="en">__attribute__((section(".psramtext")))</span> را بیفزایید.</td></tr>
+    <tr><td>سرعت اجرا از <span class="en">PSRAM</span> افزایش نیافته است</td><td>مقداردهی اولیۀ <span class="en">PSRAM</span> ناقص است یا فرکانس ساعت کافی نیست</td><td>رجیستر کنترل حافظۀ نهان <span class="en">PSRAM</span> را بررسی و حافظۀ نهان را فعال کنید؛ مطمئن شوید ساعت سیستم <span class="en">200MHz</span> است.</td></tr>
+  </table>
+</div>
+
+<h3 class="h2x" id="sec-412"><span class="dm">◆</span>۴.۲ نکات مهم</h3>
+<div class="bl"><b><span class="en">PSRAM_Prepare</span> و همۀ توابع وابسته به آن باید در فلش بمانند:</b> فایل‌های منبع این توابع (مانند <span class="en">PSRAM.c</span> و <span class="en">PSRAM_Init.c</span>) هرگز نباید در دایرکتوری <span class="en">User/coremark</span> قرار گیرند؛ در غیر این صورت به قطعۀ <span class="en">.psramtext</span> لینک می‌شوند و پیش از آمادۀ شدن <span class="en">PSRAM</span> اجرا می‌شوند و خرابی سخت رخ می‌دهد.</div>
+<div class="bl"><b>پیکربندی ظرفیت <span class="en">PSRAM</span> باید با تراشۀ واقعی مطابقت داشته باشد:</b> تعریف‌های ماکرو مانند <span class="en">PSRAM_CAPCFG_32M</span> در <span class="en">PSRAM_INIT</span> باید بر اساس ظرفیت واقعی <span class="en">PSRAM</span> تراشه (مثلاً <span class="en">4MB</span> یا <span class="en">8MB</span>) انتخاب شوند. پیکربندی اشتباه می‌تواند به دسترسی غیرعادی یا استفاده از بخشی از فضا بینجامد.</div>
+<div class="bl"><b>وقفه‌ها و خروجی دیباگ:</b> اگر پیاده‌سازی <span class="en">USART_Printf_Init</span> و <span class="en">printf</span> به جانبی‌هایی وابسته است، مطمئن شوید ساعت آن جانبی‌ها قبلاً فعال شده و کدشان در قطعۀ <span class="en">PSRAM</span> نیست. معمولاً درایور درگاه سریال در کتابخانه استاندارد جانبی‌هاست و تأثیری نمی‌پذیرد.</div>
+<div class="bl"><b>زمان صرف‌شده برای حلقۀ انتقال:</b> اگر <span class="en">.psramtext</span> بزرگ باشد (مثلاً چند ده کیلوبایت)، فرایند کپی بخشی از زمان راه‌اندازی را می‌گیرد که معمولاً قابل قبول است. برای تسریع کپی می‌توان از <span class="en">DMA</span> استفاده کرد، اما پیچیدگی پیکربندی <span class="en">DMA</span> را در نظر بگیرید.</div>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN36001</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/08/25</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">Link.ld</span></td><td class="jt">لینکر اسکریپت؛ نقشۀ نواحی حافظه و جای‌گیری قطعه‌ها را به لینک‌کننده می‌دهد</td></tr>
+      <tr><td><span class="en">MEMORY</span></td><td class="jt">فرمان لینکر اسکریپت برای تعریف نواحی مستقل حافظه: <span class="en">FLASH</span>، <span class="en">RAM</span> و <span class="en">PSRAM</span></td></tr>
+      <tr><td><span class="en">LMA / VMA</span></td><td class="jt">آدرس بارگذاری و آدرس اجرا؛ در این طرح کد در فلش بارگذاری و از <span class="en">PSRAM</span> اجرا می‌شود</td></tr>
+      <tr><td><span class="en">.psramtext</span></td><td class="jt">قطعۀ اختصاصی کدِ اجراشدنی از <span class="en">PSRAM</span>؛ منابع دایرکتوری <span class="en">./User/coremark/</span> را جمع می‌کند</td></tr>
+      <tr><td><span class="en">_psram_vma / _psram_lma / _psram_lma_end</span></td><td class="jt">نمادهای خروجی لینکر اسکریپت؛ آدرس آغاز اجرا در <span class="en">PSRAM</span> و آدرس آغاز/پایان بارگذاری در فلش برای انتقال در راه‌اندازی</td></tr>
+      <tr><td><span class="en">startup_ch32v4x7.s</span></td><td class="jt">فایل راه‌اندازی؛ نخستین کد پس از ریست که سخت‌افزار را آماده و به <span class="en">main</span> پرش می‌کند</td></tr>
+      <tr><td><span class="en">handle_reset</span></td><td class="jt">روتین ریست در فایل راه‌اندازی؛ مقداردهی <span class="en">gp/sp</span>، انتقال <span class="en">.data</span>، صفرکردن <span class="en">.bss</span>، پیکربندی رجیسترهای سیستم و فراخوانی <span class="en">PSRAM_Prepare</span></td></tr>
+      <tr><td><span class="en">PSRAM_Prepare</span></td><td class="jt">تابع C در روند راه‌اندازی؛ ساعت را به <span class="en">200MHz</span> می‌رساند، سخت‌افزار <span class="en">PSRAM</span> را مقداردهی و <span class="en">.psramtext</span> را از فلش به <span class="en">PSRAM</span> منتقل می‌کند؛ باید در فلش بماند</td></tr>
+      <tr><td><span class="en">PSRAM_INIT</span></td><td class="jt">مقداردهی اولیۀ کنترل‌کنندۀ <span class="en">PSRAM</span>؛ پارامترهای زمان‌بندی (<span class="en">trc/tcph/txlpd</span>)، ظرفیت (<span class="en">PSRAM_CAPCFG_32M</span>) و ساعت جانبی</td></tr>
+      <tr><td><span class="en">__attribute__((section))</span></td><td class="jt">ویژگی GCC برای جای‌گذاری اجباری تابع یا داده در قطعۀ مشخص؛ برای ماندن کد در فلش یا رفتن به <span class="en">.psramtext</span></td></tr>
+      <tr><td><span class="en">_eusrstack</span></td><td class="jt">نماد بالای پشته در پایان <span class="en">RAM</span>؛ مقدار اولیۀ رجیستر <span class="en">sp</span> در فایل راه‌اندازی</td></tr>
+      <tr><td><span class="en">__stack_size</span></td><td class="jt">اندازۀ ثابت پشته؛ در این نمونه ۲۰۴۸ بایت</td></tr>
+      <tr><td><span class="en">mret</span></td><td class="jt">فرمان بازگشت از رویداد در معماری <span class="en">RISC-V</span>؛ در پایان راه‌اندازی از حالت ماشین به حالت کاربر پرش می‌کند</td></tr>
+      <tr><td><span class="en">CoreMark</span></td><td class="jt">بنچمارک استاندارد کارایی پردازنده؛ در نمونۀ رسمی ماژول نمونۀ اجراشدنی از <span class="en">PSRAM</span> است</td></tr>
+      <tr><td><span class="en">EVT</span></td><td class="jt">بستۀ ارزیابی رسمی WCH شامل پروژه‌های نمونه؛ مسیر نمونۀ این سند <span class="en">EVT\EXAM\APPLICATION\RunInPSRAM</span> است</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN36001 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۲۵</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN36001</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
