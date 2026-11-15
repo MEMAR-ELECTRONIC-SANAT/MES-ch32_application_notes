@@ -94,7 +94,7 @@ mcpy rs1, rs2, rs3
 
 ## تهیه و تدوین
 
-**معمار الکترونیک صنعت**  
+**معمار الکترونیک صنعت**
 **MEMAR ELECTRONIC SANAT (MES)**
 
 همراه شما در مسیر طراحی و ساخت مدارهای مطمئن
@@ -102,3 +102,5 @@ mcpy rs1, rs2, rs3
 - کانال تلگرام: [MEMAR Electronic](https://t.me/Memar_Electronic)
 - اینستاگرام: [MEMAR Electronic](https://www.instagram.com/Memar.Electronic)
 - GitHub: [MEMAR-ELECTRONIC-SANAT](https://github.com/MEMAR-ELECTRONIC-SANAT)
+
+![MES Animated Logo](../../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg)
