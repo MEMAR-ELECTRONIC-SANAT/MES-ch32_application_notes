@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>جانبی اختصاصی ARGB برای راه‌اندازی LEDهای WS2812/SK6812 — ترجمۀ فارسی AN35000</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">جانبی اختصاصی <span class="en">ARGB</span></div>
+    <div class="t2">برای راه‌اندازی LEDهای رنگ‌پذیر</div>
+    <div class="t3"><span class="en">WS2812 · SK6812 · RGBW</span></div>
+  </div>
+  <div class="c-sub">تولید مستقیم زمان‌بندی پروتکل‌های کنترل نور با دقت بالا، بدون باد دادۀ حافظه و با بار نزدیک به صفرِ <span class="en">CPU</span>؛ از مزایا و مقایسۀ طرح‌های کنترل و روند توسعه نرم‌افزار، تا سناریوهای کاربردی رایج</div>
+  <div class="c-desc">در این جزوه، ترجمۀ فارسی سند رسمی <span class="en">AN35000</span> (نسخۀ ۱٫۱، منتشرۀ شرکت <span class="en">WCH</span>) را می‌خوانید: جانبی <span class="en">ARGB</span> می‌تواند زمان‌بندی پروتکل‌های کنترل چراغ <span class="en">WS2812</span>، <span class="en">SK6812</span> و مانند آن‌ها را مستقیماً تولید کند و راه‌حلی با دقت زمان‌بندی بالا، حافظۀ کم و بار پایین <span class="en">CPU</span> ارائه می‌دهد؛ راه‌حلی مناسب برای سیستم‌های نورپردازی بزرگ، افکت‌های نور بازی‌محور، نورپردازی خودرو و نورپردازی صوتی. در ادامه، مزایا و مقایسۀ طرح‌های کنترل، روند توسعه نرم‌افزار و پیکربندی <span class="en">DMA</span> و سناریوهای کاربردی رایج بررسی می‌شود.</div>
+  <div class="c-tags">
+    <span class="c-tag">جانبی اختصاصی <span class="en">ARGB</span></span>
+    <span class="c-tag"><span class="en">WS2812 / SK6812 (RGBW)</span></span>
+    <span class="c-tag">بدون باد دادۀ حافظه</span>
+    <span class="c-tag">بار <span class="en">CPU</span> نزدیک به صفر</span>
+    <span class="c-tag"><span class="en">PIOC</span></span>
+    <span class="c-tag"><span class="en">T0H / T1H / DAT_ARR / RST_ARR</span></span>
+    <span class="c-tag">انتقال دوگانه با <span class="en">DMA</span></span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN35000 V1.1</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | مزایای <span class="en">ARGB</span></span><span class="t-dots"></span><span class="t-page">۴</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-111"><span class="s-id">1.1</span><span>مقایسۀ طرح‌های کنترل WS2812</span><span class="s-dots"></span><span class="s-page">۴</span></a>
+    <a class="toc-sub" href="#sec-112"><span class="s-id">1.2</span><span>مزایای اصلی جانبی اختصاصی ARGB</span><span class="s-dots"></span><span class="s-page">۴</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | روش استفاده</span><span class="t-dots"></span><span class="t-page">۵</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-211"><span class="s-id">2.1</span><span>روند توسعۀ نرم‌افزار</span><span class="s-dots"></span><span class="s-page">۵</span></a>
+    <a class="toc-sub" href="#sec-212"><span class="s-id">2.2</span><span>سناریوهای کاربردی رایج</span><span class="s-dots"></span><span class="s-page">۸</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۴</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۹</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۵</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۹</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">کد ۱</span><span>مقداردهی اولیۀ <span class="en">GPIO</span> برای <span class="en">ARGB</span></span><span class="f-dots"></span><span class="f-page">۶</span></div>
+        <div class="frow"><span class="f-id">کد ۲</span><span>مقداردهی اولیۀ کانال <span class="en">DMA</span></span><span class="f-dots"></span><span class="f-page">۶</span></div>
+      </div>
+      <div>
+        <div class="frow"><span class="f-id">کد ۳</span><span>مقداردهی اولیۀ جانبی <span class="en">ARGB</span></span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">کد ۴</span><span>نمونۀ پخش <span class="en">GIF</span> روی ماتریس ۸×۸ <span class="en">WS2812</span></span><span class="f-dots"></span><span class="f-page">۸</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> جانبی <span class="en">ARGB</span> زمان‌بندی پروتکل‌های کنترل چراغ <span class="en">WS2812</span>، <span class="en">SK6812</span> و مانند آن‌ها را مستقیماً تولید می‌کند و راه‌حلی با دقت زمان‌بندی بالا، حافظۀ کم و بار پایین <span class="en">CPU</span> ارائه می‌دهد؛ در حالی که طرح‌های <span class="en">SPI+DMA</span> یا <span class="en">TIM+DMA</span> به باد دادۀ ۸ تا ۱۶ برابری و پیش‌پردازش نرم‌افزاری نیاز دارند. پارامترهای <span class="en">T0H/T1H</span>، دورۀ بیت داده و کد ریست آزادانه پیکربندی می‌شوند و مدل‌های متنوعی از LEDهای <span class="en">ARGB</span> پشتیبانی می‌شوند. این سند مقایسۀ طرح‌های کنترل، روند توسعۀ نرم‌افزار (مقداردهی اولیۀ <span class="en">IO</span>، <span class="en">DMA</span> و <span class="en">ARGB</span>) و سناریوهای کاربردی رایج را شرح می‌دهد.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>جانبی <span class="en">ARGB</span> می‌تواند زمان‌بندی پروتکل‌های کنترل چراغ <span class="en">WS2812</span>، <span class="en">SK6812</span> و مدل‌های دیگر را مستقیماً تولید کند و راه‌حلی با دقت زمان‌بندی بالا، حافظۀ کم و بار پایین <span class="en">CPU</span> ارائه می‌دهد؛ این جانبی برای سناریوهایی مانند سیستم‌های نورپردازی بزرگ‌مقیاس، افکت‌های نور بازی‌محور (ای‌اسپورت)، نورپردازی خودرو و نورپردازی صوتی مناسب است.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>میکروکنترلرهای اینترکانکت</td><td><span class="en">CH32V467</span>، <span class="en">CH32V407</span>، <span class="en">CH32X315</span></td></tr>
+    <tr><td><span class="en">SoC</span> بلوتوثی</td><td><span class="en">CH587</span></td></tr>
+  </table>
+</div>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">مزایای <span class="en">ARGB</span></div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-111"><span class="dm">◆</span>۱.۱ مقایسۀ طرح‌های کنترل WS2812</h3>
+<div class="tblwrap" id="tab-11">
+  <div class="tblcap"><span class="cap-pill">جدول ۱-۱</span><span class="cap-text">مقایسۀ طرح‌های کنترل <span class="en">WS2812</span></span></div>
+  <table class="tbl">
+    <tr><th style="width:16%;">شاخص مقایسه</th><th><span class="en">ARGB</span></th><th><span class="en">PIOC</span></th><th><span class="en">TIM (PWM+DMA)</span></th><th><span class="en">SPI+DMA</span></th></tr>
+    <tr><td>حافظۀ مصرفی</td><td>کم</td><td>کم</td><td>زیاد</td><td>زیاد</td></tr>
+    <tr><td>بار <span class="en">CPU</span></td><td>کم؛ فقط وقفه‌ها پردازش می‌شوند</td><td>بدون اشغال؛ هسته فقط وظیفه را تحویل می‌دهد و <span class="en">PIOC</span> مستقل اجرا می‌شود</td><td>زیاد؛ پیش‌پردازش داده + پردازش وقفه</td><td>زیاد؛ پیش‌پردازش داده + پردازش وقفه</td></tr>
+    <tr><td>باد دادۀ حافظه</td><td>ندارد؛ ارسال مستقیم دادۀ خام <span class="en">RGB</span></td><td>ندارد؛ ارسال مستقیم دادۀ خام <span class="en">RGB</span></td><td>دارد؛ هر بیت رنگ به ۱ یا ۲ بایت تبدیل می‌شود (۸ تا ۱۶ برابر)</td><td>دارد؛ هر بیت رنگ به ۱ یا ۲ بایت تبدیل می‌شود (۸ تا ۱۶ برابر)</td></tr>
+    <tr><td>دقت زمان‌بندی</td><td>بالا؛ جانبی اختصاصی، فرکانس و زمان‌بندی ۰/۱ پیکربندی‌شدنی</td><td>بالا؛ کنترل با اسمبلی و زمان‌بندی دقیق؛ طول پالس سطح بالای کد ۰/۱ و طول کد ریست پیکربندی‌شدنی</td><td>متوسط؛ محدود به فرکانس ساعت و ضریب تقسیم؛ ممکن است زمان‌بندی دقیقاً برآورده نشود</td><td>متوسط؛ محدود به فرکانس ساعت و ضریب تقسیم؛ ممکن است زمان‌بندی دقیقاً برآورده نشود</td></tr>
+    <tr><td>پیچیدگی کد</td><td>ساده؛ کد نمونۀ فراهم است، فراخوانی آسان و فقط پیکربندی <span class="en">ARGB</span> و <span class="en">DMA</span> لازم است</td><td>نسبتاً زیاد؛ توسعۀ ثانویه نیازمند آشنایی با اسمبلی</td><td>متوسط؛ پیش‌پردازش داده + پردازش وقفه</td><td>متوسط؛ پیش‌پردازش داده + پردازش وقفه</td></tr>
+    <tr><td>انعطاف‌پذیری</td><td>بالا؛ پارامترهای پیکربندی زیاد، پشتیبانی از مدل‌های زیاد LED و سازگاری خوب</td><td>بالا؛ پروتکل آزادانه تعریف می‌شود، دقت زمانی بالا و سازگاری خوب</td><td>متوسط؛ پروتکل با نرم‌افزار کنترل می‌شود</td><td>متوسط؛ پروتکل با نرم‌افزار کنترل می‌شود</td></tr>
+  </table>
+</div>
+
+<h3 class="h2x" id="sec-112"><span class="dm">◆</span>۱.۲ مزایای اصلی جانبی اختصاصی ARGB</h3>
+<div class="bl"><b>استفاده آسان و توسعه سریع و شهودی:</b> در مقایسه با طرح‌های <span class="en">SPI+DMA</span> یا <span class="en">TIM+DMA</span>، جانبی اختصاصی <span class="en">ARGB</span> به پیش‌پردازش داده پیش از هر بار تازه‌سازی نیاز ندارد؛ داده مستقیماً قالب <span class="en">GRB</span> را پشتیبانی می‌کند که همان قالب بومی <span class="en">WS2812</span> است. کد پروتکل <span class="en">PIOC</span> نیز به‌صورت نمونۀ مرجع فراهم شده و می‌توان مستقیماً آن را فراخوانی کرد.</div>
+<div class="bl"><b>نبود «باد داده»:</b> طرح‌های <span class="en">SPI+DMA</span> یا <span class="en">TIM+DMA</span> با مصرف حافظه به اندازۀ چند برابر دادۀ خام همراه‌اند. برای نوارهای نورانی بلند — برای مثال ۱۰۲۴ LED — با روش معمولی <span class="en">SPI+DMA</span> یا <span class="en">TIM+DMA</span> حافظۀ مصرفی از <span class="en">3KB</span> به <span class="en">24KB</span> افزایش می‌یابد و منابع حافظه هدر می‌رود؛ جانبی اختصاصی <span class="en">ARGB</span> و <span class="en">PIOC</span> باد دادۀ حافظه ندارند.</div>
+<div class="bl"><b>سازگاری بالا:</b> جانبی <span class="en">ARGB</span> به کاربر اجازه می‌دهد طول سطح بالای کد ۰/۱ (<span class="en">T0H</span>، <span class="en">T1H</span>)، دورۀ کل کد ۰/۱ (<span class="en">DAT_ARR</span>) و طول سیگنال ریست (<span class="en">RST_ARR</span>) را آزادانه پیکربندی کند. با تنظیم این پارامترها می‌توان با LEDهای <span class="en">ARGB</span> سازندگان مختلف با الزامات زمان‌بندی متفاوت — مانند <span class="en">WS2812</span>، <span class="en">SK6812 (RGBW)</span>، <span class="en">TM1814</span>، <span class="en">UCS1903</span> و <span class="en">GS8208</span> — سازگاری برقرار کرد.</div>
+<div class="bl"><b>بار بسیار پایین CPU و آزادسازی توان محاسباتی:</b> هنگام کنترل نوارهای نورانی بلند (مثلاً بیش از ۱۰۰۰ LED)، نرخ اشغال <span class="en">CPU</span> تقریباً ۰٪ است. توان محاسباتی آزادشده می‌تواند الگوریتم‌های پیچیده‌تر افکت نور (مانند تحلیل طیف موسیقی و پیوند هوش مصنوعی لبه‌ای با افکت نور) را پشتیبانی کند.</div>
+<div class="bl"><b>سازوکار تازه‌سازی منعطف و مدیریت وقفه:</b> وقفه‌های متعددی مانند تکمیل ارسال، نیمۀ انتقال، تکمیل بایت و تکمیل ریست فراهم است تا پیاده‌سازی قابلیت‌های پیشرفته مانند تعویض بافر دوگانه و به‌روزرسانی پویای افکت‌ها آسان شود.</div>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">روش استفاده</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-211"><span class="dm">◆</span>۲.۱ روند توسعۀ نرم‌افزار</h3>
+<p>گام‌های توسعه به‌ترتیب عبارت‌اند از:</p>
+<div class="bl">۱. مقداردهی اولیۀ <span class="en">IO</span></div>
+<div class="bl">۲. مقداردهی اولیۀ <span class="en">DMA</span></div>
+<div class="bl">۳. مقداردهی اولیۀ <span class="en">ARGB</span></div>
+<div class="bl">۴. فعال‌سازی ارسال <span class="en">ARGB</span> با <span class="en">ARGB_Cmd(ENABLE);</span> و آغاز ارسال یک فریم داده</div>
+<p>بسته به تراشۀ مختلف، <span class="en">IO</span> متناظر با <span class="en">ARGB</span> باید در حالت خروجی push-pull چندگانه (Alternate Function) پیکربندی شود؛ کارکرد دقیق هر پین را می‌توان در دیتاشیت منتشرشده در وب‌گاه رسمی مراجعه کرد. برای مثال در سری <span class="en">CH32V407</span> پین چندگانۀ <span class="en">ARGB</span> پین <span class="en">PA15</span> است. کد پیکربندی <span class="en">CH32V407</span> به‌صورت زیر است:</p>
+<div class="fig" id="code-1">
+  <div class="codeblk">void ARGB_GPIO_Init()
+{
+GPIO_InitTypeDef GPIO_InitStructure;
+RCC_PB2PeriphClockCmd(RCC_PB2Periph_GPIOA, ENABLE);
+GPIO_InitStructure.GPIO_Pin = GPIO_Pin_15;
+GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+GPIO_InitStructure.GPIO_Speed = GPIO_Speed_High;
+GPIO_Init(GPIOA, &GPIO_InitStructure);
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۱</span><span class="cap-text">مقداردهی اولیۀ <span class="en">GPIO</span> برای <span class="en">ARGB</span></span></div>
+</div>
+<p>بسته به تراشۀ مختلف، کانال <span class="en">DMA</span> پیکربندی می‌شود؛ ممکن است <span class="en">ARGB</span> تراشه‌های مختلف به کانال‌های <span class="en">DMA</span> متفاوتی متصل باشد. حالت انتقال <span class="en">DMA</span> پیشنهاد می‌شود همواره روی <span class="en">DMA_Mode_Normal</span> ثابت بماند و طول انتقال <span class="en">DMA</span> بر اساس نیاز پیکربندی می‌شود؛ اما توجه شود که طول انتقال <span class="en">DMA</span> باید دقیقاً با طول دورۀ تازه‌سازی دادۀ <span class="en">ARGB</span> برابر باشد. کد پیکربندی <span class="en">CH32V407</span> به‌صورت زیر است:</p>
+<div class="fig" id="code-2">
+  <div class="codeblk">void ARGB_WS2812B_DMA_Init(uint8_t *ARGB_DMA_Buffer, size_t buffer_size)
+{
+RCC_HBPeriphClockCmd(RCC_HBPeriph_DMA1, ENABLE);
+DMA_InitTypeDef DMA_InitStructure;
+DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)&(ARGB->DATAR);
+DMA_InitStructure.DMA_MemoryBaseAddr = (uint32_t)ARGB_DMA_Buffer;
+DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralDST;
+DMA_InitStructure.DMA_BufferSize = buffer_size;
+DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
+DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
+DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte;
+DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_Byte;
+DMA_InitStructure.DMA_Mode = DMA_Mode_Normal;
+DMA_InitStructure.DMA_Priority = DMA_Priority_High;
+DMA_InitStructure.DMA_M2M = DMA_M2M_Disable;
+DMA_Init(DMA1_Channel10, &DMA_InitStructure);
+DMA_Cmd(DMA1_Channel10, ENABLE);
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۲</span><span class="cap-text">مقداردهی اولیۀ کانال <span class="en">DMA</span> متصل به <span class="en">ARGB</span></span></div>
+</div>
+<p>در پیکربندی <span class="en">ARGB</span> توجه شود که پارامترهای پروتکل تک‌خطی مانند <span class="en">T1H</span> بر اساس ساعتِ گذرگاه ساعتی که <span class="en">ARGB</span> به آن متصل است محاسبه می‌شوند. برای مثال در سری <span class="en">CH32V407</span>، <span class="en">ARGB</span> زیر گذرگاه ساعتی <span class="en">HB</span> قرار دارد و ساعت گذرگاه <span class="en">HB</span> در این سری با ساعت هسته برابر است؛ بنابراین می‌توان مقدار قابل‌نوشتن در رجیستر را مستقیماً با <span class="en">SystemCoreClock</span> محاسبه کرد. در غیر این صورت، باید با ساختار ساعت سیستم یا با فراخوانی مستقیم تابع <span class="en">void RCC_GetClocksFreq(RCC_ClocksTypeDef *RCC_Clocks);</span> ساعت گذرگاه ساعتیِ محل استقرار <span class="en">ARGB</span> در آن پلتفرم به‌دست آید و سپس مقدار قابل‌نوشتن در رجیستر محاسبه شود.</p>
+<div class="fig" id="code-3">
+  <div class="codeblk long">#define ARGB_MS2HBTICK(ms) ((uint32_t)((float)SystemCoreClock / 1000.0f * (float)ms))
+#define ARGB_US2HBTICK(us) ((uint32_t)((float)SystemCoreClock / 1000000.0f * (float)us))
+#define ARGB_NS2HBTICK(ns) ((uint32_t)((float)SystemCoreClock / 1000000000.0f * (float)ns))
+
+void ARGB_WS2812B_Init(uint8_t *ARGB_DMA_Buffer, size_t buffer_size)
+{
+// Enable the clock for ARGB peripheral
+RCC_HBPeriphClockCmd(RCC_HBPeriph_ARGB, ENABLE);
+
+// Initialize ARGB configuration structure
+ARGB_InitTypeDef ARGB_InitStruct;
+
+// Configure ARGB parameters
+ARGB_InitStruct.ARGB_Length = buffer_size - 1;      <span class="cm">// Set buffer length (minus 1 for zero-based indexing)</span>
+ARGB_InitStruct.ARGB_T1H = ARGB_US2HBTICK(0.9f);    <span class="cm">// Set high time for '1' bit</span>
+ARGB_InitStruct.ARGB_T0H = ARGB_US2HBTICK(0.3f);    <span class="cm">// Set high time for '0' bit</span>
+ARGB_InitStruct.ARGB_DataPeriod = ARGB_US2HBTICK(1.45f);  <span class="cm">// Set data bit period</span>
+ARGB_InitStruct.ARGB_RSTPeriod = ARGB_US2HBTICK(80.0f);   <span class="cm">// Set reset period</span>
+ARGB_InitStruct.ARGB_Mode = ARGB_Mode_SendRSTFirst; <span class="cm">// Set mode to send reset first</span>
+ARGB_InitStruct.ARGB_Endian = ARGB_Endian_MSB;      <span class="cm">// Set most significant bit first</span>
+ARGB_Init(&ARGB_InitStruct);                        <span class="cm">// Apply ARGB configuration</span>
+
+// Enable ARGB interrupt for frame reception complete
+ARGB_ITConfig(ARGB_IT_FRH, ENABLE);
+
+// Enable ARGB interrupt in the NVIC
+NVIC_EnableIRQ(ARGB_IRQn);
+
+ARGB_WS2812B_DMA_Init((void *)ARGB_DMA_Buffer, buffer_size);
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۳</span><span class="cap-text">مقداردهی اولیۀ جانبی <span class="en">ARGB</span> با پروتکل <span class="en">WS2812B</span></span></div>
+</div>
+<div class="note"><span class="lbl">توجه:</span> هنگام آغاز دوبارۀ یک فریم انتقال، لازم است طول انتقال و آدرس آغاز انتقال <span class="en">DMA</span> دوباره پیکربندی شوند.</div>
+<p><b>نمونه:</b> نمونۀ زیر روی نمایشگر نقطه‌ای <span class="en">8×8</span> متشکل از <span class="en">WS2812</span>، دادهٔ تصویری چندفریمی قالب <span class="en">GRB</span> تولیدشده از یک پروندۀ <span class="en">GIF</span> را نمایش می‌دهد.</p>
+<div class="fig" id="code-4">
+  <div class="codeblk long">int main(void)
+{
+···
+GD_ERR err;
+size_t err_pos;
+GD_GIF_HANDLE gif;
+gif = GD_FromMemory(media_default, media_default_end - media_default, &err, &err_pos);
+GD_FRAME *frame = GD_GetFrame(gif, 0);
+ARGB_WS2812B_Init((uint8_t *)frame->Buffer,
+frame->Descriptor.Width * frame->Descriptor.Height * 3);
+while (1)
+{
+for (uint32_t i = 0; i &lt; GD_FrameCount(gif); i++)
+{
+GD_FRAME *frame = GD_GetFrame(gif, i);
+ARGB_WS2812B_DMA_Init((uint8_t *)frame->Buffer,
+frame->Descriptor.Width * frame->Descriptor.Height * 3);
+ARGB_Cmd(ENABLE);
+while (DMA1_Channel10->CNTR != 0)
+{
+}
+DMA_Cmd(DMA1_Channel10, DISABLE);
+Delay_Ms(1000);
+}
+}
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۴</span><span class="cap-text">نمونۀ پخش <span class="en">GIF</span> روی ماتریس <span class="en">8×8</span> از <span class="en">WS2812</span></span></div>
+</div>
+
+<h3 class="h2x" id="sec-212"><span class="dm">◆</span>۲.۲ سناریوهای کاربردی رایج</h3>
+<p><b>■ سیستم‌های روشنایی هوشمند بزرگ‌مقیاس:</b></p>
+<div class="bl"><b>توصیف سناریو:</b> روشنایی منظر شهری، نور دورنمای ساختمان، پرده پس‌زمینۀ بزرگ صحنه (نوارهای نورانی به طول چند صد متر و ده‌ها هزار LED).</div>
+<div class="bl"><b>ویژگی راه‌حل:</b> رانندگی آسان نوارهای نورانی بسیار بلند بدون افت فریم؛ پشتیبانی از ساخت افکت‌های نورانی پویا، هم‌گام و پیچیده.</div>
+<p><b>■ لوازم جانبی بازی‌محور و نورپردازی محیط دسکتاپ:</b></p>
+<div class="bl"><b>توصیف سناریو:</b> نور پس‌زمینۀ کیبورد مکانیکی، افکت نور ماوس، نوار نورانی رنگین‌کمانی داخل کیس رایانه، نوار نور کاهش‌دهندۀ خیرگی مانیتور.</div>
+<div class="bl"><b>ویژگی راه‌حل:</b> پشتیبانی از <span class="en">SK6812 (RGBW)</span> چهارکاناله با بازنمایی رنگ ظریف‌تر؛ تأخیر پایین در سطح سخت‌افزار که تضمین می‌کند افکت‌های نور بدون لگ به‌صورت بی‌درنگ به تصویر بازی و ریتم موسیقی (مانند حالت ریتمیک) پاسخ دهند.</div>
+<p><b>■ نورپردازی داخلی و خارجی خودرو:</b></p>
+<div class="bl"><b>توصیف سناریو:</b> نور پای پیاده داخل کابین، راهنمای روان روی پنل درب، چراغ خوش‌آمدگویی پویای جلوپنجره.</div>
+<div class="bl"><b>ویژگی راه‌حل:</b> پایداری بالا. جانبی اختصاصی <span class="en">ARGB</span> عدم‌قطعیت زمان‌بندی شبیه‌سازی نرم‌افزاری را حذف می‌کند و تضمین می‌سازد افکت نور در محیط الکترومغناطیسی پیچیدۀ خودرو همچنان پایدار، مطمئن و بدون سوسو زدن بماند.</div>
+<p><b>■ مصورسازی موسیقی و نصب‌های تعاملی:</b></p>
+<div class="bl"><b>توصیف سناریو:</b> نور ریتمیک بلندگوی بلوتوثی، نصب‌های هنری تعاملی، نورپردازی تزئینی بار.</div>
+<div class="bl"><b>ویژگی راه‌حل:</b> <span class="en">CPU</span> می‌تواند با تمام توان الگوریتم <span class="en">FFT</span> (تبدیل فوریه سریع) را برای تحلیل صدا اجرا کند و هم‌زمان نتیجه را از طریق <span class="en">DMA</span> به جانبی <span class="en">ARGB</span> بفرستد؛ هم‌گام‌سازی افکت نور با موسیقی به‌سادگی انجام می‌شود.</div>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN35000</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/03/26</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+      <tr><td><span class="en">2026/09/05</span></td><td><span class="en">V1.1</span></td><td>بهبود چینش و نگارش مطالب</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">ARGB</span></td><td class="jt">جانبی اختصاصی تولید زمان‌بندی پروتکل‌های کنترل نور آدرس‌پذیر؛ بدون پردازش هسته و با ارسال مستقیم دادۀ خام <span class="en">GRB</span></td></tr>
+      <tr><td><span class="en">WS2812 / SK6812</span></td><td class="jt">LEDهای هوشمند تک‌خطی رایج؛ <span class="en">SK6812</span> در نوع <span class="en">RGBW</span> کانال سفید مستقل دارد</td></tr>
+      <tr><td><span class="en">TM1814 / UCS1903 / GS8208</span></td><td class="jt">مدل‌های دیگر LED تک‌خطی با زمان‌بندی متفاوت که با تنظیم پارامترها پشتیبانی می‌شوند</td></tr>
+      <tr><td><span class="en">PIOC</span></td><td class="jt">کنترل‌کنندۀ ورودی/خروجی برنامه‌پذیر؛ کد اسمبلی پروتکل را مستقل از هسته اجرا می‌کند و راه‌حل جایگزین جانبی <span class="en">ARGB</span> است</td></tr>
+      <tr><td><span class="en">T0H / T1H</span></td><td class="jt">طول سطح بالای پالس برای کد ۰ و کد ۱؛ بر اساس تیک‌های ساعت گذرگاه میزبان <span class="en">ARGB</span> محاسبه می‌شود</td></tr>
+      <tr><td><span class="en">DAT_ARR</span></td><td class="jt">دورۀ کل بیت داده؛ مجموع طول سطح بالا و سطح پایین هر بیت</td></tr>
+      <tr><td><span class="en">RST_ARR</span></td><td class="jt">طول سیگنال ریست (خط <span class="en">Latch</span>) برای قفل‌کردن رنگ‌های نمایش‌شده؛ برای <span class="en">WS2812</span> حدود <span class="en">80µs</span></td></tr>
+      <tr><td><span class="en">GRB</span></td><td class="jt">ترتیب بایت‌های رنگ در قالب بومی <span class="en">WS2812</span>؛ دادۀ بافر بدون پیش‌پردازش مستقیماً ارسال می‌شود</td></tr>
+      <tr><td><span class="en">Data Bloat</span></td><td class="jt">باد دادۀ حافظه؛ در طرح‌های <span class="en">SPI+DMA</span>/<span class="en">TIM+DMA</span> هر بیت رنگ به ۱ یا ۲ بایت گسترش می‌یابد (۸ تا ۱۶ برابر)</td></tr>
+      <tr><td><span class="en">Half-Transfer / Frame-Ready</span></td><td class="jt">وقفه‌های نیمۀ انتقال و آمادگی فریم؛ برای تعویض بافر دوگانه و به‌روزرسانی پویای افکت‌ها</td></tr>
+      <tr><td><span class="en">Interconnect MCU</span></td><td class="jt">میکروکنترلرهای اینترکانکت WCH مانند <span class="en">CH32V467/V407/X315</span> با گذرگاه‌های گسترده و جانبی‌های پرسرعت</td></tr>
+      <tr><td><span class="en">HBTICK</span></td><td class="jt">یک تیک ساعت گذرگاه <span class="en">HB</span>؛ در <span class="en">CH32V407</span> برابر تیک ساعت هسته است و با <span class="en">SystemCoreClock</span> محاسبه می‌شود</td></tr>
+      <tr><td><span class="en">GD / GIF</span></td><td class="jt">کتابخانۀ رمزگشای <span class="en">GIF</span> در نمونۀ رسمی؛ هر فریم به‌صورت بافر <span class="en">GRB</span> به <span class="en">DMA</span> داده می‌شود</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN35000 V1.1</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۲۵</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN35000</span> نسخۀ <span class="en">V1.1</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
