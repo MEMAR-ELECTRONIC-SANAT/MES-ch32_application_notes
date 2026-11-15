@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>راه‌اندازی نمایشگر با PSRAM به‌عنوان حافظۀ تصویر در CH32V467 — ترجمۀ فارسی AN36002</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1"><span class="en">PSRAM</span> به‌عنوان حافظۀ تصویر</div>
+    <div class="t2">در میکروکنترلر <span class="en">CH32V467</span></div>
+    <div class="t3">رانندگی نمایشگر <span class="en">LTDC</span> · کتابخانۀ گرافیکی <span class="en">LVGL</span></div>
+  </div>
+  <div class="c-sub">پیکربندی <span class="en">PSRAM</span> به‌عنوان حافظۀ تصویر (Frame Buffer) برای کنترل‌کنندۀ نمایشگر <span class="en">LTDC</span> و راه‌اندازی نمایشگرهای با وضوح بالا؛ همراه با انتقال و راه‌اندازی (Porting) کتابخانۀ گرافیکی <span class="en">LVGL</span></div>
+  <div class="c-desc">ترجمۀ فارسی سند رسمی <span class="en">AN36002</span> (نسخۀ ۱٫۰، منتشرۀ <span class="en">WCH</span>): میکروکنترلر <span class="en">CH32V467</span> به حافظۀ داخلی <span class="en">PSRAM</span> با ظرفیت بالا مجهز است و استفاده از آن در کاربردهای متنوع ممکن است. این سند برای مهندسان توسعه رابط کاربری گرافیکی (GUI) تدوین شده و به‌تفصیل شرح می‌دهد چگونه <span class="en">PSRAM</span> به‌عنوان حافظۀ تصویر (Frame Buffer) کنترل‌کنندۀ نمایشگر <span class="en">LTDC</span> پیکربندی می‌شود تا نمایشگرهای با وضوح بالا راه‌اندازی شوند؛ روش انتقال و راه‌اندازی (Porting) کتابخانۀ گرافیکی <span class="en">LVGL</span> نیز آموزش داده می‌شود.</div>
+  <div class="c-tags">
+    <span class="c-tag">میکروکنترلر <span class="en">CH32V467</span></span>
+    <span class="c-tag">حافظۀ تصویر (Frame Buffer)</span>
+    <span class="c-tag">کنترل‌کنندۀ نمایشگر <span class="en">LTDC</span></span>
+    <span class="c-tag">بافر خطی و پیش‌واکشی <span class="en">DMA</span></span>
+    <span class="c-tag">کتابخانۀ گرافیکی <span class="en">LVGL</span></span>
+    <span class="c-tag"><span class="en">RGB565 · 800×480</span></span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN36002 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | طرح کلی و منابع سخت‌افزاری</span><span class="t-dots"></span><span class="t-page">۴</span></a>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | انتقال پروژۀ LTDC + LVGL</span><span class="t-dots"></span><span class="t-page">۵</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-211"><span class="s-id">2.1</span><span>پیکربندی فایل اسکریپت لینک</span><span class="s-dots"></span><span class="s-page">۵</span></a>
+    <a class="toc-sub" href="#sec-212"><span class="s-id">2.2</span><span>PSRAM و حافظۀ تصویر</span><span class="s-dots"></span><span class="s-page">۶</span></a>
+    <a class="toc-sub" href="#sec-213"><span class="s-id">2.3</span><span>پیکربندی LTDC</span><span class="s-dots"></span><span class="s-page">۶</span></a>
+    <a class="toc-sub" href="#sec-214"><span class="s-id">2.4</span><span>پیکربندی LVGL</span><span class="s-dots"></span><span class="s-page">۱۰</span></a>
+    <a class="toc-sub" href="#sec-215"><span class="s-id">2.5</span><span>تابع اصلی</span><span class="s-dots"></span><span class="s-page">۱۲</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۴</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۱۳</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۵</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۱۳</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">جدول ۲</span><span>منابع میکروکنترلر</span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">شکل ۱</span><span>نمودار روند رندر</span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">کد ۱</span><span>پیکربندی فایل اسکریپت لینک و بخش .psram</span><span class="f-dots"></span><span class="f-page">۵</span></div>
+        <div class="frow"><span class="f-id">کد ۲</span><span>تعریف حافظه‌های تصویر در PSRAM</span><span class="f-dots"></span><span class="f-page">۶</span></div>
+        <div class="frow"><span class="f-id">کد ۳</span><span>تأمین ساعت پیکسلی از ETH_PLL</span><span class="f-dots"></span><span class="f-page">۶</span></div>
+        <div class="frow"><span class="f-id">کد ۴</span><span>راه‌اندازی LTDC (قطبیت‌ها و زمان‌بندی)</span><span class="f-dots"></span><span class="f-page">۷</span></div>
+      </div>
+      <div>
+        <div class="frow"><span class="f-id">کد ۵</span><span>پیکربندی لایه</span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">جدول ۳</span><span>پارامترهای زمان‌بندی نمایشگر</span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">کد ۶</span><span>تعویض پینگ‌پنگی بافر خطی در وقفۀ خط</span><span class="f-dots"></span><span class="f-page">۹</span></div>
+        <div class="frow"><span class="f-id">کد ۷</span><span>رابط نمایش LVGL</span><span class="f-dots"></span><span class="f-page">۱۱</span></div>
+        <div class="frow"><span class="f-id">کد ۸</span><span>زمان‌بند TIM4 برای تیک LVGL</span><span class="f-dots"></span><span class="f-page">۱۲</span></div>
+        <div class="frow"><span class="f-id">کد ۹</span><span>تابع اصلی</span><span class="f-dots"></span><span class="f-page">۱۲</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> میکروکنترلر <span class="en">CH32V467</span> حافظۀ <span class="en">PSRAM</span> درون‌تراشه‌ای بزرگی دارد (بسته به بسته‌بندی ۴ یا ۸ مگابایت، آدرس آغاز <span class="en">0x80000000</span>، عرض ۸ بیتی و <span class="en">DMA</span> مستقل). چون <span class="en">LTDC</span> فقط یک لایه با <span class="en">FIFO</span> به عمق ۸×۳۲ بیت دارد، خواندن مستقیم از <span class="en">PSRAM</span> در ساعت پیکسلی بالا به پارگی تصویر می‌انجامد؛ در این طرح دو بافر خطی در <span class="en">SRAM</span> داخلی به‌طور دوره‌ای توسط <span class="en">DMA</span> اختصاصی <span class="en">PSRAM</span> پیش‌واکشی می‌شود و <span class="en">LTDC</span> از بافر خطی می‌خواند. روند رندر، پیکربندی فایل اسکریپت لینک، حافظۀ تصویر، پیکربندی <span class="en">LTDC</span> (ساعت پیکسلی، زمان‌بندی، لایه، تعویض پینگ‌پنگی) و انتقال و راه‌اندازی <span class="en">LVGL</span> شرح داده شده است.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>میکروکنترلر <span class="en">CH32V467</span> به حافظۀ داخلی <span class="en">PSRAM</span> با ظرفیت بالا مجهز شده است که امکان استفاده از آن را در کاربردهای متنوع فراهم می‌کند.</p>
+<p>این سند برای مهندسانی تدوین شده است که با استفاده از <span class="en">CH32V467</span> در حال توسعه رابط کاربری گرافیکی (GUI) هستند. در این سند، نحوۀ پیکربندی حافظۀ <span class="en">PSRAM</span> به‌عنوان حافظۀ تصویر (Frame Buffer) برای کنترل‌کنندۀ نمایشگر <span class="en">LTDC</span>، به‌منظور راه‌اندازی نمایشگرهای با وضوح بالا، به‌صورت مفصل شرح داده شده است.</p>
+<p>همچنین، روش انتقال و راه‌اندازی کتابخانۀ گرافیکی <span class="en">LVGL</span> روی این میکروکنترلر (Porting) آموزش داده می‌شود.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>میکروکنترلرهای عمومی (General-Purpose MCU)</td><td>سری <span class="en">CH32V467</span></td></tr>
+  </table>
+</div>
+
+<h3 class="h2x" id="sec-concepts"><span class="dm">◆</span>مفاهیم کلیدی برای درک سند</h3>
+<p>برای درک بهتر موضوع، آشنایی با چهار مفهوم زیر مفید است:</p>
+<div class="bl"><span class="en">PSRAM</span>: نوعی حافظۀ <span class="en">RAM</span> خارجی با ظرفیت نسبتاً بالا که برای ذخیره‌سازی داده‌های حجیم، مانند تصاویر و اطلاعات گرافیکی، استفاده می‌شود.</div>
+<div class="bl"><span class="en">LTDC</span> (کنترل‌کنندۀ نمایشگر <span class="en">LCD-TFT</span>): کنترل‌کنندۀ سخت‌افزاری نمایشگر که داده‌های تصویری را از حافظه می‌خواند و برای نمایش روی <span class="en">LCD</span> ارسال می‌کند.</div>
+<div class="bl"><span class="en">Frame Buffer</span> (حافظۀ تصویر): بخشی از حافظه که اطلاعات پیکسل‌های تصویر در آن ذخیره می‌شود؛ هرچه وضوح و عمق رنگ نمایشگر بیشتر باشد، به حافظۀ بیشتری نیاز است.</div>
+<div class="bl"><span class="en">LVGL</span> (Light and Versatile Graphics Library): یک کتابخانۀ گرافیکی متن‌باز برای طراحی رابط کاربری (GUI) در سیستم‌های نهفته که امکاناتی مانند دکمه‌ها، منوها، نمودارها، انیمیشن‌ها و صفحات تنظیمات را فراهم می‌کند.</div>
+<div class="fig" id="fig-1">
+  <div style="background:#fdfaf5; border:1px solid #f0e3d0; border-radius:12px; padding:12px 10px; direction:rtl;">
+    <div style="display:flex; align-items:stretch; justify-content:center; gap:7px;">
+      <div style="flex:1; min-width:140px; max-width:200px; background:#fff; border:1.5px solid #e08038; border-radius:10px; padding:8px 10px; text-align:center;"><b style="color:#b35309; font-size:12.5px;"><span class="en">LVGL</span></b><div style="color:#5c554d; font-size:10.8px; line-height:1.7; margin-top:3px;">تولید رابط کاربری و محتوای گرافیکی</div></div>
+      <div style="align-self:center; color:#e08038; font-weight:800; font-size:17px;">←</div>
+      <div style="flex:1; min-width:140px; max-width:200px; background:#fff; border:1.5px solid #e08038; border-radius:10px; padding:8px 10px; text-align:center;"><b style="color:#b35309; font-size:12.5px;"><span class="en">PSRAM</span></b><div style="color:#5c554d; font-size:10.8px; line-height:1.7; margin-top:3px;">ذخیره‌سازی تصاویر و حافظۀ تصویر (Frame Buffer)</div></div>
+      <div style="align-self:center; color:#e08038; font-weight:800; font-size:17px;">←</div>
+      <div style="flex:1; min-width:140px; max-width:200px; background:#fff; border:1.5px solid #e08038; border-radius:10px; padding:8px 10px; text-align:center;"><b style="color:#b35309; font-size:12.5px;"><span class="en">DMA</span> اختصاصی <span class="en">PSRAM</span></b><div style="color:#5c554d; font-size:10.8px; line-height:1.7; margin-top:3px;">پیش‌واکشی دوره‌ای خطوط تصویر</div></div>
+    </div>
+    <div style="text-align:center; margin:2px 0; color:#e08038; font-weight:800; font-size:15px;">↓</div>
+    <div style="display:flex; align-items:stretch; justify-content:center; gap:7px;">
+      <div style="flex:1; min-width:140px; max-width:200px; background:#fff; border:1.5px solid #e08038; border-radius:10px; padding:8px 10px; text-align:center;"><b style="color:#b35309; font-size:12.5px;">بافرهای خطی در <span class="en">SRAM</span></b><div style="color:#5c554d; font-size:10.8px; line-height:1.7; margin-top:3px;">دو بافر هم‌اندازه با تعویض پینگ‌پنگی</div></div>
+      <div style="align-self:center; color:#e08038; font-weight:800; font-size:17px;">←</div>
+      <div style="flex:1; min-width:140px; max-width:200px; background:#fff; border:1.5px solid #e08038; border-radius:10px; padding:8px 10px; text-align:center;"><b style="color:#b35309; font-size:12.5px;"><span class="en">LTDC</span></b><div style="color:#5c554d; font-size:10.8px; line-height:1.7; margin-top:3px;">خواندن داده‌های تصویر و ارسال به نمایشگر</div></div>
+      <div style="align-self:center; color:#e08038; font-weight:800; font-size:17px;">←</div>
+      <div style="flex:1; min-width:140px; max-width:200px; background:#fff; border:1.5px solid #e08038; border-radius:10px; padding:8px 10px; text-align:center;"><b style="color:#b35309; font-size:12.5px;">نمایشگر <span class="en">LCD / TFT</span></b><div style="color:#5c554d; font-size:10.8px; line-height:1.7; margin-top:3px;">نمایش رابط کاربری گرافیکی با وضوح بالا</div></div>
+    </div>
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱</span><span class="cap-text">زنجیرۀ ارتباط فناوری‌ها و روند رندر در پروژۀ نمونه</span></div>
+</div>
+<div class="scen"><span class="lbl">نتیجه: </span>هدف اصلی این راهنما، استفاده از ظرفیت بالای <span class="en">PSRAM</span> در <span class="en">CH32V467</span> برای مدیریت حافظۀ تصویری نمایشگرهای با وضوح بالا و اجرای رابط‌های کاربری پیشرفته با کمک <span class="en">LVGL</span> است.</div>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">طرح کلی و منابع سخت‌افزاری</div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-111"><span class="dm">◆</span>۱.۱ معرفی منابع مرتبط</h3>
+<p><span class="en">CH32V467</span> حافظۀ <span class="en">PSRAM</span> داخلی با ظرفیت زیاد دارد؛ بسته به نوع بسته‌بندی به‌صورت <span class="en">4MiB</span> یا <span class="en">8MiB</span>؛ آدرس آغاز <span class="en">0x80000000</span>، عرض دادۀ ۸ بیت و <span class="en">DMA</span> مستقل. این حافظه برای نقش حافظۀ تصویر مناسب است.</p>
+<div class="tblwrap" id="tab-mcu">
+  <div class="tblcap"><span class="cap-pill">جدول ۲</span><span class="cap-text">منابع میکروکنترلر</span></div>
+  <table class="tbl">
+    <tr><th style="width:34%;">مورد</th><th>پارامتر</th></tr>
+    <tr><td>هسته</td><td><span class="en">Qingke RISC-V3V</span>، <span class="en">SYSCLK 400MHz / HCLK 200MHz</span></td></tr>
+    <tr><td><span class="en">Flash</span></td><td><span class="en">512KB</span> (قابل پیکربندی)</td></tr>
+    <tr><td><span class="en">SRAM</span> داخلی</td><td><span class="en">136KB/200KB</span> (قابل پیکربندی)</td></tr>
+    <tr><td><span class="en">PSRAM</span></td><td><span class="en">4MB/8MB</span> با عرض ۸ بیت</td></tr>
+    <tr><td><span class="en">LTDC</span></td><td>یک لایه، <span class="en">FIFO</span> با عمق <span class="en">8×32</span> بیت، پشتیبانی از قالب‌های پیکسلی متعدد</td></tr>
+  </table>
+</div>
+<p><span class="en">LTDC</span> فقط یک لایه دارد و عمق <span class="en">FIFO</span> آن <span class="en">8×32</span> بیت است. در قالب <span class="en">RGB565</span> هر ۳۲ بایت تنها ۱۶ پیکسل را در بر می‌گیرد و در ساعت پیکسلی بالاتر، زمان در دسترس برای تأمین داده کوتاه‌تر می‌شود. اگر <span class="en">LTDC</span> مستقیماً از <span class="en">PSRAM</span> بخواند، اشغال بس توسط <span class="en">CPU</span> بیشتر طول می‌کشد و <span class="en">FIFO</span> خالی می‌ماند؛ نتیجه، پارگی تصویر روی نمایشگر است. بنابراین در این پروژه دو بافر خطی در <span class="en">SRAM</span> داخلی قرار می‌گیرد و هر چند وقت یک‌بار، <span class="en">DMA</span> اختصاصی <span class="en">PSRAM</span> یک پیش‌واکشی انجام می‌دهد؛ <span class="en">LTDC</span> از بافر خطی می‌خواند، نه از <span class="en">PSRAM</span>. روند رندر در شکل ۱ آمده است.</p>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">انتقال پروژۀ <span class="en">LTDC + LVGL</span></div>
+  <div class="sec-divider"></div>
+</div>
+
+<h3 class="h2x" id="sec-211"><span class="dm">◆</span>۲.۱ پیکربندی فایل اسکریپت لینک</h3>
+<p><span class="en">PSRAM</span> به‌صورت ۴ مگابایتی استفاده می‌شود. در <span class="en">Ld/Link.ld</span> ناحیۀ <span class="en">PSRAM</span> به <span class="en">MEMORY</span> افزوده می‌شود و بخش <span class="en">.psram</span> به <span class="en">SECTIONS</span> اضافه می‌شود:</p>
+<div class="fig" id="code-1">
+  <div class="codeblk">MEMORY
+{
+    FLASH (rx)  : ORIGIN = 0x00000000, LENGTH = 576K
+    RAM   (xrw) : ORIGIN = 0x20000000 + 1024, LENGTH = 136K - 1K
+    PSRAM (xrw) : ORIGIN = 0x80000000, LENGTH = 4M
+}
+
+SECTIONS
+{
+    [...] <span class="cm">/* بقیۀ بخش‌ها بدون تغییر می‌مانند */</span>
+    .psram (NOLOAD) :
+    {
+        . = ALIGN(4);
+        *(.psram.*)
+        *(.psram*)
+    } &gt;PSRAM
+
+    <span class="cm">/* بقیۀ بخش‌ها بدون تغییر می‌مانند */</span>
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۱</span><span class="cap-text">پیکربندی فایل اسکریپت لینک و بخش <span class="en">.psram</span></span></div>
+</div>
+<p>بخش <span class="en">.psram</span> باید <span class="en">NOLOAD</span> داشته باشد. محتوای <span class="en">PSRAM</span> پس از قطع تغذیه حفظ نمی‌شود، مقدار اولیه ندارد و پس از ریست نیز لازم است کنترل‌کنندۀ <span class="en">PSRAM</span> به‌صورت دستی مقداردهی اولیه شود. متغیرهای این بخش با <span class="en">__attribute__((section(".psram")))</span> اعلام می‌شوند.</p>
+
+<h3 class="h2x" id="sec-212"><span class="dm">◆</span>۲.۲ PSRAM و حافظۀ تصویر</h3>
+
+<h3 class="h2x" id="sec-2121"><span class="dm">◆</span>۲.۲.۱ مقداردهی اولیۀ PSRAM</h3>
+<p>مقداردهی اولیۀ <span class="en">PSRAM</span> توسط API رسمی (<span class="en">PSRAM_INIT()</span>) انجام می‌شود؛ کافی است در آغاز <span class="en">main()</span> یک‌بار فراخوانی شود؛ ساعت کنترل‌کننده، زمان‌بندی، ظرفیت و تأخیر خواندن/نوشتن همگی درون تابع پیکربندی می‌شوند.</p>
+<p>ظرفیت به‌صورت <span class="en">4MB</span> استفاده می‌شود؛ یعنی <span class="en">PSRAM_CAPCFG_32M</span>، متناظر با <span class="en">LENGTH = 4M</span> در فایل اسکریپت لینک. دو حافظۀ تصویر در مجموع <span class="en">1.5MB</span> اشغال می‌کنند و فضای باقی‌مانده بسته به نیاز قابل استفاده است.</p>
+
+<h3 class="h2x" id="sec-2122"><span class="dm">◆</span>۲.۲.۲ تعریف حافظۀ تصویر</h3>
+<p>تعریف دو حافظۀ تصویر تمام‌صفحه به‌صورت زیر است؛ دو بافر روی‌هم <span class="en">1.5MB</span> حجم دارند:</p>
+<div class="fig" id="code-2">
+  <div class="codeblk">#define LCD_W      800
+#define LCD_H      480
+
+__attribute__((aligned(32), section(".psram"))) static uint16_t LTDC_GRAM1[LCD_W * LCD_H];
+__attribute__((aligned(32), section(".psram"))) static uint16_t LTDC_GRAM2[LCD_W * LCD_H];
+
+const void *const LTDC_layer1 = LTDC_GRAM1;
+const void *const LTDC_layer2 = LTDC_GRAM2;</div>
+  <div class="figcap"><span class="cap-pill">کد ۲</span><span class="cap-text">تعریف حافظه‌های تصویر در <span class="en">PSRAM</span></span></div>
+</div>
+
+<h3 class="h2x" id="sec-213"><span class="dm">◆</span>۲.۳ پیکربندی LTDC</h3>
+
+<h3 class="h2x" id="sec-2131"><span class="dm">◆</span>۲.۳.۱ ساعت پیکسلی</h3>
+<p>ساعت پیکسلی <span class="en">LTDC</span> در <span class="en">CH32V467</span> را می‌توان از <span class="en">ETH_PLL</span> یا <span class="en">USB_PLL</span> تأمین کرد؛ در این راهنما از تقسیم <span class="en">ETH_PLL</span> استفاده شده است. ضریب تقسیم در میدان <span class="en">LTDCDIV[5:0]</span> از <span class="en">RCC-&gt;CFGR2</span> تنظیم می‌شود و مقدار مؤثر تقسیم برابر <span class="en">LTDCDIV+1</span> است. در مثال حاضر <span class="en">LTDCDIV</span> روی ۱۵ تنظیم شده است؛ یعنی تقسیم بر ۱۶ و در نتیجه ساعت <span class="en">31.25MHz</span>:</p>
+<div class="fig" id="code-3">
+  <div class="codeblk">RCC-&gt;CFGR2 &amp;= ~(uint32_t)0x7F;   <span class="cm">/* پاک‌کردن LTDCSRC و LTDCDIV */</span>
+ETH_PLL_CLK_Enable();            <span class="cm">/* فعال‌سازی ETH_PLL و انتظار برای ETHPLLRDY */</span>
+RCC-&gt;CFGR2 |= (1 &lt;&lt; 6);          <span class="cm">/* انتخاب منبع ساعت: ETH_PLL (500MHz) */</span>
+RCC-&gt;CFGR2 |= 15;                <span class="cm">/* تقسیم بر 16 → 31.25MHz */</span></div>
+  <div class="figcap"><span class="cap-pill">کد ۳</span><span class="cap-text">تأمین ساعت پیکسلی از <span class="en">ETH_PLL</span></span></div>
+</div>
+
+<h3 class="h2x" id="sec-2132"><span class="dm">◆</span>۲.۳.۲ پارامترهای زمان‌بندی نمایشگر</h3>
+<p>رجیسترهای زمان‌بندی <span class="en">LTDC</span> به‌صورت «مقدار واقعی منهای ۱» نوشته می‌شوند؛ مقادیر مربوط به نمایشگر <span class="en">800×480</span> در جدول ۳ آمده است. بر اساس این پارامترها هر قاب <span class="en">1081×545</span> پیکسل‌کلاک طول می‌کشد و در ساعت <span class="en">31.25MHz</span> نرخ تازۀ حدود ۵۳ قاب بر ثانیه به دست می‌آید.</p>
+<div class="tblwrap" id="tab-timing">
+  <div class="tblcap"><span class="cap-pill">جدول ۳</span><span class="cap-text">پارامترهای زمان‌بندی نمایشگر</span></div>
+  <table class="tbl">
+    <tr><th>پارامتر</th><th>مقدار دفترچه</th><th>مقدار نوشته‌شده</th><th>نحوۀ محاسبه</th></tr>
+    <tr><td><span class="en">HSW</span></td><td><span class="en">1</span></td><td><span class="en">0</span></td><td><span class="en">HSW-1</span></td></tr>
+    <tr><td><span class="en">VSW</span></td><td><span class="en">3</span></td><td><span class="en">2</span></td><td><span class="en">VSW-1</span></td></tr>
+    <tr><td><span class="en">HBP</span></td><td><span class="en">80</span></td><td><span class="en">80</span></td><td><span class="en">HSW+HBP-1</span></td></tr>
+    <tr><td><span class="en">VBP</span></td><td><span class="en">40</span></td><td><span class="en">42</span></td><td><span class="en">VSW+VBP-1</span></td></tr>
+    <tr><td><span class="en">W</span></td><td><span class="en">800</span></td><td><span class="en">880</span></td><td><span class="en">HSW+HBP+W-1</span></td></tr>
+    <tr><td><span class="en">H</span></td><td><span class="en">480</span></td><td><span class="en">522</span></td><td><span class="en">VSW+VBP+H-1</span></td></tr>
+    <tr><td><span class="en">HFP</span></td><td><span class="en">200</span></td><td><span class="en">1080</span></td><td><span class="en">HSW+HBP+W+HFP-1</span></td></tr>
+    <tr><td><span class="en">VFP</span></td><td><span class="en">22</span></td><td><span class="en">544</span></td><td><span class="en">VSW+VBP+H+VFP-1</span></td></tr>
+  </table>
+</div>
+<div class="fig" id="code-4">
+  <div class="codeblk">LTDC_InitTypeDef s = {0};
+
+s.LTDC_HSPolarity = LTDC_HSPolarity_AH;
+s.LTDC_VSPolarity = LTDC_VSPolarity_AL;
+s.LTDC_DEPolarity = LTDC_DEPolarity_AH;
+s.LTDC_PCPolarity = LTDC_PCPolarity_IIPC;
+
+s.LTDC_HorizontalSync       = HSW - 1;
+s.LTDC_VerticalSync         = VSW - 1;
+s.LTDC_AccumulatedHBP       = HBP + HSW - 1;
+s.LTDC_AccumulatedVBP       = VBP + VSW - 1;
+s.LTDC_AccumulatedActiveW = LCD_W + HSW + HBP - 1;
+s.LTDC_AccumulatedActiveH = LCD_H + VSW + VBP - 1;
+s.LTDC_TotalWidth           = LCD_W + HSW + HBP + HFP - 1;
+s.LTDC_TotalHeigh           = LCD_H + VSW + VBP + VFP - 1;
+
+LTDC_Init(&amp;s);</div>
+  <div class="figcap"><span class="cap-pill">کد ۴</span><span class="cap-text">راه‌اندازی <span class="en">LTDC</span> (قطبیت‌ها و زمان‌بندی)</span></div>
+</div>
+
+<h3 class="h2x" id="sec-2133"><span class="dm">◆</span>۲.۳.۳ پیکربندی لایه</h3>
+<p>تنظیمات لایۀ نمایشگر به‌صورت زیر است:</p>
+<div class="fig" id="code-5">
+  <div class="codeblk">LTDC_Layer_InitTypeDef l = {0};
+
+l.LTDC_HorizontalStart  = 0;
+l.LTDC_HorizontalStop   = LCD_W;
+l.LTDC_VerticalStart    = 0;
+l.LTDC_VerticalStop     = LCD_H;
+
+l.LTDC_PixelFormat      = LTDC_Pixelformat_RGB565;
+l.LTDC_CFBStartAdress   = (uint32_t)LTDC_GRAM1;
+l.LTDC_CFBLineLength    = LCD_W * 2 + 31;   <span class="cm">/* طول خط + 31 */</span>
+l.LTDC_CFBPitch         = LCD_W * 2;        <span class="cm">/* فاصلۀ خطوط */</span>
+l.LTDC_CFBLineNumber    = LCD_H;
+
+LTDC_LayerInit(LTDC_Layer, &amp;l);
+LTDC_LayerCmd(LTDC_Layer, ENABLE);
+LTDC_ReloadConfig(LTDC_IMReload);</div>
+  <div class="figcap"><span class="cap-pill">کد ۵</span><span class="cap-text">پیکربندی لایه</span></div>
+</div>
+
+<h3 class="h2x" id="sec-2134"><span class="dm">◆</span>۲.۳.۴ پیکربندی تعویض پینگ‌پنگی بافر خطی</h3>
+<p>تعویض بافرهای خطی در وقفۀ خط <span class="en">LTDC</span> انجام می‌شود. هر <span class="en">n</span> خط یک‌بار وقفه رخ می‌دهد؛ در این مثال <span class="en">n=5</span> تنظیم شده است. در وقفۀ خط، نخست <span class="en">CFBAR</span> به بافرِ از پیش پُرشده اشاره داده می‌شود و سپس با <span class="en">DMA</span> اختصاصی <span class="en">PSRAM</span>، دستۀ بعدیِ ۵ خط به بافر دیگر منتقل می‌شود:</p>
+<div class="fig" id="code-6">
+  <div class="codeblk long">#define LAYER_BUF_CNT (5)
+
+__attribute__((aligned(32), section(".psram"))) static const uint16_t LTDC_GRAM1[layer1_w * layer1_h];
+__attribute__((aligned(32), section(".psram"))) static const uint16_t LTDC_GRAM2[layer1_w * layer1_h];
+
+const void* const LTDC_layer1 = LTDC_GRAM1;
+const void* const LTDC_layer2 = LTDC_GRAM2;
+
+__attribute__((aligned(32))) uint8_t* global_layer = (void*)LTDC_layer1;
+
+static volatile uint32_t buffer_switch = 0;
+static volatile uint32_t layer1_cnt    = 0; <span class="cm">/* خط جاری این لایه */</span>
+
+__attribute__((aligned(32))) uint16_t layer1_buffer0[layer1_w * LAYER_BUF_CNT];
+__attribute__((aligned(32))) uint16_t layer1_buffer1[layer1_w * LAYER_BUF_CNT];
+
+static void LTDC_DMA_Change(uint32_t addr)
+{
+    LTDC-&gt;IER |= (1 &lt;&lt; 2);
+    LTDC_Layer-&gt;CFBAR = (uint32_t)addr;
+
+    LTDC_LIPConfig(layer1_cnt);
+
+    LTDC_ReloadConfig(LTDC_IMReload);
+    LTDC-&gt;IER &amp;= ~(1 &lt;&lt; 2);
+}
+
+void LTDC_IRQHandler(void)
+{
+    LTDC_ClearITPendingBit(LTDC_IT_LI);
+
+    uint16_t* layer16 = (void*)global_layer;
+
+    if (buffer_switch)
+    {
+        buffer_switch = 0;
+
+        LTDC_DMA_Change((uint32_t)layer1_buffer1);
+
+        void*    dst = layer1_buffer0;
+        void*    src = &amp;(layer16[layer1_cnt * layer1_w]);
+        uint32_t len = layer1_w * LAYER_BUF_CNT * layer1_pixel_size;
+
+        PSRAMDMARead((void*)dst, (uint32_t)src, len / 4, PSRAM_DMA_SIZE_32,
+                     DMA_BRST_NUM2, DMA_PAUSE_TIM0);
+    }
+    else
+    {
+        buffer_switch = 1;
+
+        LTDC_DMA_Change((uint32_t)layer1_buffer0);
+
+        void*    dst = layer1_buffer1;
+        void*    src = &amp;(layer16[layer1_cnt * layer1_w]);
+        uint32_t len = layer1_w * LAYER_BUF_CNT * layer1_pixel_size;
+
+        PSRAMDMARead(dst, (uint32_t)src, len / 4, PSRAM_DMA_SIZE_32,
+                     DMA_BRST_NUM2, DMA_PAUSE_TIM0);
+    }
+
+    layer1_cnt += LAYER_BUF_CNT;
+    layer1_cnt %= layer1_h;
+    if (layer1_cnt == 0)
+    {
+        void ltdc_flushed();
+        ltdc_flushed();
+    }
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۶</span><span class="cap-text">تعویض پینگ‌پنگی بافر خطی در وقفۀ خط <span class="en">LTDC</span></span></div>
+</div>
+
+<h3 class="h2x" id="sec-214"><span class="dm">◆</span>۲.۴ پیکربندی LVGL</h3>
+<p>کل دایرکتوری <span class="en">lvgl-8.3.11</span> به پروژه افزوده می‌شود؛ فایل‌های درگیر کامپایل عبارت‌اند از: هستۀ <span class="en">src</span>، فایل <span class="en">lv_conf.h</span>، فایل‌های <span class="en">lv_port_disp.c</span> و <span class="en">lv_port_indev.c</span> و همچنین <span class="en">lv_demo_widgets</span> به‌همراه منابع تصویری آن.</p>
+
+<h3 class="h2x" id="sec-2141"><span class="dm">◆</span>۲.۴.۱ رابط نمایش</h3>
+<p>بخش نمایش از دو بافر تمام‌صفحه استفاده می‌کند و <span class="en">full_refresh</span> روی <span class="en">1</span> تنظیم می‌شود. با این تنظیم، <span class="en">LVGL</span> هر بار یک قاب کامل به <span class="en">flush_cb</span> می‌سپارد؛ در فراخوان نیازی به انتقال داده نیست و تنها آدرس بافر ثبت می‌شود.</p>
+<p>در <span class="en">flush_cb</span> تابع <span class="en">lv_disp_flush_ready</span> فراخوانی نمی‌شود؛ پس از پایان اسکن قاب و هنگام فراخوانی <span class="en">ltdc_flushed</span> اجازۀ حرکت داده می‌شود. به این ترتیب سرعت خروج قاب‌های <span class="en">LVGL</span> از نرخ تازۀ نمایشگر فراتر نمی‌رود:</p>
+<div class="fig" id="code-7">
+  <div class="codeblk long">void lv_port_disp_init(void)
+{
+    extern const void *LTDC_layer1;
+    extern const void *LTDC_layer2;
+
+    lv_disp_draw_buf_init(&amp;draw_buf,
+                          (lv_color_t *)LTDC_layer1,   <span class="cm">/* حافظۀ تصویر کامل در PSRAM */</span>
+                          (lv_color_t *)LTDC_layer2,
+                          800 * 480);
+
+    lv_disp_drv_init(&amp;disp_drv);
+    disp_drv.hor_res       = 800;
+    disp_drv.ver_res       = 480;
+    disp_drv.flush_cb      = disp_flush;
+    disp_drv.draw_buf      = &amp;draw_buf;
+
+    disp_drv.full_refresh = 1;
+    lv_disp_drv_register(&amp;disp_drv);
+}
+
+static void disp_flush(lv_disp_drv_t* disp_drv, const lv_area_t* area, lv_color_t* color_p)
+{
+    if (disp_flush_enabled)
+    {
+        global_layer = (void*)color_p; <span class="cm">/* فقط ثبت آدرس بافر */</span>
+    }
+}
+
+void ltdc_flushed()
+{
+    lv_disp_flush_ready(&amp;disp_drv);
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۷</span><span class="cap-text">رابط نمایش <span class="en">LVGL</span></span></div>
+</div>
+
+<h3 class="h2x" id="sec-2142"><span class="dm">◆</span>۲.۴.۲ زمان‌بند (تیک)</h3>
+<p>تیک <span class="en">LVGL</span> توسط <span class="en">TIM4</span> تأمین و در وقفه به‌روزرسانی می‌شود:</p>
+<div class="fig" id="code-8">
+  <div class="codeblk">void TIM4_init(void)
+{
+    TIM_TimeBaseInitTypeDef t = {0};
+
+    RCC_PB1PeriphClockCmd(RCC_PB1Periph_TIM4, ENABLE);
+    t.TIM_Prescaler     = SystemCoreClock / 100000;
+    t.TIM_Period        = 500;
+    t.TIM_ClockDivision = TIM_CKD_DIV1;
+    t.TIM_CounterMode   = TIM_CounterMode_Up;
+    TIM_TimeBaseInit(TIM4, &amp;t);
+
+    TIM_ClearFlag(TIM4, TIM_FLAG_Update);
+    TIM_ITConfig(TIM4, TIM_IT_Update, ENABLE);
+    NVIC_EnableIRQ(TIM4_IRQn);
+    TIM_Cmd(TIM4, ENABLE);
+}
+
+void TIM4_IRQHandler(void)
+{
+    TIM_ClearITPendingBit(TIM4, TIM_IT_Update);
+    lv_tick_inc(5);
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۸</span><span class="cap-text">زمان‌بند <span class="en">TIM4</span> برای تیک <span class="en">LVGL</span></span></div>
+</div>
+
+<h3 class="h2x" id="sec-215"><span class="dm">◆</span>۲.۵ تابع اصلی</h3>
+<p>تا اینجا مجموعۀ نمایشی <span class="en">LTDC+LVGL</span> تقریباً منتقل شده است؛ با افزودن <span class="en">lv_task_handler</span> به تابع اصلی، ترسیم آغاز می‌شود:</p>
+<div class="fig" id="code-9">
+  <div class="codeblk">lv_init();
+lv_port_disp_init();
+lv_port_indev_init();
+lv_demo_widgets();
+
+while (1)
+{
+    lv_task_handler();
+}</div>
+  <div class="figcap"><span class="cap-pill">کد ۹</span><span class="cap-text">تابع اصلی</span></div>
+</div>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN36002</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/11/6</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">PSRAM</span></td><td class="jt">حافظۀ RAM شبه‌استاتیک با ظرفیت نسبتاً بالا؛ در <span class="en">CH32V467</span> درون‌تراشه‌ای است (۴ یا ۸ مگابایت، آدرس آغاز <span class="en">0x80000000</span>، عرض ۸ بیت، <span class="en">DMA</span> مستقل) و برای ذخیرۀ داده‌های حجیم مانند تصاویر مناسب است</td></tr>
+      <tr><td><span class="en">LTDC</span></td><td class="jt">کنترل‌کنندۀ سخت‌افزاری نمایشگر <span class="en">LCD-TFT</span>؛ داده‌های تصویری را از حافظه می‌خواند و برای نمایش ارسال می‌کند؛ در این تراشه یک لایه با <span class="en">FIFO</span> به عمق <span class="en">8×32</span> بیت دارد</td></tr>
+      <tr><td><span class="en">Frame Buffer</span></td><td class="jt">حافظۀ تصویر؛ ناحیۀ حافظه که اطلاعات پیکسل‌های هر قاب در آن ذخیره می‌شود؛ هرچه وضوح و عمق رنگ نمایشگر بیشتر باشد، حافظۀ بیشتری لازم است</td></tr>
+      <tr><td><span class="en">Line Buffer</span></td><td class="jt">بافر خطی؛ نوار حافظۀ کوچک برای چند خط تصویر در <span class="en">SRAM</span> داخلی که <span class="en">LTDC</span> از آن می‌خواند و <span class="en">DMA</span> اختصاصی <span class="en">PSRAM</span> آن را دوره‌ای پیش‌واکشی می‌کند</td></tr>
+      <tr><td><span class="en">Ping-Pong Buffer</span></td><td class="jt">دو بافر هم‌اندازه با نقش متناوب؛ یکی هنگام نمایش و دیگری در حال پُر شدن است تا پارگی تصویر رخ ندهد</td></tr>
+      <tr><td><span class="en">Tearing</span></td><td class="jt">پارگی تصویر؛ وقتی منبع داده سرعت خواندن <span class="en">LTDC</span> را تأمین نکند، <span class="en">FIFO</span> خالی می‌ماند و قاب ناقص نمایش داده می‌شود</td></tr>
+      <tr><td><span class="en">.psram (NOLOAD)</span></td><td class="jt">بخش فایل اسکریپت لینک برای متغیرهای <span class="en">PSRAM</span>؛ با <span class="en">NOLOAD</span> تا تصویر حافظۀ Flash با محتوای آن بار نشود</td></tr>
+      <tr><td><span class="en">PSRAM_CAPCFG_32M</span></td><td class="jt">پیکربندی ظرفیت <span class="en">PSRAM</span> روی ۳۲ مگابیت (۴ مگابایت)؛ متناظر با <span class="en">LENGTH = 4M</span> در فایل اسکریپت لینک</td></tr>
+      <tr><td><span class="en">PSRAM_INIT()</span></td><td class="jt">API رسمی مقداردهی اولیۀ <span class="en">PSRAM</span>؛ ساعت کنترل‌کننده، زمان‌بندی، ظرفیت و تأخیر خواندن/نوشتن را درون خود پیکربندی می‌کند</td></tr>
+      <tr><td><span class="en">ETH_PLL / LTDCDIV</span></td><td class="jt">منبع ساعت پیکسلی <span class="en">LTDC</span> و ضریب تقسیم آن در <span class="en">RCC->CFGR2</span>؛ مقدار مؤثر تقسیم برابر <span class="en">LTDCDIV+1</span> است</td></tr>
+      <tr><td><span class="en">RGB565</span></td><td class="jt">قالب پیکسلی ۱۶ بیتی (۵-۶-۵)؛ هر پیکسل دو بایت حافظه اشغال می‌کند</td></tr>
+      <tr><td><span class="en">CFBAR</span></td><td class="jt">رجیستر آدرس حافظۀ تصویر لایۀ <span class="en">LTDC</span>؛ در تعویض پینگ‌پنگی، در وقفۀ خط به بافر بعدی اشاره داده می‌شود</td></tr>
+      <tr><td><span class="en">full_refresh</span></td><td class="jt">گزلۀ درایور نمایش <span class="en">LVGL</span>؛ با مقدار <span class="en">1</span> هر بار یک قاب کامل به <span class="en">flush_cb</span> داده می‌شود</td></tr>
+      <tr><td><span class="en">flush_cb / lv_disp_flush_ready</span></td><td class="jt">فراخوان خروج قاب در <span class="en">LVGL</span>؛ در این طرح فقط آدرس بافر ثبت می‌شود و آزادسازی پس از پایان اسکن قاب، در <span class="en">ltdc_flushed</span> انجام می‌شود</td></tr>
+      <tr><td><span class="en">lv_tick_inc</span></td><td class="jt">به‌روزرسانی تیک <span class="en">LVGL</span>؛ در این طرح با وقفۀ <span class="en">TIM4</span> هر ۵ میلی‌ثانیه</td></tr>
+      <tr><td><span class="en">lv_task_handler</span></td><td class="jt">حلقۀ وظایف <span class="en">LVGL</span>؛ در تابع اصلی به‌طور پیوسته فراخوانی می‌شود و ترسیم را پیش می‌برد</td></tr>
+      <tr><td><span class="en">LVGL</span></td><td class="jt">کتابخانۀ گرافیکی سبک و چندمنظورۀ متن‌باز برای طراحی رابط کاربری (GUI) در سیستم‌های نهفته؛ نسخۀ به‌کاررفته در این سند <span class="en">8.3.11</span> است</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN36002 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۲۴</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN36002</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
