@@ -56,3 +56,5 @@
 - کانال تلگرام: [https://t.me/Memar_Electronic](https://t.me/Memar_Electronic)
 - پیج اینستاگرام: [https://www.instagram.com/Memar.Electronic](https://www.instagram.com/Memar.Electronic)
 - GitHub: [MEMAR-ELECTRONIC-SANAT](https://github.com/MEMAR-ELECTRONIC-SANAT)
+
+![MES Animated Logo](../../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg)
