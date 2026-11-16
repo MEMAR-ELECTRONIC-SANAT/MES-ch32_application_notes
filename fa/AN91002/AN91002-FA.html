@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>پیکربندی فایل LD و فایل راه‌اندازی در MRS — ترجمۀ فارسی AN91002</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+/* compact TOC page (for docs with long figure lists) */
+.toc-page{ padding-top:60px; }
+.toc-underline{ margin-bottom:8px; }
+.toc-row{ padding:4.5px 2px; }
+.toc-figs{ margin-top:10px; padding:8px 14px 5px; }
+.toc-figs h3{ margin:0 0 5px; font-size:12px; }
+.toc-figs .frow{ padding:0.9px 0; font-size:10.3px; }
+.abstract{ margin-top:10px; padding:9px 14px; font-size:10.6px; line-height:1.62; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">پیکربندی فایل <span class="en">LD</span> و فایل راه‌اندازی</div>
+    <div class="t2">تخصیص حافظه و نشانی ثابت در <span class="en">MRS</span> با <span class="en">H417</span></div>
+    <div class="t3">متغیر مشترک، انتقال به <span class="en">RAM</span> و راه‌اندازی سرد/گرم</div>
+  </div>
+  <div class="c-sub">طرح تخصیص حافظۀ دو‌هستۀ V3/V5 با فایل LD (بخش‌های FLASH، RAM_CODE، RAM و RAM_LOAD)، تعریف ثابت‌ها، توابع و متغیرهای سراسری در نشانی ثابت، کلیدواژه‌های KEEP و SORT_NONE و پیاده‌سازی راه‌اندازی سرد/گرم با صرف‌نظر از صفرکردن bss</div>
+  <div class="c-desc">ترجمۀ فارسی سند رسمی <span class="en">AN91002</span> (نسخۀ ۱٫۰، منتشرۀ <span class="en">WCH</span>): در محیط کامپایلر MRS، پیکربندی فایل‌های LD و راه‌اندازی می‌تواند به‌صورت انعطاف‌پذیر تخصیص حافظه، ذخیرۀ در نشانی ثابت، متغیر مشترک و انتقال به RAM برای اجرا را پیاده کند و انعطاف‌پذیری کاربرد پروژه را بالا ببرد. تمام بلوک‌های LD، اسمبلی و C از سند اصلی حفظ شده و مستقیماً قابل استفاده‌اند.</div>
+  <div class="c-tags">
+    <span class="c-tag"><span class="en">MRS · Linker Script</span></span>
+    <span class="c-tag"><span class="en">CH32H417</span></span>
+    <span class="c-tag">فایل راه‌اندازی</span>
+    <span class="c-tag">نشانی ثابت</span>
+    <span class="c-tag">راه‌اندازی سرد/گرم</span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN91002 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">مقدمه | توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | تخصیص حافظه و پیکربندی سیستم</span><span class="t-dots"></span><span class="t-page">۴</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-11"><span class="s-id">1.1</span><span>طرح تخصیص حافظۀ H417</span><span class="s-dots"></span><span class="s-page">۴</span></a>
+    <a class="toc-sub" href="#sec-12"><span class="s-id">1.2</span><span>طرح پیکربندی سیستمی H417</span><span class="s-dots"></span><span class="s-page">۶</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | پیکربندی کارکردهای رایج</span><span class="t-dots"></span><span class="t-page">۶</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-21"><span class="s-id">2.1</span><span>ذخیرۀ داده در بخش حافظۀ مشخص</span><span class="s-dots"></span><span class="s-page">۱</span></a>
+    <a class="toc-sub" href="#sec-211"><span class="s-id">2.1.1</span><span>تعریف ثابت const در نشانی ثابت</span><span class="s-dots"></span><span class="s-page">۱</span></a>
+    <a class="toc-sub" href="#sec-212"><span class="s-id">2.1.2</span><span>تعریف تابع در نشانی ثابت</span><span class="s-dots"></span><span class="s-page">۱</span></a>
+    <a class="toc-sub" href="#sec-213"><span class="s-id">2.1.3</span><span>متغیر سراسری در نشانی ثابت (بدون مقدار اولیه)</span><span class="s-dots"></span><span class="s-page">۱</span></a>
+    <a class="toc-sub" href="#sec-214"><span class="s-id">2.1.4</span><span>متغیر سراسری در نشانی ثابت (با مقدار اولیه)</span><span class="s-dots"></span><span class="s-page">۱</span></a>
+    <a class="toc-sub" href="#sec-215"><span class="s-id">2.1.5</span><span>نکات</span><span class="s-dots"></span><span class="s-page">۱</span></a>
+    <a class="toc-sub" href="#sec-22"><span class="s-id">2.2</span><span>راه‌اندازی سرد و گرم</span><span class="s-dots"></span><span class="s-page">۱۰</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۴</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۱۲</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۵</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۱۲</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">شکل ۱</span><span>تخصیص حافظۀ 417</span><span class="f-dots"></span><span class="f-page">۵</span></div>
+      </div>
+      <div>
+        <div class="frow"><span class="f-id">جدول ۱</span><span>دامنۀ کاربرد سند</span><span class="f-dots"></span><span class="f-page">۳</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> در محیط کامپایلر <span class="en">MRS</span>، پیکربندی فایل <span class="en">LD</span> (بخش MEMORY با چهار ناحیۀ <span class="en">FLASH</span>، <span class="en">RAM_CODE</span>، <span class="en">RAM</span> و <span class="en">RAM_LOAD</span> برای هر هسته) و فایل راه‌اندازی، تخصیص انعطاف‌پذیر حافظۀ هسته‌های V3/V5 در <span class="en">CH32H417</span>، انتقال کد به <span class="en">RAM</span> برای اجرا، تعریف ثابت‌ها و توابع و متغیرهای سراسری در نشانی ثابت (با <span class="en">KEEP</span> و <span class="en">SORT_NONE</span> و تراز 1KB جدول بردار) و پیاده‌سازی راه‌اندازی سرد/گرم (صرف‌نظر از صفرکردن بخش <span class="en">bss</span> با مقایسۀ bssjudge و bssjudgerTab) را ممکن می‌کند.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>در محیط کامپایلر <span class="en">MRS</span>، پیکربندی فایل‌های <span class="en">LD</span> و فایل راه‌اندازی می‌تواند تخصیص حافظه، ذخیرۀ در نشانی ثابت، متغیر مشترک، انتقال و نشانی‌گیری برای اجرا و موارد مشابه را به‌صورت انعطاف‌پذیر پیاده کند و تا حدی انعطاف‌پذیری کاربرد پروژه را بالا می‌برد.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>MCU عمومی</td><td><span class="en">H417</span> و دیگر <span class="en">MCU</span>های عمومی</td></tr>
+  </table>
+</div>
+
+<h3 class="h2x" id="sec-intro-tech"><span class="dm">◆</span>توضیح مختصر فنی</h3>
+<p style="color:#9a8f83;font-size:11.6px;margin-top:-4px;">این بخش افزودۀ مترجم برای درک بهتر مفاهیم سند است و در متن اصلی وجود ندارد.</p>
+<p><b style="color:#8a4a12;">۱. فایل LD چیست؟</b></p>
+<p>فایل <span class="en">LD</span> اسکریپت پیوند (<span class="en">Linker Script</span>) است که به پیوندگر می‌گوید کد و داده را کجا بچیند. بخش <span class="en">MEMORY</span> نواحی حافظه را با نشانی آغازین (<span class="en">ORIGIN</span>) و اندازه (<span class="en">LENGTH</span>) تعریف می‌کند و بخش <span class="en">SECTIONS</span> ورودی‌های کامپایل‌شده را به این نواحی می‌چینند؛ نشانی‌های نهایی برنامه از همین‌جا می‌آیند.</p>
+<p><b style="color:#8a4a12;">۲. فایل راه‌اندازی چیست؟</b></p>
+<p>فایل راه‌اندازی (<span class="en">Startup</span>) کد اسمبلی‌ای است که پیش از ورود به تابع اصلی اجرا می‌شود: ویژگی بخش‌ها و جدول بردار را تعریف می‌کند، داده بخش <span class="en">.data</span> را از فلش به <span class="en">RAM</span> منتقل می‌کند، بخش <span class="en">.bss</span> را صفر می‌کند و ثبات‌های هسته (حالت کار، ممیز شناور، پشته‌سازی سخت‌افزاری) را تنظیم می‌کند.</p>
+<p><b style="color:#8a4a12;">۳. انتقال به RAM و اجرا</b></p>
+<p>در تراشه‌های سری H417 اجرای مستقیم از فلش (فلش صفرمکث) امکان‌پذیر اما نسبتاً کند است؛ بنابراین طرح رایج این است که کد در فلش باقی بماند اما در راه‌اندازی به ناحیه‌ای از <span class="en">RAM</span> (بخش <span class="en">RAM_CODE</span>) منتقل شود و از آن‌جا با سرعت بالا اجرا شود. دو نشانیِ «اجرا» (<span class="en">VMA</span>) و «بارگذاری» (<span class="en">LMA</span>) که با دستور <span class="en">AT&gt;</span> جدا می‌شوند، مبنای این انتقال‌اند.</p>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">تخصیص حافظه و پیکربندی سیستم</div>
+  <div class="sec-divider"></div>
+</div>
+<h3 class="h2x" id="sec-11"><span class="dm">◆</span>۱.۱ طرح تخصیص حافظۀ H417</h3>
+<p>در فایل <span class="en">LD</span>، بخش <span class="en">MEMORY</span> نشانی آغازین و اندازۀ تخصیص حافظۀ تراشه را تعریف می‌کند. توجه شود که نخست بازه‌های حافظۀ تعریف‌شده نباید هم‌پوشانی داشته باشند؛ و دوم نباید از محدودۀ واقعی حافظه فراتر بروند؛ در غیر این صورت خطای کامپایل یا رفتار غیرعادی برنامه رخ می‌دهد.</p>
+<p>در ادامه برای توضیح دقیق‌تر از <span class="en">H417</span> مثال می‌زنیم. تخصیص حافظۀ <span class="en">H417</span> انعطاف‌پذیر اما نسبتاً پیچیده است؛ به‌طور پیش‌فرض نشانی‌گیری و اجرا از <span class="en">FLASH</span> انجام می‌شود که سرعت اجرا نسبتاً کند است؛ بنابراین نمونه‌ها همگی طرح انتقال به <span class="en">RAM</span> و اجرا از آن را ارائه می‌دهند. در عمل می‌توان بسته به نیاز پروژه، اندازه و محل حافظۀ V3 و V5 را دوباره تخصیص داد. در زیر نمای انتزاعی عمومی تخصیص پروژه‌های V3 و V5 آمده است.</p>
+<div class="codeblk"><span class="cm">V3:</span>
+MEMORY
+{
+    /*FLASH, RAM, and RAM-CODE can be freely configured according to project
+    requirements;Please refer to the datasheet manual for specific allocation*/
+    FLASH (rx) : ORIGIN = A, LENGTH = SIZE_A            /* zero_wait flah ,and loaded into RAM_CODE for running */
+    RAM_CODE (xrw) : ORIGIN = B, LENGTH = SIZE_B        /* RAM for running code*/
+    RAM (xrw) : ORIGIN = C, LENGTH = SIZE_C             /* RAM for .data .bss section and other*/
+    RAM_LOAD (xrw) : ORIGIN = D, LENGTH = SIZE_D        /* RAM for .load section*/
+}
+
+<span class="cm">V5:</span>
+MEMORY
+{
+    /*FLASH, RAM, and RAM-CODE can be freely configured according to project
+    requirements;Please refer to the datasheet manual for specific allocation*/
+    FLASH (rx) : ORIGIN = E, LENGTH = SIZE_E            /* zero_wait flah ,and loaded into RAM_CODE for running */
+    RAM_CODE (xrw) : ORIGIN = F, LENGTH = SZIE_F        /*ITCM RAM for running code*/
+    RAM (xrw) : ORIGIN = G, LENGTH = SIZE_G             /*DTCM RAM for .data .bss section and other*/
+    RAM_LOAD (xrw) : ORIGIN = H, LENGTH = SIZE_H        /* RAM for .load section*/
+}</div>
+<div class="fig" id="fig-01">
+  <div class="figbox"><img src="assets/img/an91002-fig01.png" alt="تخصیص حافظۀ 417" style="max-width:480px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱</span><span class="cap-text">تخصیص حافظۀ 417 (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p><b style="color:#8a4a12;">پارامترهای V3:</b></p>
+<p><span class="en">A</span>: معمولاً برابر <span class="en">0x00000000</span> یعنی آغاز <span class="en">FLASH</span> است؛ <span class="en">SIZE_A</span>: اندازۀ <span class="en">FLASH</span> تخصیصی V3. <b>(لازم)</b></p>
+<p><span class="en">B</span>: نشانی آغاز انتقال V3 به <span class="en">RAM</span>؛ <span class="en">SIZE_B</span>: اندازۀ کد انتقالی V3؛ اشغال واقعی تقریباً برابر اندازۀ بخش <span class="en">FLASH</span> است (اندکی کمتر، چون بخشی از محتوا مانند بخش <span class="en">.data</span> در <span class="en">Section&lt;RAM&gt;</span> قرار می‌گیرد)؛ بنابراین اندازه را <span class="en">SIZE_B = SIZE_A</span> تخصیص دهید. <b>(اختیاری)</b></p>
+<p><span class="en">C</span>: بخش‌های <span class="en">.data</span> و <span class="en">.bss</span>؛ در نشانی آغاز باید توجه داشت که پیش از آن، بخش‌های <span class="en">Section&lt;RAM_CODE&gt;</span> و <span class="en">Section&lt;RAM_LOAD&gt;</span> قرار دارند؛ بنابراین شرط <span class="en">C &gt;= B+SIZE_B+SIZE_D</span> باید برقرار باشد؛ <span class="en">SIZE_C</span>: اندازۀ تخصیص <span class="en">Section&lt;RAM&gt;</span>؛ به‌عنوان مثال در 417، شرط <span class="en">C + SIZE_C &lt;= 0x20180000</span> (نشانی انتهای <span class="en">SRAM</span>). <b>(لازم)</b></p>
+<p><span class="en">D</span>: بخش پیش‌بارگذاری؛ هدف آن انتقال کد در <span class="en">RAM</span> است؛ پیش از بخش <span class="en">Section&lt;RAM_LOAD&gt;</span>، بخش <span class="en">Section&lt;RAM_CODE&gt;</span> قرار دارد؛ بنابراین شرط <span class="en">D &gt;= B + SIZE_B</span>؛ <span class="en">SIZE_D</span>: اندازۀ کدِ بارگذاری؛ اگر محتوای پیش‌بارگذاری در فایل راه‌اندازی افزایش یابد ممکن است خطای کامپایل رخ دهد؛ در این صورت کافی است <span class="en">SIZE_D</span> را بزرگ‌تر کنید. <b>(اختیاری)</b></p>
+<p><b style="color:#8a4a12;">پارامترهای V5:</b></p>
+<p><span class="en">E</span>: نشانی آغاز <span class="en">FLASH</span> تخصیصی V5؛ معمولاً شرط <span class="en">E &gt;= A + SIZE_A</span>؛ <span class="en">SIZE_E</span>: اندازۀ <span class="en">FLASH</span> تخصیصی V5. <b>(لازم)</b></p>
+<p><span class="en">F</span>: نشانی آغاز انتقال V5 به <span class="en">RAM</span> (پیشنهاد می‌شود از ناحیۀ پیوند نزدیک استفاده شود)؛ <span class="en">SIZE_F</span>: اندازۀ کد انتقالی V5؛ اشغال واقعی تقریباً برابر اندازۀ بخش <span class="en">FLASH</span> است؛ بنابراین اندازه را <span class="en">SIZE_F = SIZE_E</span> تخصیص دهید. <b>(اختیاری)</b></p>
+<p><span class="en">G</span>: بخش‌های <span class="en">.data</span> و <span class="en">.bss</span>؛ در نشانی آغاز باید توجه داشت که پیش از آن، <span class="en">Section&lt;RAM_CODE&gt;</span> (ITCM)، نشانی پشته‌سازی سخت‌افزاری (پیش‌فرض اما قابل پیکربندی) و <span class="en">Section&lt;RAM_LOAD&gt;</span> (DTCM) قرار دارند؛ <span class="en">SIZE_G</span>: اندازۀ تخصیص <span class="en">Section&lt;RAM&gt;</span>. <b>(لازم)</b></p>
+<p><span class="en">H</span>: بخش پیش‌بارگذاری در ناحیۀ پیوند نزدیک DTCM؛ باز هم انتقال کد در <span class="en">RAM</span> انجام می‌شود؛ پیش از بخش <span class="en">Section&lt;RAM_LOAD&gt;</span> نشانی پیش‌فرض پشته‌سازی سخت‌افزاری قرار دارد؛ بنابراین شرط <span class="en">H &gt;= DTCM_BASE + 512B</span> (اشغال پشته‌سازی سخت‌افزاری)؛ <span class="en">SIZE_H</span>: اندازۀ کدِ بارگذاری؛ اگر محتوای پیش‌بارگذاری در فایل راه‌اندازی افزایش یابد ممکن است خطای کامپایل رخ دهد؛ در این صورت کافی است <span class="en">SIZE_H</span> را بزرگ‌تر کنید. <b>(اختیاری)</b></p>
+<div class="scen"><span class="lbl">مورد خاص: </span>در شرایط خاص، وقتی هستۀ V5 حافظۀ زیادی مصرف می‌کند، می‌توان <span class="en">ITCM</span> و بخشی از ناحیۀ پیوند نزدیک <span class="en">DTCM</span> را برای نشانی‌گیری و اجرا به کار برد. توجه شود که برای تخصیص <span class="en">DTCM</span> باید 512B برای پشته‌سازی سخت‌افزاری هستۀ V5 رزرو شود و نشانی پشته‌سازی سخت‌افزاری نیز باید دوباره تنظیم شود (در حالت Machine خواندنی/نوشتنی).</div>
+<h3 class="h2x" id="sec-12"><span class="dm">◆</span>۱.۲ طرح پیکربندی سیستمی H417</h3>
+<p>فایل راه‌اندازی تراشه‌های با هستۀ <span class="en">RISC-V</span>، کارکردهای اصلی زیر را بر عهده دارد: تعریف ویژگی بخش‌ها (Section)، تعریف جدول بردار، بارگذاری داده و پیکربندی ثبات‌های هسته و حالت کار تراشه و غیره. تعریف ویژگی بخش‌ها اغلب باید همراه نشانی متناظر در فایل <span class="en">LD</span> باشد تا اثر معقول داشته باشد. بارگذاری داده شامل بارگذاری داده بخش‌های <span class="en">data/highcode</span> و صفرکردن بخش <span class="en">bss</span> است. تغییر ثبات‌های هسته شامل تنظیم حالت کار تراشه، کلید روشن/خاموش‌کردن کارکرد ممیز شناور، تنظیم پشته‌سازی سخت‌افزاری و تعداد سطوح تودرتوی آن و غیره است. ثبات‌های هسته‌ای که در حالت Machine خواندنی/نوشتنی‌اند تقریباً همگی را می‌توان در فایل راه‌اندازی پیکربندی کرد؛ برای محتوای مشخص به کتابچۀ هستۀ متناظر مراجعه کنید.</p>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">پیکربندی کارکردهای رایج</div>
+  <div class="sec-divider"></div>
+</div>
+<h3 class="h2x" id="sec-21"><span class="dm">◆</span>۲.۱ ذخیرۀ داده در بخش حافظۀ مشخص</h3>
+<p>فایل راه‌اندازی تراشه‌های با هستۀ <span class="en">RISC-V</span>، کارکردهای اصلی زیر را بر عهده دارد: تعریف ویژگی بخش‌ها (Section)، تعریف جدول بردار، بارگذاری داده و پیکربندی ثبات‌های هسته و حالت کار تراشه و غیره. تعریف ویژگی بخش‌ها اغلب باید همراه نشانی متناظر در فایل <span class="en">LD</span> باشد تا اثر معقول داشته باشد.</p>
+<p id="sec-211"><b style="color:#8a4a12;">۲.۱.۱ تعریف ثابت <span class="en">const</span> در نشانی ثابت</b></p>
+<p>افزودن ناحیۀ حافظه:</p>
+<div class="codeblk">FLASH1 (rx) : ORIGIN = 0x0000F000, LENGTH = 2K</div>
+<p>تعریف بخش حافظه:</p>
+<div class="codeblk">.flash1 :
+{
+  . = ALIGN(4);
+  *(.flash1);
+  . = ALIGN(4);
+} &gt;FLASH1 AT&gt;FLASH1</div>
+<p>فراخوانی تعریف:</p>
+<div class="codeblk">const uint32_t tmp_value __attribute__((section(".flash1"))) = 0x1234567;
+const uint32_t tmp_value2[2]  __attribute__((section(".flash1"))) = {9,8};</div>
+<p id="sec-212"><b style="color:#8a4a12;">۲.۱.۲ تعریف تابع در نشانی ثابت</b></p>
+<p>افزودن ناحیۀ حافظه:</p>
+<div class="codeblk">FLASH2 (rx) : ORIGIN = 0x0000F800, LENGTH = 2K</div>
+<p>تعریف بخش حافظه:</p>
+<div class="codeblk">.flash2 :
+{
+  . = ALIGN(4);
+  *(.flash2);
+  . = ALIGN(4);
+} &gt;FLASH2 AT&gt;FLASH2</div>
+<p>فراخوانی تعریف:</p>
+<div class="codeblk"> __attribute__((section(".flash2")))
+void GPIO_Toggle_INIT(void)
+{
+    GPIO_InitTypeDef GPIO_InitStructure = {0};
+    RCC_PB2PeriphClockCmd(RCC_PB2Periph_GPIOD, ENABLE);
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_Init(GPIOD, &amp;GPIO_InitStructure);
+}</div>
+<p id="sec-213"><b style="color:#8a4a12;">۲.۱.۳ تعریف متغیر سراسری در نشانی ثابت (بدون مقدار اولیه)</b></p>
+<p>افزودن ناحیۀ حافظه:</p>
+<div class="codeblk">RAM1 (xrw) : ORIGIN = 0x20004000, LENGTH = 2K</div>
+<p>تعریف بخش حافظه:</p>
+<div class="codeblk">.ran1 (NOLOAD) :
+{
+  . = ALIGN(4);
+  *(.ram1_data);
+  . = ALIGN(4);
+} &gt;RAM1</div>
+<p>فراخوانی تعریف:</p>
+<div class="codeblk">__attribute__((section(".ram1_data")))
+uint32_t buff_ram1[64];
+__attribute__((section(".ram1_data")))
+u32 value_ram1;</div>
+<p id="sec-214"><b style="color:#8a4a12;">۲.۱.۴ تعریف متغیر سراسری در نشانی ثابت (با مقدار اولیه)</b></p>
+<p>اگر متغیر سراسری باید مقدار اولیه را حفظ کند، باید روند انتقال در فایل راه‌اندازی تکمیل شود.</p>
+<p>افزودن ناحیۀ حافظه:</p>
+<div class="codeblk">RAM2 (xrw) : ORIGIN = 0x20004800, LENGTH = 2K</div>
+<p>تعریف بخش حافظه و نشانه‌گذاری نشانی انتقال:</p>
+<div class="codeblk">.ram2codelalign :
+{
+  . = ALIGN(4);
+  PROVIDE(_ram2code_lma = .);
+} &gt;FLASH AT&gt;FLASH
+
+.ran2 :
+{
+  . = ALIGN(4);
+  PROVIDE(_ram2code_vma_start = .);
+  *(.ram2_data);
+  . = ALIGN(4);
+  PROVIDE(_ram2code_vma_end = .);
+} &gt;RAM2 AT&gt;FLASH</div>
+<p>افزودن روند انتقال در فایل راه‌اندازی:</p>
+<div class="codeblk">/* Load ram2 data section from flash to RAM */
+la a0, _ram2code_lma
+la a1, _ram2code_vma_start
+la a2, _ram2code_vma_end
+bgeu a1, a2, 2f
+1:
+lw t0, (a0)
+sw t0, (a1)
+addi a0, a0, 4
+addi a1, a1, 4
+2:</div>
+<p>فراخوانی تعریف؛ مقدار اولیۀ آرایه و متغیر در ناحیۀ <span class="en">RAM</span> بارگذاری می‌شود:</p>
+<div class="codeblk">__attribute__((section(".ram2_data")))
+uint32_t buff_ram2[64] = {0};
+__attribute__((section(".ram2_data")))
+u32 value_ram2 = 0x5aa55aa5;</div>
+<p id="sec-215"><b style="color:#8a4a12;">۲.۱.۵ نکات</b></p>
+<p>هنگام تعریف بخش در فایل پیوند می‌توان از <span class="en">KEEP</span> استفاده کرد تا از بهینه‌شدن با گزینۀ پیوند <span class="en">--gc-sections</span> جلوگیری شود، مانند:</p>
+<div class="codeblk">KEEP(*(.ram2_data));</div>
+<p>متغیرهای سراسریِ مشابه اما بدون عملیات، اگر بخش محل قرارگیری آن‌ها ویژگی KEEP داشته باشد، پس از کامپایل در ناحیۀ حافظۀ هدف نگه داشته می‌شوند و بهینه نخواهند شد.</p>
+<p>اگر لازم است ترتیب داخل بخش مربوطه تضمین شود، می‌توان کلیدواژۀ <span class="en">SORT_NONE</span> را افزودن کرد؛ مرتب‌سازی ممنوع می‌شود و اطمینان می‌یابد که بخش‌های ورودی مطابق ترتیب اصلی ظهور در اسکریپت پیوند چیده می‌شوند، مانند:</p>
+<div class="codeblk">KEEP(*(SORT_NONE(.ram2_data)))</div>
+<p>محتوای برخی بخش‌ها به ترازِ اکید نشانی آغاز نیاز دارد؛ مثلاً جدول بردار معمولاً تراز 1KB دارد؛ می‌توان در <span class="en">LD</span> تنظیم کرد، مانند:</p>
+<div class="codeblk">.vector :
+{
+  . = ALIGN(1024);
+    *(.vector);
+    KEEP(*(SORT_NONE(.vector_handler)))
+  . = ALIGN(4);
+} &gt;FLASH AT&gt;FLASH</div>
+<h3 class="h2x" id="sec-22"><span class="dm">◆</span>۲.۲ راه‌اندازی سرد و گرم</h3>
+<p>راه‌اندازی سرد و گرم به این معناست که در نخستین روشن‌شدن سیستم، مقداردهی اولیۀ متغیرهای سراسری انجام می‌شود؛ اما هنگام ریست نرم‌افزاری/سخت‌افزاری یا بیداری از خواب می‌توان روند راه‌اندازی را سریع‌تر کرد و پارامترهای اجرا را حفظ نمود؛ مثلاً از روند صفرکردن بخش <span class="en">bss</span> صرف‌نظر شود.</p>
+<p>نخست در فایل <span class="en">LD</span> بخشی افزوده شود که متغیرهای سراسری را به <span class="en">RAM</span> منتقل و آرایه را نشانه‌گذاری کند:</p>
+<div class="codeblk">.bssjudge :
+{
+    . = ALIGN(4);
+    PROVIDE( _bssjudge_start = .);
+    KEEP(*(.bssjudge));
+    PROVIDE( _bssjudge_end = .);
+    . = ALIGN(4);
+} &gt;RAM AT&gt;FLASH</div>
+<p>سپس در فایل راه‌اندازی اضافه شود؛ <span class="en">bssjudgerTab</span> برای پیش‌نگهداری داده مقایسه‌ای است و می‌توان حجم داده در <span class="en">bssjudgerTab</span> را بسته به نیاز افزایش داد:</p>
+<div class="codeblk">    .section    .text.bssjudgerTab,"ax",@progbits
+    .align      1
+bssjudgerTab:
+    .byte 0x5
+    .byte 0xA</div>
+<p>پس از پایان انتقال بخش <span class="en">data</span>، انتقال <span class="en">bssjudge</span> و روند مقایسه با محتوای <span class="en">bssjudgerTab</span> افزوده می‌شود؛ اگر محتوای دو طرف هم‌خوان باشد، روند صفرکردن بخش <span class="en">bss</span> رد می‌شود؛ در غیر این صورت در هر ریست، محتوای بخش <span class="en">bss</span> پاک می‌شود.</p>
+<div class="codeblk">//load data section end
+2:
+    la t0, _bssjudge_start
+    la t1, _bssjudge_end
+    beq t0, t1, 2f
+    la t2, bssjudgerTab
+bssjudge_func:
+    lb a0, 0(t0)
+    lb a1, 0(t2)
+    bne a0, a1, 2f
+    addi t0, t0, 1
+    addi t2, t2, 1
+    bne t0, t1, bssjudge_func
+    j cmdafterbss
+2:
+/* Clear bss section */
+    la a0, _sbss
+    la a1, _ebss
+    bgeu a0, a1, 2f
+1:
+    sw zero, (a0)
+    addi a0, a0, 4
+    bltu a0, a1, 1b
+2:
+cmdafterbss:
+//CSR config start</div>
+<p>علاوه بر مقایسه با محتوای <span class="en">bssjudgerTab</span>، باید در بخش <span class="en">bssjudge</span> آرایه‌ای از نوع <span class="en">u8</span> ساخته شود که طول آن دقیقاً با تعداد مقادیر ثابت تعریف‌شده در <span class="en">bssjudgerTab</span> برابر باشد و <span class="en">__attribute__()</span> نیز به آن افزوده شود، به شرح زیر:</p>
+<div class="codeblk">__IO uint8_t __attribute__((section(".bssjudge"),unused)) FirstStart[2];</div>
+<p>در جریان اجرای برنامه مقدار آرایۀ <span class="en">FirstStart</span> تغییر داده شود؛ اگر با محتوای <span class="en">bssjudgerTab</span> هم‌خوان باشد، پس از ریست از گام صفرکردن <span class="en">bss</span> صرف‌نظر می‌شود:</p>
+<div class="codeblk">    FirstStart[0] = 0x05;
+    FirstStart[1] = 0x0a;</div>
+<p>محتوای بخش <span class="en">bss</span> شامل متغیرهای سراسری/ایستای بدون مقداردهی اولیه و متغیرهای سراسری/ایستای مقداردهی‌شده با 0 است.</p>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN91002</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/07/08</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">فایل LD (اسکریپت پیوند)</span></td><td class="jt">اسکریپت کنترل فرایند پیوند در GNU ld؛ تخصیص حافظه و چیدمان بخش‌ها در آن تعریف می‌شود و مبنای نشانی‌های نهایی برنامه است</td></tr>
+      <tr><td><span class="en">بخش MEMORY</span></td><td class="jt">بخشی از فایل LD که هر ناحیۀ حافظه را با ORIGIN (نشانی آغازین) و LENGTH (اندازه) تعریف می‌کند؛ بازه‌ها نباید هم‌پوشانی داشته باشند یا از محدودۀ واقعی حافظه بگذرند</td></tr>
+      <tr><td><span class="en">فایل راه‌اندازی (Startup)</span></td><td class="jt">کد اسمبلی آغاز اجرا؛ تعریف ویژگی بخش‌ها، جدول بردار، بارگذاری .data، صفرکردن .bss و پیکربندی ثبات‌های هسته</td></tr>
+      <tr><td><span class="en">بخش (Section)</span></td><td class="jt">واحد چیدمان کد و داده در پیوند؛ مانند .text، .data، .bss و بخش‌های سفارشی مانند .flash1</td></tr>
+      <tr><td><span class="en">VMA / LMA</span></td><td class="jt">نشانی مجازیِ اجرا (VMA) و نشانی بارگذاری (LMA)؛ دستور AT> در فایل LD دو نشانی را از هم جدا می‌کند و مبنای انتقال کد از FLASH به RAM است</td></tr>
+      <tr><td><span class="en">FLASH / RAM_CODE / RAM / RAM_LOAD</span></td><td class="jt">چهار ناحیۀ حافظۀ طرح این سند: فلش اجرای صفرمکث، RAM اجرای کد، RAM داده‌های .data/.bss و ناحیۀ پیش‌بارگذاری برای انتقال کد</td></tr>
+      <tr><td><span class="en">zero_wait flash</span></td><td class="jt">فلشی که خواندن آن بدون مکث انجام می‌شود؛ در طرح 417 کد در فلش بارگذاری و برای اجرای سریع‌تر به RAM_CODE منتقل می‌شود</td></tr>
+      <tr><td><span class="en">ITCM / DTCM</span></td><td class="jt">حافظه‌های پیوند نزدیک (Tightly-Coupled) هستۀ V5: ITCM برای کد و DTCM برای داده؛ اجرا از آن‌ها سریع‌ترین است</td></tr>
+      <tr><td><span class="en">پشته‌سازی سخت‌افزاری</span></td><td class="jt">سازوکار push/pop سخت‌افزاری هستۀ V5 با ناحیۀ پیش‌فرض 512 بایت در DTCM؛ اگر DTCM بازتخصیص شود باید نشانی آن دوباره تنظیم شود</td></tr>
+      <tr><td><span class="en">KEEP()</span></td><td class="jt">کلیدواژۀ فایل LD برای جلوگیری از حذف بخش با گزینۀ پیوند --gc-sections؛ بدون آن محتوای بدون ارجاع بهینه می‌شود</td></tr>
+      <tr><td><span class="en">SORT_NONE</span></td><td class="jt">کلیدواژۀ ممنوع‌کردن مرتب‌سازی ورودی‌ها؛ ترتیب اصلی ظهور در اسکریپت پیوند حفظ می‌شود</td></tr>
+      <tr><td><span class="en">NOLOAD</span></td><td class="jt">نشانه‌گذاری بخش بدون محتوای بارگذاری در فایل خروجی؛ مناسب متغیرهای بدون مقدار اولیه در RAM</td></tr>
+      <tr><td><span class="en">__attribute__((section(...)))</span></td><td class="jt">ویژگی GCC برای قرار دادن ثابت، تابع یا متغیر در بخش مشخص‌شده که در فایل LD به ناحیۀ حافظه چیده می‌شود</td></tr>
+      <tr><td><span class="en">PROVIDE</span></td><td class="jt">دستور فایل LD برای تعریف نشانه (مثل _ram2code_lma) قابل ارجاع در کد؛ نشانی‌های انتقال را ثبت می‌کند</td></tr>
+      <tr><td><span class="en">بخش .bss</span></td><td class="jt">محل متغیرهای سراسری/ایستای بدون مقدار اولیه و مقداردهی‌شده با صفر؛ در راه‌اندازی سردِ فعال، صفرکردن آن با مقایسه رد می‌شود</td></tr>
+      <tr><td><span class="en">bssjudge / bssjudgerTab</span></td><td class="jt">سازوکار راه‌اندازی سرد/گرم: بخش bssjudge آرایه علائم را نگه می‌دارد و bssjudgerTab مقادیر انتظار؛ هم‌خوانی آن‌ها یعنی صرف‌نظر از صفرکردن bss</td></tr>
+      <tr><td><span class="en">راه‌اندازی سرد و گرم</span></td><td class="jt">سرد: نخستین روشن‌شدن با مقداردهی کامل متغیرها؛ گرم: پس از ریست نرم‌افزاری/سخت‌افزاری یا بیداری از خواب با حفظ پارامترها و شروع سریع‌تر</td></tr>
+      <tr><td><span class="en">ثبات‌های هسته (CSR)</span></td><td class="jt">ثبات‌های کنترل وضعیت RISC-V مانند تنظیم حالت کار، واحد ممیز شناور و پشته‌سازی سخت‌افزاری؛ در حالت Machine خواندنی/نوشتنی و قابل پیکربندی در فایل راه‌اندازی</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN91002 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۲۵</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN91002</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
