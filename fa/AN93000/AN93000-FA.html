@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>رابط‌های درایور نمایشگر در سری CH32 — ترجمۀ فارسی AN93000</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* toc page: always start at a fresh page; keep the toc-note below the header band (block y>=33.5pt) */
+.toc-page{ break-before:page; padding-top:48px; }
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">رابط‌های درایور نمایشگر در سری <span class="en">CH32</span></div>
+    <div class="t2">از <span class="en">I2C</span> و <span class="en">SPI</span> تا پورت موازی <span class="en">8080</span> و کنترلر <span class="en">LTDC</span></div>
+    <div class="t3">برآورد فریم‌ریت، پهنای باند و راهنمای انتخاب مدل</div>
+  </div>
+  <div class="c-sub">تفکیک صفحه‌های دارای GRAM و بدون GRAM؛ شش رابط پرکاربرد (I2C، SPI، QSPI، 8080، RGB/LTDC) با نکات اتصال و پیکربندی؛ جدول توان نه مدل CH32، برآورد فریم‌ریت صفحه‌های GRAM‌دار، فرمول پهنای باند LTDC، نمونه‌برنامه‌های EVT و معرفی کتابخانۀ WGUI</div>
+  <div class="c-desc">ترجمۀ فارسی سند رسمی <span class="en">AN93000</span> (نسخۀ ۱٫۰، منتشرۀ <span class="en">WCH</span>): توان درایو نمایشگر مدل‌های مختلف سری CH32 تفاوت زیادی دارد؛ از CH32V006 که فقط می‌تواند صفحه‌های ساده را براند تا CH32V407 که چندین توان هم‌زمان دارد. این سند رابط‌های درایو صفحه در دسترس مدل‌های CH32، کاربرد نمونه، نکات پیکربندی و پیشنهاد انتخاب را جمع‌بندی می‌کند. پهنای باند و فریم‌ریت همگی برآوردی‌اند؛ ساعت واقعی SCK/FSMC/LTDC بر اساس درخت ساعت و تقسیم‌های هر مدل تعیین می‌شود و ملاک، دیتاشیت، راهنمای مرجع و آخرین اسناد تولیدکننده است.</div>
+  <div class="c-tags">
+    <span class="c-tag"><span class="en">LCD · OLED</span></span>
+    <span class="c-tag"><span class="en">I2C · SPI · QSPI</span></span>
+    <span class="c-tag"><span class="en">8080 · FSMC</span></span>
+    <span class="c-tag"><span class="en">RGB · LTDC</span></span>
+    <span class="c-tag"><span class="en">WGUI</span></span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN93000 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">مقدمه | توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | رابط‌های پرکاربرد و شیوۀ استفاده</span><span class="t-dots"></span><span class="t-page">۴</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-11"><span class="s-id">1.1</span><span>تفکیک رابط‌ها</span><span class="s-dots"></span><span class="s-page">۴</span></a>
+    <a class="toc-sub" href="#sec-12"><span class="s-id">1.2</span><span>رابط I2C</span><span class="s-dots"></span><span class="s-page">۴</span></a>
+    <a class="toc-sub" href="#sec-13"><span class="s-id">1.3</span><span>رابط SPI</span><span class="s-dots"></span><span class="s-page">۴</span></a>
+    <a class="toc-sub" href="#sec-14"><span class="s-id">1.4</span><span>رابط QSPI</span><span class="s-dots"></span><span class="s-page">۵</span></a>
+    <a class="toc-sub" href="#sec-15"><span class="s-id">1.5</span><span>پورت موازی 8080</span><span class="s-dots"></span><span class="s-page">۵</span></a>
+    <a class="toc-sub" href="#sec-16"><span class="s-id">1.6</span><span>رابط RGB و کنترلر LTDC</span><span class="s-dots"></span><span class="s-page">۶</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | مرور رابط‌های درایو صفحه CH32</span><span class="t-dots"></span><span class="t-page">۷</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-21"><span class="s-id">2.1</span><span>مرور کلی توان درایو نمایشگر</span><span class="s-dots"></span><span class="s-page">۷</span></a>
+    <a class="toc-sub" href="#sec-22"><span class="s-id">2.2</span><span>برآورد فریم‌ریت صفحه‌های GRAM‌دار</span><span class="s-dots"></span><span class="s-page">۷</span></a>
+    <a class="toc-sub" href="#sec-23"><span class="s-id">2.3</span><span>برآورد پهنای باند صفحه‌های بدون GRAM</span><span class="s-dots"></span><span class="s-page">۸</span></a>
+    <a class="toc-sub" href="#sec-24"><span class="s-id">2.4</span><span>نمونه‌برنامه‌های درایو موجود برای CH32</span><span class="s-dots"></span><span class="s-page">۸</span></a>
+    <a class="toc-sub" href="#sec-25"><span class="s-id">2.5</span><span>WGUI</span><span class="s-dots"></span><span class="s-page">۹</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۴</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۹</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۵</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۱۰</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">شکل ۱</span><span>رابط ویرایش WGUI</span><span class="f-dots"></span><span class="f-page">۹</span></div>
+        <div class="frow"><span class="f-id">جدول ۱</span><span>دامنۀ کاربرد سند</span><span class="f-dots"></span><span class="f-page">۳</span></div>
+        <div class="frow"><span class="f-id">جدول ۲</span><span>مرور کلی توان MCUها</span><span class="f-dots"></span><span class="f-page">۷</span></div>
+      </div>
+      <div>
+        <div class="frow"><span class="f-id">جدول ۳</span><span>برآورد فریم‌ریت صفحه GRAM‌دار</span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">جدول ۴</span><span>پهنای باند صفحه بدون GRAM</span><span class="f-dots"></span><span class="f-page">۸</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> نکته کلیدی انتخاب: صفحه‌های دارای <span class="en">GRAM</span> داخلی (I2C/SPI/QSPI/8080) فقط هنگام تغییر تصویر داده می‌گیرند و صفحه خودش را ~60Hz تازه نگه می‌دارد، اما صفحه‌های RGB بدون GRAM جریان پیوستۀ پیکسل از طریق <span class="en">LTDC</span> می‌خواهند و با یک وقفه سیاه می‌شوند. جدول توان ۹ مدل CH32 (از V006 با I2C/SPI تا V407/V467 با FSMC و LTDC)، برآورد فریم‌ریت RGB565 برای پنج رزولوشن متداول با SPI@20/40MHz و QSPI@60MHz و 8080-16bit، فرمول PCLK و جدول پهنای باند 480×272 و 800×480 و معرفی نمونه‌برنامه‌های EVT و کتابخانۀ سبک <span class="en">WGUI</span> در این سند آمده است.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>توان درایو نمایشگر مدل‌های مختلف سری <span class="en">CH32</span> تفاوت زیادی دارد: از <span class="en">CH32V006</span> که فقط می‌تواند صفحه‌های ساده را براند، تا <span class="en">CH32V407</span> که چندین توان هم‌زمان دارد. این سند رابط‌های درایو صفحه در دسترس مدل‌های CH32، شیوۀ کاربرد نمونه، نکات پیکربندی و پیشنهاد انتخاب را جمع‌بندی می‌کند. پهنای باند و فریم‌ریت همگی برآوردی‌اند؛ ساعت واقعی <span class="en">SCK/FSMC/LTDC</span> بر اساس درخت ساعت و تقسیم‌های هر مدل تعیین می‌شود و ملاک، دیتاشیت، راهنمای مرجع و آخرین اسناد تولیدکننده است.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>MCU عمومی</td><td><span class="en">CH32V006 / V103 / V203 / V205 / V30x / V4x7 / L103 / X035 / X315</span> و …</td></tr>
+  </table>
+</div>
+
+<h3 class="h2x" id="sec-intro-tech"><span class="dm">◆</span>توضیح مختصر فنی</h3>
+<p style="color:#9a8f83;font-size:11.6px;margin-top:-4px;">این بخش افزودۀ مترجم برای درک بهتر مفاهیم سند است و در متن اصلی وجود ندارد.</p>
+<p><b style="color:#8a4a12;">۱. GRAM چیست؟</b></p>
+<p>حافظۀ گرافیکی درون IC درایور صفحه است. پس از اینکه MCU یک‌بار تصویر (یا ناحیه‌ای از آن) را نوشت، خودِ IC با حدود 60Hz محتوای GRAM را روی پنل تازه می‌کند؛ بنابراین MCU فقط هنگام تغییر تصویر داده می‌فرستد و بارش سبک است.</p>
+<p><b style="color:#8a4a12;">۲. FrameBuffer و صفحه‌های بدون GRAM</b></p>
+<p>صفحه‌های RGB کنترلر و GRAM ندارند؛ هر پیکسل باید به‌طور پیوسته از MCU بیرون بیاید. به همین دلیل MCU باید کل فریم را در SRAM/PSRAM نگه دارد و کنترلر LTDC (یا FSMC) بدون دخالت CPU از آن بخواند؛ قطع جریان داده یعنی سیاه‌شدن صفحه.</p>
+<p><b style="color:#8a4a12;">۳. سیگنال TE</b></p>
+<p>در صفحه‌های GRAM‌دار، پایۀ TE لحظۀ تازه‌سازی پنل را اعلام می‌کند؛ اگر MCU با EXTI آن را بگیرد و نوشتن GRAM را با این لحظه هماهنگ کند، پارگی تصویر (tearing) کم می‌شود.</p>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">رابط‌های پرکاربرد و شیوۀ استفاده</div>
+  <div class="sec-divider"></div>
+</div>
+<h3 class="h2x" id="sec-11"><span class="dm">◆</span>۱.۱ تفکیک رابط‌ها</h3>
+<p>هنگام انتخاب مدل، ابتدا باید تفکیک شود که صفحه GRAM داخلی دارد یا نه:</p>
+<p><b style="color:#8a4a12;">صفحه‌های GRAM‌دار (I2C / SPI / QSPI / 8080):</b> MCU فقط هنگام به‌روزرسانی تصویر، داده ناحیه‌ای یا تمام‌صفحه می‌فرستد و صفحه به‌طور مستقل تازه‌سازی حدود 60Hz را حفظ می‌کند. نیازمندی به حجم SRAM و پهنای باند خروجی پیوسته پایین است.</p>
+<p><b style="color:#8a4a12;">صفحه‌های بدون GRAM (پورت موازی RGB):</b> جانۀ LTDC در MCU باید به‌طور پیوسته با ساعت پیکسل (PCLK) داده فریم را بیرون بریزد؛ به‌محض وقفه، تصویر چشمک می‌زند. MCU باید SRAM/PSRAM به‌اندازۀ کافی به‌عنوان FrameBuffer داشته باشد.</p>
+<h3 class="h2x" id="sec-12"><span class="dm">◆</span>۱.۲ رابط I2C</h3>
+<p><span class="en">I2C</span> برای نمایشگرهای با تفکیک‌پذیری و نرخ تازه‌سازی پایین مناسب‌تر است؛ مانند OLED تک‌رنگ <span class="en">SSD1306 128×64</span>، صفحه‌های هفت‌بخشی و صفحه‌های کاراکتری. صفحه‌های رنگی ماتریسی نقطه‌ای نیز می‌توانند با I2C متصل شوند، اما پهنای باند تازه‌سازی معمولاً کافی نیست و در پروژه‌های واقعی به‌ندرت از آن به‌عنوان رابط اصلی صفحه رنگی استفاده می‌شود. سیگنال‌های کنترلی آن معمولاً <span class="en">SCL</span> و <span class="en">SDA</span> هستند و در کنار آن‌ها معمولاً <span class="en">RST</span> و <span class="en">BL</span> نیز به‌عنوان پشتیبان ممکن است وجود داشته باشند.</p>
+<p><b style="color:#8a4a12;">ویژگی‌های رابط I2C:</b></p>
+<p style="margin:4px 0;">در <span class="en">400kHz</span> نرخ داده خام نظری حدود <span class="en">50KB/s</span> است و با احتساب سربار پروتکل، نرخ داده مؤثر واقعی حدود <span class="en">40KB/s</span> خواهد بود.</p>
+<p style="margin:4px 0;">سیم‌کشی ساده است؛ عمدتاً SCL و SDA و بسته به نیاز ماژول صفحه، RST و BL.</p>
+<p style="margin:4px 0;">اکثر ICهای درایور صفحۀ I2C دارای GRAM یا RAM نمایش‌داده داخلی هستند؛ پس از نوشتن MCU، خود IC پویش نمایش را انجام می‌دهد.</p>
+<p style="margin:4px 0;">قطعه‌هایی مانند SSD1306 اغلب نسخۀ SPI نیز دارند. اگر امکان دارد، SPI معمولاً برای صحنه‌هایی که تازه‌سازی سریع‌تری نیاز دارند مناسب‌تر است.</p>
+<h3 class="h2x" id="sec-13"><span class="dm">◆</span>۱.۳ رابط SPI</h3>
+<p><span class="en">SPI</span> یکی از رایج‌ترین رابط‌های صفحه رنگی روی CH32 است. اتصال متداول ۴ سیمی عبارت است از SCK، MOSI، CS، DC و بسته به ماژول، RST و BL نیز افزوده می‌شود.</p>
+<p><span class="en">SPI</span> سه‌سیم اطلاعات D/C را در بیت داده اضافی قرار می‌دهد، مانند SPI با 9 بیت. عرض داده اکثر SPIهای CH32 برابر 8/16 بیت است؛ بنابراین نمی‌توان مستقیماً از SPI بومی 9 بیت استفاده کرد و در مواردی که نرخ بالا مطرح نیست، با GPIO شبیه‌سازی می‌شود.</p>
+<p>هنگام استفاده از صفحه SPI، کنترلر صفحه معمولاً داده را در GRAM خودش می‌نویسد. MCU می‌تواند فقط ناحیۀ تغییرکرده را به‌روزرسانی کند. اگر صفحه پایۀ TE ارائه می‌دهد، می‌توان با <span class="en">EXTI</span> سیگنال TE را گرفت و با چرخۀ تازه‌سازی صفحه هماهنگ کرد تا پارگی تصویر کاهش یابد.</p>
+<p>کد راه‌اندازی کنترلر SPI نسبتاً رایج است و معمولاً می‌توان مستقیماً درایورهای موجود را منتقل کرد؛ در صورت نیاز، تابع ارسال لایۀ پایین را مطابق رابط <span class="en">SPI/DMA</span> در CH32 تنظیم کنید.</p>
+<h3 class="h2x" id="sec-14"><span class="dm">◆</span>۱.۴ رابط QSPI</h3>
+<p><span class="en">QSPI</span> بسط رابط SPI است که خط داده سنتیِ تک را به چهار خط داده (<span class="en">IO0~IO3</span>) بسط می‌دهد و با حفظ سادگی سیم‌کشی رابط سریال، از طریق انتقال موازی چهارخطی توان عبور داده را به‌طور چشمگیر بالا می‌برد. صفحه QSPI از طریق چهار خط داده و یک خط ساعت، داده تصویر و دستورهای کنترل را با سرعت بالا منتقل می‌کند و برای LCD با تفکیک‌پذیری یا نرخ تازه‌سازی بالا مناسب است. سیگنال‌های کنترلی آن از این خطوط هسته‌ای تشکیل می‌شود: SCLK، CS، IO0-3؛ مدل‌های متداول دارای دو پایۀ RST و BL نیز هستند.</p>
+<p>در حالت QSPI، پایۀ DC (انتخاب داده/دستور) در SPI سابق چندگانه می‌شود؛ تفکیک دستور از داده از طریق خود پروتکل انجام می‌شود، نه پایۀ مستقل DC. این با شیوۀ صفحۀ SPI که اطلاعات D/C را با پایۀ DC مستقل یا بیت داده اضافی منتقل می‌کند متفاوت است.</p>
+<p>صفحۀ SPI با یک خط داده بیت‌به‌بیت سریال منتقل می‌کند و نرخ انتقال محدود به فرکانس ساعت است. چهار خط داده QSPI می‌توانند در همان چرخۀ ساعت، 4 بیت داده را به‌طور موازی منتقل کنند؛ توان عبور نظری 4 برابر SPI استاندارد است. افزون بر این، جانۀ QSPI از حالت‌های انتقال متعددی مانند <span class="en">Dual SPI</span> و <span class="en">Quad SPI</span> پشتیبانی می‌کند و دستور، نشانی و داده می‌توانند جداگانه با عرض‌های خطی متفاوت پیکربندی شوند — برای مثال دستور و نشانی با SPI استاندارد فرستاده و بخش داده به انتقال Quad SPI تغییر کند. ساختار معمول قالب دستور چنین است: سرِ دستور 8 بیت + کلمۀ دستور 24 بیت + چند بیت داده پیکسل؛ اما قالب دقیق بسته به IC درایور صفحه متفاوت است.</p>
+<p>روند تازه‌سازی صفحه شبیه صفحۀ SPI است: ابتدا با دستور، پنجرۀ نوشتن GRAM (نشانی ردیف/ستون آغاز و پایان) تنظیم می‌شود، سپس داده پیکسل به‌طور پیوسته نوشته می‌شود و پرشدن ناحیه با سازوکار افزایش خودکار نشانی GRAM کامل می‌گردد.</p>
+<h3 class="h2x" id="sec-15"><span class="dm">◆</span>۱.۵ پورت موازی 8080</h3>
+<p>پورت موازی <span class="en">8080</span> (موسوم به رابط <span class="en">I80</span> یا رابط صفحه از نوع MCU) یکی از رایج‌ترین رابط‌های موازی صفحه رنگی است. سیگنال‌های کنترلی آن از چهار خط هسته‌ای CS، WR، RD، DC تشکیل می‌شود و عرض خطوط داده معمولاً 8 یا 16 بیت است. در حالت 8 بیت از هشت خط داده D0~D7 و در حالت 16 بیت از شانزده خط داده D15~D0 استفاده می‌شود؛ عرض دقیق بسته به پیکربندی حالت رابط کنترلر صفحه تعیین می‌شود.</p>
+<p>8080 رابط موازی است؛ در مقایسه با انتقال سریال بیت‌به‌بیت SPI، در هر بار 8 یا 16 بیت داده را موازی می‌فرستد؛ نرخ تازه‌سازی بالاتر است اما اشغال پایه‌ها بیشتر. انتخاب داده/دستور با پایۀ مستقل DC (یا RS) کنترل می‌شود: هنگامی که DC پایین است دستور نوشته می‌شود و هنگامی که DC بالاست داده نوشته می‌شود.</p>
+<p>هنگام استفاده از صفحۀ 8080، کنترلر صفحه به‌همان ترتیب داده را در GRAM خود می‌نویسد؛ MCU می‌تواند ابتدا با دستور، ناحیۀ پنجرۀ GRAM (مختصات آغاز و پایان) را تنظیم کند، سپس داده پیکسل را پیوسته بنویسد و با سازوکار افزایش خودکار نشانی GRAM، پرشدن ناحیه به‌طور خودکار انجام شود و فقط ناحیۀ تغییرکرده به‌روزرسانی شود.</p>
+<p>سمت MCU معمولاً از جانۀ <span class="en">FSMC/FMC</span> برای براندن رابط 8080 استفاده می‌کند و زمان‌بندی 8080 به عملیات خواندن/نوشتن مشابه SRAM نگاشت می‌شود: دسترسی به نشانی‌های متفاوت، زمان‌بندی دستور یا داده تولید می‌کند؛ پایۀ DC توسط یک خط نشانی (مانند <span class="en">FSMC_Ax</span>) و CS توسط سیگنال انتخاب قطعه (مانند <span class="en">FSMC_NE</span>) کنترل می‌شود. کد راه‌اندازی معمولاً شامل پیکربندی جانۀ FSMC/FMC، ارسال توالی راه‌اندازی صفحه و کپسوله‌سازی توابع لایۀ پایین نوشتن‌دستور، نوشتن‌داده و خواندن‌داده است؛ پس از آن به‌روزرسانی ناحیه‌ای GRAM برای تازه‌سازی نمایش استفاده می‌شود.</p>
+<h3 class="h2x" id="sec-16"><span class="dm">◆</span>۱.۶ رابط RGB و کنترلر LTDC</h3>
+<p><span class="en">LTDC</span> (کنترلر نمایش LCD-TFT) کنترلر نمایش درون MCU است که مخصوص براندن صفحه‌های LCD با رابط RGB ساخته شده است. بزرگ‌ترین تفاوت آن با صفحات SPI، 8080 و QSPI در این است که صفحۀ RGB معمولاً کنترلر نمایش ندارد (بدون GRAM) و MCU باید جریان پیکسل را پیوسته و بی‌وقفه خروجی بدهد تا نمایش تصویر حفظ شود.</p>
+<p>رابط RGB نیز رابط موازی است؛ سخت‌افزار LTDC گذرگاه داده موازی RGB با 24 بیت (هر رنگ 8 بیت، یعنی <span class="en">RGB888</span>) فراهم می‌کند و هم‌زمان سیگنال‌های کنترل زمان‌بندی را خروجی می‌دهد: <span class="en">LCD_CLK</span> ساعت پیکسل، <span class="en">LCD_HSYNC</span> سیگنال همگام افقی، <span class="en">LCD_VSYNC</span> سیگنال همگام عمودی و <span class="en">LCD_DE</span> سیگنال فعال‌سازی داده.</p>
+<p>برای صفحه‌های با عرض بیت پایین‌تر مانند RGB666 یا RGB565، هنگام اتصال باید بیت‌های بالای گذرگاه داده LTDC متناظر به خطوط داده صفحه وصل شوند. همه GPIOهای LTDC باید در حالت پرسرعت پیکربندی شوند تا صحت سیگنال در ساعت پیکسل تضمین شود.</p>
+<p>حالت رابط صفحۀ RGB به دو شیوۀ DE و SYNC تقسیم می‌شود. در حالت DE، اعتبار داده با سیگنال DE تعیین می‌شود و نیازی به پیکربندی ثبات‌های ناحیۀ پوشش نیست؛ در حالت SYNC از سیگنال DE استفاده نمی‌شود و ناحیۀ داده مؤثر با دوره‌های پوشش وابسته به VSYNC و HSYNC تعیین می‌گردد. برخی صفحات RGB همچنین رابط ترکیبی <span class="en">SPI + RGB</span> دارند: SPI برای راه‌اندازی ثبات‌های IC درایور صفحه (مانند تنظیم آینۀ تصویر و قالب رنگ) و رابط RGB مسئول انتقال بعدی داده پیکسل پرسرعت است.</p>
+<p><b style="color:#8a4a12;">تفاوت هسته‌ای با صفحه‌های دیگر:</b> IC درایور صفحات SPI، 8080 و QSPI معمولاً GRAM داخلی دارد؛ MCU فقط داده را در GRAM می‌نویسد و IC درایور خودش مسئول تازه‌سازی پنل است. اما IC درایور صفحۀ RGB معمولاً GRAM ندارد و هر پیکسل پنل باید به‌طور هم‌زمان از طریق رابط RGB توسط MCU ارسال شود. یعنی MCU باید در حافظۀ نمایش، بافر کامل فریم (Frame Buffer) نگه دارد. کنترلر LTDC به‌عنوان مستر گذرگاه، به‌طور خودکار داده پیکسل را ردیف‌به‌ردیف از حافظۀ نمایش می‌خواند، بدون دخالت CPU. به‌محض توقف جریان پیکسل، صفحه فوراً سیاه یا به‌هم‌ریخته می‌شود.</p>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">مرور رابط‌های درایو صفحه CH32</div>
+  <div class="sec-divider"></div>
+</div>
+<h3 class="h2x" id="sec-21"><span class="dm">◆</span>۲.۱ مرور کلی توان درایو نمایشگر</h3>
+<div class="tblwrap" id="tab-02">
+  <div class="tblcap"><span class="cap-pill">جدول ۲</span><span class="cap-text">مرور کلی توان MCUها</span></div>
+  <table class="tbl">
+    <tr><th style="width:26%;">مدل</th><th style="width:24%;">هسته / فرکانس اصلی</th><th style="width:20%;">SRAM</th><th>توان جانۀ مرتبط با نمایش</th></tr>
+    <tr><td><span class="en">CH32V006</span></td><td><span class="en">V2C، 48MHz</span></td><td><span class="en">8KB</span></td><td><span class="en">I2C، SPI</span></td></tr>
+    <tr><td><span class="en">CH32V103</span></td><td><span class="en">V3A، 72MHz</span></td><td><span class="en">10KB</span></td><td><span class="en">I2C، SPI</span></td></tr>
+    <tr><td><span class="en">CH32V203</span></td><td><span class="en">V4B، 144MHz</span></td><td><span class="en">10~32KB</span></td><td><span class="en">I2C، SPI</span></td></tr>
+    <tr><td><span class="en">CH32V205</span></td><td><span class="en">V3B، 192MHz</span></td><td><span class="en">32KB</span></td><td><span class="en">I2C، SPI، QSPI</span></td></tr>
+    <tr><td><span class="en">CH32V307</span></td><td><span class="en">V4F، 144MHz</span></td><td><span class="en">32~128KB</span></td><td><span class="en">I2C، SPI، FSMC</span></td></tr>
+    <tr><td><span class="en">CH32L103</span></td><td><span class="en">V4C، 96MHz</span></td><td><span class="en">20KB</span></td><td><span class="en">I2C، SPI</span></td></tr>
+    <tr><td><span class="en">CH32X035</span></td><td><span class="en">V4C، 48MHz</span></td><td><span class="en">20KB</span></td><td><span class="en">I2C، SPI</span></td></tr>
+    <tr><td><span class="en">CH32X315</span></td><td><span class="en">V3F، 480MHz</span></td><td><span class="en">64KB</span></td><td><span class="en">I2C، SPI</span></td></tr>
+    <tr><td><span class="en">CH32V407/V467</span></td><td><span class="en">V3V، 200MHz</span></td><td><span class="en">200KB</span><br>(<span class="en">V467</span> همچنین دارای <span class="en">PSRAM</span>)</td><td><span class="en">I2C، SPI، FSMC، LTDC</span></td></tr>
+  </table>
+</div>
+<h3 class="h2x" id="sec-22"><span class="dm">◆</span>۲.۲ برآورد فریم‌ریت صفحه‌های GRAM‌دار</h3>
+<p>جدول زیر مقادیر نظری فریم‌ریت هنگام براندن صفحه GRAM‌دار با MCUهای CH32 است:</p>
+<div class="tblwrap" id="tab-03">
+  <div class="tblcap"><span class="cap-pill">جدول ۳</span><span class="cap-text">برآورد فریم‌ریت صفحه GRAM‌دار</span></div>
+  <table class="tbl">
+    <tr><th style="width:20%;">تفکیک‌پذیری<br>(<span class="en">RGB565</span>)</th><th style="width:16%;">اندازۀ کل فریم</th><th style="width:16%;"><span class="en">SPI@20MHz</span><br>(نظری)</th><th style="width:16%;"><span class="en">SPI@40MHz</span><br>(نظری)</th><th style="width:16%;"><span class="en">QSPI</span> ۴خطی<br><span class="en">@60MHz</span> (نظری)</th><th><span class="en">8080-16bit</span><br>(نظری)</th></tr>
+    <tr><td><span class="en">128×160</span></td><td><span class="en">40KiB</span></td><td>حدود <span class="en">61fps</span></td><td>حدود <span class="en">122fps</span></td><td>کافی</td><td>کافی</td></tr>
+    <tr><td><span class="en">240×240</span></td><td><span class="en">113KiB</span></td><td>حدود <span class="en">22fps</span></td><td>حدود <span class="en">43fps</span></td><td>حدود <span class="en">150fps</span></td><td>حدود <span class="en">100fps</span></td></tr>
+    <tr><td><span class="en">240×320</span></td><td><span class="en">150KiB</span></td><td>حدود <span class="en">16fps</span></td><td>حدود <span class="en">33fps</span></td><td>حدود <span class="en">120fps</span></td><td>حدود <span class="en">90fps</span></td></tr>
+    <tr><td><span class="en">320×480</span></td><td><span class="en">300KiB</span></td><td>حدود <span class="en">8fps</span></td><td>حدود <span class="en">16fps</span></td><td>حدود <span class="en">60fps</span></td><td>حدود <span class="en">40fps</span></td></tr>
+    <tr><td><span class="en">480×480</span></td><td><span class="en">450KiB</span></td><td>حدود <span class="en">5fps</span></td><td>حدود <span class="en">11fps</span></td><td>حدود <span class="en">40fps</span></td><td>حدود <span class="en">25fps</span></td></tr>
+    <tr><td><span class="en">480×272</span></td><td><span class="en">255KiB</span></td><td>حدود <span class="en">10fps</span></td><td>حدود <span class="en">19fps</span></td><td>حدود <span class="en">70fps</span></td><td>حدود <span class="en">50fps</span></td></tr>
+  </table>
+</div>
+<h3 class="h2x" id="sec-23"><span class="dm">◆</span>۲.۳ برآورد پهنای باند صفحه‌های بدون GRAM</h3>
+<p>صفحه‌های RGB متداول فریم‌ریت حدود <span class="en">50-70Hz</span> می‌پذیرند؛ زیر این مقدار ممکن است صفحه دچار چشمک‌زدن یا به‌هم‌ریختگی شود. برای صفحات RGB با درایور LTDC مناسب <span class="en">V407/V467</span>، ساعت پیکسل توسط زمان‌بندی صفحه تعیین می‌شود:</p>
+<div class="codeblk"><span class="cm">PCLK = (Hres + HBP + HFP + HSPW) × (Vres + VBP + VFP + VSPW) × fps</span>
+
+<span class="cm">پهنای باند پیکسل = PCLK × bpp / 8</span></div>
+<div class="tblwrap" id="tab-04">
+  <div class="tblcap"><span class="cap-pill">جدول ۴</span><span class="cap-text">پهنای باند صفحه بدون GRAM</span></div>
+  <table class="tbl">
+    <tr><th style="width:25%;">تفکیک‌پذیری</th><th style="width:25%;"><span class="en">PCLK@60Hz</span></th><th style="width:25%;">پهنای باند <span class="en">RGB565</span></th><th>بافر فریم <span class="en">RGB565</span></th></tr>
+    <tr><td><span class="en">480×272</span></td><td>حدود <span class="en">10MHz</span></td><td>حدود <span class="en">19MB/s</span></td><td><span class="en">255KB</span></td></tr>
+    <tr><td><span class="en">800×480</span></td><td>حدود <span class="en">33MHz</span></td><td>حدود <span class="en">66MB/s</span></td><td><span class="en">750KB</span></td></tr>
+  </table>
+</div>
+<h3 class="h2x" id="sec-24"><span class="dm">◆</span>۲.۴ نمونه‌برنامه‌های درایو موجود برای CH32</h3>
+<p>نمونه‌برنامه‌های مرتبط با نمایش در بستۀ پروژۀ رسمی <span class="en">EVT</span> و کتابچه‌های تراشه را می‌توان پس از دانلود بستۀ EVT مربوطه از وب‌گاه رسمی WCH (沁恒) یافت:</p>
+<p style="margin:4px 0;"><span class="en">CH32V30x</span>: نمونۀ <span class="en">FSMC/LCD</span> (8080 با 16 بیت) و <span class="en">FSMC/LCD_8bit</span> برای براندن صفحه LCD با 8080؛ نمونۀ <span class="en">SPI/SPI_LCD</span> برای براندن LCD با SPI</p>
+<p style="margin:4px 0;"><span class="en">CH32V4x7</span>: نمونۀ صفحۀ RGB با <span class="en">LTDC/LTDC_Display</span>؛ نمونۀ <span class="en">FSMC/8080 LCD</span>؛ افزون بر آن، نمونۀ استفاده هم‌زمان <span class="en">lvgl</span> و LTDC</p>
+<h3 class="h2x" id="sec-25"><span class="dm">◆</span>۲.۵ WGUI</h3>
+<p><span class="en">WGUI</span> کتابخانۀ سبک رابط گرافیکی نهفته‌ای است که توسط WCH (沁恒微电子) برای MCUهای دارای صفحه LCD (مانند <span class="en">CH32V</span>، <span class="en">CH58x</span> و …) ارائه شده است.</p>
+<p><b style="color:#8a4a12;">ویژگی‌های اصلی:</b></p>
+<p style="margin:4px 0;">سبک است؛ اشغال <span class="en">Flash/SRAM</span> کم دارد و برای MCUهای محدود از نظر منابع مناسب است</p>
+<p style="margin:4px 0;">کنترل‌های رایج مانند دکمه، برچسب، نوار پیشرفت، نوار کشویی، فهرست، چک‌باکس و غیره را فراهم می‌کند</p>
+<p style="margin:4px 0;">به شکل کتابخانۀ C ارائه می‌شود و می‌تواند مستقیماً در پروژه ادغام شود</p>
+<p style="margin:4px 0;">با رابط‌های LCD رایج مانند TFT و OLED سازگار است</p>
+<p style="margin:4px 0;">امکان ویرایش گرافیکی رابط را دارد</p>
+<div class="fig" id="fig-01">
+  <div class="figbox"><img src="assets/img/an93000-fig01.png" alt="رابط ویرایش WGUI" style="max-width:440px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱</span><span class="cap-text">رابط ویرایش WGUI (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN93000</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/07/08</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">GRAM</span></td><td class="jt">حافظۀ گرافیکی درون IC درایور صفحه؛ پس از نوشتن MCU، خودِ IC تصویر را با ~60Hz تازه نگه می‌دارد</td></tr>
+      <tr><td><span class="en">FrameBuffer</span></td><td class="jt">بافر کامل فریم در SRAM/PSRAM که MCU برای صفحه‌های بدون GRAM باید نگه دارد و LTDC از آن پیوسته می‌خواند</td></tr>
+      <tr><td><span class="en">LTDC</span></td><td class="jt">کنترلر نمایش LCD-TFT درون MCU (در CH32V407/V467)؛ مستر گذرگاهی که داده فریم را ردیف‌به‌ردیف از حافظه می‌خواند</td></tr>
+      <tr><td><span class="en">FSMC/FMC</span></td><td class="jt">کنترلر حافظۀ ایستا؛ زمان‌بندی 8080 را به عملیات خواندن/نوشتن مشابه SRAM نگاشت می‌کند</td></tr>
+      <tr><td><span class="en">PCLK</span></td><td class="jt">ساعت پیکسل؛ ریت خروج پیکسل‌ها به صفحه RGB و تعیین‌کنندۀ اصلی پهنای باند</td></tr>
+      <tr><td><span class="en">HSYNC/VSYNC/DE</span></td><td class="jt">سیگنال‌های همگام‌سازی افقی و عمودی و فعال‌سازی داده در رابط RGB</td></tr>
+      <tr><td><span class="en">RGB888/RGB565/RGB666</span></td><td class="jt">قالب‌های رنگ: 8 بیت برای هر رنگ، یا 5-6-5 بیت (16 بیت کل) و نسخۀ 18 بیت با تراز بیت‌های بالا</td></tr>
+      <tr><td><span class="en">DE mode / SYNC mode</span></td><td class="jt">دو حالت رابط RGB: تعیین اعتبار داده با سیگنال DE، یا با دوره‌های پوشش VSYNC/HSYNC</td></tr>
+      <tr><td><span class="en">TE (Tearing Effect)</span></td><td class="jt">سیگنال همگام‌سازی صفحه GRAM‌دار که با EXTI گرفته می‌شود تا به‌روزرسانی با چرخۀ تازه‌سازی هماهنگ و پارگی تصویر کم شود</td></tr>
+      <tr><td><span class="en">HBP/HFP/HSPW/VBP/VFP/VSPW</span></td><td class="jt">پارامترهای پوشش افقی و عمودی در زمان‌بندی صفحه RGB؛ در فرمول PCLK وارد می‌شوند</td></tr>
+      <tr><td><span class="en">bpp</span></td><td class="jt">بیت در هر پیکسل؛ RGB565 یعنی 16bpp و پهنای باند = PCLK × bpp ÷ 8</td></tr>
+      <tr><td><span class="en">SSD1306</span></td><td class="jt">OLED تک‌رنگ 128×64 با رابط I2C (و نسخۀ SPI)؛ نمونۀ رایج صفحه کم‌مصرف</td></tr>
+      <tr><td><span class="en">پورت 8080 (I80)</span></td><td class="jt">رابط موازی صفحه با CS/WR/RD/DC و خطوط داده 8 یا 16 بیت؛ رایج‌ترین رابط موازی صفحه</td></tr>
+      <tr><td><span class="en">SPI سه‌سیم / 9-bit</span></td><td class="jt">حالتی که اطلاعات D/C در بیت نهم داده می‌رود؛ اکثر SPIهای CH32 عرض 8/16 بیت دارند و با GPIO شبیه‌سازی می‌شود</td></tr>
+      <tr><td><span class="en">Dual SPI / Quad SPI</span></td><td class="jt">حالت‌های ۲ و ۴ خطی QSPI؛ دستور و نشانی می‌توانند SPI استاندارد بمانند و داده چهارخطی فرستاده شود</td></tr>
+      <tr><td><span class="en">WGUI</span></td><td class="jt">کتابخانۀ سبک رابط گرافیکی WCH برای MCUهای دارای LCD؛ با کنترل‌های رایج و ابزار ویرایش گرافیکی</td></tr>
+      <tr><td><span class="en">EVT</span></td><td class="jt">بستۀ ارزیابی رسمی WCH حاوی نمونه‌برنامه‌ها؛ نمونه‌های نمایشگر در FSMC/LCD و LTDC/LTDC_Display</td></tr>
+      <tr><td><span class="en">RST / BL</span></td><td class="jt">پایۀ ریست صفحه و پایۀ پس‌نور (backlight) که بسته به ماژول در کنار سیگنال‌های اصلی وصل می‌شوند</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN93000 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۲۵</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN93000</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
