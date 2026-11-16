@@ -1,5 +1,7 @@
 <p align="center"><img src="Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider"></p>
 
+<p align="center"><img src="Images/GitHub-Assets/MES-Hero-Banner.svg" width="100%" alt="معمار الکترونیک صنعت | MEMAR ELECTRONIC SANAT"></p>
+
 # یادداشت‌های کاربردی میکروکنترلرهای WCH CH32 / WCH CH32 Application Notes
 
 [🇮🇷 فارسی](README.md) · [🇬🇧 English](README_EN.md) · [🇨🇳 اسناد اصلی چینی / Original Chinese](README_zh.md)
@@ -9,6 +11,8 @@
 این مخزن مجموعه‌ای از یادداشت‌های کاربردی (Application Notes یا AN) برای میکروکنترلرهای **WCH CH32** است. اسناد، راهنمای عملی برای قابلیت‌های MCU، طراحی سخت‌افزار، پیکربندی Firmware، راه‌اندازی Peripheralها، عیب‌یابی و بهینه‌سازی ارائه می‌کنند. این مطالب مکمل Datasheet و Reference Manual هستند و جایگزین آن‌ها نیستند.
 
 This repository collects Application Notes (ANs) for **WCH CH32 microcontrollers**, covering MCU features, hardware design, firmware configuration, peripheral bring-up, debugging, and optimization. These notes complement, but do not replace, the relevant datasheets and reference manuals.
+
+<p align="center"><img src="Images/GitHub-Assets/MES-Project-Card.svg" width="100%" alt="MES CH32 Application Notes Project Card"></p>
 
 ## ساختار و زبان‌ها / Structure and Languages
 
@@ -48,7 +52,7 @@ This repository collects Application Notes (ANs) for **WCH CH32 microcontrollers
 | AN11002 | نکات TIM در کاربردهای موتور | TIM Considerations for Motor Applications | [راهنما / Guide](fa/AN11002/README.md) | [Source](zh/AN11002/AN11002.md) |
 | AN14000 | آموزش پایه استفاده از SerDes | SerDes Fundamentals and Usage | [راهنما / Guide](fa/AN14000/README.md) | [Source](zh/AN14000/AN14000.md) |
 | AN16001 | مقایسه I2C و I3C و راهنمای I3C | I2C and I3C Comparison and I3C Guide | [راهنما / Guide](fa/AN16001/README.md) | [Source](zh/AN16001/AN16001.md) |
-| AN17000 | آموزش استفاده از SPI Host و NSS | Using SPI Host and NSS | [راهنما / Guide](fa/AN17000/README.md) | [Source](zh/AN17000/AN17000.md) |
+| AN17000 | راهنمای استفاده از SPI Host و NSS | Using SPI Host and NSS | [راهنما / Guide](fa/AN17000/README.md) | [Source](zh/AN17000/AN17000.md) |
 | AN21000 | راهنمای استفاده از SDIO در حالت Slave | Using SDIO in Slave Mode | [راهنما / Guide](fa/AN21000/README.md) | [Source](zh/AN21000/AN21000.md) |
 | AN22000 | کارت چندرسانه‌ای SDMMC و ارتباط در حالت Slave | SDMMC Card and Slave-Mode Communication | [راهنما / Guide](fa/AN22000/README.md) | [Source](zh/AN22000/AN22000.md) |
 | AN23000 | معرفی عملکرد و استفاده از PIOC | PIOC Features and Usage | [راهنما / Guide](fa/AN23000/README.md) | [Source](zh/AN23000/AN23000.md) |
@@ -81,6 +85,8 @@ This repository collects Application Notes (ANs) for **WCH CH32 microcontrollers
 
 ## نکات فنی / Engineering Notes
 
+<p align="center"><img src="Images/GitHub-Assets/MES-Status-Strip.svg" width="100%" alt="MES Documentation Status"></p>
+
 - Application Note جایگزین Datasheet، Reference Manual، Errata یا مستندات رسمی ابزار نیست. / An Application Note does not replace datasheets, reference manuals, errata, or official tool documentation.
 - اعداد، واحدها، کلاک، حافظه، تغذیه، USB، RF و EMI را مستقل اعتبارسنجی کنید. / Independently validate values, units, clocks, memory, power, USB, RF, and EMI.
 - پیش از استفاده در محصول، طراحی را روی سخت‌افزار واقعی آزمایش کنید. / Test the design on real hardware before production use.
@@ -94,9 +100,15 @@ This repository collects Application Notes (ANs) for **WCH CH32 microcontrollers
 ## تصاویر و دیاگرام‌های راهنما / Images and Diagrams
 
 - [دارایی‌های گرافیکی MES / MES visual assets](Images/GitHub-Assets/)
-- [بنر / Hero banner](Images/GitHub-Assets/MES-Hero-Banner.svg)
+- [بنر معرفی / Hero banner](Images/GitHub-Assets/MES-Hero-Banner.svg)
+- [کارت پروژه / Project card](Images/GitHub-Assets/MES-Project-Card.svg)
+- [سربرگ بخش / Section header](Images/GitHub-Assets/MES-Section-Header.svg)
+- [نوار وضعیت / Status strip](Images/GitHub-Assets/MES-Status-Strip.svg)
+- [تصویر پایانی / Thank-you footer](Images/GitHub-Assets/MES-Thank-You-Footer.svg)
 
 ## تهیه و تدوین / Credits
+
+<p align="center"><img src="Images/GitHub-Assets/MES-Thank-You-Footer.svg" width="100%" alt="Thank you for using MES resources"></p>
 
 **معمار الکترونیک صنعت**  
 **MEMAR ELECTRONIC SANAT (MES)**
@@ -107,6 +119,5 @@ This repository collects Application Notes (ANs) for **WCH CH32 microcontrollers
 - Telegram: https://t.me/Memar_Electronic
 - Instagram: https://www.instagram.com/Memar.Electronic
 - GitHub: https://github.com/MEMAR-ELECTRONIC-SANAT
-
 
 <p align="center"><img src="Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo"></p>
