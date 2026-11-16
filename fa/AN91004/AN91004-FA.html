@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>کارکردهای رایج LINK و MounRiver Studio 2 — ترجمۀ فارسی AN91004</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">کارکردهای رایج <span class="en">LINK</span> و <span class="en">MounRiver Studio 2</span></div>
+    <div class="t2">دانلود، خواندن <span class="en">FLASH</span> و پیکربندی تراشه در <span class="en">LINK V3.00</span></div>
+    <div class="t3">پیکربندی، کامپایل، دانلود و اشکال‌زدایی پروژه در <span class="en">MRS2 V2.50</span></div>
+  </div>
+  <div class="c-sub">هشت کارکرد رایج LINK از پیکربندی روند دانلود و خواندن/ذخیرۀ داده FLASH تا دانلود یک‌کلیکی، FLASH خارجی، تعویض حالت RISC-V/ARM و تأخیر قطع تغذیه؛ و چهار کارکرد MRS2 از پیکربندی پروژه و کامپایل (تحلیل منابع، فراخوانی و پشته) تا دانلود و اشکال‌زدایی با شرح کامل منوها</div>
+  <div class="c-desc">ترجمۀ فارسی سند رسمی <span class="en">AN91004</span> (نسخۀ ۱٫۰، منتشرۀ <span class="en">WCH</span>): LINK و MounRiver Studio 2 در حال حاضر ابزارهای اصلی توسعه‌اند و با عرضۀ نسخه‌های جدید، کارکردهای نرم‌افزار نیز پیوسته کامل‌تر می‌شوند؛ این سند شیوه‌های رایج استفاده از این ابزارها را برای سهولت توسعه توصیف می‌کند. نسخۀ نرم‌افزار LINK مورد نظر این سند V3.00 و نسخۀ نرم‌افزار MRS2 برابر V2.50 است.</div>
+  <div class="c-tags">
+    <span class="c-tag"><span class="en">WCH-Link V3.00</span></span>
+    <span class="c-tag"><span class="en">MRS2 V2.50</span></span>
+    <span class="c-tag"><span class="en">RISC-V · ARM</span></span>
+    <span class="c-tag">دانلود و اشکال‌زدایی</span>
+    <span class="c-tag">۲۶ شکل آموزشی</span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN91004 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">مقدمه | توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۴</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | کارکردهای رایج LINK</span><span class="t-dots"></span><span class="t-page">۵</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-11"><span class="s-id">1.1</span><span>پیکربندی کارکرد دانلود</span><span class="s-dots"></span><span class="s-page">۵</span></a>
+    <a class="toc-sub" href="#sec-12"><span class="s-id">1.2</span><span>خواندن و ذخیرۀ داده از نشانی مشخص FLASH</span><span class="s-dots"></span><span class="s-page">۵</span></a>
+    <a class="toc-sub" href="#sec-13"><span class="s-id">1.3</span><span>پیکربندی کارکردهای تراشه</span><span class="s-dots"></span><span class="s-page">۶</span></a>
+    <a class="toc-sub" href="#sec-14"><span class="s-id">1.4</span><span>دانلود یک‌کلیکی</span><span class="s-dots"></span><span class="s-page">۷</span></a>
+    <a class="toc-sub" href="#sec-15"><span class="s-id">1.5</span><span>نشانی دانلود مشخص FLASH داخلی</span><span class="s-dots"></span><span class="s-page">۷</span></a>
+    <a class="toc-sub" href="#sec-16"><span class="s-id">1.6</span><span>دانلود FLASH خارجی</span><span class="s-dots"></span><span class="s-page">۷</span></a>
+    <a class="toc-sub" href="#sec-17"><span class="s-id">1.7</span><span>تعویض حالت LINK</span><span class="s-dots"></span><span class="s-page">۷</span></a>
+    <a class="toc-sub" href="#sec-18"><span class="s-id">1.8</span><span>افزایش زمان پاک‌سازی هنگام قطع تغذیه</span><span class="s-dots"></span><span class="s-page">۸</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | کارکردهای رایج MRS</span><span class="t-dots"></span><span class="t-page">۹</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-21"><span class="s-id">2.1</span><span>پیکربندی پروژه</span><span class="s-dots"></span><span class="s-page">۹</span></a>
+    <a class="toc-sub" href="#sec-22"><span class="s-id">2.2</span><span>کامپایل پروژه</span><span class="s-dots"></span><span class="s-page">۱۲</span></a>
+    <a class="toc-sub" href="#sec-23"><span class="s-id">2.3</span><span>دانلود پروژه</span><span class="s-dots"></span><span class="s-page">۱۵</span></a>
+    <a class="toc-sub" href="#sec-24"><span class="s-id">2.4</span><span>اشکال‌زدایی پروژه</span><span class="s-dots"></span><span class="s-page">۱۶</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۴</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۱۷</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۵</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۱۷</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">شکل ۱</span><span>پیکربندی دانلود LINK</span><span class="f-dots"></span><span class="f-page">۵</span></div>
+        <div class="frow"><span class="f-id">شکل ۲</span><span>پیکربندی خواندن داده FLASH در LINK</span><span class="f-dots"></span><span class="f-page">۵</span></div>
+        <div class="frow"><span class="f-id">شکل ۳</span><span>کارکرد خواندن FLASH</span><span class="f-dots"></span><span class="f-page">۵</span></div>
+        <div class="frow"><span class="f-id">شکل ۴</span><span>ذخیرۀ داده</span><span class="f-dots"></span><span class="f-page">۶</span></div>
+        <div class="frow"><span class="f-id">شکل ۵</span><span>پیکربندی کارکردهای تراشه</span><span class="f-dots"></span><span class="f-page">۶</span></div>
+        <div class="frow"><span class="f-id">شکل ۶</span><span>دانلود یک‌کلیکی</span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">شکل ۷</span><span>تعیین نشانی دانلود FLASH</span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">شکل ۸</span><span>انتخاب حالت دانلود FLASH خارجی</span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">شکل ۹</span><span>تعویض حالت LINK</span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">شکل ۱۰</span><span>پیکربندی حالت DAP در LINK</span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">شکل ۱۱</span><span>تأخیر قطع تغذیه</span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">شکل ۱۲</span><span>ورودی منوی ویژگی‌های پروژه (راست‌کلیک)</span><span class="f-dots"></span><span class="f-page">۹</span></div>
+        <div class="frow"><span class="f-id">شکل ۱۳</span><span>ورودی منوی ویژگی‌های پروژه (میانبر)</span><span class="f-dots"></span><span class="f-page">۹</span></div>
+        <div class="frow"><span class="f-id">شکل ۱۴</span><span>پیکربندی‌های رایج پروژه</span><span class="f-dots"></span><span class="f-page">۱۰</span></div>
+      </div>
+      <div>
+        <div class="frow"><span class="f-id">شکل ۱۵</span><span>پیکربندی چاپ ممیز شناور</span><span class="f-dots"></span><span class="f-page">۱۰</span></div>
+        <div class="frow"><span class="f-id">شکل ۱۶</span><span>انتخاب فایل هدف تولیدی کامپایل</span><span class="f-dots"></span><span class="f-page">۱۱</span></div>
+        <div class="frow"><span class="f-id">شکل ۱۷</span><span>پارامترهای پیکربندی تولید فایل list</span><span class="f-dots"></span><span class="f-page">۱۱</span></div>
+        <div class="frow"><span class="f-id">شکل ۱۸</span><span>تنظیمات کارکردهای میانبر پروژه</span><span class="f-dots"></span><span class="f-page">۱۲</span></div>
+        <div class="frow"><span class="f-id">شکل ۱۹</span><span>موارد پیکربندی کامپایل پروژه</span><span class="f-dots"></span><span class="f-page">۱۲</span></div>
+        <div class="frow"><span class="f-id">شکل ۲۰</span><span>نمایش اشغال منابع</span><span class="f-dots"></span><span class="f-page">۱۳</span></div>
+        <div class="frow"><span class="f-id">شکل ۲۱</span><span>نمایش مختصر اشغال منابع</span><span class="f-dots"></span><span class="f-page">۱۳</span></div>
+        <div class="frow"><span class="f-id">شکل ۲۲</span><span>تحلیل گرافیکی فراخوانی توابع</span><span class="f-dots"></span><span class="f-page">۱۴</span></div>
+        <div class="frow"><span class="f-id">شکل ۲۳</span><span>تحلیل فراخوانی پشته</span><span class="f-dots"></span><span class="f-page">۱۴</span></div>
+        <div class="frow"><span class="f-id">شکل ۲۴</span><span>زنجیره ابزار GCC سفارشی</span><span class="f-dots"></span><span class="f-page">۱۵</span></div>
+        <div class="frow"><span class="f-id">شکل ۲۵</span><span>پیکربندی دانلود</span><span class="f-dots"></span><span class="f-page">۱۵</span></div>
+        <div class="frow"><span class="f-id">شکل ۲۶</span><span>پیکربندی اشکال‌زدایی</span><span class="f-dots"></span><span class="f-page">۱۶</span></div>
+        <div class="frow"><span class="f-id">جدول ۱</span><span>دامنۀ کاربرد سند</span><span class="f-dots"></span><span class="f-page">۴</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> در <span class="en">LINK V3.00</span>، روند دانلود با چک‌باکس‌ها به‌صورت سفارشی (فقط پاک‌سازی، فقط تأیید، فقط ریست نرم‌افزاری یا ترکیب‌ها) اجرا می‌شود؛ داده از نشانی مشخص <span class="en">FLASH</span> خوانده و ذخیره می‌شود (در غیر حالت محافظت خواندن)؛ بیت‌های کارکرد ناحیۀ User Word (ریست STOP، DATA0/DATA1، watchdog، محافظت خواندن/نوشتن) در روند دانلود نوشته می‌شوند؛ دانلود یک‌کلیکی با قطع/وصل تغذیه و رفع محافظت، تراشه‌های قطع‌شده از دوخط را نجات می‌دهد؛ نشانی دانلود داخلی با تراز 4K قابل تعیین است؛ دانلود FLASH خارجی، تعویض حالت به ARM/DAP و افزایش زمان پاک‌سازی هنگام قطع تغذیه نیز پشتیبانی می‌شود. در <span class="en">MRS2 V2.50</span>، پیکربندی پروژه (زنجیره ابزار، بهینه‌سازی، مسیرها و ماکروها)، چاپ ممیز شناور، تحلیل اشغال منابع، فراخوانی توابع و پشته، زنجیرۀ GCC سفارشی، دانلود با ۱۳ گزینۀ منو و پیکربندی اشکال‌زدایی شرح داده شده است.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p><span class="en">LINK</span> و <span class="en">MounRiver Studio 2</span> در حال حاضر ابزارهای اصلی توسعه هستند و با عرضۀ نسخه‌های جدید، کارکردهای نرم‌افزار نیز پیوسته کامل‌تر می‌شوند. هدف این سند توصیف شیوه‌های رایج استفاده از ابزارهای فوق برای سهولت کار در توسعه است. نسخۀ نرم‌افزار <span class="en">LINK</span> مورد نظر این سند <span class="en">V3.00</span> و نسخۀ نرم‌افزار <span class="en">MRS2</span> برابر <span class="en">V2.50</span> است.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>MCU عمومی</td><td>تراشه‌های با هستۀ <span class="en">RISC-V</span></td></tr>
+  </table>
+</div>
+
+<h3 class="h2x" id="sec-intro-tech"><span class="dm">◆</span>توضیح مختصر فنی</h3>
+<p style="color:#9a8f83;font-size:11.6px;margin-top:-4px;">این بخش افزودۀ مترجم برای درک بهتر مفاهیم سند است و در متن اصلی وجود ندارد.</p>
+<p><b style="color:#8a4a12;">۱. WCH-Link چیست؟</b></p>
+<p><span class="en">WCH-Link</span> پروگرامر و اشکال‌زاد سیمی شرکت WCH است که از طریق USB به رایانه و از طریق دوخط به تراشه وصل می‌شود؛ برای تراشه‌های RISC-V در حالت RV و برای تراشه‌های ARM در حالت DAP کار می‌کند. رابط کاربری آن در این سند با نام <span class="en">LINK</span> و نسخۀ ۳٫۰۰ توصیف شده است.</p>
+<p><b style="color:#8a4a12;">۲. MRS2 چیست؟</b></p>
+<p><span class="en">MounRiver Studio 2</span> محیط توسعه یکپارچه (IDE) مبتنی بر Eclipse برای تراشه‌های RISC-V شرکت WCH است؛ شامل پیکربندی پروژه، کامپایل با زنجیرۀ GCC، دانلود از طریق LINK و اشکال‌زدایی. نسخۀ مورد بررسی <span class="en">V2.50</span> است.</p>
+<p><b style="color:#8a4a12;">۳. ساختار سند</b></p>
+<p>بخش ۱ هشت کاربرد رایج نرم‌افزار LINK را با شکل مرور می‌کند و بخش ۲ چهار کاربرد رایج MRS2 (پیکربندی، کامپایل، دانلود و اشکال‌زدایی پروژه) را با شرح تک‌تک منوها. برای دانلود FLASH خارجی نیز می‌توان به ترجمۀ فارسی سند AN91003 در همین مجموعه مراجعه کرد.</p>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">کارکردهای رایج LINK</div>
+  <div class="sec-divider"></div>
+</div>
+<h3 class="h2x" id="sec-11"><span class="dm">◆</span>۱.۱ پیکربندی کارکرد دانلود</h3>
+<div class="fig" id="fig-01">
+  <div class="figbox"><img src="assets/img/an91004-fig01.png" alt="پیکربندی دانلود LINK" style="max-width:360px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱</span><span class="cap-text">پیکربندی دانلود <span class="en">LINK</span> (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>مطابق شکل ۱، می‌توان از طریق چک‌باکس‌ها، محتوای روند دانلود را به‌صورت سفارشی انتخاب کرد؛ مثلاً فقط پاک‌سازی، فقط تأیید، فقط ریست نرم‌افزاری و ترکیب‌های مختلف این کارکردها را پیاده کرد.</p>
+<h3 class="h2x" id="sec-12"><span class="dm">◆</span>۱.۲ خواندن و ذخیرۀ داده از نشانی مشخص FLASH</h3>
+<div class="fig" id="fig-02">
+  <div class="figbox"><img src="assets/img/an91004-fig02.png" alt="پیکربندی خواندن داده FLASH در LINK" style="max-width:420px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۲</span><span class="cap-text">پیکربندی خواندن داده <span class="en">FLASH</span> در <span class="en">LINK</span> (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>مطابق شکل ۲، نشانی و اندازه را پر کنید؛ سپس خواندن <span class="en">FLASH</span> را اجرا کنید، مطابق شکل ۳. توجه: خواندن داده حافظه نیازمند آن است که تراشه در حالت غیر محافظت‌خواندن باشد؛ اگر تراشه در حال حاضر در حالت محافظت خواندن باشد، امکان خواندن داده وجود ندارد و پس از رفع محافظت خواندن، ناحیۀ کاربر به‌طور خودکار پاک می‌شود.</p>
+<div class="fig" id="fig-03">
+  <div class="figbox"><img src="assets/img/an91004-fig03.png" alt="کارکرد خواندن FLASH" style="max-width:420px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۳</span><span class="cap-text">کارکرد خواندن <span class="en">FLASH</span> (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>در رابط نمایش داده خوانده‌شده، با کلیک راست موس می‌توان گزینۀ ذخیره در فایل را انتخاب کرد، مطابق شکل ۴.</p>
+<div class="fig" id="fig-04">
+  <div class="figbox"><img src="assets/img/an91004-fig04.png" alt="ذخیرۀ داده" style="max-width:420px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۴</span><span class="cap-text">ذخیرۀ داده (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<h3 class="h2x" id="sec-13"><span class="dm">◆</span>۱.۳ پیکربندی کارکردهای تراشه</h3>
+<div class="fig" id="fig-05">
+  <div class="figbox"><img src="assets/img/an91004-fig05.png" alt="پیکربندی کارکردهای تراشه" style="max-width:440px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۵</span><span class="cap-text">پیکربندی کارکردهای تراشه (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>برای تراشه‌هایی که از پیکربندی کارکرد پشتیبانی می‌کنند، <span class="en">LINK</span> در روند دانلود، مقدارهای تنظیم‌شده در رابط نرم‌افزار را در نشانی مشخص می‌نویسد، مطابق شکل ۵. پیکربندی نمونۀ بیت‌های کارکرد ناحیۀ User Word شامل ریست حالت STOP، مقدارهای DATA0/DATA1، فعال‌سازی watchdog سخت‌افزاری، محافظت خواندن/نوشتن و غیره است. بیت‌های کارکرد قابل پیکربندی در تراشه‌های مختلف ممکن است متفاوت باشد؛ برای جزئیات به کتابچۀ مربوطه مراجعه کنید. اندازۀ تخصیص واقعی بخشی از ناحیه‌های User Word بیش از 16 بایت است؛ نشانی‌های خارج از ناحیۀ کارکرد User Word همگی می‌توانند به‌عنوان DATA FLASH کاربر به کار روند، یعنی با قطع تغذیه از بین نمی‌روند.</p>
+<div class="scen"><span class="lbl">توجه: </span>دانلود با LINK برای به‌روزرسانی User Word، نخست پاک‌سازی ناحیۀ User Word را فراخوانی می‌کند و به‌روزرسانی مقدار User Word تنها در روند دانلود و فقط برای 16 بایت اول ممکن است؛ اگر ناحیۀ پس از 16 بایت به‌عنوان DATA FLASH استفاده می‌شود، پیشنهاد می‌شود روند تشخیص ورود مجدد در برنامه افزوده شود تا از پاک‌شدن محتوا در روند دانلود جلوگیری شود. شیوۀ برنامه‌ریزی ناحیۀ User Word در تراشه‌های مختلف متفاوت است و تقریباً به دو دسته تقسیم می‌شود: دستۀ اول تراشه‌هایی که نوشتن نیم‌کلمه را پشتیبانی می‌کنند، مانند <span class="en">CH32V30x</span>؛ و دستۀ دوم تراشه‌هایی که نوشتن نیم‌کلمه را پشتیبانی نمی‌کنند و فقط نوشتن صفحه‌ای ناحیۀ User Word را ممکن می‌سازند، مانند <span class="en">CH32X035</span>.</div>
+<h3 class="h2x" id="sec-14"><span class="dm">◆</span>۱.۴ دانلود یک‌کلیکی</h3>
+<div class="fig" id="fig-06">
+  <div class="figbox"><img src="assets/img/an91004-fig06.png" alt="دانلود یک‌کلیکی" style="max-width:360px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۶</span><span class="cap-text">دانلود یک‌کلیکی (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>مطابق شکل ۶، این دکمه چندین کارکرد را یکپارچه می‌کند: قطع/وصل تغذیۀ 5V/3V، پاک‌سازی ناحیۀ کاربر با قطع تغذیه، رفع محافظت خواندن و روند دانلود دوبارۀ میان‌افزار. می‌تواند به‌طور مؤثر مشکلات اتصال غیرعادی دوخط ناشی از اجرای خارج از کنترل کد تراشه یا خاموش‌کردن داخلی دوخط را حل کند.</p>
+<h3 class="h2x" id="sec-15"><span class="dm">◆</span>۱.۵ نشانی دانلود مشخص FLASH داخلی</h3>
+<div class="fig" id="fig-07">
+  <div class="figbox"><img src="assets/img/an91004-fig07.png" alt="تعیین نشانی دانلود FLASH" style="max-width:300px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۷</span><span class="cap-text">تعیین نشانی دانلود <span class="en">FLASH</span> (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>مطابق شکل ۷، دانلود <span class="en">FLASH</span> داخلی می‌تواند نشانی دانلود را مشخص کند؛ توجه شود که تراز 4K باید رعایت شود.</p>
+<h3 class="h2x" id="sec-16"><span class="dm">◆</span>۱.۶ دانلود FLASH خارجی</h3>
+<div class="fig" id="fig-08">
+  <div class="figbox"><img src="assets/img/an91004-fig08.png" alt="انتخاب حالت دانلود FLASH خارجی" style="max-width:320px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۸</span><span class="cap-text">انتخاب حالت دانلود <span class="en">FLASH</span> خارجی (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>مطابق شکل ۸، با انتخاب حالت <span class="en">External</span> می‌توان برای مدل‌های پشتیبانی‌شده، دانلود <span class="en">FLASH</span> خارجی انجام داد. در حال حاضر تنها بخشی از مدل‌ها پشتیبانی می‌شوند و پشتیبانی از انواع بیشتر تراشه‌ها به‌تدریج در به‌روزرسانی‌های بعدی کامل خواهد شد.</p>
+<h3 class="h2x" id="sec-17"><span class="dm">◆</span>۱.۷ تعویض حالت LINK</h3>
+<p><span class="en">LINK</span> همچنین دانلود تراشه‌های با هستۀ <span class="en">ARM</span> را پشتیبانی می‌کند؛ در نوع Core گزینۀ <span class="en">ARM</span> انتخاب شود، مطابق شکل ۹.</p>
+<div class="fig" id="fig-09">
+  <div class="figbox"><img src="assets/img/an91004-fig09.png" alt="تعویض حالت LINK" style="max-width:240px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۹</span><span class="cap-text">تعویض حالت <span class="en">LINK</span> (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>افزون بر این، باید <span class="en">Link Mode</span> به‌صورت <span class="en">DAP</span> تنظیم شود، در غیر این صورت اتصال دوخط به‌درستی انجام نمی‌شود؛ مطابق شکل ۱۰.</p>
+<div class="fig" id="fig-10">
+  <div class="figbox"><img src="assets/img/an91004-fig10.png" alt="پیکربندی حالت DAP در LINK" style="max-width:420px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱۰</span><span class="cap-text">پیکربندی حالت <span class="en">DAP</span> در <span class="en">LINK</span> (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<h3 class="h2x" id="sec-18"><span class="dm">◆</span>۱.۸ افزایش زمان پاک‌سازی هنگام قطع تغذیه</h3>
+<div class="fig" id="fig-11">
+  <div class="figbox"><img src="assets/img/an91004-fig11.png" alt="تأخیر قطع تغذیه" style="max-width:300px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱۱</span><span class="cap-text">تأخیر قطع تغذیه (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>در تراشه‌هایی که پاک‌سازی با قطع تغذیه را پشتیبانی می‌کنند، اگر زمان خاموش‌کردن دوخط در برنامه بیش از حد زود باشد، نمی‌توان اتصال دوخط برقرار کرد و وارد حالت اشکال‌زدایی شد. برخی تراشه‌های دارای پایۀ BOOT سخت‌افزاری می‌توانند گزینۀ ورود به برنامه در حالت BOOT را انتخاب کنند، سپس از طریق رابط دوخط وارد اشکال‌زدایی شوند و کل ناحیۀ کاربر را پاک کنند تا مشکل حل شود، مانند <span class="en">V20x</span>، <span class="en">V30x</span> و غیره. برخی تراشه‌های بدون پایۀ BOOT سخت‌افزاری مانند <span class="en">V00x</span> می‌توانند از طریق گزینۀ کارکرد مطابق شکل ۱۱، زمان قطع تغذیه را به‌طور مناسب طولانی‌تر کنند و تا حدی مشکل فعلی را برطرف کنند.</p>
+<div class="scen"><span class="lbl">توجه: </span>زمان خاموش‌کردن دوخط در نرم‌افزار تا حد امکان نباید بیش از حد زود باشد؛ در غیر این صورت ممکن است تراشه به‌طور کامل غیرقابل استفاده (brick) شود.</div>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">کارکردهای رایج MRS</div>
+  <div class="sec-divider"></div>
+</div>
+<h3 class="h2x" id="sec-21"><span class="dm">◆</span>۲.۱ پیکربندی پروژه</h3>
+<p>معمولاً می‌توان پروژه را انتخاب کرد و در منوی راست‌کلیک گزینۀ <span class="en">Properties</span> را زد، مطابق شکل ۱۲؛ یا با کلیک دکمۀ میانبر وارد پیکربندی پروژه شد، مطابق شکل ۱۳.</p>
+<div class="fig" id="fig-12">
+  <div class="figbox"><img src="assets/img/an91004-fig12.png" alt="ورودی منوی ویژگی‌های پروژه (راست‌کلیک)" style="max-width:440px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱۲</span><span class="cap-text">ورودی منوی ویژگی‌های پروژه (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<div class="fig" id="fig-13">
+  <div class="figbox"><img src="assets/img/an91004-fig13.png" alt="ورودی منوی ویژگی‌های پروژه (میانبر)" style="max-width:440px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱۳</span><span class="cap-text">ورودی منوی ویژگی‌های پروژه (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>پیکربندی‌های رایج به شرح زیر است، مطابق شکل ۱۴:</p>
+<p style="margin:4px 0;"><b style="color:#8a4a12;">منوی ۱:</b> انتخاب زنجیره ابزار</p>
+<p style="margin:4px 0;"><b style="color:#8a4a12;">منوی ۲:</b> سطح بهینه‌سازی کامپایل پروژه</p>
+<p style="margin:4px 0;"><b style="color:#8a4a12;">منوی ۳:</b> مسیر فایل اسمبلی (Startup)</p>
+<p style="margin:4px 0;"><b style="color:#8a4a12;">منوی ۴:</b> ماکروهای سراسری</p>
+<p style="margin:4px 0;"><b style="color:#8a4a12;">منوی ۵:</b> مسیر فایل‌های سرآیند (header)</p>
+<p style="margin:4px 0;"><b style="color:#8a4a12;">منوی ۶:</b> مسیر فایل پیوند (LD)</p>
+<p style="margin:4px 0;"><b style="color:#8a4a12;">منوی ۷:</b> مسیر کتابخانۀ ایستا (.a)</p>
+<div class="fig" id="fig-14">
+  <div class="figbox"><img src="assets/img/an91004-fig14.png" alt="پیکربندی‌های رایج پروژه" style="max-width:480px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱۴</span><span class="cap-text">پیکربندی‌های رایج پروژه (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>چاپ ممیز شناور مطابق شکل ۱۵ است.</p>
+<div class="fig" id="fig-15">
+  <div class="figbox"><img src="assets/img/an91004-fig15.png" alt="پیکربندی چاپ ممیز شناور" style="max-width:460px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱۵</span><span class="cap-text">پیکربندی چاپ ممیز شناور (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>انتخاب فایل تولیدی کامپایل مطابق شکل ۱۶ است.</p>
+<div class="fig" id="fig-16">
+  <div class="figbox"><img src="assets/img/an91004-fig16.png" alt="انتخاب فایل هدف تولیدی کامپایل" style="max-width:460px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱۶</span><span class="cap-text">انتخاب فایل هدف تولیدی کامپایل (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>پارامترهای فایل list تولیدی مطابق شکل ۱۷ است.</p>
+<div class="fig" id="fig-17">
+  <div class="figbox"><img src="assets/img/an91004-fig17.png" alt="پارامترهای پیکربندی تولید فایل list" style="max-width:460px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱۷</span><span class="cap-text">پارامترهای پیکربندی تولید فایل <span class="en">list</span> (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>تنظیمات کارکردهای میانبر پروژه مطابق شکل ۱۸ است؛ می‌توان کارکردهای رایج مانند نوع فایل خروجی هدف، چاپ ممیز شناور، کتابخانۀ math و غیره را پیکربندی کرد.</p>
+<div class="fig" id="fig-18">
+  <div class="figbox"><img src="assets/img/an91004-fig18.png" alt="تنظیمات کارکردهای میانبر پروژه" style="max-width:460px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱۸</span><span class="cap-text">تنظیمات کارکردهای میانبر پروژه (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<h3 class="h2x" id="sec-22"><span class="dm">◆</span>۲.۲ کامپایل پروژه</h3>
+<div class="fig" id="fig-19">
+  <div class="figbox"><img src="assets/img/an91004-fig19.png" alt="موارد پیکربندی کامپایل پروژه" style="max-width:300px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱۹</span><span class="cap-text">موارد پیکربندی کامپایل پروژه (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>منوی پیکربندی کامپایل عمدتاً مطابق شکل ۱۹ است؛ برای فعال‌سازی روی آن کلیک کنید.</p>
+<p><b style="color:#8a4a12;">منوی ۱:</b> کارکرد اصلی شامل نمایش اشغال منابع، مشاهده تابع مشخص و بخش (Section) مربوطه، و نشانی و اندازۀ تابع پس از کامپایل است، مطابق شکل ۲۰.</p>
+<div class="fig" id="fig-20">
+  <div class="figbox"><img src="assets/img/an91004-fig20.png" alt="نمایش اشغال منابع" style="max-width:440px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۲۰</span><span class="cap-text">نمایش اشغال منابع (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>اگر فقط بخواهید نسبت اشغال منابع فعلی در رابط خروجی کامپایل نمایش داده شود، می‌توان در منوی <span class="en">Properties-&gt;GNU RISC-V Cross C Linker-&gt;Miscellaneous</span> به فیلد <span class="en">Linker flags</span> عبارت «<span class="en">--print-memory-usage</span>» را افزودن کرد؛ اثر آن مطابق شکل ۲۱ است.</p>
+<div class="fig" id="fig-21">
+  <div class="figbox"><img src="assets/img/an91004-fig21.png" alt="نمایش مختصر اشغال منابع" style="max-width:440px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۲۱</span><span class="cap-text">نمایش مختصر اشغال منابع (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p><b style="color:#8a4a12;">منوی ۲:</b> کارکرد اصلی تحلیل گرافیکی فراخوانی توابع است، مطابق شکل ۲۲.</p>
+<div class="fig" id="fig-22">
+  <div class="figbox"><img src="assets/img/an91004-fig22.png" alt="تحلیل گرافیکی فراخوانی توابع" style="max-width:440px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۲۲</span><span class="cap-text">تحلیل گرافیکی فراخوانی توابع (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p><b style="color:#8a4a12;">منوی ۳:</b> کارکرد اصلی تحلیل فراخوانی پشته است، مطابق شکل ۲۳.</p>
+<div class="fig" id="fig-23">
+  <div class="figbox"><img src="assets/img/an91004-fig23.png" alt="تحلیل فراخوانی پشته" style="max-width:440px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۲۳</span><span class="cap-text">تحلیل فراخوانی پشته (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p><b style="color:#8a4a12;">منوی ۴:</b> زنجیره ابزار GCC سفارشی، مطابق شکل ۲۴؛ توجه شود که تنها <span class="en">GCC</span> پشتیبانی می‌شود و می‌توان آن را در همین رابط افزودن و مدیریت کرد.</p>
+<div class="fig" id="fig-24">
+  <div class="figbox"><img src="assets/img/an91004-fig24.png" alt="زنجیره ابزار GCC سفارشی" style="max-width:420px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۲۴</span><span class="cap-text">زنجیره ابزار <span class="en">GCC</span> سفارشی (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<h3 class="h2x" id="sec-23"><span class="dm">◆</span>۲.۳ دانلود پروژه</h3>
+<p>رابط پیکربندی دانلود مطابق شکل ۲۵ است.</p>
+<div class="fig" id="fig-25">
+  <div class="figbox"><img src="assets/img/an91004-fig25.png" alt="پیکربندی دانلود" style="max-width:480px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۲۵</span><span class="cap-text">پیکربندی دانلود (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p style="margin:4px 0;"><b style="color:#8a4a12;">منوی ۱:</b> پرس‌وجوی وضعیت محافظت خواندن/نوشتن</p>
+<p style="margin:4px 0;"><b style="color:#8a4a12;">منوی ۲:</b> فعال‌سازی محافظت خواندن</p>
+<p style="margin:4px 0;"><b style="color:#8a4a12;">منوی ۳:</b> رفع محافظت خواندن</p>
+<p style="margin:4px 0;"><b style="color:#8a4a12;">منوی ۴:</b> دریافت مدل تراشه</p>
+<p style="margin:4px 0;"><b style="color:#8a4a12;">منوی ۵:</b> پرس‌وجو و تنظیم حالت LINK، <span class="en">RISC-V</span> یا <span class="en">ARM</span></p>
+<p style="margin:4px 0;"><b style="color:#8a4a12;">منوی ۶:</b> تخصیص ظرفیت <span class="en">FLASH/RAM</span> (فقط برای تراشه‌های پشتیبانی‌شده اثر دارد)</p>
+<p style="margin:4px 0;"><b style="color:#8a4a12;">منوی ۷:</b> کارکرد پاک‌سازی با قطع تغذیه و پاک‌سازی با ریست برای پاک‌کردن ناحیۀ کاربر. توجه: پاک‌سازی با ریست برای تراشه‌های دارای قابلیت تعویض تک‌خط/دوخط، تنها در حالت تک‌خط پشتیبانی می‌شود.</p>
+<p style="margin:4px 0;"><b style="color:#8a4a12;">منوی ۸:</b> نشانی برنامه‌ریزی قابل سفارشی‌سازی است اما همان الزامات تراز را دارد</p>
+<p style="margin:4px 0;"><b style="color:#8a4a12;">منوی ۹:</b> حالت رابط اشکال‌زدایی، انتخاب تک‌خط/دوخط (فقط برای تراشه‌های پشتیبانی‌شده اثر دارد)</p>
+<p style="margin:4px 0;"><b style="color:#8a4a12;">منوی ۱۰:</b> سرعت رابط اشکال‌زدایی، به‌طور پیش‌فرض سه درجه قابل تنظیم. (اگر عواملی مانند مسیرکشی PCB باعث خطای تأیید دانلود شود، می‌توان سرعت پورت اشکال‌زدایی را کاهش داد)</p>
+<p style="margin:4px 0;"><b style="color:#8a4a12;">منوی ۱۱:</b> فایل هدف دانلود</p>
+<p style="margin:4px 0;"><b style="color:#8a4a12;">منوی ۱۲:</b> روند دانلود عمومی، همانند ابزار <span class="en">LinkUtility</span></p>
+<p style="margin:4px 0;"><b style="color:#8a4a12;">منوی ۱۳:</b> گام‌های مکمل پیش از روند دانلود عمومی، شامل قطع/وصل تغذیۀ ولتاژ، پاک‌سازی ناحیۀ کاربر با قطع تغذیه و خاموش‌کردن محافظت خواندن تراشه.</p>
+<h3 class="h2x" id="sec-24"><span class="dm">◆</span>۲.۴ اشکال‌زدایی پروژه</h3>
+<p>رابط پیکربندی اشکال‌زدایی از طریق <span class="en">Properties</span> باز می‌شود، مطابق شکل ۲۶. گزینه‌های قابل پیکربندی اشکال‌زدایی شامل: صرف‌نظر از گام دانلود دوبارۀ میان‌افزار هنگام اشکال‌زدایی (باید میان‌افزار اشکال‌زدایی در <span class="en">FLASH</span> موجود باشد)؛ استفاده از پاک‌سازی صفحه‌ای هنگام دانلود میان‌افزار اشکال‌زدایی پیش از شروع اشکال‌زدایی؛ و فعال‌سازی اشکال‌زدایی ناحیۀ غیر صفرمکث.</p>
+<div class="fig" id="fig-26">
+  <div class="figbox"><img src="assets/img/an91004-fig26.png" alt="پیکربندی اشکال‌زدایی" style="max-width:480px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۲۶</span><span class="cap-text">پیکربندی اشکال‌زدایی (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN91004</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/08/31</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">WCH-Link</span></td><td class="jt">پروگرامر و اشکال‌زاد رسمی WCH با اتصال USB؛ دارای دو حالت RV برای تراشه‌های RISC-V و DAP برای تراشه‌های ARM</td></tr>
+      <tr><td><span class="en">نرم‌افزار LINK (V3.00)</span></td><td class="jt">رابط کاربری ابزار LINK که در این سند توصیف شده؛ شامل پیکربندی دانلود، خواندن FLASH، پیکربندی تراشه و حالت‌های مختلف</td></tr>
+      <tr><td><span class="en">MRS2 (MounRiver Studio 2)</span></td><td class="jt">محیط توسعه یکپارچه (IDE) مبتنی بر Eclipse برای توسعه تراشه‌های RISC-V شرکت WCH؛ نسخۀ مورد نظر این سند V2.50 است</td></tr>
+      <tr><td><span class="en">محافظت خواندن (Read Protect)</span></td><td class="jt">حالت حفاظتی تراشه که خواندن محتوای حافظه را می‌بندد؛ رفع آن باعث پاک‌شدن خودکار ناحیۀ کاربر می‌شود</td></tr>
+      <tr><td><span class="en">ناحیۀ User Word</span></td><td class="jt">ناحیۀ بیت‌های پیکربندی کارکرد تراشه (معمولاً 16 بایت اول): ریست حالت STOP، مقدارهای DATA0/DATA1، watchdog سخت‌افزاری و محافظت خواندن/نوشتن</td></tr>
+      <tr><td><span class="en">DATA FLASH</span></td><td class="jt">نشانی‌های خارج از ناحیۀ کارکرد User Word که می‌توانند داده کاربر را نگه دارند و با قطع تغذیه از بین نمی‌روند</td></tr>
+      <tr><td><span class="en">نوشتن نیم‌کلمه / نوشتن صفحه‌ای</span></td><td class="jt">دو شیوۀ برنامه‌ریزی ناحیۀ User Word: برخی تراشه‌ها مانند CH32V30x نوشتن نیم‌کلمه (half-word) را پشتیبانی می‌کنند و برخی مانند CH32X035 فقط نوشتن صفحه‌ای</td></tr>
+      <tr><td><span class="en">دانلود یک‌کلیکی</span></td><td class="jt">دکمۀ یکپارچه‌ساز قطع/وصل تغذیۀ 5V/3V، پاک‌سازی ناحیۀ کاربر، رفع محافظت خواندن و دانلود دوباره برای نجات تراشه‌هایی که دوخطشان غیرعادی شده</td></tr>
+      <tr><td><span class="en">پاک‌سازی با قطع تغذیه / پاک‌سازی با ریست</span></td><td class="jt">دو روش پاک‌سازی ناحیۀ کاربر؛ پاک‌سازی با ریست فقط در حالت تک‌خط برای تراشه‌های دارای قابلیت تعویض تک‌خط/دوخط کار می‌کند</td></tr>
+      <tr><td><span class="en">حالت DAP</span></td><td class="jt">حالت Link برای کار با تراشه‌های ARM (Debug Access Port)؛ بدون آن اتصال دوخط به تراشۀ ARM برقرار نمی‌شود</td></tr>
+      <tr><td><span class="en">تراز 4K</span></td><td class="jt">الزام هم‌ترازی نشانی دانلود داخلی FLASH؛ نشانی دانلود باید مضرب 4K باشد</td></tr>
+      <tr><td><span class="en">LinkUtility</span></td><td class="jt">ابزار دانلود عمومی WCH؛ روند دانلود عمومی در MRS2 همانند این ابزار است</td></tr>
+      <tr><td><span class="en">زنجیره ابزار (Toolchain)</span></td><td class="jt">مجموعۀ کامپایلر و پیوندگر GCC مورد استفاده در کامپایل؛ در MRS2 قابل انتخاب و تعریف سفارشی است</td></tr>
+      <tr><td><span class="en">Properties</span></td><td class="jt">منوی ویژگی‌های پروژه در MRS2؛ ورودی اصلی پیکربندی پروژه، پیوندگر و اشکال‌زدایی</td></tr>
+      <tr><td><span class="en">فایل list</span></td><td class="jt">خروجی متنی کامپایل شامل نشانی‌ها و اندازه‌های نمادها؛ پارامترهای تولید آن در MRS2 قابل پیکربندی است</td></tr>
+      <tr><td><span class="en">--print-memory-usage</span></td><td class="jt">پرچم پیوندگر GCC برای نمایش مختصر اشغال حافظه در انتهای خروجی کامپایل؛ در Linker flags افزوده می‌شود</td></tr>
+      <tr><td><span class="en">ناحیۀ صفرمکث / غیرصفرمکث</span></td><td class="jt">نواحی فلش بدون مکث و با مکث در خواندن؛ اشکال‌زدایی ناحیۀ غیرصفرمکث در MRS2 نیازمند فعال‌سازی گزلۀ مربوطه است</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN91004 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۲۵</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN91004</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
