@@ -1,12 +1,16 @@
 <p align="center"><img src="Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider"></p>
 
+<p align="center"><img src="Images/GitHub-Assets/MES-Hero-Banner.svg" width="100%" alt="MEMAR ELECTRONIC SANAT | MES"></p>
+
 # WCH CH32 Application Notes
 
 [🇮🇷 فارسی / Persian](README.md) · [🇬🇧 English](README_EN.md) · [🇨🇳 Original Chinese documents](README_zh.md)
 
 ## Repository Overview
 
-This repository organizes WCH CH32 Application Notes (ANs), translated reading guides, original source documents, and supporting media. The notes cover MCU features, hardware design, firmware configuration, peripheral operation, debugging, and optimization. They complement the relevant datasheets and reference manuals; they do not replace them.
+This repository organizes WCH CH32 Application Notes (ANs), bilingual reading guides, original source documents, and supporting media. The notes cover MCU features, hardware design, firmware configuration, peripheral operation, debugging, and optimization. They complement the relevant datasheets and reference manuals; they do not replace them.
+
+<p align="center"><img src="Images/GitHub-Assets/MES-Project-Card.svg" width="100%" alt="MES CH32 Application Notes Project Card"></p>
 
 ## Repository Structure
 
@@ -31,6 +35,8 @@ The complete list of available notes, Persian and English titles, bilingual guid
 
 ## Engineering Notes
 
+<p align="center"><img src="Images/GitHub-Assets/MES-Status-Strip.svg" width="100%" alt="MES Documentation Status"></p>
+
 - Application Notes are supplementary technical references, not substitutes for datasheets, reference manuals, errata, or official tool documentation.
 - Independently validate electrical values, units, clocks, memory configuration, power requirements, USB behavior, RF, and EMI.
 - Do not generalize a result from one MCU model or package to another without checking the relevant documentation.
@@ -45,12 +51,18 @@ The complete list of available notes, Persian and English titles, bilingual guid
 
 ## Images and Diagrams
 
+<p align="center"><img src="Images/GitHub-Assets/MES-Section-Header.svg" width="100%" alt="MES Section Header"></p>
+
 - [MES GitHub visual assets](Images/GitHub-Assets/)
 - [MES section divider](Images/GitHub-Assets/MES-Divider.svg)
 - [MES hero banner](Images/GitHub-Assets/MES-Hero-Banner.svg)
-- [MES section header](Images/GitHub-Assets/MES-Section-Header.svg)
+- [MES project card](Images/GitHub-Assets/MES-Project-Card.svg)
+- [MES status strip](Images/GitHub-Assets/MES-Status-Strip.svg)
+- [MES thank-you footer](Images/GitHub-Assets/MES-Thank-You-Footer.svg)
 
 ## تهیه و تدوین / Credits
+
+<p align="center"><img src="Images/GitHub-Assets/MES-Thank-You-Footer.svg" width="100%" alt="Thank you for using MES resources"></p>
 
 **معمار الکترونیک صنعت**  
 **MEMAR ELECTRONIC SANAT (MES)**
