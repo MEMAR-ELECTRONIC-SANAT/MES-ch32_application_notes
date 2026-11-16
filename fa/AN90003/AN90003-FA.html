@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>سیستم فایل FatFs روی CH32V — ترجمۀ فارسی AN90003</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">سیستم فایل <span class="en">FatFs</span> روی میکروکنترلرهای <span class="en">CH32V</span></div>
+    <div class="t2">انتقال روی <span class="en">SPI FLASH</span> و کارت <span class="en">SD</span> با رابط <span class="en">SDIO</span></div>
+    <div class="t3">سازگارسازی <span class="en">diskio.c</span> و پیکربندی <span class="en">ffconf.h</span> در <span class="en">MounRiver Studio</span></div>
+  </div>
+  <div class="c-sub">ساختار لایه‌ای FatFs و ساختار فایل پروژه، انتقال روی فلش SPI با سکتور 4KB و جابه‌جایی ۶ مگابایتی، انتقال روی کارت SD با SDIO، جدول تفاوت‌های دو کانال و راهنمای عیب‌یابی و راستی‌آزمایی</div>
+  <div class="c-desc">ترجمۀ فارسی سند رسمی <span class="en">AN90003</span> (نسخۀ ۱٫۰، منتشرۀ <span class="en">WCH</span>): این یادداشت کاربردی انتقال سیستم فایل FatFs را در پروژه‌های سری CH32V (معماری RISC-V با کتابخانۀ استاندارد SPL) در محیط MounRiver Studio شرح می‌دهد؛ دو مسیر رسانه — SPI FLASH و کارت SD با SDIO — لایۀ میانی مشترک FatFs دارند و تفاوت‌ها صرفاً در درایو رسانه و سازگارسازی diskio.c است. نام رابط‌ها، ماکروها، پایه‌ها و کدهای فرمان از روال‌های واقعی کتابخانۀ الگو گرفته شده و مستقیماً قابل استفاده است.</div>
+  <div class="c-tags">
+    <span class="c-tag">سیستم فایل <span class="en">FatFs</span></span>
+    <span class="c-tag"><span class="en">CH32V407</span></span>
+    <span class="c-tag"><span class="en">SPI FLASH · W25Q128</span></span>
+    <span class="c-tag"><span class="en">SDIO</span></span>
+    <span class="c-tag"><span class="en">diskio.c · ffconf.h</span></span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN90003 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">مقدمه | توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | مرور کلی</span><span class="t-dots"></span><span class="t-page">۴</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-11"><span class="s-id">1.1</span><span>هدف انتقال و رویکرد کلی</span><span class="s-dots"></span><span class="s-page">۴</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | انتقال سیستم فایل روی SPI FLASH</span><span class="t-dots"></span><span class="t-page">۵</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-21"><span class="s-id">2.1</span><span>پیکربندی سخت‌افزار و رابط</span><span class="s-dots"></span><span class="s-page">۵</span></a>
+    <a class="toc-sub" href="#sec-22"><span class="s-id">2.2</span><span>اندازۀ سکتور و جابه‌جایی نشانی</span><span class="s-dots"></span><span class="s-page">۶</span></a>
+    <a class="toc-sub" href="#sec-23"><span class="s-id">2.3</span><span>سازگارسازی diskio</span><span class="s-dots"></span><span class="s-page">۷</span></a>
+    <a class="toc-sub" href="#sec-24"><span class="s-id">2.4</span><span>نمونۀ نصب و خواندن/نوشتن</span><span class="s-dots"></span><span class="s-page">۸</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b3"><span class="t-num">۴</span><span class="t-title">بخش ۳ | انتقال سیستم فایل روی کارت SD با SDIO</span><span class="t-dots"></span><span class="t-page">۸</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-31"><span class="s-id">3.1</span><span>پیکربندی سخت‌افزار و رابط</span><span class="s-dots"></span><span class="s-page">۸</span></a>
+    <a class="toc-sub" href="#sec-32"><span class="s-id">3.2</span><span>سازگارسازی diskio</span><span class="s-dots"></span><span class="s-page">۹</span></a>
+    <a class="toc-sub" href="#sec-33"><span class="s-id">3.3</span><span>نمونۀ نصب و خواندن/نوشتن</span><span class="s-dots"></span><span class="s-page">۱۰</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b4"><span class="t-num">۵</span><span class="t-title">بخش ۴ | پیکربندی و راستی‌آزمایی</span><span class="t-dots"></span><span class="t-page">۱۱</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-41"><span class="s-id">4.1</span><span>پیکربندی کلیدی ffconf.h</span><span class="s-dots"></span><span class="s-page">۱۱</span></a>
+    <a class="toc-sub" href="#sec-42"><span class="s-id">4.2</span><span>مقایسۀ تفاوت‌های دو کانال</span><span class="s-dots"></span><span class="s-page">۱۱</span></a>
+    <a class="toc-sub" href="#sec-43"><span class="s-id">4.3</span><span>عیب‌یابی خطاهای رایج</span><span class="s-dots"></span><span class="s-page">۱۲</span></a>
+    <a class="toc-sub" href="#sec-44"><span class="s-id">4.4</span><span>گام‌های راستی‌آزمایی</span><span class="s-dots"></span><span class="s-page">۱۳</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۶</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۱۴</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۷</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۱۴</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">شکل ۱</span><span>ساختار لایه‌ای FatFs</span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">شکل ۲</span><span>روند پردازش نوشتن تک‌بلوکی فلش</span><span class="f-dots"></span><span class="f-page">۶</span></div>
+        <div class="frow"><span class="f-id">جدول ۱</span><span>دامنۀ کاربرد سند</span><span class="f-dots"></span><span class="f-page">۳</span></div>
+        <div class="frow"><span class="f-id">جدول ۲</span><span>ساختار فایل پروژه‌ها</span><span class="f-dots"></span><span class="f-page">۵</span></div>
+        <div class="frow"><span class="f-id">جدول ۳</span><span>اتصال پایه‌های SPI</span><span class="f-dots"></span><span class="f-page">۵</span></div>
+      </div>
+      <div>
+        <div class="frow"><span class="f-id">جدول ۴</span><span>اتصال پایه‌های SDIO</span><span class="f-dots"></span><span class="f-page">۹</span></div>
+        <div class="frow"><span class="f-id">جدول ۵</span><span>پیکربندی ffconf.h و تفاوت‌ها</span><span class="f-dots"></span><span class="f-page">۱۱</span></div>
+        <div class="frow"><span class="f-id">جدول ۶</span><span>تفاوت‌های دو کانال</span><span class="f-dots"></span><span class="f-page">۱۲</span></div>
+        <div class="frow"><span class="f-id">جدول ۷</span><span>خطاهای رایج و عیب‌یابی</span><span class="f-dots"></span><span class="f-page">۱۳</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> سیستم فایل <span class="en">FatFs</span> به‌عنوان لایۀ میانی، API استاندارد فایل را به لایۀ کاربرد ارائه می‌کند و تفاوت رسانه‌ها را در لایۀ <span class="en">diskio.c</span> منزوی می‌سازد. این سند انتقال آن را روی دو رسانه شرح می‌دهد: <span class="en">SPI FLASH</span> (سکتور منطقی 4096 بایت، جابه‌جایی 1536 سکتوری و ظرفیت 10MB روی <span class="en">W25Q128</span>) و کارت <span class="en">SD</span> با <span class="en">SDIO</span> (درایو <span class="en">DEV_MMC</span> و قالب <span class="en">FM_FAT32</span>) — همراه با کد کامل، پیکربندی <span class="en">ffconf.h</span>، جدول تفاوت‌های دو کانال و گام‌های عیب‌یابی و راستی‌آزمایی.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>این یادداشت کاربردی (<span class="en">Application Note</span>) شرح می‌دهد که چگونه در پروژه‌های سری <span class="en">CH32V</span> (معماری <span class="en">RISC-V</span> با کتابخانۀ استاندارد پیرامونی <span class="en">SPL</span>) در محیط <span class="en">MounRiver Studio</span>، سیستم فایل <span class="en">FatFs</span> منتقل (Port) شود. بر اساس رسانۀ ذخیره‌سازی، موضوع به دو دسته تقسیم می‌شود: <span class="en">SPI FLASH</span> و کارت <span class="en">SD</span> کنترل‌شده با رابط <span class="en">SDIO</span>؛ هر دو از یک لایۀ میانی مشترک <span class="en">FatFs</span> بهره می‌گیرند و تفاوت‌ها صرفاً در درایو رسانه و سازگارسازی <span class="en">diskio.c</span> متمرکز است.</p>
+<p>نام تمام رابط‌ها، ماکروها، تعریف پایه‌ها و کدهای فرمان در این سند از روال‌های واقعی کتابخانۀ الگو (درایو <span class="en">SPI Flash</span>، روال <span class="en">SDIO</span> و روال <span class="en">FatFs</span>) برگرفته شده و می‌توان مستقیماً آن‌ها را در پروژه به کار برد؛ هیچ توصیف حدسی در متن وجود ندارد. برای خواندن این سند، آشنایی با زبان <span class="en">C</span> و نحوۀ استفاده از کتابخانۀ استاندارد <span class="en">CH32V</span> لازم است. در جریان انتقال، فایل اصلی <span class="en">FatFs</span> یعنی <span class="en">ff.c</span> را دست‌نخورده بگذارید و کل کار سازگارسازی را در <span class="en">diskio.c</span> و <span class="en">ffconf.h</span> متمرکز کنید.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>MCU عمومی</td><td>مدل‌های دارای <span class="en">SDIO</span> / <span class="en">SPI</span> مانند <span class="en">CH32V407</span></td></tr>
+  </table>
+</div>
+
+<h3 class="h2x" id="sec-intro-tech"><span class="dm">◆</span>توضیح مختصر فنی</h3>
+<p style="color:#9a8f83;font-size:11.6px;margin-top:-4px;">این بخش افزودۀ مترجم برای درک بهتر مفاهیم سند است و در متن اصلی وجود ندارد.</p>
+<p><b style="color:#8a4a12;">۱. سیستم فایل چیست؟</b></p>
+<p>سیستم فایل (<span class="en">File System</span>) سازوکاری برای سازمان‌دهی داده‌ها روی رسانۀ ذخیره‌سازی به‌صورت فایل و پوشه است؛ به لایۀ کاربرد امکان می‌دهد بدون آگاهی از چیدمان فیزیکی بایت‌ها روی رسانه، فایل را با نام بسازد، بخواند، بنویسد یا حذف کند. <span class="en">FAT</span> و <span class="en">FAT32</span> از رایج‌ترین سیستم‌های فایل در میکروکنترلرها و کارت‌های SD هستند.</p>
+<p><b style="color:#8a4a12;">۲. FatFs چیست؟</b></p>
+<p><span class="en">FatFs</span> ماژول میان‌افزار متن‌باز پیاده‌سازی سیستم فایل <span class="en">FAT</span> برای سیستم‌های نهفته است. این ماژول از سخت‌افزار کاملاً مستقل است: در بالا مجموعه رابط‌های استاندارد <span class="en">f_mount</span>، <span class="en">f_open</span>، <span class="en">f_read</span>، <span class="en">f_write</span> و … را ارائه می‌کند و در پایین، عملیات خواندن/نوشتن را از طریق توابع ثابت <span class="en">disk_*</span> به لایۀ درایو رسانه می‌سپارد؛ به همین دلیل فقط با نوشتن یک لایۀ نازک، روی هر رسانه‌ای نصب می‌شود.</p>
+<p><b style="color:#8a4a12;">۳. نقش diskio.c و ffconf.h</b></p>
+<p><span class="en">diskio.c</span> پل میان <span class="en">FatFs</span> و درایو رسانه است و توابع <span class="en">disk_status</span>، <span class="en">disk_read</span>، <span class="en">disk_write</span> و <span class="en">disk_ioctl</span> را برای رسانۀ مشخص پیاده‌سازی می‌کند؛ <span class="en">ffconf.h</span> نیز پیکربندی امکانات ماژول (اندازۀ سکتور، تعداد درایوها، صفحۀ کد، نام فایل طولانی و …) را در اختیار می‌گیرد. تمام تفاوت‌های دو پروژۀ این سند در همین دو فایل خلاصه می‌شود.</p>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">مرور کلی</div>
+  <div class="sec-divider"></div>
+</div>
+<p>این بخش ساختار لایه‌ای <span class="en">FatFs</span> در پروژه‌های <span class="en">CH32V</span> و ساختار فایل دو پروژه را معرفی می‌کند و مبنای سازگارسازی رسانه در بخش‌های بعدی را فراهم می‌کند.</p>
+<h3 class="h2x" id="sec-11"><span class="dm">◆</span>۱.۱ هدف انتقال و رویکرد کلی</h3>
+<p>هدف انتقال آن است که لایۀ کاربرد بتواند از طریق رابط‌های استاندارد <span class="en">FatFs</span> (<span class="en">f_mount</span>، <span class="en">f_open</span>، <span class="en">f_read</span>، <span class="en">f_write</span> و …) به رسانۀ ذخیره‌سازی دسترسی داشته باشد و تفاوت رسانه‌ها در لایۀ <span class="en">diskio.c</span> منزوی شود. <span class="en">FatFs</span> یک لایۀ میانی است که در بالا API فایل ارائه می‌کند و در پایین از طریق رابط ثابت ورودی/خروجی دیسک، درایو رسانه را فرا می‌خواند.</p>
+<p><b style="color:#8a4a12;">۱.۱.۱ ساختار لایه‌ای</b></p>
+<p>ساختار لایه‌ای <span class="en">FatFs</span> در شکل ۱ نشان داده شده است. تفاوت دو پروژه فقط در لایۀ درایو رسانه و شمارۀ درایو فیزیکی و پارامترهای سکتور در <span class="en">diskio.c</span> است؛ بدنۀ <span class="en">FatFs</span> کاملاً یکسان باقی می‌ماند.</p>
+<div class="fig" id="fig-11">
+  <div class="figbox"><img src="assets/img/an90003-layers.png" alt="ساختار لایه‌ای FatFs" style="max-width:500px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱</span><span class="cap-text">ساختار لایه‌ای <span class="en">FatFs</span> (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p><b style="color:#8a4a12;">۱.۱.۲ ساختار فایل پروژه</b></p>
+<p>ساختار فایل دو پروژه در جدول ۲ آمده است. توجه شود که پوشۀ <span class="en">FATFS</span> در پروژۀ <span class="en">SPI FLASH</span> در ریشۀ پروژه و در پروژۀ <span class="en">SDIO</span> درون پوشۀ <span class="en">User</span> قرار دارد؛ هنگام افزودن به پروژه کافی است مسیر جستجوی فایل‌های سرآیند مطابق مسیر واقعی تنظیم شود.</p>
+<div class="tblwrap" id="tab-02">
+  <div class="tblcap"><span class="cap-pill">جدول ۲</span><span class="cap-text">ساختار فایل پروژه‌ها</span></div>
+  <table class="tbl">
+    <tr><th style="width:24%;">پروژه</th><th style="width:18%;">مسیر</th><th>فایل‌ها</th></tr>
+    <tr><td rowspan="2"><span class="en">FATFS_SPI_FLASH</span></td><td><span class="en">FATFS/</span></td><td><span class="en">diskio.c</span>، <span class="en">diskio.h</span>، <span class="en">ff.c</span>، <span class="en">ff.h</span>، <span class="en">ffconf.h</span>، <span class="en">ffsystem.c</span>، <span class="en">ffunicode.c</span></td></tr>
+    <tr><td><span class="en">User/</span></td><td><span class="en">main.c</span>، <span class="en">SPI.c</span>، <span class="en">SPI.h</span>، <span class="en">ch32v4x7_conf.h</span>، <span class="en">ch32v4x7_it.c/h</span>، <span class="en">system_ch32v4x7.c/h</span></td></tr>
+    <tr><td rowspan="2"><span class="en">FATFS_SDIO_SD</span></td><td><span class="en">User/FATFS/</span></td><td><span class="en">diskio.c</span>، <span class="en">diskio.h</span>، <span class="en">ff.c</span>، <span class="en">ff.h</span>، <span class="en">ffconf.h</span>، <span class="en">ffsystem.c</span>، <span class="en">ffunicode.c</span></td></tr>
+    <tr><td><span class="en">User/</span></td><td><span class="en">main.c</span>، <span class="en">sdio.c</span>، <span class="en">sdio.h</span>، <span class="en">ch32v4x7_conf.h</span>، <span class="en">ch32v4x7_it.c/h</span>، <span class="en">system_ch32v4x7.c/h</span></td></tr>
+  </table>
+</div>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">انتقال سیستم فایل روی SPI FLASH</div>
+  <div class="sec-divider"></div>
+</div>
+<p>این بخش بر پایۀ پروژۀ <span class="en">FATFS_SPI_FLASH</span>، روش انتقال سیستم فایل با رسانۀ <span class="en">W25Qxx</span> را شرح می‌دهد.</p>
+<h3 class="h2x" id="sec-21"><span class="dm">◆</span>۲.۱ پیکربندی سخت‌افزار و رابط</h3>
+<p><b style="color:#8a4a12;">۲.۱.۱ اتصال پایه‌های SPI</b></p>
+<p><span class="en">SPI FLASH</span> از طریق <span class="en">SPI1</span> متصل می‌شود؛ اتصال پایه‌ها در جدول ۳ آمده است. خط انتخاب تراشه (<span class="en">CS</span>) مستقیماً با <span class="en">GPIO</span> کنترل می‌شود و <span class="en">NSS</span> سخت‌افزاری را اشغال نمی‌کند.</p>
+<div class="tblwrap" id="tab-03">
+  <div class="tblcap"><span class="cap-pill">جدول ۳</span><span class="cap-text">اتصال پایه‌های <span class="en">SPI</span></span></div>
+  <table class="tbl">
+    <tr><th style="width:18%;">سیگنال</th><th style="width:32%;">پایه</th><th>توضیح</th></tr>
+    <tr><td><span class="en">CS</span></td><td><span class="en">PA2</span></td><td>خروجی push-pull معمولی؛ در بیکاری سطح بالا</td></tr>
+    <tr><td><span class="en">CLK</span></td><td><span class="en">PA5</span> (<span class="en">SPI1_SCK</span>)</td><td>خروجی push-pull چندگانه (Alternate)</td></tr>
+    <tr><td><span class="en">DO</span></td><td><span class="en">PA6</span> (<span class="en">SPI1_MISO</span>)</td><td>ورودی شناور</td></tr>
+    <tr><td><span class="en">DI</span></td><td><span class="en">PA7</span> (<span class="en">SPI1_MOSI</span>)</td><td>خروجی push-pull چندگانه</td></tr>
+    <tr><td><span class="en">WP / HOLD</span></td><td><span class="en">3.3V</span></td><td>مستقیماً به سطح بالا کشیده شده</td></tr>
+  </table>
+</div>
+<p>مقداردهی اولیۀ <span class="en">SPI</span> در <span class="en">SPI_Flash_Init()</span> انجام می‌شود: فعال‌سازی <span class="en">RCC_PB2Periph_GPIOA</span> و <span class="en">RCC_PB2Periph_SPI1</span>؛ <span class="en">SPI</span> در حالت مستر، دوخطی تمام‌دوطرفه، دادۀ ۸ بیتی، <span class="en">CPOL_High</span> و <span class="en">CPHA_2Edge</span>، <span class="en">NSS</span> نرم‌افزاری، پیش‌تقسیم‌کنندۀ <span class="en">SPI_BaudRatePrescaler_4</span> و ارسال <span class="en">MSB</span> ابتدا. انتخاب تراشه با <span class="en">GPIO_WriteBit(GPIOA, GPIO_Pin_2, 0/1)</span> کنترل می‌شود.</p>
+<h3 class="h2x" id="sec-22"><span class="dm">◆</span>۲.۲ اندازۀ سکتور و جابه‌جایی نشانی</h3>
+<p><b style="color:#8a4a12;">۲.۲.۱ سکتور 4KB و خواندن-تغییر-نوشتن</b></p>
+<p>برخلاف کارت <span class="en">SD</span>، این پروژه اندازۀ سکتور منطقی <span class="en">FatFs</span> را 4096 بایت تنظیم می‌کند تا با گرانول پاک‌سازی <span class="en">SPI FLASH</span> یکسان باشد؛ یعنی <span class="en">FF_MIN_SS</span> برابر 512 و <span class="en">FF_MAX_SS</span> برابر 4096. بدین ترتیب طول نوشتنِ متناظر با هر <span class="en">disk_write</span> مضرب 4KB است و از خواندن-تغییر-نوشتن در مرز بلوک‌های پاک‌سازی اجتناب می‌شود.</p>
+<p>پاک‌سازی درون یک بلوک اجتناب‌ناپذیر است: در <span class="en">SPI FLASH</span> هنگام نوشتن فقط می‌توان 1 را به 0 تبدیل کرد و پیش از نوشتن باید پاک‌سازی انجام شود. تابع <span class="en">SPI_Flash_Write()</span> این مورد را از پیش مدیریت می‌کند؛ روند آن در شکل ۲ آمده است.</p>
+<div class="fig" id="fig-21">
+  <div class="figbox"><img src="assets/img/an90003-flow.png" alt="روند پردازش نوشتن تک‌بلوکی" style="max-width:500px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۲</span><span class="cap-text">روند پردازش نوشتن تک‌بلوکی در <span class="en">SPI_Flash_Write</span> (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>بنابراین در <span class="en">disk_write</span> مستقیماً <span class="en">SPI_Flash_Write</span> فراخوانی می‌شود و نیازی به پیاده‌سازی منطق بافر و پاک‌سازی در <span class="en">diskio.c</span> نیست. بافر مربوطه در این پروژه آرایۀ سراسری <span class="en">SPI_FLASH_BUF[4096]</span> است و 4KB از <span class="en">RAM</span> را اشغال می‌کند.</p>
+<p><b style="color:#8a4a12;">۲.۲.۲ جابه‌جایی 1536 سکتوری و ظرفیت قابل استفاده</b></p>
+<p>فایل <span class="en">diskio.c</span> این پروژه پیش از هر خواندن/نوشتن، به‌طور یکنواخت <span class="en">sector += 1536</span> اجرا می‌کند؛ یعنی شمارۀ سکتور منطقی به‌کلی 1536 سکتور 4KB (معادل 6MB) به جلو رانده می‌شود. بدین ترتیب سیستم فایل از منطقۀ بعد از 6MB استفاده می‌کند و 6MB نخست برای کاربردهای دیگر (مانند برنامه، ناحیه پارامتر یا داده‌ای دیگر) باقی می‌ماند تا با داده‌های موجود تداخل نکند.</p>
+<p>با در نظر گرفتن مقادیر بازگشتی <span class="en">disk_ioctl</span>، پارامترهای واقعی سیستم فایل عبارت‌اند از: <span class="en">GET_SECTOR_COUNT</span> برابر 2560، <span class="en">GET_SECTOR_SIZE</span> برابر 4096 و <span class="en">GET_BLOCK_SIZE</span> برابر 1. بنابراین ظرفیت سیستم فایل 2560 × 4KB = 10MB است و بازۀ 6MB تا 16MB را اشغال می‌کند؛ دقیقاً متناظر با <span class="en">W25Q128</span> ظرفیت 16MB. برای استفاده روی قطعه‌هایی با ظرفیت دیگر، باید دو پارامتر «جابه‌جایی» و «شمارۀ کل سکتورها» هم‌زمان تنظیم شوند.</p>
+<h3 class="h2x" id="sec-23"><span class="dm">◆</span>۲.۳ سازگارسازی diskio</h3>
+<p>شمارۀ درایو فیزیکی این پروژه <span class="en">SPI_FLASH = 0</span> تعریف شده است؛ بنابراین مسیر نصب <span class="en">"0:"</span> است. نکات پیاده‌سازی پنج رابط به شرح زیر است:</p>
+<div class="codeblk"><span class="cm">#define SPI_FLASH     0    /* SPI FLASH mapped to physical drive 0 */</span>
+
+DSTATUS disk_status (BYTE pdrv)
+{
+    switch (pdrv) {
+    case SPI_FLASH :
+        id = SPI_Flash_ReadID();       <span class="cm">/* 0xEF13 ~ 0xEF17 hit: clear STA_NOINIT */</span>
+        ...
+    }
+}</div>
+<p>در <span class="en">disk_read</span>، پیش از خواندن جابه‌جایی اعمال و نشانی بایت محاسبه می‌شود:</p>
+<div class="codeblk">DRESULT disk_read (BYTE pdrv, BYTE *buff, LBA_t sector, UINT count)
+{
+    case SPI_FLASH :
+        sector += 1536;
+        SPI_Flash_Read(buff, sector &lt;&lt; 12, count &lt;&lt; 12);
+        res = RES_OK;
+}</div>
+<div class="codeblk">DRESULT disk_write (BYTE pdrv, const BYTE *buff, LBA_t sector, UINT count)
+{
+    case SPI_FLASH :
+        sector += 1536;
+        write_addr = sector &lt;&lt; 12;
+        SPI_Flash_Write((u8 *)buff, write_addr, count &lt;&lt; 12);
+        res = RES_OK;
+}
+
+DRESULT disk_ioctl (BYTE pdrv, BYTE cmd, void *buff)
+{
+    case SPI_FLASH :
+        case CTRL_SYNC:        break;
+        case GET_SECTOR_COUNT: *(DWORD*)buff = 2560;   break;
+        case GET_SECTOR_SIZE:  *(WORD*)buff  = 4096;   break;
+        case GET_BLOCK_SIZE:   *(WORD*)buff  = 1;      break;
+        case CTRL_TRIM:        break;
+}</div>
+<div class="scen"><span class="lbl">نکته: </span>نوع پارامتر طولِ <span class="en">SPI_Flash_Read</span> و <span class="en">SPI_Flash_Write</span> برابر <span class="en">u16</span> است، درحالی‌که <span class="en">disk_read/disk_write</span> مقدار <span class="en">count &lt;&lt; 12</span> می‌دهند؛ سقف شمارۀ سکتور در هر فراخوانی حدود 15 سکتور است (15 × 4096 = 61440 و 16 × 4096 از ظرفیت ۱۶ بیتی بیرون می‌زند). اگر کاربرد شما خواندن/نوشتن پیوستۀ بزرگ دارد، بهتر است نوع پارامتر طول درایو به <span class="en">u32</span> تغییر کند یا در <span class="en">diskio.c</span> به تکه‌های ۱۵ سکتوری تقسیم و حلقه‌وار فراخوانی شود.</div>
+<h3 class="h2x" id="sec-24"><span class="dm">◆</span>۲.۴ نمونۀ نصب و خواندن/نوشتن</h3>
+<p>روند اصلی برنامه چنین است: مقداردهی اولیۀ <span class="en">SPI</span> و فلش، تشخیص مدل، نصب، قالب‌بندی در صورت نبود سیستم فایل، ساختن فایل، نوشتن و خواندن باز. کد کلیدی به این صورت است:</p>
+<div class="codeblk">SPI_Flash_Init();
+Flash_Model = SPI_Flash_ReadID();      <span class="cm">/* print model; print Fail! on error */</span>
+SPI_Flash_Erase_Sector(0);
+
+opt.fmt = FM_FAT;  opt.n_fat = 1;  opt.align = 0;  opt.au_size = 0;
+
+res_sd = f_mount(&amp;fs, "0:", 1);
+if (res_sd == FR_NO_FILESYSTEM) {
+    res_sd = f_mkfs("0:", &amp;opt, work, sizeof(work));
+    if (res_sd == FR_OK) { res_sd = f_mount(&amp;fs, "0:", 1); }
+}
+
+res_sd = f_open(&amp;fnew, "0:/testWCH.txt", FA_CREATE_ALWAYS | FA_WRITE);
+res_sd = f_write(&amp;fnew, WriteBuf, 11, &amp;fnum);
+f_close(&amp;fnew);
+
+res_sd = f_open(&amp;fnew, "0:/testWCH.txt", FA_OPEN_EXISTING | FA_READ);
+res_sd = f_read(&amp;fnew, ReadSDBuf, 11, (UINT *)&amp;fnum);</div>
+<p>در این پروژه <span class="en">WriteBuf</span> برابر رشتۀ <span class="en">"Hello WCH!"</span> (11 بایت) است و پس از خواندن، داده بایت‌به‌بایت چاپ و مقایسه می‌شود. پارامتر قالب‌بندی <span class="en">FM_FAT</span> است و اندازۀ بافر <span class="en">work</span> برابر <span class="en">FF_MAX_SS</span> (در این پروژه 4096) است.</p>
+
+<!-- ================= بخش ۳ ================= -->
+<div class="chapter-header" id="sec-b3">
+  <span class="sec-pill">بخش ۳</span>
+  <div class="sec-title">انتقال سیستم فایل روی کارت SD با SDIO</div>
+  <div class="sec-divider"></div>
+</div>
+<p>این بخش بر پایۀ پروژۀ <span class="en">FATFS_SDIO_SD</span>، روش انتقال سیستم فایل روی کارت <span class="en">SD</span> کنترل‌شده با جانۀ <span class="en">SDIO</span> را شرح می‌دهد.</p>
+<h3 class="h2x" id="sec-31"><span class="dm">◆</span>۳.۱ پیکربندی سخت‌افزار و رابط</h3>
+<p><b style="color:#8a4a12;">۳.۱.۱ اتصال پایه‌های SDIO</b></p>
+<p>کارت <span class="en">SD</span> از طریق جانۀ <span class="en">SDIO</span> متصل می‌شود و از گذرگاه دادۀ ۴ بیتی استفاده می‌کند؛ اتصال پایه‌ها در جدول ۴ آمده است.</p>
+<div class="tblwrap" id="tab-04">
+  <div class="tblcap"><span class="cap-pill">جدول ۴</span><span class="cap-text">اتصال پایه‌های <span class="en">SDIO</span></span></div>
+  <table class="tbl">
+    <tr><th style="width:18%;">سیگنال</th><th style="width:26%;">پایه</th><th>توضیح</th></tr>
+    <tr><td><span class="en">CLK</span></td><td><span class="en">PC12</span></td><td>ساعت <span class="en">SDIO</span></td></tr>
+    <tr><td><span class="en">CMD</span></td><td><span class="en">PD2</span></td><td>خط فرمان</td></tr>
+    <tr><td><span class="en">D0</span></td><td><span class="en">PB14</span></td><td>خط داده 0</td></tr>
+    <tr><td><span class="en">D1</span></td><td><span class="en">PB15</span></td><td>خط داده 1</td></tr>
+    <tr><td><span class="en">D2</span></td><td><span class="en">PC10</span></td><td>خط داده 2</td></tr>
+    <tr><td><span class="en">D3</span></td><td><span class="en">PC11</span></td><td>خط داده 3</td></tr>
+  </table>
+</div>
+<p><b style="color:#8a4a12;">۳.۱.۲ ساعت و رابط درایو</b></p>
+<p>تقسیم فرکانس ساعت و حالت کار در <span class="en">sdio.h</span> تعریف شده‌اند: <span class="en">SDIO_INIT_CLK_DIV</span> برابر <span class="en">0xB2</span> برای ساعتِ آهستۀ مرحلۀ مقداردهی اولیه و <span class="en">SDIO_TRANSFER_CLK_DIV</span> برابر <span class="en">0x00</span> برای مرحلۀ انتقال؛ حالت کار نیز <span class="en">SD_POLLING_MODE</span> یا <span class="en">SD_DMA_MODE</span> انتخاب می‌شود. رابط بیرونی درایو شامل <span class="en">SD_Init</span>، <span class="en">SD_GetState</span>، <span class="en">SD_GetCardInfo</span>، <span class="en">SD_ReadDisk</span>، <span class="en">SD_WriteDisk</span> و متغیر سراسری <span class="en">SDCardInfo</span> است (با اعضای <span class="en">CardType</span>، <span class="en">CardCapacity</span>، <span class="en">CardBlockSize</span>، <span class="en">RCA</span> و <span class="en">SD_cid</span>).</p>
+<h3 class="h2x" id="sec-32"><span class="dm">◆</span>۳.۲ سازگارسازی diskio</h3>
+<p>این پروژه قرارداد شمارۀ درایو نمونۀ <span class="en">FatFs</span> را حفظ کرده است: <span class="en">DEV_RAM</span> برابر 0، <span class="en">DEV_MMC</span> برابر 1 و <span class="en">DEV_USB</span> برابر 2؛ کارت <span class="en">SD</span> از <span class="en">DEV_MMC</span> استفاده می‌کند و مسیر نصب <span class="en">"1:"</span> نوشته می‌شود. نکات پیاده‌سازی رابط‌ها به شرح زیر است:</p>
+<div class="codeblk"><span class="cm">#define DEV_MMC     1   /* SD card mapped to physical drive 1 */</span>
+
+DSTATUS disk_status (BYTE pdrv)
+{
+    case DEV_MMC :
+        result = SD_GetState();
+        if (result &lt; SD_CARD_DISCONNECTED) { stat &amp;= ~STA_NOINIT; }
+        else                               { stat  = STA_NOINIT;  }
+}</div>
+<div class="codeblk">DRESULT disk_read (...)
+{
+    case DEV_MMC :
+        result = SD_ReadDisk(buff, sector, count);      <span class="cm">/* SD_OK mapped to RES_OK */</span>
+}
+
+DRESULT disk_write (...)
+{
+    case DEV_MMC :
+        result = SD_WriteDisk((u8 *)buff, sector, count);
+}</div>
+<p>پارامترهای <span class="en">disk_ioctl</span> از ساختار اطلاعات کارت گرفته می‌شود:</p>
+<div class="codeblk">case GET_SECTOR_COUNT: *(DWORD*)buff = SDCardInfo.CardCapacity / 512;  break;
+case GET_SECTOR_SIZE:  *(WORD*)buff  = SDCardInfo.CardBlockSize;       break;
+case GET_BLOCK_SIZE:   *(WORD*)buff  = SDCardInfo.CardBlockSize;       break;</div>
+<p>تابع <span class="en">get_fattime()</span> در این پروژه مقدار ثابت 0 را برمی‌گرداند.</p>
+<div class="scen"><span class="lbl">نکته: </span>پارامتر شمارۀ سکتورِ <span class="en">SD_ReadDisk</span> و <span class="en">SD_WriteDisk</span> از نوع <span class="en">u8</span> است، درحالی‌که <span class="en">disk_read/disk_write</span> مقدار <span class="en">UINT count</span> می‌دهند؛ درخواستِ بیش از 255 سکتور در یک فراخوانی کوتاه (Truncate) می‌شود. برای خواندن/نوشتن پیوستۀ بزرگ، بهتر است پارامتر درایو به <span class="en">u32</span> تغییر کند و در <span class="en">diskio.c</span> به تکه‌های کوچک‌تر تقسیم شود.</div>
+<h3 class="h2x" id="sec-33"><span class="dm">◆</span>۳.۳ نمونۀ نصب و خواندن/نوشتن</h3>
+<p>روند اصلی با کانال <span class="en">SPI FLASH</span> یکسان است؛ تفاوت در شمارۀ درایو و قالب قالب‌بندی است:</p>
+<div class="codeblk">while (SD_Init()) { printf("SD Card Error!\r\n"); delay_ms(1000); }
+show_sdcard_info();                    <span class="cm">/* print card type, ManufacturerID, RCA, capacity, block size */</span>
+
+opt.fmt = FM_FAT32;  opt.n_fat = 1;  opt.align = 0;  opt.au_size = 0;
+
+res_sd = f_mount(&amp;fs, "1:", 1);
+if (res_sd == FR_NO_FILESYSTEM) {
+    res_sd = f_mkfs("1:", &amp;opt, work, sizeof(work));
+    if (res_sd == FR_OK) { res_sd = f_mount(&amp;fs, "1:", 1); }
+}
+
+res_sd = f_open(&amp;fnew, "1:/testWCH.txt", FA_CREATE_ALWAYS | FA_WRITE);
+res_sd = f_write(&amp;fnew, WriteBuf, 11, &amp;fnum);
+f_close(&amp;fnew);
+
+res_sd = f_open(&amp;fnew, "1:/testWCH.txt", FA_OPEN_EXISTING | FA_READ);
+res_sd = f_read(&amp;fnew, ReadSDBuf, 11, (UINT *)&amp;fnum);</div>
+<p>قالب قالب‌بندی این پروژه <span class="en">FM_FAT32</span> است و با <span class="en">FM_FAT</span> پروژۀ <span class="en">SPI FLASH</span> تفاوت دارد؛ اندازۀ بافر <span class="en">work</span> نیز برابر <span class="en">FF_MAX_SS</span> (در این پروژه 512) است. در صورت شکست <span class="en">SD_Init</span>، پیام <span class="en">"SD Card Error!"</span> به‌طور حلقه‌ای چاپ می‌شود و پس از ۱ ثانیه تأخیر، دوباره تلاش می‌شود.</p>
+
+<!-- ================= بخش ۴ ================= -->
+<div class="chapter-header" id="sec-b4">
+  <span class="sec-pill">بخش ۴</span>
+  <div class="sec-title">پیکربندی و راستی‌آزمایی</div>
+  <div class="sec-divider"></div>
+</div>
+<h3 class="h2x" id="sec-41"><span class="dm">◆</span>۴.۱ پیکربندی کلیدی ffconf.h</h3>
+<p>پیکربندی اصلی <span class="en">ffconf.h</span> و تفاوت‌های دو پروژه در جدول ۵ آمده است.</p>
+<div class="tblwrap" id="tab-05">
+  <div class="tblcap"><span class="cap-pill">جدول ۵</span><span class="cap-text">پیکربندی <span class="en">ffconf.h</span> و تفاوت‌ها</span></div>
+  <table class="tbl">
+    <tr><th style="width:24%;">گزینۀ پیکربندی</th><th style="width:20%;"><span class="en">FATFS_SPI_FLASH</span></th><th style="width:20%;"><span class="en">FATFS_SDIO_SD</span></th><th>توضیح</th></tr>
+    <tr><td><span class="en">FF_MIN_SS</span></td><td>512</td><td>512</td><td>کمینۀ اندازۀ سکتور</td></tr>
+    <tr><td><span class="en">FF_MAX_SS</span></td><td>4096</td><td>512</td><td>در سمت <span class="en">SPI FLASH</span> برابر 4096 تا با گرانول پاک‌سازی هم‌تراز شود</td></tr>
+    <tr><td><span class="en">FF_VOLUMES</span></td><td>1</td><td>3</td><td>شمارۀ درایوهای منطقی؛ به قرارداد شمارۀ درایو مربوط است</td></tr>
+    <tr><td><span class="en">FF_USE_FASTSEEK</span></td><td>1</td><td>0</td><td>جستجوی سریع در سمت <span class="en">SPI FLASH</span> فعال است</td></tr>
+    <tr><td><span class="en">FF_USE_MKFS</span></td><td>1</td><td>1</td><td>فعال‌سازی <span class="en">f_mkfs()</span></td></tr>
+    <tr><td><span class="en">FF_CODE_PAGE</span></td><td>936</td><td>936</td><td>صفحۀ کد چینی ساده‌شده</td></tr>
+  </table>
+</div>
+<h3 class="h2x" id="sec-42"><span class="dm">◆</span>۴.۲ مقایسۀ تفاوت‌های دو کانال</h3>
+<p>تفاوت‌های اصلی دو کانال در جدول ۶ خلاصه شده است.</p>
+<div class="tblwrap" id="tab-06">
+  <div class="tblcap"><span class="cap-pill">جدول ۶</span><span class="cap-text">تفاوت‌های دو کانال</span></div>
+  <table class="tbl">
+    <tr><th style="width:24%;">مورد</th><th style="width:38%;">کانال <span class="en">SPI FLASH</span></th><th>کانال کارت <span class="en">SD</span> (<span class="en">SDIO</span>)</th></tr>
+    <tr><td>شمارۀ درایو فیزیکی</td><td><span class="en">SPI_FLASH = 0</span>، مسیر <span class="en">"0:"</span></td><td><span class="en">DEV_MMC = 1</span>، مسیر <span class="en">"1:"</span></td></tr>
+    <tr><td>اندازۀ سکتور منطقی</td><td>4096</td><td>512 (از <span class="en">CardBlockSize</span>)</td></tr>
+    <tr><td>شمارۀ کل سکتورها</td><td>2560 (ثابت)</td><td><span class="en">CardCapacity / 512</span> (پویا)</td></tr>
+    <tr><td>جابه‌جایی نشانی</td><td>پیش از خواندن/نوشتن، +1536 سکتور (6MB)</td><td>بدون جابه‌جایی</td></tr>
+    <tr><td>قالب قالب‌بندی</td><td><span class="en">FM_FAT</span></td><td><span class="en">FM_FAT32</span></td></tr>
+    <tr><td>پاک‌سازی پیش از نوشتن</td><td>لازم؛ به‌طور داخلی در <span class="en">SPI_Flash_Write</span> مدیریت می‌شود</td><td>لازم نیست</td></tr>
+    <tr><td>سربار اضافی <span class="en">RAM</span></td><td>آرایۀ <span class="en">SPI_FLASH_BUF[4096]</span> مجموعاً 4KB</td><td>ندارد</td></tr>
+  </table>
+</div>
+<h3 class="h2x" id="sec-43"><span class="dm">◆</span>۴.۳ عیب‌یابی خطاهای رایج</h3>
+<p>خطاهای رایج و علل احتمالی آن‌ها در جدول ۷ آمده است.</p>
+<div class="tblwrap" id="tab-07">
+  <div class="tblcap"><span class="cap-pill">جدول ۷</span><span class="cap-text">خطاهای رایج و عیب‌یابی</span></div>
+  <table class="tbl">
+    <tr><th style="width:36%;">خطا</th><th>علت احتمالی</th></tr>
+    <tr><td>چاپ <span class="en">Fail!</span> در <span class="en">SPI FLASH</span></td><td>شناسۀ خوانده‌شده خارج از بازۀ <span class="en">0xEF13~0xEF17</span> است یا اتصال سیم‌ها (<span class="en">CS/CLK/DI/DO</span>) نادرست است</td></tr>
+    <tr><td><span class="en">FR_NOT_READY</span> (<span class="en">SPI FLASH</span>)</td><td><span class="en">disk_status</span> قطعه را تشخیص نمی‌دهد یا مقداردهی اولیۀ <span class="en">SPI</span> اجرا نشده است</td></tr>
+    <tr><td><span class="en">FR_NOT_READY</span> (کارت <span class="en">SD</span>)</td><td>کارت کامل جا نیفتاده، اتصال پایه‌ها یا مقاومت‌های pull-up مطابقت ندارد یا <span class="en">SD_Init()</span> موفق نشده است</td></tr>
+    <tr><td><span class="en">FR_NO_FILESYSTEM</span></td><td>رسانه قالب‌بندی نشده است؛ با <span class="en">FF_USE_MKFS</span> برابر 0 قالب‌بندی درجا ممکن نیست</td></tr>
+    <tr><td><span class="en">FR_DISK_ERR</span> (نوشتن <span class="en">SPI FLASH</span>)</td><td>ناحیۀ هدف پاک‌سازی نشده، نوشتن بین‌صفحه‌ای تقسیم نشده یا پس از نوشتن منتظر صفرشدن <span class="en">BUSY</span> نمانده‌اید</td></tr>
+    <tr><td>ظرفیت مطابق انتظار نیست</td><td>شمارۀ سکتور 2560 و جابه‌جایی 1536 برای <span class="en">SPI FLASH</span> مقدار ثابت‌اند و باید مطابق قطعۀ واقعی تنظیم شوند</td></tr>
+    <tr><td>خطا در خواندن/نوشتن بلوک بزرگ</td><td>پارامتر طول درایو <span class="en">u16</span> است و درخواست سکتور زیاد در یک فراخوانی سرریز می‌شود</td></tr>
+    <tr><td>نام فایل چینی یا طولانی باز نمی‌شود</td><td><span class="en">FF_CODE_PAGE</span> برابر 936 نیست، یا <span class="en">FF_USE_LFN</span> برابر 0 است و <span class="en">ffunicode.c</span> به پروژه افزوده نشده است</td></tr>
+  </table>
+</div>
+<h3 class="h2x" id="sec-44"><span class="dm">◆</span>۴.۴ گام‌های راستی‌آزمایی</h3>
+<p>توصیه می‌شود راستی‌آزمایی به ترتیب زیر انجام شود: نخست از طریق پورت سریال (115200، با فراخوانی <span class="en">USART_Printf_Init(115200)</span>) مطمئن شوید خروجی <span class="en">SystemClk</span> و <span class="en">ChipID</span> درست است؛ سپس موفقیت تشخیص رسانه را تأیید کنید — در سمت <span class="en">SPI FLASH</span> مدل بازگشتی از <span class="en">SPI_Flash_ReadID()</span> چاپ می‌شود و در سمت کارت <span class="en">SD</span> با فراخوانی <span class="en">show_sdcard_info()</span> نوع کارت، <span class="en">ManufacturerID</span>، <span class="en">RCA</span>، ظرفیت و اندازۀ بلوک چاپ می‌شود؛ پس از آن مطمئن شوید <span class="en">f_mount</span> مقدار <span class="en">FR_OK</span> را برمی‌گرداند و در صورت دریافت <span class="en">FR_NO_FILESYSTEM</span>، اجرای موفق <span class="en">f_mkfs</span> و نصب مجدد بررسی شود؛ در پایان، مقادیر بازگشتی <span class="en">f_open</span>، <span class="en">f_write</span>، <span class="en">f_close</span>، <span class="en">f_open</span> و <span class="en">f_read</span> همگی <span class="en">FR_OK</span> باشد و ۱۱ بایت خوانده‌شده با محتوای نوشته‌شده یکسان باشد.</p>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN90003</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/10/19</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">FatFs</span></td><td class="jt">لایۀ میانی متن‌باز سیستم فایل FAT برای سیستم‌های نهفته؛ API استانداردی مانند f_mount و f_open ارائه می‌کند و از طریق رابط ثابت دیسک I/O با رسانه گفت‌وگو می‌کند</td></tr>
+      <tr><td><span class="en">diskio.c</span></td><td class="jt">لایۀ سازگارسازی دیسک و تنها نقطۀ وابسته به رسانه؛ توابع disk_status، disk_read، disk_write و disk_ioctl برای هر رسانه در آن پیاده‌سازی می‌شود</td></tr>
+      <tr><td><span class="en">ffconf.h</span></td><td class="jt">فایل پیکربندی FatFs؛ اندازۀ سکتور (FF_MIN_SS/FF_MAX_SS)، تعداد درایوها (FF_VOLUMES)، صفحۀ کد و امکاناتی مانند f_mkfs در آن تنظیم می‌شود</td></tr>
+      <tr><td><span class="en">ff.c</span></td><td class="jt">بدنۀ اصلی FatFs؛ در جریان انتقال نباید تغییر کند و تمام سازگارسازی به diskio.c و ffconf.h منتقل می‌شود</td></tr>
+      <tr><td><span class="en">SPI FLASH</span></td><td class="jt">فلش سری با رابط SPI مانند W25Qxx؛ گرانول پاک‌سازی 4KB دارد، هنگام نوشتن فقط 1 را به 0 تبدیل می‌کند و پیش از نوشتن باید پاک‌سازی شود</td></tr>
+      <tr><td><span class="en">W25Q128</span></td><td class="jt">فلش SPI با ظرفیت 16MB؛ جابه‌جایی 6MB و ظرفیت 10MB سیستم فایل در این سند بر مبنای آن محاسبه شده است</td></tr>
+      <tr><td><span class="en">SDIO</span></td><td class="jt">جانۀ گذرگاه کارت SD؛ در این پروژه با گذرگاه دادۀ ۴ بیتی روی پایه‌های PC12، PD2، PB14، PB15، PC10 و PC11</td></tr>
+      <tr><td><span class="en">سکتور منطقی</span></td><td class="jt">واحد خواندن/نوشتن سیستم فایل؛ در مسیر SPI FLASH برابر 4096 و در مسیر کارت SD برابر 512 بایت</td></tr>
+      <tr><td><span class="en">خواندن-تغییر-نوشتن (Read-Modify-Write)</span></td><td class="jt">خواندن بلوک کامل، تغییر بخشی از آن و بازنویسی کل بلوک؛ با هم‌ترازکردن اندازۀ سکتور با گرانول پاک‌سازی از آن اجتناب می‌شود</td></tr>
+      <tr><td><span class="en">جابه‌جایی سکتور</span></td><td class="jt">افزودن 1536 به شمارۀ هر سکتور پیش از خواندن/نوشتن تا سیستم فایل از منطقۀ بعد از 6MB فلش استفاده کند</td></tr>
+      <tr><td><span class="en">STA_NOINIT</span></td><td class="jt">پرچم «مقداردهی اولیه نشده» در وضعیت دیسک؛ با تشخیص موفق رسانه (خواندن شناسۀ فلش یا فراخوانی SD_GetState) پاک می‌شود</td></tr>
+      <tr><td><span class="en">DEV_RAM / DEV_MMC / DEV_USB</span></td><td class="jt">قرارداد شمارۀ درایو فیزیکی در نمونۀ FatFs: 0 برای RAM، 1 برای کارت SD (MMC) و 2 برای USB؛ کارت SD با مسیر «1:" نصب می‌شود</td></tr>
+      <tr><td><span class="en">SDCardInfo</span></td><td class="jt">ساختار اطلاعات کارت با اعضای CardType، CardCapacity، CardBlockSize، RCA و SD_cid؛ منبع پارامترهای disk_ioctl در مسیر SD</td></tr>
+      <tr><td><span class="en">FM_FAT / FM_FAT32</span></td><td class="jt">قالب قالب‌بندی در f_mkfs؛ مسیر SPI FLASH با FM_FAT و مسیر کارت SD با FM_FAT32 قالب‌بندی می‌شود</td></tr>
+      <tr><td><span class="en">get_fattime()</span></td><td class="jt">تابع تاریخ/زمان برای برچسب زمانی فایل‌ها؛ در این پروژه مقدار ثابت 0 را برمی‌گرداند</td></tr>
+      <tr><td><span class="en">SPI_FLASH_BUF[4096]</span></td><td class="jt">بافر سراسری 4KB درایو فلش برای خواندن-تغییر-نوشتن؛ سربار RAM اختصاصی مسیر SPI FLASH</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN90003 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۲۵</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN90003</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
