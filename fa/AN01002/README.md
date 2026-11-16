@@ -1,128 +1,110 @@
-<h1 dir="rtl" align="right">AN01002 — راهنمای جامع مصرف توان و حالت‌های کم‌مصرف در CH32L103</h1>
+<p align="center"><img src="../../Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider"></p>
 
-<div dir="rtl">
+# AN01002 — راهبردهای کاهش توان در CH32L103
+
+[🇮🇷 فارسی](README.md) · [🇬🇧 English](#english) · [فهرست دوزبانه / Bilingual index](../README.md)
+
+<div dir="rtl" align="right">
 
 ## معرفی
 
-این صفحه به معرفی و دسترسی به ترجمۀ فارسی یادداشت کاربردی **AN01002 V1.0** از شرکت **WCH** اختصاص دارد. سند، منابع مصرف توان در میکروکنترلر **CH32L103** و روش‌های کاهش مصرف در حالت‌های **Sleep، Stop1~4 و Standby** را بررسی می‌کند.
+این صفحه راهنمای دوزبانه یادداشت کاربردی **AN01002** از مجموعه Application Notes شرکت **WCH** است. موضوع سند: **راهبردهای کاهش توان در CH32L103**. این راهنما مسیر دسترسی به سند اصلی، فایل‌های ترجمه‌شده و رسانه‌های همراه را معرفی می‌کند. برای جزئیات پیاده‌سازی و محدودیت‌های فنی، متن کامل سند WCH و مستندات رسمی MCU مربوطه را بررسی کنید.
 
-تمرکز راهنما بر انتخاب حالت خواب متناسب با وظیفه، حفظ وضعیت سیستم، بیداری زمان‌بندی‌شده با **LPTIM** و بهینه‌سازی مصرف در زمان اجرا از طریق تنظیم فرکانس، ساعت‌های کم‌مصرف، اجرای کد از RAM و انتقال داده با DMA است.
+## وضعیت ترجمه و انتشار
 
-## دریافت فایل‌ها
+> **نسخه فارسی PDF و HTML در مخزن موجود است.**
 
-- [دانلود نسخۀ فارسی PDF](./AN01002%20FA.pdf)
-- [مشاهدۀ نسخۀ فارسی HTML](./AN01002-FA.html)
-- [مشاهدۀ سند اصلی چینی (Markdown)](../../zh/AN01002/AN01002.md)
-- [بازگشت به فهرست فارسی یادداشت‌های کاربردی](../README.md)
+در صورت موجود بودن، PDF برای مطالعه آفلاین و چاپ و HTML برای مشاهده در مرورگر مناسب است.
 
-## خلاصۀ محتوای سند
+## دسترسی به مستندات
 
-### ۱. حالت‌های کم‌مصرف و مقایسۀ آن‌ها
-
-سند سه گروه اصلی حالت کم‌مصرف را توضیح می‌دهد:
-
-- **Sleep:** هسته متوقف می‌شود، اما ساعت‌ها و جانبی‌های فعال طبق پیکربندی می‌توانند به کار ادامه دهند. وضعیت SRAM، رجیسترها و IO حفظ می‌شود. بیداری با وقفه یا رویداد و از طریق WFI/WFE انجام می‌شود.
-- **Stop1~Stop4:** ساعت‌های پرسرعت HSE، HSI و PLL و ساعت جانبی‌ها متوقف می‌شوند؛ وضعیت SRAM، رجیسترها و IO حفظ می‌شود. تفاوت این حالت‌ها عمدتاً به تنظیمات LDO و سطح حفظ RAM مربوط است. RTC، LPTIM و منابع بیداری پشتیبانی‌شده می‌توانند در این حالت‌ها فعال بمانند.
-- **Standby:** تنظیم‌گر اصلی ولتاژ خاموش و بیشتر مدارها بی‌برق می‌شوند. امکان حفظ بخش‌هایی از SRAM به پیکربندی بستگی دارد، اما وضعیت معمول اجرا حفظ نمی‌شود؛ خروج از Standby از مسیر راه‌اندازی مجدد انجام می‌شود.
-
-انتخاب حالت باید با توجه به نیاز به کارکرد جانبی در زمان خواب، منبع بیداری، زمان بازگشت، حفظ داده‌ها و هزینه راه‌اندازی مجدد صورت گیرد.
-
-### ۲. منابع مصرف جریان
-
-مصرف جریان CH32L103 در سند به جریان پویا و جریان ساکن تفکیک شده است. منابع مهم عبارت‌اند از:
-
-- هسته و گذرگاه: اجرای دستور، دسترسی به رجیسترها و انتقال داده
-- سیستم ساعت: HSI، HSE، PLL و توزیع ساعت
-- FLASH و SRAM: واکشی دستور، خواندن ثابت‌ها، دسترسی حافظه و حفظ داده
-- جانبی‌های دیجیتال و آنالوگ: از جمله USART، SPI، I2C، ADC و CMP
-- پایه‌های IO: مدار ورودی، pull-up/pull-down و درایور خروجی
-- تنظیم‌گرهای داخلی و مدارهای حفظ RAM
-
-در حالت اجرا، فرکانس سیستم، ساعت جانبی‌ها، اجرای کد از Flash یا RAM، پرس‌وجوی مکرر وضعیت و تغییرات IO بر مصرف اثر می‌گذارند. در حالت‌های کم‌مصرف، تفاوت اصلی به میزان توقف هسته و ساعت‌ها، وضعیت تنظیم‌گر داخلی و بخش‌های حافظۀ حفظ‌شده مربوط است.
-
-### ۳. انتخاب حالت خواب بر اساس کاربرد
-
-راهنما تأکید می‌کند که مقایسۀ حالت‌ها باید بر مبنای **میانگین جریان یک چرخه کامل** انجام شود؛ یعنی زمان بیداری و بازگشت، زمان اجرای وظیفه و زمان خواب با هم در نظر گرفته شوند.
-
-- برای دوره‌های کوتاه و وظایفی که به جانبی‌های ساعت‌دار نیاز دارند، Sleep ممکن است مناسب‌تر باشد.
-- برای زمان‌های انتظار طولانی‌تر، وقتی تنها منابع کم‌سرعت یا رویدادهای بیداری لازم‌اند و باید وضعیت برنامه حفظ شود، Stop می‌تواند مصرف چرخه را کاهش دهد.
-- برای انتظار طولانی با امکان بازسازی وضعیت پس از بیداری، Standby می‌تواند گزینه‌ای کم‌مصرف‌تر باشد؛ اما هزینه راه‌اندازی مجدد و نگهداری داده باید لحاظ شود.
-
-در سند دو مثال کاربردی نیز بررسی شده است: قفل هوشمند با بررسی دوره‌ای اثر انگشت و نمایشگر کاغذ الکترونیکی با فاصله زیاد میان به‌روزرسانی‌ها.
-
-### ۴. بیداری زمان‌بندی‌شده با LPTIM
-
-**LPTIM** برای زمان‌بندی کم‌مصرف به‌کار می‌رود و می‌تواند در Sleep و Stop با منابع ساعت کم‌سرعت مانند LSE یا LSI کار کند. در Standby، LPTIM خاموش است و پس از خروج از این حالت باید دوباره مقداردهی اولیه شود.
-
-این روش به MCU اجازه می‌دهد زمان‌بندی دوره‌ای را به سخت‌افزار بسپارد و CPU فقط هنگام رسیدن زمان یا رخداد موردنیاز فعال شود.
-
-### ۵. بهینه‌سازی در مرحلۀ اجرا
-
-سند سه راهکار اصلی را معرفی می‌کند:
-
-**تنظیم فرکانس و ساعت**
-- انتخاب فرکانس متناسب با نوع و زمان‌بندی وظیفه
-- استفاده از HSI-LP؛ در CH32L103 خروجی HSI از 8MHz به 1MHz کاهش می‌یابد
-- بررسی HSE-LP، وضعیت PLL و تقسیم فرکانس گذرگاه‌ها
-- بستن ساعت جانبی‌های بلااستفاده و پرهیز از راه‌اندازی یا تغییر ساعت غیرضروری
-
-**اجرای کد از RAM و کاهش مصرف Flash**
-- انتقال بخش مناسب برنامه به RAM
-- تنظیم FLASH_LP برای ورود Flash به حالت کم‌مصرف
-- توجه به اینکه این روش برای بخش‌هایی مناسب است که در طول اجرا به Flash نیاز ندارند
-
-**کاهش درگیری CPU با DMA**
-- استفاده از DMA برای انتقال داده‌های ADC، USART، SPI و وظایف دارای حجم داده مناسب
-- کاهش خواندن و نوشتن تکراری رجیسترهای جانبی توسط CPU
-- توجه به فعالیت DMA، ساعت جانبی و داوری دسترسی به SRAM؛ برای انتقال‌های کوچک، سربار پیکربندی ممکن است سود را کاهش دهد
-
-## نکات مهم طراحی
-
-- حالت کم‌مصرف را بر اساس نیاز واقعی جانبی‌ها، منبع بیداری و حفظ داده انتخاب کنید.
-- میانگین جریان را برای چرخه کامل و با وظیفه و بازۀ زمانی یکسان مقایسه کنید.
-- پس از بیداری از Stop، ساعت و جانبی‌های موردنیاز وظیفه را بازیابی کنید.
-- خروج از Standby را مسیر راه‌اندازی مجدد در نظر بگیرید و داده‌های لازم را در حافظۀ قابل حفظ یا سازوکار بازسازی قرار دهید.
-- پیش از استفاده از HSI-LP، HSE-LP، FLASH_LP، RAMLV و DMA، جزئیات رجیسترها و محدودیت‌های CH32L103 را در دیتاشیت و Reference Manual بررسی کنید.
-- اعداد و رفتارهای ذکرشده به مدل CH32L103 و سند AN01002 مربوط‌اند؛ آن‌ها را بدون بررسی به سایر خانواده‌های CH32 تعمیم ندهید.
-
-## مشخصات سند
-
-| مشخصه | مقدار |
+| نوع سند | پیوند |
 |---|---|
-| شماره سند | AN01002 |
-| عنوان | مصرف توان و حالت‌های کم‌مصرف |
-| میکروکنترلر | CH32L103 |
-| نسخۀ سند اصلی | V1.0 |
-| تاریخ انتشار سند اصلی | 2026/09/21 |
-| زبان این نسخه | فارسی |
-| منبع | WCH |
+| سند اصلی WCH (Markdown) | — |
+| PDF فارسی | [AN01002 FA.pdf](AN01002%20FA.pdf) |
+| HTML فارسی | [AN01002-FA.html](AN01002-FA.html) |
 
-<p align="center">
-  <img src="../../Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider">
-</p>
+## موضوع و دامنه
 
-## تصاویر و دیاگرام‌های راهنما
+**راهبردهای کاهش توان در CH32L103**. مدل‌های پشتیبانی‌شده، شرایط کاری، مقادیر عددی و تنظیمات رجیسترها را از متن اصلی استخراج و با Datasheet و Reference Manual همان مدل تطبیق دهید. نتایج را بدون بررسی به سایر اعضای خانواده CH32 تعمیم ندهید.
 
-تصاویر، جدول مقایسۀ حالت‌های کم‌مصرف، نمودار چرخه وظیفه، پیکربندی LPTIM و نمودارهای بهینه‌سازی در نسخۀ HTML فارسی قرار دارند:
+## فایل‌های تصویری و رسانه‌ای
 
-- [مشاهدۀ نسخۀ HTML فارسی همراه با تصاویر و دیاگرام‌ها](./AN01002-FA.html)
-- [پوشۀ AN01002 در نسخۀ اصلی چینی](../../zh/AN01002/)
+در پوشه `media/` تعداد **5 فایل رسانه‌ای** وجود دارد. [مشاهده پوشه رسانه‌ها](./media/)
 
-## تهیه و تدوین
+## ملاحظات بازبینی فنی
 
-**معمار الکترونیک صنعت**\\
-**MEMAR ELECTRONIC SANAT (MES)**
+- نام Peripheralها، رجیسترها، بیت‌ها، توابع و کدها را با سند اصلی تطبیق دهید.
+- مقادیر، واحدها، شکل موج‌ها و شرایط آزمون را بدون تغییر ناخواسته حفظ کنید.
+- محدودیت‌های وابسته به مدل MCU، پکیج و Revision را رعایت کنید.
+- پیش از استفاده در محصول، طراحی را با مستندات رسمی و سخت‌افزار واقعی اعتبارسنجی کنید.
 
-همراه شما در مسیر طراحی و ساخت مدارهای مطمئن
+## منابع مرتبط
 
-طراحی و توسعه مدارهای الکترونیکی، PCB، سیستم‌های embedded و ابزارهای پیکربندی میکروکنترلر.
-
-- کانال تلگرام: [https://t.me/Memar_Electronic](https://t.me/Memar_Electronic)
-- پیج اینستاگرام: [https://www.instagram.com/Memar.Electronic](https://www.instagram.com/Memar.Electronic)
-- GitHub: [MEMAR-ELECTRONIC-SANAT](https://github.com/MEMAR-ELECTRONIC-SANAT)
+- [فهرست دوزبانه یادداشت‌ها](../README.md)
+- [اسناد اصلی چینی](../../zh/)
+- [مخزن MES-ch32_application_notes](https://github.com/MEMAR-ELECTRONIC-SANAT/MES-ch32_application_notes)
+- [وب‌سایت WCH](https://www.wch.cn/)
 
 </div>
 
-<p align="center">
-  <img src="../../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo">
-</p>
+## English
+
+## Overview
+
+This is the bilingual guide for **AN01002**, an Application Note from **WCH**. Topic: **Power-Reduction Strategies for CH32L103**. It provides links to the original source, available translated editions, and supporting media. Consult the complete WCH document and the relevant MCU documentation for implementation details and technical limitations.
+
+## Translation and Publication Status
+
+> **Persian PDF and HTML editions are available in this repository.**
+
+When available, use PDF for offline reading and printing, and HTML for browser-based reading.
+
+## Documentation
+
+| Document | Link |
+|---|---|
+| Original WCH Markdown | — |
+| Persian PDF | [AN01002 FA.pdf](AN01002%20FA.pdf) |
+| Persian HTML | [AN01002-FA.html](AN01002-FA.html) |
+
+## Scope and Technical Notes
+
+The subject is **Power-Reduction Strategies for CH32L103**. Verify supported MCU variants, operating conditions, numeric values, and register settings in the original source. Cross-check device-specific details against the matching datasheet and reference manual. Do not generalize results to other CH32 devices without verification.
+
+## Images and Supporting Media
+
+There are **5 media files** in `media/`. [Open the media folder](./media/)
+
+## Engineering Review
+
+- Cross-check peripheral names, registers, bits, functions, and code against the original source.
+- Preserve values, units, waveforms, and test conditions accurately.
+- Observe limitations related to MCU model, package, and silicon revision.
+- Validate the design against official documentation and on real hardware before production use.
+
+## Related Resources
+
+- [Bilingual Application Notes index](../README.md)
+- [Original Chinese documents](../../zh/)
+- [MES-ch32_application_notes repository](https://github.com/MEMAR-ELECTRONIC-SANAT/MES-ch32_application_notes)
+- [WCH official website](https://www.wch.cn/)
+
+## تصاویر و دیاگرام‌های راهنما / Images and Diagrams
+
+- [رسانه‌های AN01002 / AN01002 media](./media/)
+- [دارایی‌های گرافیکی MES / MES visual assets](../../Images/GitHub-Assets/)
+
+## تهیه و تدوین / Credits
+
+**معمار الکترونیک صنعت**  
+**MEMAR ELECTRONIC SANAT (MES)**
+
+همراه شما در مسیر طراحی و ساخت مدارهای مطمئن  
+*Your partner in designing and building reliable circuits.*
+
+- Telegram: https://t.me/Memar_Electronic
+- Instagram: https://www.instagram.com/Memar.Electronic
+- GitHub: https://github.com/MEMAR-ELECTRONIC-SANAT
+
+<p align="center"><img src="../../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo"></p>

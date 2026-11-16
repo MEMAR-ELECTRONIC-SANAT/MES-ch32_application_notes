@@ -1,134 +1,110 @@
-<h1 dir="rtl" align="right">AN03004 — راهنمای جامع کارایی حافظه‌های میکروکنترلر CH32V467</h1>
+<p align="center"><img src="../../Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider"></p>
+
+# AN03004 — مقایسه سرعت اجرا در حافظه‌های مختلف
+
+[🇮🇷 فارسی](README.md) · [🇬🇧 English](#english) · [فهرست دوزبانه / Bilingual index](../README.md)
 
 <div dir="rtl" align="right">
 
 ## معرفی
 
-یادداشت کاربردی **AN03004 V1.0** به بررسی تأثیر محل قرارگیری کد، داده‌ها و پشته (Stack) بر کارایی میکروکنترلرهای سری **CH32V467** می‌پردازد. این خانواده بر پایه هسته **QingKe V4V** با فرکانس کاری تا **200MHz** طراحی شده و از چند نوع حافظه شامل ناحیه Flash بدون Wait State، ناحیه Flash دارای Wait State، حافظه SRAM و حافظه PSRAM با ظرفیت بالا بهره می‌برد.
+این صفحه راهنمای دوزبانه یادداشت کاربردی **AN03004** از مجموعه Application Notes شرکت **WCH** است. موضوع سند: **مقایسه سرعت اجرا در حافظه‌های مختلف**. این راهنما مسیر دسترسی به سند اصلی، فایل‌های ترجمه‌شده و رسانه‌های همراه را معرفی می‌کند. برای جزئیات پیاده‌سازی و محدودیت‌های فنی، متن کامل سند WCH و مستندات رسمی MCU مربوطه را بررسی کنید.
 
-هدف این سند، اندازه‌گیری و مقایسه عملکرد پیکربندی‌های مختلف حافظه با استفاده از آزمون **CoreMark** و ارائه راهکارهایی برای تخصیص بهینه منابع حافظه در پروژه‌های واقعی است.
+## وضعیت ترجمه و انتشار
+
+> **نسخه فارسی PDF و HTML در مخزن موجود است.**
+
+در صورت موجود بودن، PDF برای مطالعه آفلاین و چاپ و HTML برای مشاهده در مرورگر مناسب است.
 
 ## دسترسی به مستندات
 
-- [مشاهده نسخه HTML فارسی](./AN03004-FA.html)
-- [مشاهده فایل‌ها و مستندات نسخه اصلی چینی](../../zh/AN03004/)
-- [بازگشت به فهرست یادداشت‌های کاربردی فارسی](../README.md)
+| نوع سند | پیوند |
+|---|---|
+| سند اصلی WCH (Markdown) | — |
+| PDF فارسی | [AN03004.pdf](AN03004.pdf) |
+| HTML فارسی | [AN03004-FA.html](AN03004-FA.html) |
 
-<blockquote>
-نسخه PDF فارسی در مسیرهای متداول این پوشه با نام‌گذاری بررسی‌شده پیدا نشد؛ بنابراین برای جلوگیری از درج پیوند نادرست، فعلاً پیوند مستقیم PDF درج نشده است.
-</blockquote>
+## موضوع و دامنه
 
-## مشخصات حافظه در CH32V467
+**مقایسه سرعت اجرا در حافظه‌های مختلف**. مدل‌های پشتیبانی‌شده، شرایط کاری، مقادیر عددی و تنظیمات رجیسترها را از متن اصلی استخراج و با Datasheet و Reference Manual همان مدل تطبیق دهید. نتایج را بدون بررسی به سایر اعضای خانواده CH32 تعمیم ندهید.
 
-| نوع حافظه | ظرفیت و محدوده | ویژگی دسترسی |
-|---|---|---|
-| Flash بدون انتظار | حداکثر 576KB (با احتساب SRAM قابل پیکربندی)؛ از نشانی 0x00000000 | اجرای بدون Wait State |
-| Flash با انتظار | حداکثر 416KB؛ پس از ناحیه بدون انتظار | نیازمند چرخه‌های انتظار |
-| SRAM | 200KB؛ از نشانی 0x20000000 | دسترسی تک‌چرخه‌ای و سرعت بالا |
-| PSRAM | 4MB یا 8MB، بسته به مدل؛ از نشانی 0x30000000 | ظرفیت زیاد و پشتیبانی از دسترسی پرسرعت DMA |
+## فایل‌های تصویری و رسانه‌ای
 
-## روش و محیط آزمون
+در پوشه `media/` تعداد **2 فایل رسانه‌ای** وجود دارد. [مشاهده پوشه رسانه‌ها](./media/)
 
-آزمون‌های سند با مشخصات زیر انجام شده‌اند:
+## ملاحظات بازبینی فنی
 
-- میکروکنترلر: **CH32V467xx**
-- محیط توسعه: **MounRiver Studio V2.5.0**
-- کامپایلر: **RISC-V Embedded GCC 15**
-- سطح بهینه‌سازی: **-Ofast**
-- معیار سنجش: امتیاز **CoreMark**
+- نام Peripheralها، رجیسترها، بیت‌ها، توابع و کدها را با سند اصلی تطبیق دهید.
+- مقادیر، واحدها، شکل موج‌ها و شرایط آزمون را بدون تغییر ناخواسته حفظ کنید.
+- محدودیت‌های وابسته به مدل MCU، پکیج و Revision را رعایت کنید.
+- پیش از استفاده در محصول، طراحی را با مستندات رسمی و سخت‌افزار واقعی اعتبارسنجی کنید.
 
-برای افزایش کارایی، سند مجموعه‌ای از گزینه‌های کامپایلر را نیز معرفی می‌کند؛ از جمله `-funroll-all-loops`، `-finline-limit=600`، `-ftree-dominator-opts`، `-fno-if-conversion2`، `-fno-code-hoisting`، `-fselective-scheduling` و `-mno-save-restore`. اثر هر گزینه باید در کنار اندازه کد، رفتار برنامه و نسخه کامپایلر ارزیابی شود.
+## منابع مرتبط
 
-## شش سناریوی چیدمان کد و داده
-
-در سند، شش حالت اصلی برای بررسی تأثیر محل استقرار بخش‌های مختلف برنامه تعریف شده است:
-
-1. **کد در Flash بدون انتظار و داده در SRAM:** مناسب برای کارایی بالا؛ کدهای حساس و متغیرهای پرتکرار در حافظه سریع قرار می‌گیرند.
-2. **کد در Flash بدون انتظار و داده در PSRAM:** مناسب کاربردهای نیازمند حافظه داده بزرگ، مانند بافرهای تصویر و صوت.
-3. **کد در Flash دارای انتظار و داده در SRAM:** حالت مبنا برای سنجش اختلاف عملکرد Flash بدون انتظار و دارای انتظار.
-4. **کد در Flash دارای انتظار و داده در PSRAM:** برای ارزیابی عملکرد در شرایط نامطلوب‌تر دسترسی حافظه.
-5. **کد در Flash بدون انتظار، داده‌های سراسری در SRAM و پشته در PSRAM:** مناسب زمانی که SRAM محدود است و پشته به فضای بیشتری نیاز دارد.
-6. **کد، داده و پشته همگی در PSRAM:** برای برخی کاربردهای آزمایشی، اشکال‌زدایی حافظه یا محدودیت منابع Flash؛ معمولاً گزینه مناسبی برای بیشینه‌سازی کارایی محصول نهایی نیست.
-
-## راه‌اندازی و پیکربندی پروژه
-
-برای اجرای آزمون‌ها، ساختار پروژه و بخش‌های مختلف برنامه باید متناسب با سناریوی انتخاب‌شده در فایل Linker Script به حافظه‌های هدف تخصیص داده شوند.
-
-سند به تغییر فایل راه‌اندازی (Startup) و استفاده از تابع `__late_init()` اشاره می‌کند. این تابع پیش از ورود به `main()`، تنظیم کلاک و PSRAM را انجام می‌دهد و در صورت نیاز بخش‌های داده یا کد را از محل بارگذاری به آدرس اجرایی منتقل می‌کند. همچنین بخش‌های BSS باید مقداردهی اولیه شوند.
-
-نکات کلیدی پیاده‌سازی:
-
-- تنظیم فرکانس CPU و PSRAM متناسب با سناریوی آزمون
-- راه‌اندازی PSRAM پیش از استفاده از بخش‌هایی که در آن قرار دارند
-- انتقال بخش‌های دارای بار اولیه به نشانی اجرایی مقصد
-- صفرکردن بخش BSS در حافظه مقصد
-- تنظیم صحیح آدرس پشته و بررسی عدم تداخل آن با نواحی دیگر
-- هماهنگی نام و محدوده Sectionها در فایل Linker با کد راه‌اندازی
-
-## نتایج آزمون و تحلیل کارایی
-
-نتایج CoreMark گزارش‌شده در سند، رتبه‌بندی کلی زیر را برای سیاست‌های مختلف استقرار حافظه نشان می‌دهد:
-
-| پیکربندی | امتیاز CoreMark گزارش‌شده |
-|---|---:|
-| ZeroWait | 3.888 |
-| StackInPSRAM | 2.265 تا 3.076 |
-| TextInPSRAM | 0.710 تا 1.271 |
-| DataInPSRAM | 0.499 تا 0.910 |
-| NoneZeroWait | 0.209 |
-| FullInPSRAM | 0.161 تا 0.313 |
-
-### برداشت‌های اصلی از نتایج
-
-- **Flash بدون انتظار بهترین کارایی را ارائه می‌دهد.** امتیاز ZeroWait در آزمون برابر 3.887938 گزارش شده و در تنظیمات فرکانسی بررسی‌شده ثابت مانده است.
-- **قرارگیری هم‌زمان کد و داده در PSRAM ضعیف‌ترین نتیجه را دارد.** رقابت واکشی دستور و دسترسی داده بر سر پهنای باند PSRAM، کارایی را به‌شدت کاهش می‌دهد.
-- **انتقال پشته به PSRAM کم‌هزینه‌تر از انتقال کد یا داده‌های پرتکرار است.** در میان حالت‌های مبتنی بر PSRAM، StackInPSRAM بهترین امتیاز را نشان می‌دهد.
-- **فرکانس PSRAM بر عملکرد حالت‌های وابسته به آن اثر می‌گذارد.** افزایش پهنای باند مؤثر PSRAM می‌تواند امتیاز CoreMark بر واحد فرکانس را بهبود دهد.
-
-### مقایسه اثر نسبت فرکانس PSRAM و CPU
-
-در مقایسه پیکربندی‌های PSRAM/CPU برابر 200/200 و 200/100، سند افزایش امتیازهای زیر را گزارش می‌کند:
-
-| حالت | امتیاز در 200/200 | امتیاز در 200/100 | افزایش گزارش‌شده |
-|---|---:|---:|---:|
-| TextInPSRAM | 0.710 | 1.271 | 79.01٪ |
-| FullInPSRAM | 0.161 | 0.313 | 94.41٪ |
-| DataInPSRAM | 0.499 | 0.910 | 82.36٪ |
-| StackInPSRAM | 2.264 | 3.076 | 35.87٪ |
-
-همچنین در مقایسه فرکانس‌های PSRAM/CPU برابر 150/150 و 300/150، با ثابت ماندن فرکانس CPU و دو برابر شدن فرکانس PSRAM، بهبود 25.32 تا 62.79 درصدی در امتیازهای حالت‌های وابسته به PSRAM گزارش شده است.
-
-## توصیه‌های کاربردی
-
-1. **اولویت با ZeroWait:** در صورت امکان، کدهای حساس به زمان و مسیرهای اجرایی پرتکرار را در ناحیه Flash بدون انتظار قرار دهید.
-2. **از FullInPSRAM برای محصول نهایی پرکارایی پرهیز کنید:** استقرار هم‌زمان کد و داده در PSRAM می‌تواند رقابت شدیدی برای پهنای باند ایجاد کند.
-3. **PSRAM را متناسب با بار کاری تنظیم کنید:** در صورت اجرای کد یا دسترسی مکرر به داده از PSRAM، نسبت فرکانس حافظه به CPU را با آزمون واقعی ارزیابی کنید. سند نسبت PSRAM به CPU برابر یا بیشتر از 2:1 را به‌عنوان توصیه مطرح می‌کند.
-4. **در صورت کمبود SRAM، انتقال پشته را بررسی کنید:** در سناریوهای آزمون‌شده، قرارگیری پشته در PSRAM نسبت به انتقال کد یا داده اثر منفی کمتری بر کارایی داشته است.
-5. **نتایج را روی سخت‌افزار هدف اعتبارسنجی کنید:** ظرفیت و نوع PSRAM، فرکانس‌ها، تنظیمات Linker، نسخه کامپایلر و الگوی دسترسی برنامه می‌توانند نتیجه نهایی را تغییر دهند.
-
-<p align="center">
-  <img src="../../Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider">
-</p>
-
-## تصاویر و دیاگرام‌های راهنما
-
-نمودار توزیع نتایج CoreMark و تصاویر و جداول مرتبط با چیدمان حافظه در نسخه HTML و مستندات اصلی ارائه شده‌اند. برای مشاهده جزئیات گرافیکی و داده‌های آزمون، از [نسخه HTML فارسی](./AN03004-FA.html) استفاده کنید.
+- [فهرست دوزبانه یادداشت‌ها](../README.md)
+- [اسناد اصلی چینی](../../zh/)
+- [مخزن MES-ch32_application_notes](https://github.com/MEMAR-ELECTRONIC-SANAT/MES-ch32_application_notes)
+- [وب‌سایت WCH](https://www.wch.cn/)
 
 </div>
 
-## تهیه و تدوین
+## English
 
-**معمار الکترونیک صنعت**
+## Overview
+
+This is the bilingual guide for **AN03004**, an Application Note from **WCH**. Topic: **Execution-Speed Comparison Across Memory Types**. It provides links to the original source, available translated editions, and supporting media. Consult the complete WCH document and the relevant MCU documentation for implementation details and technical limitations.
+
+## Translation and Publication Status
+
+> **Persian PDF and HTML editions are available in this repository.**
+
+When available, use PDF for offline reading and printing, and HTML for browser-based reading.
+
+## Documentation
+
+| Document | Link |
+|---|---|
+| Original WCH Markdown | — |
+| Persian PDF | [AN03004.pdf](AN03004.pdf) |
+| Persian HTML | [AN03004-FA.html](AN03004-FA.html) |
+
+## Scope and Technical Notes
+
+The subject is **Execution-Speed Comparison Across Memory Types**. Verify supported MCU variants, operating conditions, numeric values, and register settings in the original source. Cross-check device-specific details against the matching datasheet and reference manual. Do not generalize results to other CH32 devices without verification.
+
+## Images and Supporting Media
+
+There are **2 media files** in `media/`. [Open the media folder](./media/)
+
+## Engineering Review
+
+- Cross-check peripheral names, registers, bits, functions, and code against the original source.
+- Preserve values, units, waveforms, and test conditions accurately.
+- Observe limitations related to MCU model, package, and silicon revision.
+- Validate the design against official documentation and on real hardware before production use.
+
+## Related Resources
+
+- [Bilingual Application Notes index](../README.md)
+- [Original Chinese documents](../../zh/)
+- [MES-ch32_application_notes repository](https://github.com/MEMAR-ELECTRONIC-SANAT/MES-ch32_application_notes)
+- [WCH official website](https://www.wch.cn/)
+
+## تصاویر و دیاگرام‌های راهنما / Images and Diagrams
+
+- [رسانه‌های AN03004 / AN03004 media](./media/)
+- [دارایی‌های گرافیکی MES / MES visual assets](../../Images/GitHub-Assets/)
+
+## تهیه و تدوین / Credits
+
+**معمار الکترونیک صنعت**  
 **MEMAR ELECTRONIC SANAT (MES)**
 
-همراه شما در مسیر طراحی و ساخت مدارهای مطمئن
+همراه شما در مسیر طراحی و ساخت مدارهای مطمئن  
+*Your partner in designing and building reliable circuits.*
 
-طراحی و توسعه مدارهای الکترونیکی، PCB، سیستم‌های embedded و ابزارهای پیکربندی میکروکنترلر.
+- Telegram: https://t.me/Memar_Electronic
+- Instagram: https://www.instagram.com/Memar.Electronic
+- GitHub: https://github.com/MEMAR-ELECTRONIC-SANAT
 
-- کانال تلگرام: [MEMAR Electronic](https://t.me/Memar_Electronic)
-- اینستاگرام: [MEMAR Electronic](https://www.instagram.com/Memar.Electronic)
-- GitHub: [MEMAR-ELECTRONIC-SANAT](https://github.com/MEMAR-ELECTRONIC-SANAT)
-
-<p align="center">
-  <img src="../../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo">
-</p>
+<p align="center"><img src="../../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo"></p>

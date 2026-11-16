@@ -1,146 +1,39 @@
-<p align="center">
+<p align="center"><img src="MES-Divider.svg" width="100%" alt="MES Divider"></p>
 
-</p>
+# دارایی‌های گرافیکی MES / MES GitHub Assets
 
-# MES Animated GitHub Assets
+این پوشه تصاویر، SVGها و عناصر گرافیکی مورد استفاده در مستندات **MEMAR ELECTRONIC SANAT (MES)** را نگهداری می‌کند.
 
-مجموعه‌ای از فایل‌های SVG متحرک با هویت بصری **معمار الکترونیک صنعت (MES)** برای استفاده در README مخزن‌ها و پروفایل GitHub.
+This directory stores images, SVGs, and visual elements used in **MEMAR ELECTRONIC SANAT (MES)** documentation.
 
-این طرح‌ها با الهام از زبان بصری نئونی و مدارمحور پروژه [ElectroIoT](https://github.com/ElectroIoT/ElectroIoT) ساخته شده‌اند؛ آثار حاضر طراحی اختصاصی MES هستند و کپی فایل‌های آن پروژه نیستند.
+## فایل‌های شاخص / Key Assets
 
-## پیش‌نمایش فایل‌ها
+- [MES-Divider.svg](MES-Divider.svg) — جداکننده بخش‌ها / Section divider.
+- [MES_Animated_Logo_640x480.svg](MES_Animated_Logo_640x480.svg) — لوگوی متحرک / Animated logo.
+- [MES-Hero-Banner.svg](MES-Hero-Banner.svg) — بنر معرفی / Hero banner.
+- [MES-Section-Header.svg](MES-Section-Header.svg) — سربرگ بخش / Section header.
+- [MES-Thank-You-Footer.svg](MES-Thank-You-Footer.svg) — تصویر پایانی / Closing graphic.
 
-### جداکننده افقی | MES Divider
+## نحوه استفاده / Usage
 
-<p align="center">
-  <img src="MES-Divider.svg" width="100%" alt="MES Divider">
-</p>
+در Markdown از مسیر نسبی استفاده کنید و عمق پوشه README را در محاسبه مسیر در نظر بگیرید.
 
-### 1. سربرگ اصلی | MES Hero Banner
+Use relative paths in Markdown and account for the README's directory depth when constructing the image path.
 
-<p align="center">
-  <img src="MES-Hero-Banner.svg" width="100%" alt="MES Hero Banner">
-</p>
+## تهیه و تدوین / Credits
 
-### 2. عنوان بخش | MES Section Header
+**معمار الکترونیک صنعت**  
+**MEMAR ELECTRONIC SANAT (MES)**
 
-<p align="center">
-  <img src="MES-Section-Header.svg" width="100%" alt="MES Section Header">
-</p>
+همراه شما در مسیر طراحی و ساخت مدارهای مطمئن  
+*Your partner in designing and building reliable circuits.*
 
-### 3. کارت معرفی پروژه | MES Project Card
+- Telegram: https://t.me/Memar_Electronic
+- Instagram: https://www.instagram.com/Memar.Electronic
+- GitHub: https://github.com/MEMAR-ELECTRONIC-SANAT
 
-<p align="center">
-  <img src="MES-Project-Card.svg" width="100%" alt="MES Project Card">
-</p>
+## تصاویر و دیاگرام‌های راهنما / Images and Diagrams
 
-### 4. نوار وضعیت | MES Status Strip
+فهرست کامل در همین پوشه قرار دارد. / Browse this directory for the complete asset collection.
 
-<p align="center">
-  <img src="MES-Status-Strip.svg" width="100%" alt="MES Status Strip">
-</p>
-
-### 5. بخش پایانی | MES Thank You Footer
-
-<p align="center">
-  <img src="MES-Thank-You-Footer.svg" width="100%" alt="MES Thank You Footer">
-</p>
-
-## فایل‌ها و کاربردها
-
-| فایل | کاربرد |
-|---|---|
-| [MES-Divider.svg](MES-Divider.svg) | جداکننده افقی میان بخش‌های README |
-| [MES-Hero-Banner.svg](MES-Hero-Banner.svg) | سربرگ اصلی README یا پروفایل |
-| [MES-Section-Header.svg](MES-Section-Header.svg) | معرفی بصری بخش‌های مهم |
-| [MES-Project-Card.svg](MES-Project-Card.svg) | پنل معرفی پروژه |
-| [MES-Status-Strip.svg](MES-Status-Strip.svg) | نوار وضعیت و معرفی مجموعه منابع |
-| [MES-Thank-You-Footer.svg](MES-Thank-You-Footer.svg) | انتهای README و پیام پایانی |
-
-فایل جداکننده افقی [MES-Divider.svg](MES-Divider.svg) نیز در همین پوشه قرار دارد.
-
-## نمونه استفاده در README مخزن‌ها
-
-کدهای زیر برای README واقع در ریشه مخزن نوشته شده‌اند؛ بنابراین مسیر تصاویر از پوشه Images/GitHub-Assets/ آغاز می‌شود.
-
-**جداکننده افقی:**
-
-~~~html
-<p align="center">
-  <img src="Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Section Divider">
-</p>
-~~~
-
-**سربرگ اصلی:**
-
-~~~html
-<p align="center">
-  <img src="Images/GitHub-Assets/MES-Hero-Banner.svg" width="100%" alt="MES — Memar Electronic Sanat">
-</p>
-~~~
-
-**عنوان یک بخش:**
-
-~~~html
-<p align="center">
-  <img src="Images/GitHub-Assets/MES-Section-Header.svg" width="100%" alt="Engineering, Design and Build">
-</p>
-~~~
-
-**معرفی پروژه:**
-
-~~~html
-<p align="center">
-  <img src="Images/GitHub-Assets/MES-Project-Card.svg" width="100%" alt="MES Project Showcase">
-</p>
-~~~
-
-**نوار وضعیت یا معرفی منابع:**
-
-~~~html
-<p align="center">
-  <img src="Images/GitHub-Assets/MES-Status-Strip.svg" width="100%" alt="MES Engineering Workspace">
-</p>
-~~~
-
-**پایان README:**
-
-~~~html
-<p align="center">
-  <img src="Images/GitHub-Assets/MES-Thank-You-Footer.svg" width="100%" alt="Thank you for visiting MES">
-</p>
-~~~
-
-## نکات فنی
-
-- فایل‌ها مستقل (Self-contained) هستند و برای اجرای انیمیشن به JavaScript یا کتابخانه خارجی نیاز ندارند.
-- انیمیشن‌ها با قابلیت‌های SVG/SMIL پیاده‌سازی شده‌اند.
-- برای نمایش در GitHub از تگ HTML یعنی img استفاده کنید؛ پشتیبانی انیمیشن ممکن است بسته به مرورگر و نحوه نمایش متفاوت باشد.
-- رنگ‌های اصلی: آبی تیره، آبی کبالت، فیروزه‌ای و سفید یخی.
-
-<p align="center">
-  <img src="./MES-Divider.svg" width="100%" alt="MES Divider">
-</p>
-
-## تصاویر و دیاگرام‌های راهنما
-
-جداکننده اختصاصی MES برای تفکیک بصری بخش‌های README:
-
-<p align="center">
-  <img src="MES-Divider.svg" width="100%" alt="MES Divider">
-</p>
-
----
-
-## تهیه و تدوین
-
-**معمار الکترونیک صنعت | MEMAR ELECTRONIC SANAT (MES)**
-همراه شما در مسیر طراحی و ساخت مدارهای مطمئن
-
-- [Telegram](https://t.me/Memar_Electronic)
-- [Instagram](https://www.instagram.com/Memar.Electronic)
-- [مشاهده سایر آموزش‌ها و پروژه‌ها در GitHub](https://github.com/MEMAR-ELECTRONIC-SANAT)
-
-<p align="center">
-  <img src="./MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo">
-</p>
+<p align="center"><img src="MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo"></p>

@@ -1,105 +1,110 @@
-<h1 dir="rtl" align="right">AN01001 — راهنمای تغذیۀ خارجی DCDC برای دامنۀ VDD12 در CH32H417</h1>
+<p align="center"><img src="../../Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider"></p>
 
-<div dir="rtl">
+# AN01001 — تغذیه خارجی VDD12
+
+[🇮🇷 فارسی](README.md) · [🇬🇧 English](#english) · [فهرست دوزبانه / Bilingual index](../README.md)
+
+<div dir="rtl" align="right">
 
 ## معرفی
 
-این یادداشت کاربردی، ترجمۀ فارسی سند رسمی **AN01001 V1.0** از شرکت **WCH** است. موضوع سند، تأمین خارجی دامنۀ تغذیۀ **VDD12** در میکروکنترلر **CH32H417** با استفاده از مبدل **DCDC**، کاهش تلفات ریگولاتور داخلی و مدیریت توان در حالت اجرا و توقف است.
+این صفحه راهنمای دوزبانه یادداشت کاربردی **AN01001** از مجموعه Application Notes شرکت **WCH** است. موضوع سند: **تغذیه خارجی VDD12**. این راهنما مسیر دسترسی به سند اصلی، فایل‌های ترجمه‌شده و رسانه‌های همراه را معرفی می‌کند. برای جزئیات پیاده‌سازی و محدودیت‌های فنی، متن کامل سند WCH و مستندات رسمی MCU مربوطه را بررسی کنید.
 
-در این راهنما، معماری تغذیۀ CH32H417، انتخاب منبع خارجی مناسب، محاسبۀ توان و تلفات، کاهش ولتاژ خروجی LDO داخلی و نمونه‌ای از تغذیۀ تک‌منبعی ۵ ولت با تراشۀ **CH2003K** بررسی می‌شود.
+## وضعیت ترجمه و انتشار
 
-## دریافت فایل‌ها
+> **نسخه فارسی PDF و HTML در مخزن موجود است.**
 
-- [دانلود نسخۀ فارسی PDF](./AN01001%20FA.pdf)
-- [مشاهدۀ نسخۀ فارسی HTML](./AN01001-FA.html)
-- [مشاهدۀ سند اصلی چینی (Markdown)](../../zh/AN01001/AN01001.md)
-- [بازگشت به فهرست فارسی یادداشت‌های کاربردی](../README.md)
+در صورت موجود بودن، PDF برای مطالعه آفلاین و چاپ و HTML برای مشاهده در مرورگر مناسب است.
 
-## خلاصۀ محتوای سند
+## دسترسی به مستندات
 
-### ۱. معماری تغذیۀ CH32H417
-
-CH32H417 چند دامنۀ تغذیۀ مجزا دارد که از جمله آن‌ها می‌توان به **VDD33** برای منطق و تغذیۀ ریگولاتورهای داخلی، **VDD33A** برای بخش‌های آنالوگ، **VDDIO** برای پایه‌های I/O و **VDD12A / VDDK** برای ماژول‌های پرسرعت و هسته اشاره کرد.
-
-در شرایط عادی، دامنۀ VDD12 از LDO داخلی تغذیه می‌شود. در صورت استفاده از منبع خارجی، ولتاژ و ظرفیت جریان باید با مشخصات دیتاشیت و بار واقعی سیستم سازگار باشد. جریان موردنیاز دامنۀ هسته به فرکانس و فعالیت CPU وابسته است؛ جریان VDD12A نیز با فعال‌بودن USB 3.0 و ETH PHY، به‌ویژه ارتباط تمام‌دوطرفه، افزایش می‌یابد.
-
-### ۲. انتخاب منبع و استفاده از DCDC خارجی
-
-برای کاهش تلفات حرارتی LDO داخلی، می‌توان دامنۀ VDD12 را از یک DCDC خارجی تغذیه کرد. منبع خارجی باید ولتاژ مجاز و جریان کافی برای مجموع بار VDDK و VDD12A را فراهم کند و حاشیۀ طراحی مناسبی داشته باشد.
-
-سند، توان خروجی، توان ورودی و تلفات تبدیل را در دو حالت استفاده از LDO داخلی و DCDC خارجی مقایسه می‌کند. بازده مبدل خارجی (**ηDCDC**) در محاسبۀ توان ورودی و تلفات نقش مستقیم دارد؛ بنابراین انتخاب قطعه باید با اندازه‌گیری مصرف واقعی و بررسی شرایط کاری انجام شود.
-
-### ۳. کاهش ولتاژ LDO داخلی
-
-پس از پایدارشدن منبع خارجی، نرم‌افزار می‌تواند با تنظیم رجیستر **SYS_CFGR0**، ولتاژ LDO داخلی مربوط به دامنۀ VDD12 را کاهش دهد تا سهم بیشتری از جریان بار توسط منبع خارجی تأمین شود.
-
-نمونۀ کد در سند، تابع **PWR_VDD12ExternPower()** را نشان می‌دهد. ترتیب راه‌اندازی و تغییر وضعیت باید با رعایت توالی تغذیه انجام شود؛ از جمله پایدارشدن منبع خارجی پیش از کاهش تنظیم LDO. برای پیاده‌سازی نهایی، تنظیمات رجیستر و محدودیت‌های مدل دقیق MCU را از دیتاشیت و Reference Manual بررسی کنید.
-
-### ۴. تغذیۀ تک‌منبعی ۵ ولت با CH2003K
-
-در بخش دوم، استفاده از تراشۀ **CH2003K** برای تأمین ۳٫۳ ولت و دامنۀ VDD12 از یک ورودی ۵ ولت بررسی شده است. این تراشه شامل LDO و مبدل کاهندۀ DCDC است. خروجی DCDC با مقاومت‌های تقسیم ولتاژ متصل به پایۀ **FB** تنظیم می‌شود و یک GPIO می‌تواند نسبت تقسیم را تغییر دهد.
-
-در نمونه ارائه‌شده، خروجی دامنۀ VDD12 برای حالت اجرا حدود **1.205V** و در حالت STOP تا حدود **0.875V** کاهش داده می‌شود. این اعداد، مقادیر طرح نمونه در سند هستند و نباید بدون بررسی مشخصات تراشۀ هدف، شرایط کاری و الزامات ولتاژ هسته به مدل‌های دیگر تعمیم داده شوند.
-
-### ۵. جریان مصرفی در حالت STOP
-
-جریان کل سیستم در طرح CH2003K از جریان شاخه DCDC، جریان شاخه LDO و جریان سکون خود تراشه تشکیل می‌شود. سند نمونه‌هایی از جریان کل در حالت STOP ارائه می‌کند:
-
-| شرایط نمونه | جریان کل گزارش‌شده |
-|---|---:|
-| تغذیۀ معمولی، بدون CH2003K | 1.4 mA |
-| CH2003K، خروجی DCDC برابر 1.2V | 1.3 mA |
-| CH2003K، خروجی DCDC برابر 0.875V | 0.8 mA |
-
-این مقادیر صرفاً نمونه‌های درج‌شده در سند هستند؛ جریان واقعی به پیکربندی MCU، بارهای متصل، وضعیت جانبی‌ها، تنظیمات کم‌مصرف و شرایط اندازه‌گیری وابسته است.
-
-## نکات مهم طراحی
-
-- ولتاژ و جریان منبع خارجی باید مطابق مشخصات دقیق CH32H417 و شرایط کاری واقعی انتخاب شوند.
-- منبع خارجی باید قبل از تغییر تنظیم LDO داخلی به مقدار پایدار رسیده باشد.
-- هنگام ورود به STOP، ترتیب تغییر GPIO، ولتاژ DCDC، LDO و جانبی‌ها باید با توالی توصیه‌شده هماهنگ باشد.
-- مقادیر 1.205V و 0.875V مربوط به طرح نمونه CH32H417 و CH2003K هستند؛ برای سایر MCUها به دیتاشیت و Reference Manual همان مدل مراجعه کنید.
-- نتایج مصرف توان را در سخت‌افزار واقعی اندازه‌گیری کنید؛ اعداد جدول، تضمین مصرف در محصول نهایی نیستند.
-
-## مشخصات سند
-
-| مشخصه | مقدار |
+| نوع سند | پیوند |
 |---|---|
-| شماره سند | AN01001 |
-| عنوان | تغذیۀ خارجی DCDC برای دامنۀ VDD12 |
-| میکروکنترلر نمونه | CH32H417 |
-| تراشۀ نمونه | CH2003K |
-| نسخۀ سند اصلی | V1.0 |
-| تاریخ انتشار سند اصلی | 2026/07/08 |
-| زبان این نسخه | فارسی |
-| منبع | WCH |
+| سند اصلی WCH (Markdown) | — |
+| PDF فارسی | [AN01001 FA.pdf](AN01001%20FA.pdf) |
+| HTML فارسی | [AN01001-FA.html](AN01001-FA.html) |
 
-<p align="center">
-  <img src="../../Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider">
-</p>
+## موضوع و دامنه
 
-## تصاویر و دیاگرام‌های راهنما
+**تغذیه خارجی VDD12**. مدل‌های پشتیبانی‌شده، شرایط کاری، مقادیر عددی و تنظیمات رجیسترها را از متن اصلی استخراج و با Datasheet و Reference Manual همان مدل تطبیق دهید. نتایج را بدون بررسی به سایر اعضای خانواده CH32 تعمیم ندهید.
 
-تصاویر و مدارهای اصلی در نسخۀ HTML فارسی درج شده‌اند:
+## فایل‌های تصویری و رسانه‌ای
 
-- [نسخۀ HTML فارسی و تصاویر سند](./AN01001-FA.html)
-- [پوشۀ AN01001 در نسخۀ اصلی چینی](../../zh/AN01001/)
+در پوشه `media/` تعداد **5 فایل رسانه‌ای** وجود دارد. [مشاهده پوشه رسانه‌ها](./media/)
 
-## تهیه و تدوین
+## ملاحظات بازبینی فنی
 
-**معمار الکترونیک صنعت**\\
-**MEMAR ELECTRONIC SANAT (MES)**
+- نام Peripheralها، رجیسترها، بیت‌ها، توابع و کدها را با سند اصلی تطبیق دهید.
+- مقادیر، واحدها، شکل موج‌ها و شرایط آزمون را بدون تغییر ناخواسته حفظ کنید.
+- محدودیت‌های وابسته به مدل MCU، پکیج و Revision را رعایت کنید.
+- پیش از استفاده در محصول، طراحی را با مستندات رسمی و سخت‌افزار واقعی اعتبارسنجی کنید.
 
-همراه شما در مسیر طراحی و ساخت مدارهای مطمئن
+## منابع مرتبط
 
-طراحی و توسعه مدارهای الکترونیکی، PCB، سیستم‌های embedded و ابزارهای پیکربندی میکروکنترلر.
-
-- کانال تلگرام: [https://t.me/Memar_Electronic](https://t.me/Memar_Electronic)
-- پیج اینستاگرام: [https://www.instagram.com/Memar.Electronic](https://www.instagram.com/Memar.Electronic)
-- GitHub: [MEMAR-ELECTRONIC-SANAT](https://github.com/MEMAR-ELECTRONIC-SANAT)
+- [فهرست دوزبانه یادداشت‌ها](../README.md)
+- [اسناد اصلی چینی](../../zh/)
+- [مخزن MES-ch32_application_notes](https://github.com/MEMAR-ELECTRONIC-SANAT/MES-ch32_application_notes)
+- [وب‌سایت WCH](https://www.wch.cn/)
 
 </div>
 
-<p align="center">
-  <img src="../../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo">
-</p>
+## English
+
+## Overview
+
+This is the bilingual guide for **AN01001**, an Application Note from **WCH**. Topic: **External VDD12 Power Supply**. It provides links to the original source, available translated editions, and supporting media. Consult the complete WCH document and the relevant MCU documentation for implementation details and technical limitations.
+
+## Translation and Publication Status
+
+> **Persian PDF and HTML editions are available in this repository.**
+
+When available, use PDF for offline reading and printing, and HTML for browser-based reading.
+
+## Documentation
+
+| Document | Link |
+|---|---|
+| Original WCH Markdown | — |
+| Persian PDF | [AN01001 FA.pdf](AN01001%20FA.pdf) |
+| Persian HTML | [AN01001-FA.html](AN01001-FA.html) |
+
+## Scope and Technical Notes
+
+The subject is **External VDD12 Power Supply**. Verify supported MCU variants, operating conditions, numeric values, and register settings in the original source. Cross-check device-specific details against the matching datasheet and reference manual. Do not generalize results to other CH32 devices without verification.
+
+## Images and Supporting Media
+
+There are **5 media files** in `media/`. [Open the media folder](./media/)
+
+## Engineering Review
+
+- Cross-check peripheral names, registers, bits, functions, and code against the original source.
+- Preserve values, units, waveforms, and test conditions accurately.
+- Observe limitations related to MCU model, package, and silicon revision.
+- Validate the design against official documentation and on real hardware before production use.
+
+## Related Resources
+
+- [Bilingual Application Notes index](../README.md)
+- [Original Chinese documents](../../zh/)
+- [MES-ch32_application_notes repository](https://github.com/MEMAR-ELECTRONIC-SANAT/MES-ch32_application_notes)
+- [WCH official website](https://www.wch.cn/)
+
+## تصاویر و دیاگرام‌های راهنما / Images and Diagrams
+
+- [رسانه‌های AN01001 / AN01001 media](./media/)
+- [دارایی‌های گرافیکی MES / MES visual assets](../../Images/GitHub-Assets/)
+
+## تهیه و تدوین / Credits
+
+**معمار الکترونیک صنعت**  
+**MEMAR ELECTRONIC SANAT (MES)**
+
+همراه شما در مسیر طراحی و ساخت مدارهای مطمئن  
+*Your partner in designing and building reliable circuits.*
+
+- Telegram: https://t.me/Memar_Electronic
+- Instagram: https://www.instagram.com/Memar.Electronic
+- GitHub: https://github.com/MEMAR-ELECTRONIC-SANAT
+
+<p align="center"><img src="../../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo"></p>

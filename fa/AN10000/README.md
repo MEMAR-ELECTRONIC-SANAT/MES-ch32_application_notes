@@ -1,77 +1,110 @@
-<h1 dir="rtl" align="right">AN10000 — راهنمای کاربردی صفحه‌کلید لمسی WCH</h1>
+<p align="center"><img src="../../Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider"></p>
+
+# AN10000 — راهنمای کاربردی صفحه‌کلید لمسی WCH
+
+[🇮🇷 فارسی](README.md) · [🇬🇧 English](#english) · [فهرست دوزبانه / Bilingual index](../README.md)
 
 <div dir="rtl" align="right">
 
 ## معرفی
 
-این صفحه راهنمای اختصاصی یادداشت کاربردی **AN10000** از مجموعه Application Notes شرکت **WCH** است. موضوع این یادداشت: **راهنمای کاربردی صفحه‌کلید لمسی WCH**.
-
-این راهنما وضعیت انتشار نسخه فارسی، مسیر دسترسی به مستندات و فایل‌های رسانه‌ای موجود را مشخص می‌کند. برای بررسی جزئیات فنی، به سند اصلی WCH و در صورت انتشار، به نسخه فارسی مراجعه کنید.
+این صفحه راهنمای دوزبانه یادداشت کاربردی **AN10000** از مجموعه Application Notes شرکت **WCH** است. موضوع سند: **راهنمای کاربردی صفحه‌کلید لمسی WCH**. این راهنما مسیر دسترسی به سند اصلی، فایل‌های ترجمه‌شده و رسانه‌های همراه را معرفی می‌کند. برای جزئیات پیاده‌سازی و محدودیت‌های فنی، متن کامل سند WCH و مستندات رسمی MCU مربوطه را بررسی کنید.
 
 ## وضعیت ترجمه و انتشار
 
-> **وضعیت: نسخه فارسی منتشر شده است.**
+> **نسخه فارسی PDF و HTML در مخزن موجود است.**
 
-فایل‌های PDF و HTML فارسی در همین پوشه قرار دارند. نسخه HTML برای مطالعه در مرورگر و نسخه PDF برای ذخیره، چاپ و مطالعه آفلاین در دسترس است.
+در صورت موجود بودن، PDF برای مطالعه آفلاین و چاپ و HTML برای مشاهده در مرورگر مناسب است.
 
 ## دسترسی به مستندات
 
-<table>
-<tr><td>📄</td><td><b>سند اصلی WCH (Markdown)</b></td><td>[مشاهده AN10000.md](../../zh/AN10000/AN10000.md)</td></tr>
-<tr><td>📕</td><td><b>PDF اصلی WCH</b></td><td>[مشاهده AN10000.pdf](../../zh/AN10000/AN10000.pdf)</td></tr>
-| 📘 | PDF فارسی | [AN10000 FA.pdf](./AN10000%20FA.pdf) |
-| 🌐 | HTML فارسی | [AN10000-FA.html](./AN10000-FA.html) |
-</table>
+| نوع سند | پیوند |
+|---|---|
+| سند اصلی WCH (Markdown) | — |
+| PDF فارسی | [AN10000 FA.pdf](AN10000%20FA.pdf) |
+| HTML فارسی | [AN10000-FA.html](AN10000-FA.html) |
 
-## موضوع و دامنه یادداشت
+## موضوع و دامنه
 
-عنوان ثبت‌شده در فهرست مجموعه: **راهنمای کاربردی صفحه‌کلید لمسی WCH**. برای تعیین دامنه دقیق کاربرد، مدل‌های پشتیبانی‌شده، مقادیر عددی، تنظیمات رجیسترها و شرایط آزمون، متن کامل سند اصلی را ملاک قرار دهید. از تعمیم نتیجه‌ها به سایر اعضای خانواده CH32 بدون بررسی Datasheet و Reference Manual خودداری کنید.
+**راهنمای کاربردی صفحه‌کلید لمسی WCH**. مدل‌های پشتیبانی‌شده، شرایط کاری، مقادیر عددی و تنظیمات رجیسترها را از متن اصلی استخراج و با Datasheet و Reference Manual همان مدل تطبیق دهید. نتایج را بدون بررسی به سایر اعضای خانواده CH32 تعمیم ندهید.
 
 ## فایل‌های تصویری و رسانه‌ای
 
-در پوشه `media/` تعداد **13 فایل تصویری** مرتبط با این یادداشت وجود دارد. این فایل‌ها برای استفاده در مستندات و بررسی شکل‌ها و نمودارهای منبع نگهداری می‌شوند.
-
-- [مشاهده پوشه رسانه‌های AN10000](./media/)
+در پوشه `media/` تعداد **13 فایل رسانه‌ای** وجود دارد. [مشاهده پوشه رسانه‌ها](./media/)
 
 ## ملاحظات بازبینی فنی
 
-- شماره قطعات، نام Peripheralها، رجیسترها، بیت‌ها، توابع و ماکروها باید با سند اصلی تطبیق داده شوند.
-- قطعه‌کدها، مقادیر عددی، واحدها، شکل موج‌ها و شرایط آزمون نباید در ترجمه تغییر ناخواسته داشته باشند.
-- محدودیت‌های وابسته به مدل MCU، پکیج و Revision باید صریح باقی بمانند.
-- پیش از استفاده در محصول، مطالب را با مستندات رسمی همان قطعه و نسخه ابزار توسعه مورد استفاده تطبیق دهید.
+- نام Peripheralها، رجیسترها، بیت‌ها، توابع و کدها را با سند اصلی تطبیق دهید.
+- مقادیر، واحدها، شکل موج‌ها و شرایط آزمون را بدون تغییر ناخواسته حفظ کنید.
+- محدودیت‌های وابسته به مدل MCU، پکیج و Revision را رعایت کنید.
+- پیش از استفاده در محصول، طراحی را با مستندات رسمی و سخت‌افزار واقعی اعتبارسنجی کنید.
 
 ## منابع مرتبط
 
-- [فهرست فارسی یادداشت‌های کاربردی](../README.md)
-- [فهرست انگلیسی مجموعه فارسی](../README_EN.md)
-- [فهرست اسناد اصلی چینی](../../README_zh.md)
+- [فهرست دوزبانه یادداشت‌ها](../README.md)
+- [اسناد اصلی چینی](../../zh/)
 - [مخزن MES-ch32_application_notes](https://github.com/MEMAR-ELECTRONIC-SANAT/MES-ch32_application_notes)
-- [وب‌سایت رسمی WCH](https://www.wch.cn/)
+- [وب‌سایت WCH](https://www.wch.cn/)
 
 </div>
 
-<p align="center">
-  <img src="../../Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider">
-</p>
+## English
 
-## تصاویر و دیاگرام‌های راهنما
+## Overview
 
-- [پوشه تصاویر و رسانه‌های AN10000](./media/)
-- [تصاویر و دارایی‌های گرافیکی MES](../../Images/GitHub-Assets/)
+This is the bilingual guide for **AN10000**, an Application Note from **WCH**. Topic: **WCH Touch-Keypad Application Guide**. It provides links to the original source, available translated editions, and supporting media. Consult the complete WCH document and the relevant MCU documentation for implementation details and technical limitations.
 
-## تهیه و تدوین
+## Translation and Publication Status
 
-**معمار الکترونیک صنعت**
+> **Persian PDF and HTML editions are available in this repository.**
+
+When available, use PDF for offline reading and printing, and HTML for browser-based reading.
+
+## Documentation
+
+| Document | Link |
+|---|---|
+| Original WCH Markdown | — |
+| Persian PDF | [AN10000 FA.pdf](AN10000%20FA.pdf) |
+| Persian HTML | [AN10000-FA.html](AN10000-FA.html) |
+
+## Scope and Technical Notes
+
+The subject is **WCH Touch-Keypad Application Guide**. Verify supported MCU variants, operating conditions, numeric values, and register settings in the original source. Cross-check device-specific details against the matching datasheet and reference manual. Do not generalize results to other CH32 devices without verification.
+
+## Images and Supporting Media
+
+There are **13 media files** in `media/`. [Open the media folder](./media/)
+
+## Engineering Review
+
+- Cross-check peripheral names, registers, bits, functions, and code against the original source.
+- Preserve values, units, waveforms, and test conditions accurately.
+- Observe limitations related to MCU model, package, and silicon revision.
+- Validate the design against official documentation and on real hardware before production use.
+
+## Related Resources
+
+- [Bilingual Application Notes index](../README.md)
+- [Original Chinese documents](../../zh/)
+- [MES-ch32_application_notes repository](https://github.com/MEMAR-ELECTRONIC-SANAT/MES-ch32_application_notes)
+- [WCH official website](https://www.wch.cn/)
+
+## تصاویر و دیاگرام‌های راهنما / Images and Diagrams
+
+- [رسانه‌های AN10000 / AN10000 media](./media/)
+- [دارایی‌های گرافیکی MES / MES visual assets](../../Images/GitHub-Assets/)
+
+## تهیه و تدوین / Credits
+
+**معمار الکترونیک صنعت**  
 **MEMAR ELECTRONIC SANAT (MES)**
 
-همراه شما در مسیر طراحی و ساخت مدارهای مطمئن
+همراه شما در مسیر طراحی و ساخت مدارهای مطمئن  
+*Your partner in designing and building reliable circuits.*
 
-طراحی و توسعه مدارهای الکترونیکی، PCB، سیستم‌های Embedded و ابزارهای پیکربندی میکروکنترلر.
+- Telegram: https://t.me/Memar_Electronic
+- Instagram: https://www.instagram.com/Memar.Electronic
+- GitHub: https://github.com/MEMAR-ELECTRONIC-SANAT
 
-- کانال تلگرام: [https://t.me/Memar_Electronic](https://t.me/Memar_Electronic)
-- پیج اینستاگرام: [https://www.instagram.com/Memar.Electronic](https://www.instagram.com/Memar.Electronic)
-- GitHub: [MEMAR-ELECTRONIC-SANAT](https://github.com/MEMAR-ELECTRONIC-SANAT)
-
-<p align="center">
-  <img src="../../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo">
-</p>
+<p align="center"><img src="../../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo"></p>

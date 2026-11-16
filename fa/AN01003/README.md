@@ -1,66 +1,110 @@
-<h1 dir="rtl" align="right">AN01003 — راهنمای جامع عیب‌یابی ریست‌های غیرعادی و توقف برنامه در CH32</h1>
+<p align="center"><img src="../../Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider"></p>
+
+# AN01003 — تحلیل علت‌های Reset تراشه
+
+[🇮🇷 فارسی](README.md) · [🇬🇧 English](#english) · [فهرست دوزبانه / Bilingual index](../README.md)
 
 <div dir="rtl" align="right">
 
 ## معرفی
 
-این یادداشت کاربردی، ترجمۀ فارسی سند **AN01003 V1.0** از شرکت **WCH** و برای توسعه‌دهندگان میکروکنترلرهای سری **CH32 MCU** تهیه شده است. موضوع آن تحلیل ریست‌های غیرعادی، توقف برنامه و روش‌های عیب‌یابی خطاهای سخت‌افزاری و نرم‌افزاری است.
+این صفحه راهنمای دوزبانه یادداشت کاربردی **AN01003** از مجموعه Application Notes شرکت **WCH** است. موضوع سند: **تحلیل علت‌های Reset تراشه**. این راهنما مسیر دسترسی به سند اصلی، فایل‌های ترجمه‌شده و رسانه‌های همراه را معرفی می‌کند. برای جزئیات پیاده‌سازی و محدودیت‌های فنی، متن کامل سند WCH و مستندات رسمی MCU مربوطه را بررسی کنید.
 
-## محتوای سند
+## وضعیت ترجمه و انتشار
 
-### بخش ۱ — سوئیچ تغذیۀ خارجی VDDK در CH32H417
+> **نسخه فارسی PDF و HTML در مخزن موجود است.**
 
-- معرفی دامنۀ تغذیۀ **VDD12** و نقش پایه‌های **VDDK/VDD12A**.
-- بررسی افت لحظه‌ای ولتاژ هنگام کاهش سهم تنظیم‌گر داخلی و واگذاری بار به منبع خارجی ۱٫۲ ولت.
-- مرور مدار اولیه LDO خارجی و اهمیت توانایی منبع در تأمین جریان بار، پاسخ گذرا و خازن‌های بای‌پس.
-- پیشنهادهای طراحی: تأمین مستقل بار توسط منبع خارجی، انجام انتقال تغذیه در مرحلۀ کم‌بار و سنجش ولتاژ واقعی VDDK در شرایط دینامیکی.
+در صورت موجود بودن، PDF برای مطالعه آفلاین و چاپ و HTML برای مشاهده در مرورگر مناسب است.
 
-### بخش ۲ — روش عیب‌یابی ریست و توقف برنامه
+## دسترسی به مستندات
 
-- تحلیل فلگ‌های **RCC_RSTSCKR** برای شناسایی منابع ریست؛ از جمله POR/PDR، watchdog، ریست نرم‌افزاری، NRST و ریست کم‌مصرف.
-- بررسی افت ولتاژ، محدودیت جریان یا حرارتی رگولاتور، مسیر تغذیه، خازن‌ها، اتصالات و رفتار نرم‌افزار.
-- ردگیری **HardFault** با رجیسترهای **mcause، mtval و mepc** و تطبیق آدرس خطا با فایل اسمبلی و فهرست خروجی کامپایل.
-- بررسی خطاهای ناهم‌ترازی دسترسی، حلقه‌های انتظار بی‌پایان و خطاهای متناوب با تغییر کنترل‌شدۀ شرایط بازتولید.
+| نوع سند | پیوند |
+|---|---|
+| سند اصلی WCH (Markdown) | — |
+| PDF فارسی | [AN01003 FA.pdf](AN01003%20FA.pdf) |
+| HTML فارسی | [AN01003-FA.html](AN01003-FA.html) |
 
-## دسترسی به فایل‌ها
+## موضوع و دامنه
 
-- [دانلود سند PDF فارسی — AN01003 FA](./AN01003%20FA.pdf)
-- [مشاهدۀ نسخۀ HTML فارسی](./AN01003-FA.html)
-- [مشاهدۀ سند اصلی چینی (Markdown)](../../zh/AN01003/AN01003.md)
-- [بازگشت به فهرست یادداشت‌های کاربردی فارسی](../README.md)
+**تحلیل علت‌های Reset تراشه**. مدل‌های پشتیبانی‌شده، شرایط کاری، مقادیر عددی و تنظیمات رجیسترها را از متن اصلی استخراج و با Datasheet و Reference Manual همان مدل تطبیق دهید. نتایج را بدون بررسی به سایر اعضای خانواده CH32 تعمیم ندهید.
 
-## نکات فنی
+## فایل‌های تصویری و رسانه‌ای
 
-- **سری هدف:** CH32 MCU؛ مثال موردی: CH32H417.
-- **نسخۀ سند:** V1.0.
-- مقادیر ولتاژ، جریان، رجیسترها و تنظیمات باید با دیتاشیت و مرجع فنی همان مدل MCU تطبیق داده شوند.
-- توصیه‌های مربوط به خازن و تغذیه، جایگزین بررسی پایداری منبع، مسیر PCB، زمین و اندازه‌گیری با اسیلوسکوپ در شرایط واقعی بار نیستند.
+در پوشه `media/` تعداد **5 فایل رسانه‌ای** وجود دارد. [مشاهده پوشه رسانه‌ها](./media/)
 
-<p align="center">
-  <img src="../../Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider">
-</p>
+## ملاحظات بازبینی فنی
 
-## تصاویر و دیاگرام‌های راهنما
+- نام Peripheralها، رجیسترها، بیت‌ها، توابع و کدها را با سند اصلی تطبیق دهید.
+- مقادیر، واحدها، شکل موج‌ها و شرایط آزمون را بدون تغییر ناخواسته حفظ کنید.
+- محدودیت‌های وابسته به مدل MCU، پکیج و Revision را رعایت کنید.
+- پیش از استفاده در محصول، طراحی را با مستندات رسمی و سخت‌افزار واقعی اعتبارسنجی کنید.
 
-تصاویر و نمودارهای همراه سند در پوشۀ زیر قرار دارند:
+## منابع مرتبط
 
-[مشاهدۀ تصاویر AN01003](./assets/img/)
+- [فهرست دوزبانه یادداشت‌ها](../README.md)
+- [اسناد اصلی چینی](../../zh/)
+- [مخزن MES-ch32_application_notes](https://github.com/MEMAR-ELECTRONIC-SANAT/MES-ch32_application_notes)
+- [وب‌سایت WCH](https://www.wch.cn/)
 
 </div>
 
-## تهیه و تدوین
+## English
 
-**معمار الکترونیک صنعت**\\
+## Overview
+
+This is the bilingual guide for **AN01003**, an Application Note from **WCH**. Topic: **MCU Reset-Cause Analysis**. It provides links to the original source, available translated editions, and supporting media. Consult the complete WCH document and the relevant MCU documentation for implementation details and technical limitations.
+
+## Translation and Publication Status
+
+> **Persian PDF and HTML editions are available in this repository.**
+
+When available, use PDF for offline reading and printing, and HTML for browser-based reading.
+
+## Documentation
+
+| Document | Link |
+|---|---|
+| Original WCH Markdown | — |
+| Persian PDF | [AN01003 FA.pdf](AN01003%20FA.pdf) |
+| Persian HTML | [AN01003-FA.html](AN01003-FA.html) |
+
+## Scope and Technical Notes
+
+The subject is **MCU Reset-Cause Analysis**. Verify supported MCU variants, operating conditions, numeric values, and register settings in the original source. Cross-check device-specific details against the matching datasheet and reference manual. Do not generalize results to other CH32 devices without verification.
+
+## Images and Supporting Media
+
+There are **5 media files** in `media/`. [Open the media folder](./media/)
+
+## Engineering Review
+
+- Cross-check peripheral names, registers, bits, functions, and code against the original source.
+- Preserve values, units, waveforms, and test conditions accurately.
+- Observe limitations related to MCU model, package, and silicon revision.
+- Validate the design against official documentation and on real hardware before production use.
+
+## Related Resources
+
+- [Bilingual Application Notes index](../README.md)
+- [Original Chinese documents](../../zh/)
+- [MES-ch32_application_notes repository](https://github.com/MEMAR-ELECTRONIC-SANAT/MES-ch32_application_notes)
+- [WCH official website](https://www.wch.cn/)
+
+## تصاویر و دیاگرام‌های راهنما / Images and Diagrams
+
+- [رسانه‌های AN01003 / AN01003 media](./media/)
+- [دارایی‌های گرافیکی MES / MES visual assets](../../Images/GitHub-Assets/)
+
+## تهیه و تدوین / Credits
+
+**معمار الکترونیک صنعت**  
 **MEMAR ELECTRONIC SANAT (MES)**
 
-همراه شما در مسیر طراحی و ساخت مدارهای مطمئن
+همراه شما در مسیر طراحی و ساخت مدارهای مطمئن  
+*Your partner in designing and building reliable circuits.*
 
-طراحی و توسعه مدارهای الکترونیکی، PCB، سیستم‌های embedded و ابزارهای پیکربندی میکروکنترلر.
+- Telegram: https://t.me/Memar_Electronic
+- Instagram: https://www.instagram.com/Memar.Electronic
+- GitHub: https://github.com/MEMAR-ELECTRONIC-SANAT
 
-- کانال تلگرام: [https://t.me/Memar_Electronic](https://t.me/Memar_Electronic)
-- پیج اینستاگرام: [https://www.instagram.com/Memar.Electronic](https://www.instagram.com/Memar.Electronic)
-- GitHub: [MEMAR-ELECTRONIC-SANAT](https://github.com/MEMAR-ELECTRONIC-SANAT)
-
-<p align="center">
-  <img src="../../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo">
-</p>
+<p align="center"><img src="../../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo"></p>

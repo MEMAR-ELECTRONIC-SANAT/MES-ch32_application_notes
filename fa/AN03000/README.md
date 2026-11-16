@@ -1,76 +1,110 @@
-<h1 dir="rtl" align="right">AN03000 — راهنمای جامع شتاب‌دهی اجرا با ICache در CH32H417</h1>
+<p align="center"><img src="../../Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider"></p>
+
+# AN03000 — راهنمای استفاده از ICache در CH32H417
+
+[🇮🇷 فارسی](README.md) · [🇬🇧 English](#english) · [فهرست دوزبانه / Bilingual index](../README.md)
 
 <div dir="rtl" align="right">
 
 ## معرفی
 
-این یادداشت کاربردی، ترجمۀ فارسی سند **AN03000 V1.0** از شرکت **WCH** است. موضوع آن استفاده از حافظۀ نهان دستورالعمل (**ICache**) در هستۀ **QingKe V5** میکروکنترلر **CH32H417** برای افزایش سرعت اجرای کد از Flash و کاهش فشار بر منابع RAM است.
+این صفحه راهنمای دوزبانه یادداشت کاربردی **AN03000** از مجموعه Application Notes شرکت **WCH** است. موضوع سند: **راهنمای استفاده از ICache در CH32H417**. این راهنما مسیر دسترسی به سند اصلی، فایل‌های ترجمه‌شده و رسانه‌های همراه را معرفی می‌کند. برای جزئیات پیاده‌سازی و محدودیت‌های فنی، متن کامل سند WCH و مستندات رسمی MCU مربوطه را بررسی کنید.
 
-## محتوای سند
+## وضعیت ترجمه و انتشار
 
-### ۱. معرفی ICache در هستۀ V5
+> **نسخه فارسی PDF و HTML در مخزن موجود است.**
 
-- معرفی ICache با ظرفیت **32 KB** و سازوکار Cache Hit/Cache Miss.
-- توضیح Cache Line با اندازۀ معمول **64 بایت** و تأثیر آن بر واکشی دستورالعمل‌ها از Flash.
-- بررسی نقش ICache در افزایش سرعت اجرای برنامه، به‌ویژه هنگامی که کد از Flash اجرا می‌شود.
+در صورت موجود بودن، PDF برای مطالعه آفلاین و چاپ و HTML برای مشاهده در مرورگر مناسب است.
 
-### ۲. روش پیکربندی و استفاده از Cache
+## دسترسی به مستندات
 
-- کنترل راهبرد Cache با رجیستر **CACHE_STRTG_CTLR (0xBC2)** و بیت‌های انتخاب ناحیۀ Cache.
-- پاک‌سازی Cache با رجیستر **0xBD0** و بیت **[2]** پیش از فعال‌سازی، به‌ویژه پس از ریست نرم‌افزاری یا سخت‌افزاری.
-- نمونۀ اسمبلی برای پاک‌سازی و فعال‌سازی ICache در فایل **startup_ch32h417_v5f.S**.
-- استفاده از **PMP** برای تعریف ناحیۀ حافظه و کنترل Cache؛ معرفی حالت‌های **TOR، NA4 و NAPOT** و رجیسترهای آدرس/پیکربندی.
-- نمونه‌های تخصیص بخش‌های کد در فایل **LD** با برچسب‌های **_cache_beg** و **_cache_end**.
+| نوع سند | پیوند |
+|---|---|
+| سند اصلی WCH (Markdown) | — |
+| PDF فارسی | [AN03000-FA.pdf](AN03000-FA.pdf) |
+| HTML فارسی | [AN03000-FA.html](AN03000-FA.html) |
 
-### ۳. مقایسۀ عملکرد
+## موضوع و دامنه
 
-- مقایسۀ **CoreMark** برای اجرای کد از Flash، از Flash همراه Cache و از ITCM.
-- نتایج گزارش‌شده در سند: **0.327/MHz** از Flash، **6.672/MHz** از Flash+Cache و **6.802/MHz** از ITCM.
-- آزمون خطی تابع 12 KB و مقایسۀ زمان اجرا با Cache خاموش و روشن.
-- بررسی محدودیت ظرفیت Cache و اثر کد بزرگ‌تر از 32 KB یا بارگذاری مکرر Cache بر عملکرد.
+**راهنمای استفاده از ICache در CH32H417**. مدل‌های پشتیبانی‌شده، شرایط کاری، مقادیر عددی و تنظیمات رجیسترها را از متن اصلی استخراج و با Datasheet و Reference Manual همان مدل تطبیق دهید. نتایج را بدون بررسی به سایر اعضای خانواده CH32 تعمیم ندهید.
 
-## دسترسی به فایل‌ها
+## فایل‌های تصویری و رسانه‌ای
 
-- [مشاهدۀ نسخۀ HTML فارسی AN03000](./AN03000-FA.html)
-- [مشاهدۀ سند اصلی چینی (Markdown)](../../zh/AN03000/AN03000.md)
-- [بازگشت به فهرست یادداشت‌های کاربردی فارسی](../README.md)
+در پوشه `media/` تعداد **10 فایل رسانه‌ای** وجود دارد. [مشاهده پوشه رسانه‌ها](./media/)
 
-> **توجه:** لینک PDF در این README درج نشده است، زیرا فایل PDF با نام بررسی‌شده در مسیر پوشه در مخزن پیدا نشد. در صورت قرارگرفتن PDF در پوشه، می‌توان لینک مستقیم آن را اضافه کرد.
+## ملاحظات بازبینی فنی
 
-## نکات فنی
+- نام Peripheralها، رجیسترها، بیت‌ها، توابع و کدها را با سند اصلی تطبیق دهید.
+- مقادیر، واحدها، شکل موج‌ها و شرایط آزمون را بدون تغییر ناخواسته حفظ کنید.
+- محدودیت‌های وابسته به مدل MCU، پکیج و Revision را رعایت کنید.
+- پیش از استفاده در محصول، طراحی را با مستندات رسمی و سخت‌افزار واقعی اعتبارسنجی کنید.
 
-- **میکروکنترلر:** CH32H417
-- **هسته:** QingKe V5
-- **ظرفیت ICache:** 32 KB
-- **نسخۀ سند اصلی:** V1.0
-- تنظیم رجیسترها، PMP و بخش‌های linker باید با فایل‌های startup، SDK و مستندات همان نسخۀ تراشه تطبیق داده شود.
-- نتایج CoreMark و آزمون خطی، نتایج گزارش‌شدۀ سند هستند و لزوماً برای هر فرکانس، کامپایلر، تنظیمات و برنامۀ کاربردی تکرار نمی‌شوند.
+## منابع مرتبط
 
-<p align="center">
-  <img src="../../Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider">
-</p>
-
-## تصاویر و دیاگرام‌های راهنما
-
-تصاویر و نمودارهای همراه سند در پوشۀ زیر قرار دارند:
-
-[مشاهدۀ تصاویر AN03000](./assets/img/)
+- [فهرست دوزبانه یادداشت‌ها](../README.md)
+- [اسناد اصلی چینی](../../zh/)
+- [مخزن MES-ch32_application_notes](https://github.com/MEMAR-ELECTRONIC-SANAT/MES-ch32_application_notes)
+- [وب‌سایت WCH](https://www.wch.cn/)
 
 </div>
 
-## تهیه و تدوین
+## English
 
-**معمار الکترونیک صنعت**\\
+## Overview
+
+This is the bilingual guide for **AN03000**, an Application Note from **WCH**. Topic: **Using ICache on CH32H417**. It provides links to the original source, available translated editions, and supporting media. Consult the complete WCH document and the relevant MCU documentation for implementation details and technical limitations.
+
+## Translation and Publication Status
+
+> **Persian PDF and HTML editions are available in this repository.**
+
+When available, use PDF for offline reading and printing, and HTML for browser-based reading.
+
+## Documentation
+
+| Document | Link |
+|---|---|
+| Original WCH Markdown | — |
+| Persian PDF | [AN03000-FA.pdf](AN03000-FA.pdf) |
+| Persian HTML | [AN03000-FA.html](AN03000-FA.html) |
+
+## Scope and Technical Notes
+
+The subject is **Using ICache on CH32H417**. Verify supported MCU variants, operating conditions, numeric values, and register settings in the original source. Cross-check device-specific details against the matching datasheet and reference manual. Do not generalize results to other CH32 devices without verification.
+
+## Images and Supporting Media
+
+There are **10 media files** in `media/`. [Open the media folder](./media/)
+
+## Engineering Review
+
+- Cross-check peripheral names, registers, bits, functions, and code against the original source.
+- Preserve values, units, waveforms, and test conditions accurately.
+- Observe limitations related to MCU model, package, and silicon revision.
+- Validate the design against official documentation and on real hardware before production use.
+
+## Related Resources
+
+- [Bilingual Application Notes index](../README.md)
+- [Original Chinese documents](../../zh/)
+- [MES-ch32_application_notes repository](https://github.com/MEMAR-ELECTRONIC-SANAT/MES-ch32_application_notes)
+- [WCH official website](https://www.wch.cn/)
+
+## تصاویر و دیاگرام‌های راهنما / Images and Diagrams
+
+- [رسانه‌های AN03000 / AN03000 media](./media/)
+- [دارایی‌های گرافیکی MES / MES visual assets](../../Images/GitHub-Assets/)
+
+## تهیه و تدوین / Credits
+
+**معمار الکترونیک صنعت**  
 **MEMAR ELECTRONIC SANAT (MES)**
 
-همراه شما در مسیر طراحی و ساخت مدارهای مطمئن
+همراه شما در مسیر طراحی و ساخت مدارهای مطمئن  
+*Your partner in designing and building reliable circuits.*
 
-طراحی و توسعه مدارهای الکترونیکی، PCB، سیستم‌های embedded و ابزارهای پیکربندی میکروکنترلر.
+- Telegram: https://t.me/Memar_Electronic
+- Instagram: https://www.instagram.com/Memar.Electronic
+- GitHub: https://github.com/MEMAR-ELECTRONIC-SANAT
 
-- کانال تلگرام: [https://t.me/Memar_Electronic](https://t.me/Memar_Electronic)
-- پیج اینستاگرام: [https://www.instagram.com/Memar.Electronic](https://www.instagram.com/Memar.Electronic)
-- GitHub: [MEMAR-ELECTRONIC-SANAT](https://github.com/MEMAR-ELECTRONIC-SANAT)
-
-<p align="center">
-  <img src="../../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo">
-</p>
+<p align="center"><img src="../../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo"></p>

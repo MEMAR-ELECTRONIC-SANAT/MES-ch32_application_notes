@@ -1,91 +1,110 @@
-<h1 dir="rtl" align="right">AN03001 — راهنمای وقفه‌ها در تراشۀ دولپه‌ای CH32H417</h1>
+<p align="center"><img src="../../Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider"></p>
+
+# AN03001 — تخصیص وقفه و بیدارسازی تراشه‌های دو هسته‌ای
+
+[🇮🇷 فارسی](README.md) · [🇬🇧 English](#english) · [فهرست دوزبانه / Bilingual index](../README.md)
 
 <div dir="rtl" align="right">
 
 ## معرفی
 
-یادداشت کاربردی **AN03001، نسخه V1.0** از شرکت **WCH**، روش استفاده از سیستم وقفه و مدیریت خواب و بیداری را در تراشۀ دولپه‌ای **CH32H417** (هسته‌های QingKe V5F و V3F) توضیح می‌دهد. در این تراشه، برخی رفتارهای وقفه نسبت به MCUهای تک‌هسته‌ای متفاوت است؛ به‌ویژه در فعال‌سازی، تخصیص مجوز رسیدگی به وقفه و بیدارسازی هسته‌ها.
+این صفحه راهنمای دوزبانه یادداشت کاربردی **AN03001** از مجموعه Application Notes شرکت **WCH** است. موضوع سند: **تخصیص وقفه و بیدارسازی تراشه‌های دو هسته‌ای**. این راهنما مسیر دسترسی به سند اصلی، فایل‌های ترجمه‌شده و رسانه‌های همراه را معرفی می‌کند. برای جزئیات پیاده‌سازی و محدودیت‌های فنی، متن کامل سند WCH و مستندات رسمی MCU مربوطه را بررسی کنید.
 
-## محدوده کاربرد
+## وضعیت ترجمه و انتشار
 
-| مورد | توضیح |
+> **نسخه فارسی PDF و HTML در مخزن موجود است.**
+
+در صورت موجود بودن، PDF برای مطالعه آفلاین و چاپ و HTML برای مشاهده در مرورگر مناسب است.
+
+## دسترسی به مستندات
+
+| نوع سند | پیوند |
 |---|---|
-| خانواده | MCU عمومی |
-| نمونه تراشه | CH32H417 |
-| معماری | دو هسته V5F و V3F |
-| واحد اصلی مدیریت وقفه | PFIC |
+| سند اصلی WCH (Markdown) | — |
+| PDF فارسی | [AN03001 FA.pdf](AN03001%20FA.pdf) |
+| HTML فارسی | [AN03001-FA.html](AN03001-FA.html) |
 
-## خلاصه محتوای سند
+## موضوع و دامنه
 
-### ۱. فعال‌سازی و وضعیت وقفه
+**تخصیص وقفه و بیدارسازی تراشه‌های دو هسته‌ای**. مدل‌های پشتیبانی‌شده، شرایط کاری، مقادیر عددی و تنظیمات رجیسترها را از متن اصلی استخراج و با Datasheet و Reference Manual همان مدل تطبیق دهید. نتایج را بدون بررسی به سایر اعضای خانواده CH32 تعمیم ندهید.
 
-- وقفه‌ها به دو گروه **خصوصی** و **عمومی** تقسیم می‌شوند. وقفه‌های خصوصی، مانند HardFault، به هر هسته مستقل تعلق دارند؛ وقفه‌های عمومیِ پیرامونی می‌توانند میان هسته‌ها تخصیص داده شوند، اما در یک زمان فقط یک هسته مالک مجوز رسیدگی است.
-- شماره‌های 0 تا 31 مربوط به وقفه‌های خصوصی هستند و از شماره 32 به بعد وقفه‌های عمومی قرار دارند.
-- رجیسترهای PFIC برای فعال‌سازی، خواندن وضعیت فعال، غیرفعال‌سازی و بررسی حالت Pending استفاده می‌شوند.
-- توابع نمونه: `NVIC_EnableIRQ()`، `NVIC_GetStatusIRQ()`، `NVIC_DisableIRQ()` و `NVIC_GetPendingIRQ()`.
+## فایل‌های تصویری و رسانه‌ای
 
-### ۲. رجیسترهای پیکربندی و وضعیت سراسری
+در پوشه `media/` تعداد **17 فایل رسانه‌ای** وجود دارد. [مشاهده پوشه رسانه‌ها](./media/)
 
-- رجیستر **CFGR** امکان درخواست ریست سیستم را فراهم می‌کند؛ برای این کار بیت 7 و کلید معتبر `0xBEEF` در بیت‌های 31:16 مطرح است.
-- رجیستر **GISR** وضعیت هسته را گزارش می‌کند؛ از جمله وضعیت اجرا، قفل، دیباگ، فعال بودن وقفه سراسری، وضعیت Pending/اجرای وقفه و سطح تو‌در‌تویی.
-- رجیسترها و توابع مرتبط باید مطابق Reference Manual و هدرهای تراشه بررسی شوند.
+## ملاحظات بازبینی فنی
 
-### ۳. وقفه‌های VTF
+- نام Peripheralها، رجیسترها، بیت‌ها، توابع و کدها را با سند اصلی تطبیق دهید.
+- مقادیر، واحدها، شکل موج‌ها و شرایط آزمون را بدون تغییر ناخواسته حفظ کنید.
+- محدودیت‌های وابسته به مدل MCU، پکیج و Revision را رعایت کنید.
+- پیش از استفاده در محصول، طراحی را با مستندات رسمی و سخت‌افزار واقعی اعتبارسنجی کنید.
 
-- هر هسته می‌تواند چهار گروه وقفه **VTF (Vector Table-Free)** را به‌صورت مستقل پیکربندی کند.
-- شناسه وقفه در `VTFIDR` و آدرس تابع فراخوانی به‌همراه بیت Enable در رجیسترهای `VTFADDRR0…3` نگهداری می‌شود.
-- نمونه پیکربندی ارائه‌شده در سند: `SetVTFIRQ()`.
+## منابع مرتبط
 
-### ۴. آستانه اولویت و Pending
-
-- رجیستر **THRESH** آستانه اولویت را تعیین می‌کند؛ وقفه‌هایی که اولویت آن‌ها از آستانه پایین‌تر است، پس از Pending شدن سرویس نمی‌شوند.
-- رجیسترهای **IPSR** و **IPRR** برای ثبت و پاک‌کردن وضعیت Pending به کار می‌روند.
-- توابع نمونه: `NVIC_SetPendingIRQ()` و `NVIC_ClearPendingIRQ()`.
-
-### ۵. اولویت و تخصیص مجوز بین هسته‌ها
-
-- اولویت وقفه‌ها با رجیسترهای `PFIC_IPRIORx` تنظیم می‌شود. وقفه‌های خصوصی اولویت مستقل دارند؛ برای وقفه‌های عمومی، هر هسته می‌تواند تنظیم اولویت خود را انجام دهد.
-- رجیستر **INTSYSCR** تعیین می‌کند بیت‌های اولویت چگونه به اولویت پیش‌دستی (Preemption) و اولویت پاسخ تقسیم شوند و آیا تو‌در‌تویی وقفه فعال باشد.
-- رجیستر **IALLOCR** مجوز مالکیت وقفه را مشخص می‌کند؛ **IAUTR** برای پرس‌وجوی مالک/هسته پاسخ‌گو استفاده می‌شود.
-- توابع نمونه: `NVIC_SetPriority()`، `NVIC_SetAllocateIRQ()`، `NVIC_GetAllocateIRQ()` و `NVIC_OwnCoreGetAllocateIRQ()`.
-
-### ۶. خواب و بیداری هسته‌ها
-
-- خواب یک هسته در کنار فعالیت هسته دیگر یا خواب هم‌زمان دو هسته می‌تواند برای کاهش مصرف توان استفاده شود.
-- رویدادهای بیداری در PFIC قابل پیکربندی هستند؛ منابع متداول شامل Pending شدن وقفه، دریافت پیام بین هسته‌ها و رویداد سیستم است. پس از بیداری، **EWUPR** منبع رویداد را گزارش می‌کند.
-- بیداری محلی هر هسته می‌تواند با **WFI** یا **WFE** انجام شود. برای رویدادهای WFE، شناسه هسته مقصد باید مطابق سازوکار مستندشده تنظیم شود.
-- بیداری بین‌هسته‌ای از **WFE** استفاده می‌کند. در سناریوی بیداری با وقفه، سند به تنظیم بیت 4 رجیستر **SCTLR** برای تبدیل وقفه‌های معلق به رویداد بیدارکننده اشاره می‌کند.
-
-## فایل‌های این یادداشت
-
-- [نسخه HTML فارسی](./AN03001-FA.html)
-- [نسخه PDF فارسی](./AN03001%20FA.pdf)
-- [سند اصلی چینی](../../zh/AN03001/AN03001.md)
-- [تصاویر و نمودارهای HTML](./assets/img/)
-
-> **توجه:** PDF فارسی در مخزن با نام `AN03001 FA.pdf` موجود است. نام فایل و مسیرها را هنگام لینک‌دهی حفظ کنید.
-
-<p align="center">
-  <img src="../../Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider">
-</p>
-
-## تصاویر و دیاگرام‌های راهنما
-
-تصاویر سند فارسی در پوشه [assets/img](./assets/img/) قرار دارند و شامل دیاگرام‌های رجیسترهای فعال‌سازی و وضعیت وقفه، VTF، آستانه اولویت، Pending، اولویت و تخصیص مجوز، PFIC wake events و SCTLR هستند.
+- [فهرست دوزبانه یادداشت‌ها](../README.md)
+- [اسناد اصلی چینی](../../zh/)
+- [مخزن MES-ch32_application_notes](https://github.com/MEMAR-ELECTRONIC-SANAT/MES-ch32_application_notes)
+- [وب‌سایت WCH](https://www.wch.cn/)
 
 </div>
 
-## تهیه و تدوین
+## English
 
-**معمار الکترونیک صنعت**
+## Overview
+
+This is the bilingual guide for **AN03001**, an Application Note from **WCH**. Topic: **Interrupt Allocation and Wake-Up on Dual-Core MCUs**. It provides links to the original source, available translated editions, and supporting media. Consult the complete WCH document and the relevant MCU documentation for implementation details and technical limitations.
+
+## Translation and Publication Status
+
+> **Persian PDF and HTML editions are available in this repository.**
+
+When available, use PDF for offline reading and printing, and HTML for browser-based reading.
+
+## Documentation
+
+| Document | Link |
+|---|---|
+| Original WCH Markdown | — |
+| Persian PDF | [AN03001 FA.pdf](AN03001%20FA.pdf) |
+| Persian HTML | [AN03001-FA.html](AN03001-FA.html) |
+
+## Scope and Technical Notes
+
+The subject is **Interrupt Allocation and Wake-Up on Dual-Core MCUs**. Verify supported MCU variants, operating conditions, numeric values, and register settings in the original source. Cross-check device-specific details against the matching datasheet and reference manual. Do not generalize results to other CH32 devices without verification.
+
+## Images and Supporting Media
+
+There are **17 media files** in `media/`. [Open the media folder](./media/)
+
+## Engineering Review
+
+- Cross-check peripheral names, registers, bits, functions, and code against the original source.
+- Preserve values, units, waveforms, and test conditions accurately.
+- Observe limitations related to MCU model, package, and silicon revision.
+- Validate the design against official documentation and on real hardware before production use.
+
+## Related Resources
+
+- [Bilingual Application Notes index](../README.md)
+- [Original Chinese documents](../../zh/)
+- [MES-ch32_application_notes repository](https://github.com/MEMAR-ELECTRONIC-SANAT/MES-ch32_application_notes)
+- [WCH official website](https://www.wch.cn/)
+
+## تصاویر و دیاگرام‌های راهنما / Images and Diagrams
+
+- [رسانه‌های AN03001 / AN03001 media](./media/)
+- [دارایی‌های گرافیکی MES / MES visual assets](../../Images/GitHub-Assets/)
+
+## تهیه و تدوین / Credits
+
+**معمار الکترونیک صنعت**  
 **MEMAR ELECTRONIC SANAT (MES)**
 
-همراه شما در مسیر طراحی و ساخت مدارهای مطمئن
+همراه شما در مسیر طراحی و ساخت مدارهای مطمئن  
+*Your partner in designing and building reliable circuits.*
 
-- کانال تلگرام: [Memar_Electronic](https://t.me/Memar_Electronic)
-- اینستاگرام: [Memar.Electronic](https://www.instagram.com/Memar.Electronic)
-- GitHub: [MEMAR-ELECTRONIC-SANAT](https://github.com/MEMAR-ELECTRONIC-SANAT)
+- Telegram: https://t.me/Memar_Electronic
+- Instagram: https://www.instagram.com/Memar.Electronic
+- GitHub: https://github.com/MEMAR-ELECTRONIC-SANAT
 
-<p align="center">
-  <img src="../../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo">
-</p>
+<p align="center"><img src="../../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo"></p>

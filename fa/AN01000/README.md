@@ -1,98 +1,110 @@
-<h1 dir="rtl" align="right">AN01000 — راهنمای حالت‌های کم‌مصرف و بیدارسازی در میکروکنترلرهای CH32</h1>
+<p align="center"><img src="../../Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider"></p>
 
-<div dir="rtl">
+# AN01000 — یادداشت کاربردی مصرف کم
+
+[🇮🇷 فارسی](README.md) · [🇬🇧 English](#english) · [فهرست دوزبانه / Bilingual index](../README.md)
+
+<div dir="rtl" align="right">
 
 ## معرفی
 
-این یادداشت کاربردی، ترجمۀ فارسی سند رسمی **AN01000 V1.0** شرکت **WCH** است و به بررسی حالت‌های کم‌مصرف میکروکنترلرهای CH32، منابع بیدارسازی و روش‌های کاهش جریان مصرفی می‌پردازد.
+این صفحه راهنمای دوزبانه یادداشت کاربردی **AN01000** از مجموعه Application Notes شرکت **WCH** است. موضوع سند: **یادداشت کاربردی مصرف کم**. این راهنما مسیر دسترسی به سند اصلی، فایل‌های ترجمه‌شده و رسانه‌های همراه را معرفی می‌کند. برای جزئیات پیاده‌سازی و محدودیت‌های فنی، متن کامل سند WCH و مستندات رسمی MCU مربوطه را بررسی کنید.
 
-در این راهنما، تفاوت حالت‌های **SLEEP، STOP و STANDBY**، انتخاب منبع بیدارسازی، تنظیمات نرم‌افزاری و سخت‌افزاری، نکات اندازه‌گیری جریان و ملاحظات حفظ داده‌ها مرور می‌شوند. اصطلاحات فنی، نام رجیسترها، توابع و شناسه‌های سخت‌افزاری مطابق سند اصلی حفظ شده‌اند.
+## وضعیت ترجمه و انتشار
+
+> **نسخه فارسی PDF و HTML در مخزن موجود است.**
+
+در صورت موجود بودن، PDF برای مطالعه آفلاین و چاپ و HTML برای مشاهده در مرورگر مناسب است.
 
 ## دسترسی به مستندات
 
-<table>
-<tr><td>📘</td><td><b>نسخۀ PDF فارسی</b></td><td><a href="./AN01000%20FA.pdf">دانلود / مشاهده AN01000 FA.pdf</a></td></tr>
-<tr><td>🌐</td><td><b>نسخۀ HTML فارسی</b></td><td><a href="./AN01000-FA.html">مشاهدۀ راهنمای آنلاین AN01000-FA.html</a></td></tr>
-<tr><td>📄</td><td><b>سند اصلی WCH</b></td><td><a href="../../zh/AN01000/AN01000.md">مشاهدۀ نسخۀ چینی AN01000</a></td></tr>
-<tr><td>📕</td><td><b>PDF سند اصلی</b></td><td><a href="../../zh/AN01000/AN01000.pdf">مشاهدۀ AN01000.pdf</a></td></tr>
-</table>
-
-## محتوای راهنما
-
-### ۱. حالت‌های کم‌مصرف و منابع بیدارسازی
-
-- مقایسه حالت‌های **SLEEP، STOP و STANDBY** و تفاوت در مصرف توان، حفظ وضعیت و رفتار پس از بیدارسازی.
-- بیدارسازی با هشدار **RTC**.
-- بیدارسازی از طریق پایۀ **WKUP**.
-- بیدارسازی خودکار با **AWU**.
-- استفاده از تایمر کم‌مصرف **LPTIM**.
-- بیدارسازی یا پایش رویداد با **PVD**.
-
-### ۲. بهینه‌سازی مصرف توان
-
-- تنظیم وضعیت پایه‌های **GPIO** و بررسی مسیرهای جریان ناخواسته.
-- غیرفعال‌کردن واحدهای جانبی غیرضروری و کاهش فرکانس کاری.
-- تنظیمات مرتبط با ریگولاتور و حفظ حافظۀ **RAM**.
-- بررسی امکان اجرای کد از **SRAM**.
-- بررسی مدارهای خارجی، مقاومت‌های Pull-up/Pull-down و بارهای متصل به پایه‌ها.
-- حذف مسیرهای اضافی هنگام اندازه‌گیری جریان و قطع اتصال **SWD** در اندازه‌گیری جریان بسیار کم.
-
-### ۳. نکات خواب، بیدارسازی و حفظ داده
-
-- تطبیق حالت کم‌مصرف با منبع بیدارسازی و روش ورود به خواب **WFI/WFE**.
-- پاک‌سازی صحیح پرچم‌ها و بررسی خطوط **EXTI**.
-- بازپیکربندی ساعت سیستم پس از بیدارسازی در موارد لازم.
-- حفظ سطح منطقی برخی پایه‌ها در حالت **STANDBY** با محدودیت‌های مربوط به ورودی و **EXTI**.
-- دریافت منبع رویداد بیدارسازی در روش **WFE**.
-- آشنایی با تنظیمات حفظ داده‌های **RAM** در حالت **STANDBY** و وابستگی آن به خانواده و پیکربندی تراشه.
-
-## دامنه و ملاحظات فنی
-
-این سند یک راهنمای کاربردی برای مطالعه و پیاده‌سازی حالت‌های کم‌مصرف در خانواده‌های مختلف CH32 است. جزئیات قابلیت‌ها، منابع بیدارسازی، رجیسترها و رفتار حافظه ممکن است بین مدل‌ها متفاوت باشد؛ بنابراین پیش از استفاده در محصول، اطلاعات این راهنما را با **Datasheet** و **Reference Manual** همان میکروکنترلر تطبیق دهید.
-
-مقادیر و مثال‌های مربوط به رجیسترها یا خانواده‌های خاص، به همان مدل‌ها و شرایط ذکرشده در متن اصلی محدود هستند و نباید بدون بررسی به سایر تراشه‌ها تعمیم داده شوند.
-
-## نسخه و وضعیت سند
-
-| مورد | توضیحات |
+| نوع سند | پیوند |
 |---|---|
-| شماره سند | AN01000 |
-| نسخه سند اصلی | V1.0 |
-| زبان | فارسی |
-| ناشر سند اصلی | WCH |
-| تهیه و ترجمه | معمار الکترونیک صنعت (MES) |
-| وضعیت | ترجمۀ فارسی و راهنمای مطالعه |
+| سند اصلی WCH (Markdown) | — |
+| PDF فارسی | [AN01000 FA.pdf](AN01000%20FA.pdf) |
+| HTML فارسی | [AN01000-FA.html](AN01000-FA.html) |
+
+## موضوع و دامنه
+
+**یادداشت کاربردی مصرف کم**. مدل‌های پشتیبانی‌شده، شرایط کاری، مقادیر عددی و تنظیمات رجیسترها را از متن اصلی استخراج و با Datasheet و Reference Manual همان مدل تطبیق دهید. نتایج را بدون بررسی به سایر اعضای خانواده CH32 تعمیم ندهید.
+
+## فایل‌های تصویری و رسانه‌ای
+
+در پوشه `media/` تعداد **8 فایل رسانه‌ای** وجود دارد. [مشاهده پوشه رسانه‌ها](./media/)
+
+## ملاحظات بازبینی فنی
+
+- نام Peripheralها، رجیسترها، بیت‌ها، توابع و کدها را با سند اصلی تطبیق دهید.
+- مقادیر، واحدها، شکل موج‌ها و شرایط آزمون را بدون تغییر ناخواسته حفظ کنید.
+- محدودیت‌های وابسته به مدل MCU، پکیج و Revision را رعایت کنید.
+- پیش از استفاده در محصول، طراحی را با مستندات رسمی و سخت‌افزار واقعی اعتبارسنجی کنید.
 
 ## منابع مرتبط
 
-- [فهرست یادداشت‌های کاربردی فارسی](../README.md)
-- [فهرست یادداشت‌های کاربردی چینی](../../zh/README.md)
+- [فهرست دوزبانه یادداشت‌ها](../README.md)
+- [اسناد اصلی چینی](../../zh/)
 - [مخزن MES-ch32_application_notes](https://github.com/MEMAR-ELECTRONIC-SANAT/MES-ch32_application_notes)
-- [وب‌سایت رسمی WCH](https://www.wch.cn/)
+- [وب‌سایت WCH](https://www.wch.cn/)
 
 </div>
 
-<p align="center">
-  <img src="../../Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider">
-</p>
+## English
 
-## تصاویر و دیاگرام‌های راهنما
+## Overview
 
-تصاویر، نمودارها و نمونه‌های مورد استفاده در راهنمای فارسی در فایل HTML و PDF درج شده‌اند. برای نمایش با قالب‌بندی و تصاویر کامل، از نسخه HTML یا PDF استفاده کنید.
+This is the bilingual guide for **AN01000**, an Application Note from **WCH**. Topic: **Low-Power Application Note**. It provides links to the original source, available translated editions, and supporting media. Consult the complete WCH document and the relevant MCU documentation for implementation details and technical limitations.
 
-## تهیه و تدوین
+## Translation and Publication Status
 
-**معمار الکترونیک صنعت**\\
+> **Persian PDF and HTML editions are available in this repository.**
+
+When available, use PDF for offline reading and printing, and HTML for browser-based reading.
+
+## Documentation
+
+| Document | Link |
+|---|---|
+| Original WCH Markdown | — |
+| Persian PDF | [AN01000 FA.pdf](AN01000%20FA.pdf) |
+| Persian HTML | [AN01000-FA.html](AN01000-FA.html) |
+
+## Scope and Technical Notes
+
+The subject is **Low-Power Application Note**. Verify supported MCU variants, operating conditions, numeric values, and register settings in the original source. Cross-check device-specific details against the matching datasheet and reference manual. Do not generalize results to other CH32 devices without verification.
+
+## Images and Supporting Media
+
+There are **8 media files** in `media/`. [Open the media folder](./media/)
+
+## Engineering Review
+
+- Cross-check peripheral names, registers, bits, functions, and code against the original source.
+- Preserve values, units, waveforms, and test conditions accurately.
+- Observe limitations related to MCU model, package, and silicon revision.
+- Validate the design against official documentation and on real hardware before production use.
+
+## Related Resources
+
+- [Bilingual Application Notes index](../README.md)
+- [Original Chinese documents](../../zh/)
+- [MES-ch32_application_notes repository](https://github.com/MEMAR-ELECTRONIC-SANAT/MES-ch32_application_notes)
+- [WCH official website](https://www.wch.cn/)
+
+## تصاویر و دیاگرام‌های راهنما / Images and Diagrams
+
+- [رسانه‌های AN01000 / AN01000 media](./media/)
+- [دارایی‌های گرافیکی MES / MES visual assets](../../Images/GitHub-Assets/)
+
+## تهیه و تدوین / Credits
+
+**معمار الکترونیک صنعت**  
 **MEMAR ELECTRONIC SANAT (MES)**
 
-همراه شما در مسیر طراحی و ساخت مدارهای مطمئن
+همراه شما در مسیر طراحی و ساخت مدارهای مطمئن  
+*Your partner in designing and building reliable circuits.*
 
-طراحی و توسعه مدارهای الکترونیکی، PCB، سیستم‌های embedded و ابزارهای پیکربندی میکروکنترلر.
+- Telegram: https://t.me/Memar_Electronic
+- Instagram: https://www.instagram.com/Memar.Electronic
+- GitHub: https://github.com/MEMAR-ELECTRONIC-SANAT
 
-- کانال تلگرام: [https://t.me/Memar_Electronic](https://t.me/Memar_Electronic)
-- پیج اینستاگرام: [https://www.instagram.com/Memar.Electronic](https://www.instagram.com/Memar.Electronic)
-- GitHub: [MEMAR-ELECTRONIC-SANAT](https://github.com/MEMAR-ELECTRONIC-SANAT)
-
-<p align="center">
-  <img src="../../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo">
-</p>
+<p align="center"><img src="../../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo"></p>

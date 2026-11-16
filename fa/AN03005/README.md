@@ -1,151 +1,110 @@
-<h1 dir="rtl" align="right">AN03005 — سه قابلیت هسته‌ای در میکروکنترلر دو‌هسته‌ای CH32H417: HSEM، IPC و PMP</h1>
+<p align="center"><img src="../../Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider"></p>
+
+# AN03005 — قابلیت‌های ویژه هسته در CH32H417
+
+[🇮🇷 فارسی](README.md) · [🇬🇧 English](#english) · [فهرست دوزبانه / Bilingual index](../README.md)
 
 <div dir="rtl" align="right">
 
 ## معرفی
 
-یادداشت کاربردی **AN03005** از شرکت **WCH** سه قابلیت سخت‌افزاری سطح هسته در میکروکنترلر دو‌هسته‌ای **CH32H417** را معرفی می‌کند: سمافور سخت‌افزاری (**HSEM**)، ارتباط بین پردازنده‌ها (**IPC**) و حفاظت از حافظه فیزیکی (**PMP**).
+این صفحه راهنمای دوزبانه یادداشت کاربردی **AN03005** از مجموعه Application Notes شرکت **WCH** است. موضوع سند: **قابلیت‌های ویژه هسته در CH32H417**. این راهنما مسیر دسترسی به سند اصلی، فایل‌های ترجمه‌شده و رسانه‌های همراه را معرفی می‌کند. برای جزئیات پیاده‌سازی و محدودیت‌های فنی، متن کامل سند WCH و مستندات رسمی MCU مربوطه را بررسی کنید.
 
-میکروکنترلر CH32H417 از معماری دو‌هسته‌ای **RISC-V** خانواده **QingKe** با دو هسته **V5F و V3F** استفاده می‌کند. این قابلیت‌ها برای هماهنگ‌سازی اجرای دو هسته، تبادل پیام و کنترل دسترسی به نواحی حافظه در طراحی نرم‌افزارهای چند‌هسته‌ای کاربرد دارند.
+## وضعیت ترجمه و انتشار
 
-این README بر اساس محتوای نسخه فارسی **AN03005 V1.0** تنظیم شده است. برای مطالعه جزئیات، نمونه‌کدها، جدول‌ها و فهرست شکل‌ها، فایل HTML یا PDF فارسی را مشاهده کنید.
+> **نسخه فارسی PDF و HTML در مخزن موجود است.**
 
-## مشخصات سند
+در صورت موجود بودن، PDF برای مطالعه آفلاین و چاپ و HTML برای مشاهده در مرورگر مناسب است.
 
-| مشخصه | توضیحات |
+## دسترسی به مستندات
+
+| نوع سند | پیوند |
 |---|---|
-| شماره یادداشت | **AN03005** |
-| میکروکنترلر هدف | **CH32H417** |
-| معماری | دو‌هسته‌ای RISC-V از خانواده QingKe |
-| هسته‌ها | **V5F + V3F** |
-| ناشر سند اصلی | **WCH** |
-| نسخه سند اصلی | **V1.0** |
-| موضوعات اصلی | **HSEM، IPC و PMP** |
-| زبان این ویرایش | فارسی |
-| قالب‌های انتشار | PDF و HTML |
+| سند اصلی WCH (Markdown) | — |
+| PDF فارسی | [AN03005 FA.pdf](AN03005%20FA.pdf) |
+| HTML فارسی | [AN03005-FA.html](AN03005-FA.html) |
 
-## دریافت و مشاهده مستندات
+## موضوع و دامنه
 
-- 📘 **[دریافت نسخه PDF فارسی — AN03005 FA.pdf](./AN03005%20FA.pdf)**
-  مناسب مطالعه آفلاین، چاپ و نگهداری نسخه صفحه‌آرایی‌شده.
-- 🌐 **[مشاهده نسخه HTML فارسی — AN03005-FA.html](./AN03005-FA.html)**
-  مناسب مطالعه در مرورگر و دسترسی به فهرست مطالب و بخش‌های سند.
-- 📄 **[مشاهده سند مبدأ WCH — AN03005.md](../../zh/AN03005/AN03005.md)**
-- 📚 **[بازگشت به فهرست یادداشت‌های کاربردی فارسی](../README.md)**
+**قابلیت‌های ویژه هسته در CH32H417**. مدل‌های پشتیبانی‌شده، شرایط کاری، مقادیر عددی و تنظیمات رجیسترها را از متن اصلی استخراج و با Datasheet و Reference Manual همان مدل تطبیق دهید. نتایج را بدون بررسی به سایر اعضای خانواده CH32 تعمیم ندهید.
 
-## محتوای فنی راهنما
+## فایل‌های تصویری و رسانه‌ای
 
-### ۱. سمافور سخت‌افزاری — HSEM
+در پوشه `media/` تعداد **1 فایل رسانه‌ای** وجود دارد. [مشاهده پوشه رسانه‌ها](./media/)
 
-**HSEM (Hardware Semaphore)** برای مدیریت دسترسی انحصاری به منابع مشترک و هماهنگ‌سازی دو هسته به کار می‌رود.
+## ملاحظات بازبینی فنی
 
-موضوعات بررسی‌شده در سند:
-
-- جلوگیری از دسترسی هم‌زمان دو هسته به منابع بحرانی، حافظه مشترک و تجهیزات جانبی مشترک.
-- هماهنگ‌سازی راه‌اندازی هسته‌های **V3F** و **V5F** و جلوگیری از استفاده زودهنگام از منابع مقداردهی‌نشده.
-- دو وضعیت سمافور: **FREE** (آزاد) و **TAKEN** (اشغال‌شده).
-- عملیات دریافت سمافور (**Take**) و آزادسازی آن (**Release**).
-- دریافت سریع و غیرمسدودکننده با **FastTake**؛ در صورت اشغال بودن سمافور، نتیجه عملیات باید بررسی شود.
-- استفاده از وقفه هنگام آزادسازی سمافور برای اطلاع‌رسانی به هسته مقابل و سناریوهای بیدارسازی پشتیبانی‌شده.
-
-در فایل فارسی، نمونه‌هایی برای هماهنگ‌سازی راه‌اندازی دو هسته، انتظار رویداد با **WFE** و محافظت از دسترسی به منابع مشترک ارائه شده است.
-
-### ۲. ارتباط بین پردازنده‌ها — IPC
-
-**IPC (Inter-Processor Communication)** سازوکار پیام‌رسانی سخت‌افزاری مبتنی بر **Mailbox** برای تبادل داده و اعلان رویداد میان دو هسته است.
-
-نکته مهم در مشخصات این بخش: Mailbox معرفی‌شده در سند دارای **چهار ثبات داده ۳۲ بیتی با نام‌های MSG0 تا MSG3** است. این چهار ثبات، محل تبادل پیام هستند و نباید با تعداد کانال‌های IPC اشتباه گرفته شوند.
-
-موضوعات بررسی‌شده:
-
-- نوشتن و خواندن پیام در ثبات‌های **MSG0 تا MSG3**.
-- فعال‌سازی وضعیت ارسال و ایجاد وقفه برای اطلاع‌رسانی به گیرنده.
-- پشتیبانی از وقفه دریافت و وقفه ارسال.
-- خواندن پیام و پاک‌کردن پرچم وقفه در سمت گیرنده.
-- استفاده از IPC برای ارسال فرمان، وضعیت یا اعلان آماده‌بودن داده.
-- ترکیب IPC با حافظه مشترک برای تبادل داده‌های حجیم؛ در این روش داده در حافظه مشترک قرار می‌گیرد و IPC صرفاً رویداد یا آماده‌بودن داده را اعلام می‌کند.
-
-نسخه فارسی شامل نمونه کد پیکربندی IPC، تنظیم وقفه و تبادل پیام رفت‌وبرگشتی میان دو هسته است.
-
-### ۳. حفاظت از حافظه فیزیکی — PMP
-
-**PMP (Physical Memory Protection)** قابلیتی در معماری RISC-V برای محدودکردن دسترسی به نواحی حافظه و تعیین مجوزهای خواندن، نوشتن و اجرای دستور است.
-
-مطابق توضیحات سند AN03005، در **CH32H417 قابلیت PMP روی هسته V5F پشتیبانی می‌شود و هسته V3F از آن پشتیبانی نمی‌کند**. بنابراین انتخاب هسته و محل اجرای کدهای پیکربندی PMP باید با این محدودیت هماهنگ باشد.
-
-موارد بررسی‌شده:
-
-- مجوزهای **R (Read)**، **W (Write)**، **X (Execute)** و **L (Lock)**.
-- ثبات‌های پیکربندی و نشانی **pmpcfg** و **pmpaddr**.
-- سه حالت تطبیق نشانی:
-  - **TOR (Top Of Range):** تعریف بازه با استفاده از حد پایین و حد بالای ناحیه.
-  - **NA4:** تعریف ناحیه هم‌تراز ۴ بایتی.
-  - **NAPOT (Naturally Aligned Power-Of-Two):** تعریف ناحیه با اندازه توانی از دو و هم‌ترازی متناسب.
-- نمونه تنظیم ثبات‌های PMP و تعیین بازه حفاظت.
-- آزمون محدودیت دسترسی حافظه در حالت‌های مختلف PMP.
-
-**نکته پیاده‌سازی:** دسترسی نوشتن به ثبات‌های پیکربندی PMP نیازمند سطح دسترسی **Machine Mode** است. بازه نشانی، اندازه، هم‌ترازی و مجوزهای R/W/X را پیش از فعال‌سازی حفاظت با نقشه حافظه برنامه تطبیق دهید.
-
-## ساختار نمونه‌کدها و مطالب تکمیلی
-
-نسخه فارسی شامل نمونه‌کدهای زیر است:
-
-| شماره | موضوع |
-|---|---|
-| کد ۱ | هماهنگ‌سازی راه‌اندازی دو هسته با HSEM |
-| کد ۲ | دسترسی متقابل به منابع با HSEM |
-| کد ۳ | روند نمونه ارتباط IPC |
-| کد ۴ | تنظیم ثبات‌های PMP در پردازش وقفه نرم‌افزاری |
-| کد ۵ | تابع **PMP_Set_Range** برای تعیین دامنه و حالت حفاظت |
-| کد ۶ | آزمون حفاظت حافظه با سه حالت PMP |
-
-در انتهای سند، تاریخچه نسخه‌ها، بیانیه سند و واژه‌نامه فنی اصطلاحاتی مانند **QingKe، HSEM، FastTake، IPC، Mailbox، PMP، TOR، NA4، NAPOT، WFE** و **MRW** آمده است.
-
-## نکات مهم برای استفاده در پروژه
-
-- HSEM، IPC و PMP وظایف متفاوت و مکمل دارند: HSEM مالکیت منابع مشترک را هماهنگ می‌کند، IPC پیام و رویداد را میان هسته‌ها منتقل می‌کند و PMP دسترسی به نواحی حافظه را محدود می‌سازد.
-- در طراحی نرم‌افزار، پروتکل مالکیت و آزادسازی سمافورها و همچنین نحوه پاک‌کردن پرچم‌های وقفه را مشخص کنید.
-- چهار ثبات پیام **MSG0 تا MSG3** را با کانال‌های ارتباطی اشتباه نگیرید.
-- PMP را فقط روی هسته پشتیبانی‌شده، یعنی **V5F**، پیکربندی کنید.
-- نمونه‌کدهای سند را پیش از استفاده در محصول با نسخه کتابخانه، فایل‌های راه‌اندازی، نقشه حافظه و مستندات رسمی همان نسخه از CH32H417 تطبیق دهید.
+- نام Peripheralها، رجیسترها، بیت‌ها، توابع و کدها را با سند اصلی تطبیق دهید.
+- مقادیر، واحدها، شکل موج‌ها و شرایط آزمون را بدون تغییر ناخواسته حفظ کنید.
+- محدودیت‌های وابسته به مدل MCU، پکیج و Revision را رعایت کنید.
+- پیش از استفاده در محصول، طراحی را با مستندات رسمی و سخت‌افزار واقعی اعتبارسنجی کنید.
 
 ## منابع مرتبط
 
-- [نسخه HTML فارسی](./AN03005-FA.html)
-- [نسخه PDF فارسی](./AN03005%20FA.pdf)
-- [سند اصلی چینی AN03005](../../zh/AN03005/AN03005.md)
-- [فهرست فارسی Application Notes](../README.md)
+- [فهرست دوزبانه یادداشت‌ها](../README.md)
+- [اسناد اصلی چینی](../../zh/)
 - [مخزن MES-ch32_application_notes](https://github.com/MEMAR-ELECTRONIC-SANAT/MES-ch32_application_notes)
-- [وب‌سایت رسمی WCH](https://www.wch.cn/)
+- [وب‌سایت WCH](https://www.wch.cn/)
 
 </div>
 
-<p align="center">
-  <img src="../../Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider">
-</p>
+## English
 
-## تصاویر و دیاگرام‌های راهنما
+## Overview
 
-برای مشاهده صفحه‌آرایی کامل، شکل‌ها، جدول‌ها، فهرست کدها و تصاویر به‌کاررفته در راهنما، فایل‌های زیر را باز کنید:
+This is the bilingual guide for **AN03005**, an Application Note from **WCH**. Topic: **Special Core Features of CH32H417**. It provides links to the original source, available translated editions, and supporting media. Consult the complete WCH document and the relevant MCU documentation for implementation details and technical limitations.
 
-- [مشاهده نسخه HTML فارسی](./AN03005-FA.html)
-- [دریافت نسخه PDF فارسی](./AN03005%20FA.pdf)
+## Translation and Publication Status
 
-## تهیه و تدوین
+> **Persian PDF and HTML editions are available in this repository.**
 
-**معمار الکترونیک صنعت**
+When available, use PDF for offline reading and printing, and HTML for browser-based reading.
+
+## Documentation
+
+| Document | Link |
+|---|---|
+| Original WCH Markdown | — |
+| Persian PDF | [AN03005 FA.pdf](AN03005%20FA.pdf) |
+| Persian HTML | [AN03005-FA.html](AN03005-FA.html) |
+
+## Scope and Technical Notes
+
+The subject is **Special Core Features of CH32H417**. Verify supported MCU variants, operating conditions, numeric values, and register settings in the original source. Cross-check device-specific details against the matching datasheet and reference manual. Do not generalize results to other CH32 devices without verification.
+
+## Images and Supporting Media
+
+There are **1 media files** in `media/`. [Open the media folder](./media/)
+
+## Engineering Review
+
+- Cross-check peripheral names, registers, bits, functions, and code against the original source.
+- Preserve values, units, waveforms, and test conditions accurately.
+- Observe limitations related to MCU model, package, and silicon revision.
+- Validate the design against official documentation and on real hardware before production use.
+
+## Related Resources
+
+- [Bilingual Application Notes index](../README.md)
+- [Original Chinese documents](../../zh/)
+- [MES-ch32_application_notes repository](https://github.com/MEMAR-ELECTRONIC-SANAT/MES-ch32_application_notes)
+- [WCH official website](https://www.wch.cn/)
+
+## تصاویر و دیاگرام‌های راهنما / Images and Diagrams
+
+- [رسانه‌های AN03005 / AN03005 media](./media/)
+- [دارایی‌های گرافیکی MES / MES visual assets](../../Images/GitHub-Assets/)
+
+## تهیه و تدوین / Credits
+
+**معمار الکترونیک صنعت**  
 **MEMAR ELECTRONIC SANAT (MES)**
 
-همراه شما در مسیر طراحی و ساخت مدارهای مطمئن
+همراه شما در مسیر طراحی و ساخت مدارهای مطمئن  
+*Your partner in designing and building reliable circuits.*
 
-تهیه و تدوین محتوای فارسی بر اساس سند رسمی **WCH AN03005 V1.0**.
+- Telegram: https://t.me/Memar_Electronic
+- Instagram: https://www.instagram.com/Memar.Electronic
+- GitHub: https://github.com/MEMAR-ELECTRONIC-SANAT
 
-- کانال تلگرام: [Memar Electronic](https://t.me/Memar_Electronic)
-- پیج اینستاگرام: [Memar Electronic](https://www.instagram.com/Memar.Electronic)
-- GitHub: [MEMAR-ELECTRONIC-SANAT](https://github.com/MEMAR-ELECTRONIC-SANAT)
-
-**مشاهده سایر آموزش‌ها:** [مخازن آموزشی معمار الکترونیک صنعت](https://github.com/MEMAR-ELECTRONIC-SANAT)
-
-<p align="center">
-  <img src="../../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo">
-</p>
+<p align="center"><img src="../../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo"></p>

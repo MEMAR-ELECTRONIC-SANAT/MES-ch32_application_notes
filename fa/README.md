@@ -1,188 +1,102 @@
-# یادداشت‌های کاربردی WCH CH32 — مجموعه فارسی
+<p align="center"><img src="../Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider"></p>
 
-<p align="center">
-  <img src="../Images/GitHub-Assets/MES-Hero-Banner.svg" width="100%" alt="MEMAR ELECTRONIC SANAT — MES">
-</p>
+# راهنمای دوزبانه فارسی و انگلیسی — یادداشت‌های WCH CH32
 
-[🇮🇷 فارسی](README.md) | [🇬🇧 English](README_EN.md) | [بازگشت به مخزن اصلی](../README.md)
+## معرفی / Overview
 
-<div dir="rtl" align="right">
+پوشه `fa` راهنماهای دوزبانه فارسی و انگلیسی یادداشت‌های کاربردی WCH CH32 را در خود جای می‌دهد. هر شناسه AN پوشه مستقلی دارد و فایل‌های PDF و HTML فارسی و رسانه‌های همراه، در صورت موجود بودن، در همان پوشه نگهداری می‌شوند.
 
-## معرفی پوشه
+The `fa` directory contains bilingual Persian-English guides for WCH CH32 Application Notes. Each AN has a dedicated folder containing links to available Persian PDF/HTML editions and supporting media.
 
-پوشه **fa** محل گردآوری، ترجمه، بازبینی و انتشار نسخه فارسی یادداشت‌های کاربردی (Application Notes یا AN) شرکت **WCH** برای میکروکنترلرهای خانواده **CH32** است.
+## ساختار / Structure
 
-هر یادداشت با شناسه اصلی خود، مانند `AN01000`، در یک زیرپوشه مستقل نگهداری می‌شود. این ساختار باعث می‌شود فایل‌های ترجمه، نسخه قابل مشاهده در مرورگر، تصاویر و نمودارهای همراه و راهنمای اختصاصی هر سند در کنار یکدیگر قرار گیرند.
+| مسیر / Path | توضیح فارسی | English description |
+|---|---|---|
+| `ANxxxxx/README.md` | راهنمای دوزبانه یادداشت | Bilingual guide for an application note |
+| `ANxxxxx-FA.html` | نسخه فارسی مرورگر، در صورت انتشار | Browser-readable Persian edition, when available |
+| `ANxxxxx FA.pdf` | نسخه PDF فارسی، در صورت انتشار | Persian PDF edition, when available |
+| `media/` | تصاویر و نمودارهای همراه | Supporting images and diagrams |
 
-این مجموعه برای مهندسان الکترونیک، طراحان سخت‌افزار، توسعه‌دهندگان Firmware و کاربران ابزارهایی مانند **MounRiver Studio (MRS)** تهیه شده است. موضوعات اسناد از مدیریت توان و کلاک تا Peripheralها، حافظه، ارتباطات، نمایشگر، Debug و ابزارهای توسعه را دربرمی‌گیرد.
+## فهرست / Index
 
-## وضعیت فعلی مجموعه
+| شناسه | موضوع فارسی | English topic | راهنما / Guide |
+|---|---|---|---|
+| AN01000 | یادداشت کاربردی مصرف کم | Low-Power Application Note | [مشاهده / Open](AN01000/README.md) |
+| AN01001 | تغذیه خارجی VDD12 | External VDD12 Power Supply | [مشاهده / Open](AN01001/README.md) |
+| AN01002 | راهبردهای کاهش توان در CH32L103 | Power-Reduction Strategies for CH32L103 | [مشاهده / Open](AN01002/README.md) |
+| AN01003 | تحلیل علت‌های Reset تراشه | MCU Reset-Cause Analysis | [مشاهده / Open](AN01003/README.md) |
+| AN03000 | راهنمای استفاده از ICache در CH32H417 | Using ICache on CH32H417 | [مشاهده / Open](AN03000/README.md) |
+| AN03001 | تخصیص وقفه و بیدارسازی تراشه‌های دو هسته‌ای | Interrupt Allocation and Wake-Up on Dual-Core MCUs | [مشاهده / Open](AN03001/README.md) |
+| AN03002 | معرفی CoreMark و تنظیمات امتیازدهی | CoreMark Introduction and Benchmark Configuration | [مشاهده / Open](AN03002/README.md) |
+| AN03003 | دستورهای ویژه هسته QingKe RISC-V | QingKe RISC-V Core Special Instructions | [مشاهده / Open](AN03003/README.md) |
+| AN03004 | مقایسه سرعت اجرا در حافظه‌های مختلف | Execution-Speed Comparison Across Memory Types | [مشاهده / Open](AN03004/README.md) |
+| AN03005 | قابلیت‌های ویژه هسته در CH32H417 | Special Core Features of CH32H417 | [مشاهده / Open](AN03005/README.md) |
+| AN08000 | نکات DMA در سری CH32H417/415/416 | DMA Considerations for CH32H417/415/416 | [مشاهده / Open](AN08000/README.md) |
+| AN09000 | استفاده و نکات ADC در MCUهای عمومی | ADC Usage and Design Notes for General-Purpose MCUs | [مشاهده / Open](AN09000/README.md) |
+| AN09001 | راهنمای استفاده از ADC در CH32X315 | Using the ADC on CH32X315 | [مشاهده / Open](AN09001/README.md) |
+| AN10000 | راهنمای کاربردی صفحه‌کلید لمسی WCH | WCH Touch-Keypad Application Guide | [مشاهده / Open](AN10000/README.md) |
+| AN11000 | مقایسه و کاربرد RTC/Systick/TIM/LPTIM | RTC/Systick/TIM/LPTIM Comparison and Applications | [مشاهده / Open](AN11000/README.md) |
+| AN11001 | عملکرد و کاربرد تایمرهای کم‌حجم | Low-Power Timer Operation and Applications | [مشاهده / Open](AN11001/README.md) |
+| AN11002 | نکات TIM در کاربردهای موتور | TIM Considerations for Motor Applications | [مشاهده / Open](AN11002/README.md) |
+| AN14000 | آموزش پایه استفاده از SerDes | SerDes Fundamentals and Usage | [مشاهده / Open](AN14000/README.md) |
+| AN16001 | مقایسه I2C و I3C و راهنمای I3C | I2C and I3C Comparison and I3C Guide | [مشاهده / Open](AN16001/README.md) |
+| AN17000 | آموزش استفاده از SPI Host و NSS | Using SPI Host and NSS | [مشاهده / Open](AN17000/README.md) |
+| AN21000 | راهنمای استفاده از SDIO در حالت Slave | Using SDIO in Slave Mode | [مشاهده / Open](AN21000/README.md) |
+| AN22000 | کارت چندرسانه‌ای SDMMC و ارتباط در حالت Slave | SDMMC Card and Slave-Mode Communication | [مشاهده / Open](AN22000/README.md) |
+| AN23000 | معرفی عملکرد و استفاده از PIOC | PIOC Features and Usage | [مشاهده / Open](AN23000/README.md) |
+| AN24000 | راهنمای استفاده از OPA در سری عمومی CH32 | Using OPA on General-Purpose CH32 MCUs | [مشاهده / Open](AN24000/README.md) |
+| AN24001 | راهنمای استفاده از CMP در سری عمومی CH32 | Using CMP on General-Purpose CH32 MCUs | [مشاهده / Open](AN24001/README.md) |
+| AN25001 | مقایسه SAI و I2S و راهنمای SAI | SAI and I2S Comparison and SAI Guide | [مشاهده / Open](AN25001/README.md) |
+| AN26001 | مقایسه SPI و QSPI و راهنمای QSPI | SPI and QSPI Comparison and QSPI Guide | [مشاهده / Open](AN26001/README.md) |
+| AN29000 | آموزش پایه درایور SDRAM با FMC | FMC-Based SDRAM Driver Fundamentals | [مشاهده / Open](AN29000/README.md) |
+| AN31001 | راهنمای استفاده از فیلتر دیجیتال در CH32H417 | Using the Digital Filter on CH32H417 | [مشاهده / Open](AN31001/README.md) |
+| AN35000 | مقایسه ARGB و آموزش پایه | ARGB Comparison and Fundamentals | [مشاهده / Open](AN35000/README.md) |
+| AN36000 | راهنمای استفاده از PSRAM | PSRAM Usage Guide | [مشاهده / Open](AN36000/README.md) |
+| AN36001 | اجرای کد در PSRAM | Executing Code from PSRAM | [مشاهده / Open](AN36001/README.md) |
+| AN36002 | انتقال LVGL به V467 و راه‌اندازی نمایشگر با PSRAM | Porting LVGL to V467 and Driving a Display with PSRAM | [مشاهده / Open](AN36002/README.md) |
+| AN37000 | استفاده از USB PD و مقایسه تراشه‌ها | USB PD Usage and MCU Comparison | [مشاهده / Open](AN37000/README.md) |
+| AN90000 | راهنمای برد توسعه CH32H417QEU-R1-1v1 | CH32H417QEU-R1-1v1 Development Board Guide | [مشاهده / Open](AN90000/README.md) |
+| AN90001 | توسعه WCHGUI سبک؛ نمونه کنترل‌باکس | Lightweight WCHGUI Development: Control-Box Example | [مشاهده / Open](AN90001/README.md) |
+| AN90002 | استفاده از ناحیه کاربر به‌عنوان DataFlash | Using the User Area as DataFlash | [مشاهده / Open](AN90002/README.md) |
+| AN90003 | انتقال فایل‌سیستم FatFS به MRS | Porting the FatFS File System to MRS | [مشاهده / Open](AN90003/README.md) |
+| AN91000 | تنظیمات و نکات عیب‌یابی تراشه‌های دو هسته‌ای | Dual-Core MCU Configuration and Debugging | [مشاهده / Open](AN91000/README.md) |
+| AN91001 | راهنمای استفاده از پروگرامر آفلاین | Offline Programmer Usage Guide | [مشاهده / Open](AN91001/README.md) |
+| AN91002 | پیکربندی فایل‌های LD و Startup | LD and Startup File Configuration | [مشاهده / Open](AN91002/README.md) |
+| AN91003 | فرایند LINK برای دانلود در FLASH خارجی | LINK Process for Programming External FLASH | [مشاهده / Open](AN91003/README.md) |
+| AN91004 | نکات کاربردی LINK و MRS | Practical LINK and MRS Notes | [مشاهده / Open](AN91004/README.md) |
+| AN91005 | روش عیب‌یابی از طریق خط فرمان | Command-Line Debugging | [مشاهده / Open](AN91005/README.md) |
+| AN91006 | تشخیص مشکلات تراشه هنگام Debug | Diagnosing MCU Issues During Debug | [مشاهده / Open](AN91006/README.md) |
+| AN93000 | مقایسه رابط‌های راه‌اندازی نمایشگر | Display-Interface Comparison | [مشاهده / Open](AN93000/README.md) |
+| AN94000 | معرفی M030 برای تغذیه و کاربردهای موتور | M030 Introduction for Power and Motor Applications | [مشاهده / Open](AN94000/README.md) |
+| AN94001 | نکات مرتبط با EMI | EMI Considerations | [مشاهده / Open](AN94001/README.md) |
+| AN97000 | ارتقای Firmware از طریق CH32 USB DFU | Firmware Upgrade via CH32 USB DFU | [مشاهده / Open](AN97000/README.md) |
 
-در زمان به‌روزرسانی این فایل، ساختار فارسی شامل **۴۹ یادداشت کاربردی** است:
+## وضعیت انتشار / Publication Status
 
-- **۴۳ یادداشت دارای هر دو خروجی PDF و HTML فارسی:** برای مطالعه آفلاین یا مشاهده آنلاین.
-- **۶ یادداشت در مرحله آماده‌سازی ترجمه:** برای هرکدام راهنمای مستقل و فایل‌های رسانه‌ای مرتبط در صورت وجود فراهم شده، اما فایل نهایی PDF و HTML فارسی هنوز در پوشه آن‌ها منتشر نشده است.
-- **۴۹ فایل README اختصاصی:** هر شناسه یک راهنمای مستقل دارد که وضعیت سند و مسیر دسترسی به نسخه اصلی را مشخص می‌کند.
+وضعیت هر یادداشت بر اساس وجود واقعی PDF و HTML در مخزن مشخص می‌شود؛ وجود README یا پوشه به‌تنهایی به معنی تکمیل ترجمه نیست.
 
-> **نکته مهم:** وجود پوشه یا README برای یک شناسه به معنی تکمیل ترجمه آن نیست. وضعیت هر سند در جدول زیر مشخص شده است. فایل‌های PDF و HTML فقط در ردیف‌هایی لینک شده‌اند که واقعاً در مخزن وجود دارند.
+Each note reports status according to the PDF and HTML files actually present. The existence of a README or folder alone does not mean that a translation is complete.
 
-## ساختار پوشه‌ها
+## نکات فنی / Engineering Notes
 
-ساختار معمول هر یادداشت به شکل زیر است:
+- دیتاشیت و Reference Manual مدل دقیق MCU را بررسی کنید. / Consult the exact MCU datasheet and reference manual.
+- نام Peripheralها، رجیسترها، مقادیر و واحدها را با سند اصلی تطبیق دهید. / Cross-check peripheral names, registers, values, and units against the source.
+- پیش از استفاده در محصول، روی سخت‌افزار واقعی اعتبارسنجی کنید. / Validate on real hardware before production use.
 
-```text
-fa/
-├── README.md
-├── README_EN.md
-├── AN01000/
-│   ├── README.md
-│   ├── AN01000 FA.pdf
-│   ├── AN01000-FA.html
-│   └── media/
-│       ├── image1.png
-│       └── ...
-├── AN01001/
-│   ├── README.md
-│   └── ...
-└── ...
-```
+## تهیه و تدوین / Credits
 
-کاربرد اجزای اصلی:
-
-| مسیر یا فایل | کاربرد |
-| :--- | :--- |
-| `README.md` | راهنمای فارسی کل مجموعه و فهرست اسناد |
-| `README_EN.md` | راهنمای انگلیسی مجموعه فارسی |
-| `ANxxxxx/README.md` | معرفی، وضعیت ترجمه، محتوای فنی و پیوندهای همان یادداشت |
-| فایل `*.pdf` | نسخه فارسی مناسب مطالعه، چاپ و بایگانی آفلاین؛ در صورت انتشار |
-| فایل `*.html` | نسخه فارسی قابل مشاهده در مرورگر با حفظ ساختار و تصاویر؛ در صورت انتشار |
-| پوشه `media/` | تصاویر، نمودارها و منابع تصویری مورد استفاده در نسخه HTML یا سند |
-
-## روش مطالعه و استفاده
-
-1. شناسه یا موضوع موردنیاز را در جدول اسناد پیدا کنید.
-2. ابتدا وارد **راهنمای یادداشت** شوید تا موضوع، وضعیت ترجمه و فایل‌های موجود را ببینید.
-3. برای مطالعه آنلاین، فایل HTML را انتخاب کنید؛ برای ذخیره، چاپ یا مطالعه آفلاین از PDF استفاده کنید.
-4. اگر PDF یا HTML در جدول با علامت «—» مشخص شده است، خروجی فارسی نهایی آن یادداشت هنوز در این پوشه منتشر نشده است. در این حالت راهنمای همان یادداشت را باز کنید و از پیوند نسخه اصلی WCH استفاده کنید.
-5. برای مراجعه به سند اصلی و مقایسه اصطلاحات یا جزئیات فنی، از نسخه چینی در پوشه [zh](../zh/) استفاده کنید.
-
-## فهرست کامل یادداشت‌های فارسی
-
-در ستون «PDF» و «HTML» فقط فایل‌های موجود در مخزن لینک شده‌اند. برای هر شناسه، راهنمای اختصاصی نیز در دسترس است.
-
-| شناسه | موضوع | راهنمای یادداشت | PDF فارسی | HTML فارسی | وضعیت |
-| :---: | :--- | :---: | :---: | :---: | :---: |
-| AN01000 | راهنمای حالت‌های کم‌مصرف و بیدارسازی | [راهنمای یادداشت](./AN01000/README.md) | [AN01000 FA.pdf](./AN01000/AN01000%20FA.pdf) | [AN01000-FA.html](./AN01000/AN01000-FA.html) | منتشرشده |
-| AN01001 | تغذیه خارجی VDD12 | [راهنمای یادداشت](./AN01001/README.md) | [AN01001 FA.pdf](./AN01001/AN01001%20FA.pdf) | [AN01001-FA.html](./AN01001/AN01001-FA.html) | منتشرشده |
-| AN01002 | راهبردهای کاهش توان در CH32L103 | [راهنمای یادداشت](./AN01002/README.md) | [AN01002 FA.pdf](./AN01002/AN01002%20FA.pdf) | [AN01002-FA.html](./AN01002/AN01002-FA.html) | منتشرشده |
-| AN01003 | تحلیل علت‌های Reset تراشه | [راهنمای یادداشت](./AN01003/README.md) | [AN01003 FA.pdf](./AN01003/AN01003%20FA.pdf) | [AN01003-FA.html](./AN01003/AN01003-FA.html) | منتشرشده |
-| AN03000 | راهنمای استفاده از ICache در CH32H417 | [راهنمای یادداشت](./AN03000/README.md) | [AN03000-FA.pdf](./AN03000/AN03000-FA.pdf) | [AN03000-FA.html](./AN03000/AN03000-FA.html) | منتشرشده |
-| AN03001 | تخصیص وقفه و بیدارسازی تراشه‌های دو هسته‌ای | [راهنمای یادداشت](./AN03001/README.md) | [AN03001 FA.pdf](./AN03001/AN03001%20FA.pdf) | [AN03001-FA.html](./AN03001/AN03001-FA.html) | منتشرشده |
-| AN03002 | معرفی CoreMark و تنظیمات امتیازدهی | [راهنمای یادداشت](./AN03002/README.md) | [AN03002 FA.pdf](./AN03002/AN03002%20FA.pdf) | [AN03002-FA.html](./AN03002/AN03002-FA.html) | منتشرشده |
-| AN03003 | دستورهای ویژه هسته QingKe RISC-V | [راهنمای یادداشت](./AN03003/README.md) | [AN03003 FA.pdf](./AN03003/AN03003%20FA.pdf) | [AN03003-FA.html](./AN03003/AN03003-FA.html) | منتشرشده |
-| AN03004 | مقایسه سرعت اجرا در حافظه‌های مختلف | [راهنمای یادداشت](./AN03004/README.md) | [AN03004.pdf](./AN03004/AN03004.pdf) | [AN03004-FA.html](./AN03004/AN03004-FA.html) | منتشرشده |
-| AN03005 | قابلیت‌های ویژه هسته در CH32H417 | [راهنمای یادداشت](./AN03005/README.md) | [AN03005 FA.pdf](./AN03005/AN03005%20FA.pdf) | [AN03005-FA.html](./AN03005/AN03005-FA.html) | منتشرشده |
-| AN08000 | نکات DMA در سری CH32H417/415/416 | [راهنمای یادداشت](./AN08000/README.md) | [AN08000 FA.pdf](./AN08000/AN08000%20FA.pdf) | [AN08000-FA.html](./AN08000/AN08000-FA.html) | منتشرشده |
-| AN09000 | استفاده و نکات ADC در MCUهای عمومی | [راهنمای یادداشت](./AN09000/README.md) | [AN09000 FA.pdf](./AN09000/AN09000%20FA.pdf) | [AN09000-FA.html](./AN09000/AN09000-FA.html) | منتشرشده |
-| AN09001 | راهنمای استفاده از ADC در CH32X315 | [راهنمای یادداشت](./AN09001/README.md) | [AN09001 FA.pdf](./AN09001/AN09001%20FA.pdf) | [AN09001-FA.html](./AN09001/AN09001-FA.html) | منتشرشده |
-| AN10000 | راهنمای کاربردی صفحه‌کلید لمسی WCH | [راهنمای یادداشت](./AN10000/README.md) | [AN10000 FA.pdf](./AN10000/AN10000%20FA.pdf) | [AN10000-FA.html](./AN10000/AN10000-FA.html) | منتشرشده |
-| AN11000 | مقایسه و کاربرد RTC/Systick/TIM/LPTIM | [راهنمای یادداشت](./AN11000/README.md) | [AN11000 FA.pdf](./AN11000/AN11000%20FA.pdf) | [AN11000-FA.html](./AN11000/AN11000-FA.html) | منتشرشده |
-| AN11001 | عملکرد و کاربرد تایمرهای کم‌حجم | [راهنمای یادداشت](./AN11001/README.md) | [AN11001 FA.pdf](./AN11001/AN11001%20FA.pdf) | [AN11001-FA.html](./AN11001/AN11001-FA.html) | منتشرشده |
-| AN11002 | نکات TIM در کاربردهای موتور | [راهنمای یادداشت](./AN11002/README.md) | [AN11002 FA.pdf](./AN11002/AN11002%20FA.pdf) | [AN11002-FA.html](./AN11002/AN11002-FA.html) | منتشرشده |
-| AN14000 | آموزش پایه استفاده از SerDes | [راهنمای یادداشت](./AN14000/README.md) | [AN14000 FA.pdf](./AN14000/AN14000%20FA.pdf) | [AN14000-FA.html](./AN14000/AN14000-FA.html) | منتشرشده |
-| AN16001 | مقایسه I2C و I3C و راهنمای I3C | [راهنمای یادداشت](./AN16001/README.md) | [AN16001 FA.pdf](./AN16001/AN16001%20FA.pdf) | [AN16001-FA.html](./AN16001/AN16001-FA.html) | منتشرشده |
-| AN17000 | آموزش استفاده از SPI Host و NSS | [راهنمای یادداشت](./AN17000/README.md) | [AN17000 FA.pdf](./AN17000/AN17000%20FA.pdf) | [AN17000-FA.html](./AN17000/AN17000-FA.html) | منتشرشده |
-| AN21000 | راهنمای استفاده از SDIO در حالت Slave | [راهنمای یادداشت](./AN21000/README.md) | [AN21000 FA.pdf](./AN21000/AN21000%20FA.pdf) | [AN21000-FA.html](./AN21000/AN21000-FA.html) | منتشرشده |
-| AN22000 | کارت چندرسانه‌ای SDMMC و ارتباط در حالت Slave | [راهنمای یادداشت](./AN22000/README.md) | [AN22000 FA.pdf](./AN22000/AN22000%20FA.pdf) | [AN22000-FA.html](./AN22000/AN22000-FA.html) | منتشرشده |
-| AN23000 | معرفی عملکرد و استفاده از PIOC | [راهنمای یادداشت](./AN23000/README.md) | [AN23000 FA.pdf](./AN23000/AN23000%20FA.pdf) | [AN23000-FA.html](./AN23000/AN23000-FA.html) | منتشرشده |
-| AN24000 | راهنمای استفاده از OPA در سری عمومی CH32 | [راهنمای یادداشت](./AN24000/README.md) | [AN24000 FA.pdf](./AN24000/AN24000%20FA.pdf) | [AN24000-FA.html](./AN24000/AN24000-FA.html) | منتشرشده |
-| AN24001 | راهنمای استفاده از CMP در سری عمومی CH32 | [راهنمای یادداشت](./AN24001/README.md) | [AN24001 FA.pdf](./AN24001/AN24001%20FA.pdf) | [AN24001-FA.html](./AN24001/AN24001-FA.html) | منتشرشده |
-| AN25001 | مقایسه SAI و I2S و راهنمای SAI | [راهنمای یادداشت](./AN25001/README.md) | [AN25001 FA.pdf](./AN25001/AN25001%20FA.pdf) | [AN25001-FA.html](./AN25001/AN25001-FA.html) | منتشرشده |
-| AN26001 | مقایسه SPI و QSPI و راهنمای QSPI | [راهنمای یادداشت](./AN26001/README.md) | [AN26001 FA.pdf](./AN26001/AN26001%20FA.pdf) | [AN26001-FA.html](./AN26001/AN26001-FA.html) | منتشرشده |
-| AN29000 | آموزش پایه درایور SDRAM با FMC | [راهنمای یادداشت](./AN29000/README.md) | [AN29000 FA.pdf](./AN29000/AN29000%20FA.pdf) | [AN29000-FA.html](./AN29000/AN29000-FA.html) | منتشرشده |
-| AN31001 | راهنمای استفاده از فیلتر دیجیتال در CH32H417 | [راهنمای یادداشت](./AN31001/README.md) | [AN31001 FA.pdf](./AN31001/AN31001%20FA.pdf) | [AN31001-FA.html](./AN31001/AN31001-FA.html) | منتشرشده |
-| AN35000 | مقایسه ARGB و آموزش پایه | [راهنمای یادداشت](./AN35000/README.md) | [AN35000 FA.pdf](./AN35000/AN35000%20FA.pdf) | [AN35000-FA.html](./AN35000/AN35000-FA.html) | منتشرشده |
-| AN36000 | راهنمای استفاده از PSRAM | [راهنمای یادداشت](./AN36000/README.md) | [AN36000 FA.pdf](./AN36000/AN36000%20FA.pdf) | [AN36000-FA.html](./AN36000/AN36000-FA.html) | منتشرشده |
-| AN36001 | اجرای کد در PSRAM | [راهنمای یادداشت](./AN36001/README.md) | [AN36001 FA.pdf](./AN36001/AN36001%20FA.pdf) | [AN36001-FA.html](./AN36001/AN36001-FA.html) | منتشرشده |
-| AN36002 | انتقال LVGL به V467 و راه‌اندازی نمایشگر با PSRAM | [راهنمای یادداشت](./AN36002/README.md) | [AN36002 FA.pdf](./AN36002/AN36002%20FA.pdf) | [AN36002-FA.html](./AN36002/AN36002-FA.html) | منتشرشده |
-| AN37000 | استفاده از USB PD و مقایسه تراشه‌ها | [راهنمای یادداشت](./AN37000/README.md) | [AN37000 FA.pdf](./AN37000/AN37000%20FA.pdf) | [AN37000-FA.html](./AN37000/AN37000-FA.html) | منتشرشده |
-| AN90000 | راهنمای برد توسعه CH32H417QEU-R1-1v1 | [راهنمای یادداشت](./AN90000/README.md) | [AN90000-FA.pdf](./AN90000/AN90000-FA.pdf) | [AN90000-FA.html](./AN90000/AN90000-FA.html) | منتشرشده |
-| AN90001 | توسعه WCHGUI سبک؛ نمونه کنترل‌باکس | [راهنمای یادداشت](./AN90001/README.md) | [AN90001-FA.pdf](./AN90001/AN90001-FA.pdf) | [AN90001-FA.html](./AN90001/AN90001-FA.html) | منتشرشده |
-| AN90002 | استفاده از ناحیه کاربر به‌عنوان DataFlash | [راهنمای یادداشت](./AN90002/README.md) | [AN90002 FA.pdf](./AN90002/AN90002%20FA.pdf) | [AN90002-FA.html](./AN90002/AN90002-FA.html) | منتشرشده |
-| AN90003 | انتقال فایل‌سیستم FatFS به MRS | [راهنمای یادداشت](./AN90003/README.md) | [AN90003 FA.pdf](./AN90003/AN90003%20FA.pdf) | [AN90003-FA.html](./AN90003/AN90003-FA.html) | منتشرشده |
-| AN91000 | تنظیمات و نکات عیب‌یابی تراشه‌های دو هسته‌ای | [راهنمای یادداشت](./AN91000/README.md) | [AN91000 FA.pdf](./AN91000/AN91000%20FA.pdf) | [AN91000-FA.html](./AN91000/AN91000-FA.html) | منتشرشده |
-| AN91001 | راهنمای استفاده از پروگرامر آفلاین | [راهنمای یادداشت](./AN91001/README.md) | [AN91001 FA.pdf](./AN91001/AN91001%20FA.pdf) | [AN91001-FA.html](./AN91001/AN91001-FA.html) | منتشرشده |
-| AN91002 | پیکربندی فایل‌های LD و Startup | [راهنمای یادداشت](./AN91002/README.md) | [AN91002 FA.pdf](./AN91002/AN91002%20FA.pdf) | [AN91002-FA.html](./AN91002/AN91002-FA.html) | منتشرشده |
-| AN91003 | فرایند LINK برای دانلود در FLASH خارجی | [راهنمای یادداشت](./AN91003/README.md) | [AN91003 FA.pdf](./AN91003/AN91003%20FA.pdf) | [AN91003-FA.html](./AN91003/AN91003-FA.html) | منتشرشده |
-| AN91004 | نکات کاربردی LINK و MRS | [راهنمای یادداشت](./AN91004/README.md) | [AN91004 FA.pdf](./AN91004/AN91004%20FA.pdf) | [AN91004-FA.html](./AN91004/AN91004-FA.html) | منتشرشده |
-| AN91005 | روش عیب‌یابی از طریق خط فرمان | [راهنمای یادداشت](./AN91005/README.md) | — | — | در انتظار ترجمه |
-| AN91006 | تشخیص مشکلات تراشه هنگام Debug | [راهنمای یادداشت](./AN91006/README.md) | — | — | در انتظار ترجمه |
-| AN93000 | مقایسه رابط‌های راه‌اندازی نمایشگر | [راهنمای یادداشت](./AN93000/README.md) | — | — | در انتظار ترجمه |
-| AN94000 | معرفی M030 برای تغذیه و کاربردهای موتور | [راهنمای یادداشت](./AN94000/README.md) | — | — | در انتظار ترجمه |
-| AN94001 | نکات مرتبط با EMI | [راهنمای یادداشت](./AN94001/README.md) | — | — | در انتظار ترجمه |
-| AN97000 | ارتقای Firmware از طریق CH32 USB DFU | [راهنمای یادداشت](./AN97000/README.md) | — | — | در انتظار ترجمه |
-
-## اصول ترجمه و بازبینی فنی
-
-برای حفظ دقت مهندسی در ترجمه اسناد:
-
-- نام میکروکنترلرها، قطعات، Peripheralها، رجیسترها، بیت‌ها، توابع، ماکروها و شناسه‌های فنی مطابق متن اصلی حفظ می‌شوند.
-- قطعه‌کدها و دستورات برنامه‌نویسی ترجمه یا بازنویسی نمی‌شوند؛ توضیحات پیرامونی آن‌ها به فارسی ارائه می‌شود.
-- واحدها، مقادیر عددی، روابط، نمودارها، شکل موج‌ها و ارجاعات باید با سند اصلی تطبیق داده شوند.
-- اگر قابلیتی فقط در برخی اعضای خانواده یا پکیج‌های مشخص وجود داشته باشد، این محدودیت باید در متن فارسی نیز روشن بماند.
-- اصطلاحات تخصصی در اولین کاربرد، در صورت نیاز همراه با معادل انگلیسی درج می‌شوند تا جست‌وجو و تطبیق با Datasheet و Reference Manual ساده باشد.
-- اصلاحات ترجمه باید بدون تغییر ناخواسته در مفهوم فنی، شرایط آزمون یا محدوده اعتبار مثال‌ها انجام شوند.
-
-## نکات مهم برای استفاده در طراحی واقعی
-
-یادداشت‌های کاربردی مکمل مستندات رسمی هستند و جایگزین آن‌ها نمی‌شوند:
-
-1. **Datasheet:** برای بررسی مشخصات الکتریکی، ولتاژها، جریان‌ها، پکیج، Pinout و محدودیت‌های قطعه از دیتاشیت مدل دقیق MCU استفاده کنید.
-2. **Reference Manual:** برای جزئیات رجیسترها، ترتیب راه‌اندازی Peripheralها، وقفه‌ها و رفتار داخلی واحدها به راهنمای مرجع مراجعه کنید.
-3. **نسخه ابزار و کتابخانه:** مثال‌ها ممکن است به نسخه خاصی از MRS، کامپایلر، Peripheral Library یا Firmware وابسته باشند.
-4. **تطبیق مدل تراشه:** قابلیت‌ها و نگاشت پایه‌ها را از یک مدل CH32 به مدل دیگر تعمیم ندهید؛ تفاوت خانواده، پکیج و Revision را بررسی کنید.
-5. **اعتبارسنجی سخت‌افزاری:** تنظیمات تغذیه، کلاک، حافظه، USB، RF، EMI و پروگرام را با اندازه‌گیری و آزمون روی سخت‌افزار واقعی تأیید کنید.
-
-## منابع و پیوندهای مرتبط
-
-- [فهرست اصلی یادداشت‌های کاربردی — فارسی](../README.md)
-- [فهرست اسناد اصلی — چینی](../zh/)
-- [مخزن MES-ch32_application_notes](https://github.com/MEMAR-ELECTRONIC-SANAT/MES-ch32_application_notes)
-- [وب‌سایت رسمی WCH](https://www.wch.cn/)
-- [انجمن رسمی WCH](https://www.wch.cn/bbs/forum-106-1.html)
-
-## مشارکت و گزارش خطا
-
-برای اعلام اشتباه تایپی یا فنی، پیشنهاد اصلاح یا گزارش لینک خراب، از بخش [Issues مخزن](https://github.com/MEMAR-ELECTRONIC-SANAT/MES-ch32_application_notes/issues) استفاده کنید. در گزارش خود تا حد امکان شناسه AN، شماره صفحه یا بخش، مدل دقیق MCU و توضیح اصلاح پیشنهادی را ذکر کنید.
-
-</div>
-
-<p align="center">
-  <img src="../Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider">
-</p>
-
-## تصاویر و دیاگرام‌های راهنما
-
-- [تصاویر و دارایی‌های گرافیکی MES](../Images/GitHub-Assets/)
-- تصاویر اختصاصی هر یادداشت در زیرپوشه `media/` همان سند نگهداری می‌شوند.
-
-## تهیه و تدوین
-
-**معمار الکترونیک صنعت**
+**معمار الکترونیک صنعت**  
 **MEMAR ELECTRONIC SANAT (MES)**
 
-همراه شما در مسیر طراحی و ساخت مدارهای مطمئن
+همراه شما در مسیر طراحی و ساخت مدارهای مطمئن  
+*Your partner in designing and building reliable circuits.*
 
-طراحی و توسعه مدارهای الکترونیکی، PCB، سیستم‌های Embedded و ابزارهای پیکربندی میکروکنترلر.
+- Telegram: https://t.me/Memar_Electronic
+- Instagram: https://www.instagram.com/Memar.Electronic
+- GitHub: https://github.com/MEMAR-ELECTRONIC-SANAT
 
-- کانال تلگرام: [https://t.me/Memar_Electronic](https://t.me/Memar_Electronic)
-- پیج اینستاگرام: [https://www.instagram.com/Memar.Electronic](https://www.instagram.com/Memar.Electronic)
-- GitHub: [MEMAR-ELECTRONIC-SANAT](https://github.com/MEMAR-ELECTRONIC-SANAT)
+## تصاویر و دیاگرام‌های راهنما / Images and Diagrams
 
-<p align="center">
-  <img src="../Images/GitHub-Assets/MES-Thank-You-Footer.svg" width="100%" alt="Thank you for visiting MES">
-</p>
+[دارایی‌های گرافیکی MES / MES visual assets](../Images/GitHub-Assets/)
 
-<p align="center">
-  <img src="../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo">
-</p>
+<p align="center"><img src="../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo"></p>

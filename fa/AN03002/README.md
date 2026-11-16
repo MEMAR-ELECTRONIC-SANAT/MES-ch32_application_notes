@@ -1,117 +1,110 @@
-<h1 dir="rtl" align="right">AN03002 — راهنمای بنچمارک CoreMark در میکروکنترلرهای CH32</h1>
+<p align="center"><img src="../../Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider"></p>
+
+# AN03002 — معرفی CoreMark و تنظیمات امتیازدهی
+
+[🇮🇷 فارسی](README.md) · [🇬🇧 English](#english) · [فهرست دوزبانه / Bilingual index](../README.md)
 
 <div dir="rtl" align="right">
 
 ## معرفی
 
-یادداشت کاربردی **AN03002، نسخه V1.0** از شرکت **WCH**، به معرفی بنچمارک **CoreMark** و عوامل مؤثر بر نتایج آن در میکروکنترلرهای CH32 می‌پردازد. این معیار برای سنجش کارایی پردازنده‌های نهفته طراحی شده و نتیجه آن به الگوریتم آزمون، کامپایلر، گزینه‌های بهینه‌سازی، فرکانس و محل اجرای کد وابسته است.
+این صفحه راهنمای دوزبانه یادداشت کاربردی **AN03002** از مجموعه Application Notes شرکت **WCH** است. موضوع سند: **معرفی CoreMark و تنظیمات امتیازدهی**. این راهنما مسیر دسترسی به سند اصلی، فایل‌های ترجمه‌شده و رسانه‌های همراه را معرفی می‌کند. برای جزئیات پیاده‌سازی و محدودیت‌های فنی، متن کامل سند WCH و مستندات رسمی MCU مربوطه را بررسی کنید.
 
-## محدوده کاربرد
+## وضعیت ترجمه و انتشار
 
-| مورد | توضیح |
+> **نسخه فارسی PDF و HTML در مخزن موجود است.**
+
+در صورت موجود بودن، PDF برای مطالعه آفلاین و چاپ و HTML برای مشاهده در مرورگر مناسب است.
+
+## دسترسی به مستندات
+
+| نوع سند | پیوند |
 |---|---|
-| خانواده | میکروکنترلرهای عمومی CH32 |
-| نمونه‌های بررسی‌شده | CH32H417، CH32V307 و CH32V205 |
-| معیار | CoreMark |
-| ناشر بنچمارک | EEMBC |
+| سند اصلی WCH (Markdown) | — |
+| PDF فارسی | [AN03002 FA.pdf](AN03002%20FA.pdf) |
+| HTML فارسی | [AN03002-FA.html](AN03002-FA.html) |
 
-## خلاصه محتوای سند
+## موضوع و دامنه
 
-### ۱. CoreMark چیست؟
+**معرفی CoreMark و تنظیمات امتیازدهی**. مدل‌های پشتیبانی‌شده، شرایط کاری، مقادیر عددی و تنظیمات رجیسترها را از متن اصلی استخراج و با Datasheet و Reference Manual همان مدل تطبیق دهید. نتایج را بدون بررسی به سایر اعضای خانواده CH32 تعمیم ندهید.
 
-**CoreMark** بنچمارکی است که EEMBC در سال 2009 برای سنجش و مقایسه کارایی پردازنده‌های نهفته معرفی کرد. این آزمون جایگزینی برای معیار قدیمی Dhrystone محسوب می‌شود و با اجرای مجموعه‌ای از الگوریتم‌ها، توان پردازشی MCU را ارزیابی می‌کند.
+## فایل‌های تصویری و رسانه‌ای
 
-بار کاری آزمون شامل سه بخش اصلی است:
+در پوشه `media/` تعداد **5 فایل رسانه‌ای** وجود دارد. [مشاهده پوشه رسانه‌ها](./media/)
 
-- **عملیات ماتریسی:** جمع و ضرب عناصر، ضرب ماتریس در بردار و عملیات ماتریسی دیگر.
-- **عملیات لیست پیوندی:** مرتب‌سازی و محاسبه CRC روی داده‌های لیست.
-- **ماشین حالت:** اجرای انتقال حالت‌ها با حلقه‌ها و شاخه‌های شرطی.
+## ملاحظات بازبینی فنی
 
-ساختار فایل‌های اصلی CoreMark در سند معرفی شده‌اند:
+- نام Peripheralها، رجیسترها، بیت‌ها، توابع و کدها را با سند اصلی تطبیق دهید.
+- مقادیر، واحدها، شکل موج‌ها و شرایط آزمون را بدون تغییر ناخواسته حفظ کنید.
+- محدودیت‌های وابسته به مدل MCU، پکیج و Revision را رعایت کنید.
+- پیش از استفاده در محصول، طراحی را با مستندات رسمی و سخت‌افزار واقعی اعتبارسنجی کنید.
 
-| فایل | وظیفه |
-|---|---|
-| `core_main.c` | برنامه اصلی آزمون |
-| `core_state.c` | عملیات ماشین حالت |
-| `core_list_join.c` | عملیات لیست |
-| `core_matrix.c` | عملیات ماتریسی |
-| `core_util.c` | توابع CRC |
-| `coremark.h` | تعاریف، تنظیمات و ساختارهای داده |
+## منابع مرتبط
 
-### ۲. تفسیر نتایج
-
-خروجی خام آزمون **Iterations/Sec** است؛ یعنی تعداد اجرای کامل آزمون در هر ثانیه. برای مقایسه MCUها با فرکانس‌های مختلف، نتیجه بر فرکانس کاری تقسیم می‌شود و معمولاً **CoreMark/MHz** گزارش می‌شود.
-
-- **Iterations/Sec:** مناسب مقایسه توان پردازشی مطلق در تنظیمات آزمون مشخص.
-- **CoreMark/MHz:** مناسب‌تر برای مقایسه کارایی به‌ازای هر MHz.
-- آزمون باید زمان کافی داشته باشد؛ سند به اجرای حداقل 10 ثانیه‌ای برای پایداری اندازه‌گیری اشاره می‌کند.
-
-نمونه گزارش سند: در CH32H417 با هسته V5 و فرکانس 400 MHz، اجرای CoreMark در ITCM نتیجه حدود **2720.85 Iterations/Sec** و **6.802 CoreMark/MHz** ارائه می‌کند.
-
-### ۳. اثر سطح بهینه‌سازی کامپایلر
-
-نتیجه CoreMark به‌شدت به کد ماشین تولیدشده توسط کامپایلر وابسته است. در نمونه CH32V307، سند نتایج متفاوتی برای گزینه‌های بهینه‌سازی GCC گزارش می‌کند:
-
-- با `-O1`: حدود **319.08**
-- با `-Ofast`: حدود **469.52**
-
-این اعداد نتایج آزمون گزارش‌شده در سند هستند و برای مقایسه معتبر باید پیکربندی سخت‌افزار، فرکانس و شرایط اجرای یکسان باشند.
-
-### ۴. گزینه‌های اختصاصی GCC
-
-سند به گزینه‌های زیر اشاره می‌کند که WCH برای کنترل بهینه‌سازی کد استفاده کرده است:
-
-| گزینه | شرح |
-|---|---|
-| `-funroll-all-loops` | بازکردن حلقه‌ها و کاهش سربار کنترل حلقه |
-| `-finline-limit=600` | افزایش تلاش برای درون‌خطی‌سازی توابع |
-| `-ftree-dominator-opts` | بهینه‌سازی و حذف محاسبات افزونه |
-| `-fno-if-conversion2` | غیرفعال‌کردن مرحله دوم تبدیل شرطی |
-| `-fselective-scheduling` | زمان‌بندی گزینشی دستورها برای کاهش توقف خط لوله |
-| `-fno-code-hoisting` | غیرفعال‌کردن بالا بردن برخی دستورها از حلقه |
-
-این گزینه‌ها ممکن است بسته به نسخه GCC، معماری و پروژه اثر متفاوتی داشته باشند؛ بنابراین نتیجه نهایی باید با build و آزمون واقعی تأیید شود.
-
-### ۵. تفاوت نسخه‌های GCC
-
-نسخه کامپایلر نیز می‌تواند بر امتیاز اثر بگذارد. در آزمایش CH32V307، سند برای GCC 15 نسبت به GCC 12 حدود **1.5٪ بهبود** گزارش می‌کند. این مقدار نتیجه همان آزمون است و الزاماً برای همه پروژه‌ها یا MCUها تکرار نمی‌شود.
-
-### ۶. پیکربندی حافظه و دورهای انتظار
-
-محل اجرای کد یکی از عوامل مهم CoreMark است:
-
-- **RAM/ITCM:** دسترسی سریع و امکان اجرای کد با انتظار کمتر؛ معمولاً امتیاز بالاتری فراهم می‌کند.
-- **Flash:** با افزایش فرکانس، محدودیت زمان دسترسی فلش ممکن است دورهای انتظار (Wait Cycles) ایجاد کند و کارایی را کاهش دهد.
-- سند نمونه‌ای از CH32V205 ارائه می‌کند: در 160 MHz مقدار حدود **2.248 CoreMark/MHz** و در 40 MHz حدود **3.561 CoreMark/MHz** گزارش شده است. این اختلاف نشان می‌دهد نتیجه به فرکانس، تنظیمات فلش و شرایط دسترسی حافظه وابسته است.
-
-## فایل‌های این یادداشت
-
-- [نسخه HTML فارسی](./AN03002-FA.html)
-- [نسخه PDF فارسی](./AN03002%20FA.pdf)
-- [سند اصلی چینی](../../zh/AN03002/AN03002.md)
-- [تصاویر و نمودارهای HTML](./assets/img/)
-
-<p align="center">
-  <img src="../../Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider">
-</p>
-
-## تصاویر و دیاگرام‌های راهنما
-
-تصاویر و نمودارهای سند در پوشه [assets/img](./assets/img/) قرار دارند؛ از جمله نتایج CoreMark برای CH32H417، مقایسه سطوح بهینه‌سازی در CH32V307، مقایسه نسخه‌های GCC و نتایج CH32V205 در پیکربندی‌های حافظه متفاوت.
+- [فهرست دوزبانه یادداشت‌ها](../README.md)
+- [اسناد اصلی چینی](../../zh/)
+- [مخزن MES-ch32_application_notes](https://github.com/MEMAR-ELECTRONIC-SANAT/MES-ch32_application_notes)
+- [وب‌سایت WCH](https://www.wch.cn/)
 
 </div>
 
-## تهیه و تدوین
+## English
 
-**معمار الکترونیک صنعت**
+## Overview
+
+This is the bilingual guide for **AN03002**, an Application Note from **WCH**. Topic: **CoreMark Introduction and Benchmark Configuration**. It provides links to the original source, available translated editions, and supporting media. Consult the complete WCH document and the relevant MCU documentation for implementation details and technical limitations.
+
+## Translation and Publication Status
+
+> **Persian PDF and HTML editions are available in this repository.**
+
+When available, use PDF for offline reading and printing, and HTML for browser-based reading.
+
+## Documentation
+
+| Document | Link |
+|---|---|
+| Original WCH Markdown | — |
+| Persian PDF | [AN03002 FA.pdf](AN03002%20FA.pdf) |
+| Persian HTML | [AN03002-FA.html](AN03002-FA.html) |
+
+## Scope and Technical Notes
+
+The subject is **CoreMark Introduction and Benchmark Configuration**. Verify supported MCU variants, operating conditions, numeric values, and register settings in the original source. Cross-check device-specific details against the matching datasheet and reference manual. Do not generalize results to other CH32 devices without verification.
+
+## Images and Supporting Media
+
+There are **5 media files** in `media/`. [Open the media folder](./media/)
+
+## Engineering Review
+
+- Cross-check peripheral names, registers, bits, functions, and code against the original source.
+- Preserve values, units, waveforms, and test conditions accurately.
+- Observe limitations related to MCU model, package, and silicon revision.
+- Validate the design against official documentation and on real hardware before production use.
+
+## Related Resources
+
+- [Bilingual Application Notes index](../README.md)
+- [Original Chinese documents](../../zh/)
+- [MES-ch32_application_notes repository](https://github.com/MEMAR-ELECTRONIC-SANAT/MES-ch32_application_notes)
+- [WCH official website](https://www.wch.cn/)
+
+## تصاویر و دیاگرام‌های راهنما / Images and Diagrams
+
+- [رسانه‌های AN03002 / AN03002 media](./media/)
+- [دارایی‌های گرافیکی MES / MES visual assets](../../Images/GitHub-Assets/)
+
+## تهیه و تدوین / Credits
+
+**معمار الکترونیک صنعت**  
 **MEMAR ELECTRONIC SANAT (MES)**
 
-همراه شما در مسیر طراحی و ساخت مدارهای مطمئن
+همراه شما در مسیر طراحی و ساخت مدارهای مطمئن  
+*Your partner in designing and building reliable circuits.*
 
-- کانال تلگرام: [Memar_Electronic](https://t.me/Memar_Electronic)
-- اینستاگرام: [Memar.Electronic](https://www.instagram.com/Memar.Electronic)
-- GitHub: [MEMAR-ELECTRONIC-SANAT](https://github.com/MEMAR-ELECTRONIC-SANAT)
+- Telegram: https://t.me/Memar_Electronic
+- Instagram: https://www.instagram.com/Memar.Electronic
+- GitHub: https://github.com/MEMAR-ELECTRONIC-SANAT
 
-<p align="center">
-  <img src="../../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo">
-</p>
+<p align="center"><img src="../../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo"></p>
