@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>برنامه‌نویس آفلاین WCH — ترجمۀ فارسی AN91001</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+/* compact TOC page (for docs with long figure lists) */
+.toc-page{ padding-top:60px; }
+.toc-underline{ margin-bottom:8px; }
+.toc-row{ padding:4.5px 2px; }
+.toc-figs{ margin-top:10px; padding:8px 14px 5px; }
+.toc-figs h3{ margin:0 0 5px; font-size:12px; }
+.toc-figs .frow{ padding:0.9px 0; font-size:10.3px; }
+.abstract{ margin-top:10px; padding:9px 14px; font-size:10.6px; line-height:1.62; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">برنامه‌نویس آفلاین <span class="en">WCH</span></div>
+    <div class="t2">نوشتن گروهی برنامه بدون اتصال به رایانه</div>
+    <div class="t3">سه شیوۀ دانلود <span class="en">USB · UART · SWD</span> و راهنمای عیب‌یابی</div>
+  </div>
+  <div class="c-sub">معرفی برنامه‌نویس آفلاین و روش استفاده با فایل datakey، کارکرد برخط و کد غلتان، و تحلیل هفت مسئلۀ رایج کاربران از نصب درایور و مسیر فایل تا اتمام وقت اتصال، خطای U3 و تغییر به حالت انگلیسی</div>
+  <div class="c-desc">ترجمۀ فارسی سند رسمی <span class="en">AN91001</span> (نسخۀ ۱٫۰، منتشرۀ <span class="en">WCH</span>): برنامه‌نویس آفلاین (Offline Programmer) ابزار تخصصی نوشتن گروهی برنامه روی تراشه‌های WCH بدون اتصال به رایانه است و نسبت به WCH_Link برای سناریوهایی مانند تولید انبوه کارخانه که نوشتن مکرر و انبوه لازم است مناسب‌تر است. این ابزار سه شیوۀ دانلود USB، سریال و SWD ارائه می‌دهد؛ این سند علاوه بر معرفی کارکردها، مسائل رایج کاربران را نیز تحلیل می‌کند.</div>
+  <div class="c-tags">
+    <span class="c-tag">برنامه‌نویس آفلاین</span>
+    <span class="c-tag"><span class="en">USB · UART · SWD</span></span>
+    <span class="c-tag"><span class="en">.datakey</span></span>
+    <span class="c-tag">کد غلتان</span>
+    <span class="c-tag"><span class="en">CH32F/V · CH54x-58x</span></span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN91001 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">مقدمه | توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | معرفی محصول</span><span class="t-dots"></span><span class="t-page">۴</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-11"><span class="s-id">1.1</span><span>معرفی کارکردها</span><span class="s-dots"></span><span class="s-page">۱</span></a>
+    <a class="toc-sub" href="#sec-111"><span class="s-id">1.1.1</span><span>روش استفاده</span><span class="s-dots"></span><span class="s-page">۱</span></a>
+    <a class="toc-sub" href="#sec-112"><span class="s-id">1.1.2</span><span>کارکرد برخط و کارکرد کد غلتان</span><span class="s-dots"></span><span class="s-page">۱</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | مسائل رایج</span><span class="t-dots"></span><span class="t-page">۶</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-21"><span class="s-id">2.1</span><span>مسائل رایج</span><span class="s-dots"></span><span class="s-page">۱</span></a>
+    <a class="toc-sub" href="#sec-211"><span class="s-id">2.1.1</span><span>مسئلۀ نصب درایور</span><span class="s-dots"></span><span class="s-page">۱</span></a>
+    <a class="toc-sub" href="#sec-212"><span class="s-id">2.1.2</span><span>مسئلۀ مسیر فایل</span><span class="s-dots"></span><span class="s-page">۱</span></a>
+    <a class="toc-sub" href="#sec-213"><span class="s-id">2.1.3</span><span>مسئلۀ جست‌وجوی دستگاه</span><span class="s-dots"></span><span class="s-page">۱</span></a>
+    <a class="toc-sub" href="#sec-214"><span class="s-id">2.1.4</span><span>حالت دانلود 0.0V</span><span class="s-dots"></span><span class="s-page">۱</span></a>
+    <a class="toc-sub" href="#sec-215"><span class="s-id">2.1.5</span><span>اتمام وقت اتصال / اتمام وقت برنامه‌نویسی</span><span class="s-dots"></span><span class="s-page">۱</span></a>
+    <a class="toc-sub" href="#sec-216"><span class="s-id">2.1.6</span><span>شکست برنامه‌نویسی: U3</span><span class="s-dots"></span><span class="s-page">۱</span></a>
+    <a class="toc-sub" href="#sec-217"><span class="s-id">2.1.7</span><span>تغییر به حالت انگلیسی</span><span class="s-dots"></span><span class="s-page">۱</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۴</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۱۲</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۵</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۱۲</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">شکل ۱</span><span>برنامه‌نویس آفلاین WCH</span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">شکل ۲</span><span>پیکربندی برنامه‌نویس آفلاین در نرم‌افزار میزبان</span><span class="f-dots"></span><span class="f-page">۵</span></div>
+        <div class="frow"><span class="f-id">شکل ۳</span><span>بارگذاری کد کاربر در برنامه‌نویس آفلاین</span><span class="f-dots"></span><span class="f-page">۵</span></div>
+        <div class="frow"><span class="f-id">شکل ۴</span><span>پیکربندی کارکرد برخط و کد غلتان</span><span class="f-dots"></span><span class="f-page">۶</span></div>
+        <div class="frow"><span class="f-id">شکل ۵</span><span>خطای ناشی از درایور (نبود CH375DLL.DLL)</span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">شکل ۶</span><span>پیام McuUpdTool.exe — یافتن‌نشدن فایل datakey</span><span class="f-dots"></span><span class="f-page">۷</span></div>
+      </div>
+      <div>
+        <div class="frow"><span class="f-id">شکل ۷</span><span>پیام DIPubTool_N — یافتن‌نشدن فایل کاربر</span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">شکل ۸</span><span>پیام جست‌وجونشدن دستگاه در نرم‌افزار</span><span class="f-dots"></span><span class="f-page">۹</span></div>
+        <div class="frow"><span class="f-id">شکل ۹</span><span>نمایش حالت دانلود 0.0V</span><span class="f-dots"></span><span class="f-page">۱۰</span></div>
+        <div class="frow"><span class="f-id">شکل ۱۰</span><span>نمایش شکست برنامه‌نویسی U3</span><span class="f-dots"></span><span class="f-page">۱۱</span></div>
+        <div class="frow"><span class="f-id">شکل ۱۱</span><span>تغییر به حالت انگلیسی</span><span class="f-dots"></span><span class="f-page">۱۲</span></div>
+        <div class="frow"><span class="f-id">جدول ۱</span><span>دامنۀ کاربرد سند</span><span class="f-dots"></span><span class="f-page">۳</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> برنامه‌نویس آفلاین <span class="en">WCH</span> ابزار نوشتن گروهی برنامه روی تراشه‌های WCH بدون اتصال به رایانه است و برای سناریوهای تولید انبوه، مناسب‌تر از <span class="en">WCH_Link</span> است. این سند روش استفاده را شرح می‌دهد: ساخت فایل <span class="en">.datakey</span> با نرم‌افزار میزبان (انتخاب سری، مدل و پکیج تراشه)، بارگذاری آن در برنامه‌نویس و آغاز دانلود با کلید <span class="en">S3</span>؛ همراه با کارکرد برخط و کد غلتان و تحلیل هفت مسئلۀ رایج: نصب درایور (CH375DLL.DLL)، مسیر فایل، جست‌وجوی دستگاه، حالت دانلود 0.0V، اتمام وقت اتصال/برنامه‌نویسی، شکست برنامه‌نویسی U3 و تغییر به حالت انگلیسی.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>برنامه‌نویس آفلاین (<span class="en">Offline Programmer</span>) WCH ابزاری تخصصی است که بدون نیاز به اتصال به رایانه، می‌تواند به‌صورت گروهی برنامه را روی تراشه‌های WCH بنویسد. در مقایسه با <span class="en">WCH_Link</span>، برنامه‌نویس آفلاین برای سناریوهایی مانند تولید انبوه کارخانه که نوشتن مکرر و انبوه لازم است مناسب‌تر است. برنامه‌نویس آفلاین WCH سه شیوۀ دانلود <span class="en">USB</span>، سریال و <span class="en">SWD</span> ارائه می‌کند؛ <span class="en">USB</span> و سریال از همۀ تراشه‌های WCH پشتیبانی می‌کنند و <span class="en">SWD</span> فقط برای تراشه‌های دارای پروتکل اشکال‌زدایی تک‌خطی/دوخطی applicable است. این سند کاربردها هم کارکردهای برنامه‌نویس آفلاین را معرفی می‌کند و هم مسائل رایج کاربران را تحلیل می‌کند.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>MCU</td><td>تمام تراشه‌های <span class="en">WCH</span></td></tr>
+  </table>
+</div>
+
+<h3 class="h2x" id="sec-intro-tech"><span class="dm">◆</span>توضیح مختصر فنی</h3>
+<p style="color:#9a8f83;font-size:11.6px;margin-top:-4px;">این بخش افزودۀ مترجم برای درک بهتر مفاهیم سند است و در متن اصلی وجود ندارد.</p>
+<p><b style="color:#8a4a12;">۱. برنامه‌نویس آفلاین چیست؟</b></p>
+<p>برنامه‌نویس آفلاین دستگاهی مستقل با نمایشگر و کلیدهای <span class="en">S1</span> تا <span class="en">S3</span> است. یک بار فایل <span class="en">.datakey</span> را از رایانه می‌گیرد و پس از آن به‌تنهایی تراشۀ هدف را تغذیه می‌کند، آن را شناسایی می‌کند، برنامه را می‌نویسد و نتیجه را روی نمایشگر نشان می‌دهد؛ برخلاف <span class="en">WCH_Link</span> که برای هر نوشتن باید به رایانه متصل باشد، این ابزار برای خط تولید و نوشتن انبوه ساخته شده است.</p>
+<p><b style="color:#8a4a12;">۲. فایل .datakey چیست؟</b></p>
+<p>فایل <span class="en">.datakey</span> بستۀ پیکربندی و برنامۀ نوشتن است که نرم‌افزار میزبان می‌سازد: انتخاب سری، مدل و پکیج تراشه، فایل کاربر (<span class="en">HEX/BIN</span>)، ولتاژ تغذیۀ هدف، زمان پایداری تغذیه، آستانۀ تشخیص جریان و در صورت نیاز تنظیمات کارکرد برخط و کد غلتان. این فایل با <span class="en">McuUpdTool.exe</span> در برنامه‌نویس بارگذاری می‌شود و کل رفتار دستگاه در نوشتن را تعیین می‌کند.</p>
+<p><b style="color:#8a4a12;">۳. کد غلتان (Rolling Code) چیست؟</b></p>
+<p>کد غلتان داده‌ای شش‌بایتی و خودافزاست که با هر بار نوشتن یک واحد افزایش می‌یابد و همراه فایل داده در ناحیۀ <span class="en">dataflash</span> (یا فلش مشخص در تراشه‌های بدون dataflash مانند سری CH32) نوشته می‌شود؛ کاربرد آن درج شمارۀ سریال یا شناسۀ یکتا در هر قطعۀ تولیدی است.</p>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">معرفی محصول</div>
+  <div class="sec-divider"></div>
+</div>
+<p>برنامه‌نویس آفلاین ابزار نوشتن آفلاین و گروهی برنامۀ سری تراشه‌های WCH است. مدل‌های تراشه‌های پشتیبانی‌شده در حال حاضر شامل سری‌های <span class="en">CH54x</span>، <span class="en">CH55x</span>، <span class="en">CH56x</span>، <span class="en">CH57x</span>، <span class="en">CH58x</span> و <span class="en">CH32F/V</span> و … است.</p>
+<p>برنامه‌نویس آفلاین سه شیوۀ دانلود <span class="en">USB</span>، سریال و <span class="en">SWD</span> ارائه می‌کند؛ <span class="en">USB</span> و سریال برای همۀ تراشه‌ها applicable هستند و شیوۀ <span class="en">SWD</span> فقط برای تراشه‌های سری <span class="en">CH32F/V</span> قابل استفاده است.</p>
+<h3 class="h2x" id="sec-11"><span class="dm">◆</span>۱.۱ معرفی کارکردها</h3>
+<div class="fig" id="fig-01">
+  <div class="figbox"><img src="assets/img/an91001-fig01.png" alt="برنامه‌نویس آفلاین WCH" style="max-width:450px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱</span><span class="cap-text">برنامه‌نویس آفلاین <span class="en">WCH</span> (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p id="sec-111"><b style="color:#8a4a12;">۱.۱.۱ روش استفاده</b></p>
+<p>کاربر باید با نرم‌افزار میزبان و بسته به نیاز خود، فایل <span class="en">.datakey</span> بسازد و فایل ساخته‌شده را در برنامه‌نویس آفلاین بارگذاری کند. در <span class="en">DIPubTool_N_V.exe</span> باید سری تراشه، مدل تراشه و پکیج تراشه را درست انتخاب کنید؛ در صورت انتخاب نادرست، برنامه‌نویس آفلاین در جریان دانلود خطای <span class="en">E1</span> می‌دهد.</p>
+<div class="fig" id="fig-02">
+  <div class="figbox"><img src="assets/img/an91001-fig02.png" alt="پیکربندی برنامه‌نویس آفلاین" style="max-width:480px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۲</span><span class="cap-text">پیکربندی برنامه‌نویس آفلاین در نرم‌افزار میزبان (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<div class="fig" id="fig-03">
+  <div class="figbox"><img src="assets/img/an91001-fig03.png" alt="بارگذاری کد کاربر" style="max-width:480px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۳</span><span class="cap-text">بارگذاری کد کاربر در برنامه‌نویس آفلاین (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>پس از بارگذاری کد کاربر در برنامه‌نویس آفلاین، کاربر تراشه را (از طریق <span class="en">USB</span>، سریال یا <span class="en">SWD</span>) وصل می‌کند و با عمل‌کردن کلید <span class="en">S3</span>، دانلود برنامه آغاز می‌شود.</p>
+<p id="sec-112"><b style="color:#8a4a12;">۱.۱.۲ کارکرد برخط و کارکرد کد غلتان</b></p>
+<div class="fig" id="fig-04">
+  <div class="figbox"><img src="assets/img/an91001-fig04.png" alt="پیکربندی کارکرد برخط و کد غلتان" style="max-width:440px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۴</span><span class="cap-text">پیکربندی کارکرد برخط/کد غلتان (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>کارکرد برخط/کد غلتان اساساً پرکردن ناحیۀ <span class="en">dataflash</span> (در تراشه‌هایی که چنین ناحیه‌ای دارند) با فایل سفارشی یا کد غلتان خودکار است. چون تراشه‌های سری <span class="en">CH32</span> فاقد <span class="en">dataflash</span> هستند، فایل سفارشی یا داده‌های کد غلتان در فلش مشخص نوشته می‌شود.</p>
+<p>فعال‌سازی نوشتن برخط: وقتی کارکرد نوشتن برخط فعال شود، اگر داده سریال دریافت نشود، فایل داده در <span class="en">dataflash</span> دانلود می‌شود؛ و وقتی داده سریال دریافت شود، داده دریافت‌شده با فایل داده ادغام و در <span class="en">dataflash</span> دانلود می‌شود.</p>
+<p>فعال‌سازی کد غلتان: وقتی کارکرد کد غلتان فعال شود، داده شش‌بایتی خودافزای کد غلتان با فایل داده ادغام و در <span class="en">dataflash</span> دانلود می‌شود.</p>
+<div class="scen"><span class="lbl">نکته: </span>دربارۀ کارکرد تأیید (Check) برنامه‌نویس آفلاین، ارتقای آن، کارکرد کلید و نوشتن ماشینی (Machine Programming)، می‌توان به نشانی زیر مراجعه کرد: <span class="en">https://www.wch.cn/bbs/thread-73750-1.html</span></div>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">مسائل رایج</div>
+  <div class="sec-divider"></div>
+</div>
+<p>برنامه‌نویس آفلاین همراه محصولات WCH در داخل و خارج از کشور به‌طور گسترده توزیع شده است. در اینجا مسائلی که کاربران در جریان استفاده با آن روبه‌رو شده‌اند جمع‌بندی شده است. برنامه‌نویس‌های آفلاین WCH بر اساس تراشۀ میزبان به دو دسته‌اند: یکی مبتنی بر <span class="en">CH32F103</span> و دیگری مبتنی بر <span class="en">CH32V208</span>؛ بستۀ نرم‌افزاری این دو یکسان نیست.</p>
+<h3 class="h2x" id="sec-21"><span class="dm">◆</span>۲.۱ مسائل رایج</h3>
+<p id="sec-211"><b style="color:#8a4a12;">۲.۱.۱ مسئلۀ نصب درایور</b></p>
+<p>وقتی نرم‌افزار <span class="en">DlPubTool_N_VX.xx.exe</span> باز نمی‌شود و خطای یافتن‌نشدن <span class="en">CH375DLL.DLL</span> می‌دهد، باید درایورهای مربوط به برنامه‌نویس را دوباره نصب کنید.</p>
+<div class="fig" id="fig-05">
+  <div class="figbox"><img src="assets/img/an91001-fig05.png" alt="خطای نبود CH375DLL.DLL" style="max-width:440px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۵</span><span class="cap-text">خطای ناشی از درایور (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>پیوند درایور: <span class="en">https://www.wch.cn/downloads/CH372DRV_EXE.html</span></p>
+<p id="sec-212"><b style="color:#8a4a12;">۲.۱.۲ مسئلۀ مسیر فایل</b></p>
+<p>نرم‌افزار <span class="en">McuUpdTool.exe</span> پیام یافتن‌نشدن فایل <span class="en">.datakey</span> را نشان می‌دهد:</p>
+<div class="fig" id="fig-06">
+  <div class="figbox"><img src="assets/img/an91001-fig06.png" alt="پیام McuUpdTool.exe" style="max-width:360px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۶</span><span class="cap-text">پیام <span class="en">McuUpdTool.exe</span> (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>مطمئن شوید فایل <span class="en">.datakey</span> ساخته‌شده و نرم‌افزار <span class="en">McuUpdTool.exe</span> در یک مسیر باشند (فایل <span class="en">.datakey</span> تازه‌ساخته‌شده به‌طور پیش‌فرض در همان پوشۀ <span class="en">McuUpdTool.exe</span> قرار می‌گیرد). وقتی فایل در همان مسیر نباشد، <span class="en">McuUpdTool.exe</span> فایل <span class="en">.datakey</span> را پیدا نمی‌کند.</p>
+<p>نرم‌افزار <span class="en">DlPubTool_N_VX.xx.exe</span> نمی‌تواند فایل <span class="en">.datakey</span> بسازد:</p>
+<div class="fig" id="fig-07">
+  <div class="figbox"><img src="assets/img/an91001-fig07.png" alt="پیام DIPubTool_N" style="max-width:420px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۷</span><span class="cap-text">پیام <span class="en">DIPubTool_N_VX.xx.exe</span> (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>در سیستم عامل انگلیسی، <span class="en">DlPubTool_N_VX.xx.exe</span> باید در مسیری انگلیسی قرار گیرد؛ تا به‌سبب طولانی‌بودن نام مسیر، فایل کاربر را نیابد و نتواند <span class="en">.datakey</span> بسازد.</p>
+<p id="sec-213"><b style="color:#8a4a12;">۲.۱.۳ مسئلۀ جست‌وجوی دستگاه</b></p>
+<div class="fig" id="fig-08">
+  <div class="figbox"><img src="assets/img/an91001-fig08.png" alt="جست‌وجونشدن دستگاه" style="max-width:360px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۸</span><span class="cap-text">پیام جست‌وجونشدن دستگاه در نرم‌افزار (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>راه حل:</p>
+<p>۱. سالم‌بودن کابل <span class="en">USB</span> را بررسی کنید و کابل <span class="en">USB</span> و پورت رایانه را عوض کنید (هنگام دانلود، تراشه فقط باید از <span class="en">P_USB1</span> تغذیه شود).</p>
+<p>۲. درایور دستگاه را دوباره نصب کنید: نخست «Uninstall» را کلیک کنید و سپس «Install» را.</p>
+<p id="sec-214"><b style="color:#8a4a12;">۲.۱.۴ حالت دانلود 0.0V</b></p>
+<p>توصیه می‌شود جدیدترین برنامه‌نویس آفلاین و بستۀ نرم‌افزاری متناظر آن استفاده شود. بسته‌های نرم‌افزاری قدیمی گزینۀ پیکربندی ولتاژ ندارند؛ وقتی با بستۀ قدیمی فایل <span class="en">.datakey</span> ساخته و در برنامه‌نویس آفلاین دانلود شود، برنامه‌نویس آفلاین «حالت دانلود 0.0V» را نمایش می‌دهد.</p>
+<div class="fig" id="fig-09">
+  <div class="figbox"><img src="assets/img/an91001-fig09.png" alt="نمایش حالت دانلود 0.0V" style="max-width:320px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۹</span><span class="cap-text">نمایش حالت دانلود <span class="en">0.0V</span> (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>برای دریافت جدیدترین برنامه‌نویس آفلاین و بستۀ نرم‌افزاری متناظر، می‌توان مستقیماً با کارشناسان فنی WCH تماس گرفت.</p>
+<p id="sec-215"><b style="color:#8a4a12;">۲.۱.۵ اتمام وقت اتصال / اتمام وقت برنامه‌نویسی</b></p>
+<p>برنامه‌نویس آفلاین نخست باید با تراشه ارتباط برقرار کند و تراشه را شناسایی کند و سپس برنامه را دانلود کند. وقتی برقراری ارتباط برنامه‌نویس با تراشه شکست بخورد — یعنی نتواند به تراشه متصل شود — برنامه‌نویس آفلاین «اتمام وقت اتصال» را گزارش می‌کند.</p>
+<p>راه حل:</p>
+<p>۱. درست‌بودن ولتاژ را بررسی کنید؛ برخی تراشه‌ها به تغذیۀ 5V نیاز دارند. اگر برنامه‌نویس آفلاین مستقیماً برد ارزیابی را تغذیه می‌کند، پیکربندی ولتاژ برنامه‌نویس آفلاین را بر اساس ولتاژ تغذیۀ برد ارزیابی تعیین کنید.</p>
+<p>۲. وضعیت تراشۀ هدف را بررسی کنید که آیا می‌تواند عادی اجرا شود و آسیب‌دیدگی آن را بسنجید (با <span class="en">WCH_Link</span> امتحان کنید).</p>
+<p>۳. تماس سیم‌ها را بررسی کنید که ضعیف نباشد و پایه‌ها درست باشند.</p>
+<p>۴. در انتخاب دانلود ISP، وضعیت پایۀ BOOT0 را بررسی کنید.</p>
+<p>۵. سیم کوتاه‌تری انتخاب کنید؛ سیم بیش‌ازحد بلند راحت‌تر تحت اثر نویز بیرونی قرار می‌گیرد و پایداری سیگنال را تحت تأثیر می‌گذارد.</p>
+<p>۶. اگر کد پیشین تراشه را وارد حالت کم‌مصرف کرده باشد، هنگام ساخت فایل <span class="en">.datakey</span> جدید باید حالت وقفۀ تغذیه (Power-Down Pause) پیکربندی شود.</p>
+<p>۷. با دانلود <span class="en">SWD</span> می‌توان سرعت اشکال‌زدایی دوخطی را کاهش داد و با دانلود از طریق سریال می‌توان نرخ باود سریال را پایین آورد؛ با کاهش سرعت، توان پادنویز بالا می‌رود. هنگام نوشتن با <span class="en">SWD</span> می‌توان مقاومت‌های <span class="en">R33/R34</span> برنامه‌نویس را با 0Ω تعویض کرد تا شدت سیگنال اندکی تقویت شود.</p>
+<p>۸. پیکربندی «زمان پایداری تغذیه» را افزایش دهید؛ این زمان تعیین می‌کند برنامه‌نویس آفلاین پس از تغذیۀ تراشۀ هدف، چه مدت صبر کند و سپس تلاش کند با تراشه ارتباط برقرار کند. با افزایش این زمان، از ناتوانی در ارتباط با تراشه به‌سبب بالا رفتن آهستۀ ولتاژ برد ارزیابی هدف اجتناب می‌شود.</p>
+<p>۹. وضعیت پایۀ ریست تراشه را بررسی کنید تا مطمئن شوید تراشه در حالت غیرریست است.</p>
+<p id="sec-216"><b style="color:#8a4a12;">۲.۱.۶ شکست برنامه‌نویسی: U3</b></p>
+<p>وقتی برنامه‌نویس آفلاین تشخیص دهد جریان گذرنده از <span class="en">POW</span> بیش از حد است و از آستانۀ تشخیص جریان فراتر رفته، برنامه‌نویس آفلاین U3 را گزارش می‌کند.</p>
+<div class="fig" id="fig-10">
+  <div class="figbox"><img src="assets/img/an91001-fig10.png" alt="نمایش شکست برنامه‌نویسی U3" style="max-width:300px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱۰</span><span class="cap-text">نمایش شکست برنامه‌نویسی <span class="en">U3</span> (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>گزارش شکست برنامه‌نویسی به‌صورت U3 احتمالات زیر را دارد:</p>
+<p>۱. مصرف برد کاربر بالاست؛ برنامه‌نویس آفلاین قابلیت بزرگ‌کردن پارامتر تشخیص جریان را دارد.</p>
+<p>۲. برد کاربر یا تراشه اتصال کوتاه دارد و مقدار تشخیص از آستانه فراتر رفته است؛ کاربر می‌تواند با تعویض تراشه یا بازرسی سخت‌افزار برد، این را بررسی کند.</p>
+<p>۳. اگر برنامه‌نویس آفلاین بدون اتصال هیچ تراشه یا برد ارزیابی، هنگام روشن‌شدن U3 را نمایش دهد، ممکن است خود برنامه‌نویس آفلاین مشکل داشته باشد.</p>
+<p id="sec-217"><b style="color:#8a4a12;">۲.۱.۷ تغییر به حالت انگلیسی</b></p>
+<p>برنامه‌نویس آفلاین WCH همراه تراشه‌های WCH نزد کاربران خارجی نیز به‌طور گسترده استفاده می‌شود. بستۀ نرم‌افزاری برنامه‌نویس آفلاین بر اساس سیستم به حالت انگلیسی تبدیل می‌شود و رابط برنامه‌نویس آفلاین نیز می‌تواند به انگلیسی تغییر کند:</p>
+<p>۱. کلید S1 را نگه دارید تا رابط تغییر زبان ظاهر شود.</p>
+<p>۲. با کلید S3، رابط زبان انگلیسی را انتخاب کنید.</p>
+<p>۳. با کلید S1 انتخاب را تأیید کنید.</p>
+<div class="fig" id="fig-11">
+  <div class="figbox" style="border:1.5px dashed #d8cfc0; border-radius:10px; padding:18px 22px; color:#9a8f83; font-size:12px; max-width:480px;">در سند اصلی WCH برای این شکل تصویری درج نشده است.</div>
+  <div class="figcap"><span class="cap-pill">شکل ۱۱</span><span class="cap-text">تغییر به حالت انگلیسی</span></div>
+</div>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN91001</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/07/31</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">برنامه‌نویس آفلاین (Offline Programmer)</span></td><td class="jt">ابزار نوشتن گروهی برنامه روی تراشه‌های WCH بدون اتصال به رایانه؛ با نمایشگر و کلیدهای S1/S2/S3، مناسب تولید انبوه کارخانه</td></tr>
+      <tr><td><span class="en">WCH_Link</span></td><td class="jt">پروگرامر و اشکال‌زاد رسمی WCH برای استفاده متصل به رایانه؛ برای نوشتن‌های تکی مناسب‌تر از نسخۀ آفلاین است</td></tr>
+      <tr><td><span class="en">.datakey</span></td><td class="jt">بستۀ پیکربندی و برنامۀ تولیدشده توسط نرم‌افزار میزبان که در برنامه‌نویس آفلاین بارگذاری می‌شود؛ شامل فایل کاربر و تنظیمات ولتاژ، زمان پایداری و آستانۀ جریان</td></tr>
+      <tr><td><span class="en">DIPubTool_N_VX.xx.exe</span></td><td class="jt">نرم‌افزار میزبان ساخت فایل .datakey؛ انتخاب سری، مدل و پکیج تراشه در آن انجام می‌شود و انتخاب نادرست خطای E1 در دانلود می‌دهد</td></tr>
+      <tr><td><span class="en">McuUpdTool.exe</span></td><td class="jt">نرم‌افزار بارگذاری فایل .datakey در برنامه‌نویس آفلاین؛ فایل .datakey باید در همان پوشۀ نرم‌افزار باشد</td></tr>
+      <tr><td><span class="en">CH375DLL.DLL</span></td><td class="jt">کتابخانۀ درایورِ USB نرم‌افزار میزبان؛ نبود آن یعنی درایورهای برنامه‌نویس نصب نشده‌اند</td></tr>
+      <tr><td><span class="en">E1</span></td><td class="jt">کد خطای برنامه‌نویس آفلاین هنگام دانلود، وقتی سری، مدل یا پکیج تراشه در نرم‌افزار میزبان نادرست انتخاب شده باشد</td></tr>
+      <tr><td><span class="en">U3</span></td><td class="jt">کد خطای شکست برنامه‌نویسی وقتی جریان گذرنده از مسیر تغذیۀ هدف از آستانۀ تشخیص جریان بیشتر شود</td></tr>
+      <tr><td><span class="en">اتمام وقت اتصال (Link Timeout)</span></td><td class="jt">خطای شکست برقراری ارتباط و شناسایی تراشه پیش از آغاز نوشتن؛ علت آن تغذیه، سیم‌کشی، BOOT0 یا نویز است</td></tr>
+      <tr><td><span class="en">کد غلتان (Rolling Code)</span></td><td class="jt">داده شش‌بایتی خودافزا که با هر بار نوشتن افزایش می‌یابد و همراه فایل داده در dataflash نوشته می‌شود</td></tr>
+      <tr><td><span class="en">dataflash</span></td><td class="jt">ناحیۀ داده برخی تراشه‌های WCH برای نگهداری اطلاعات کاربر؛ سری CH32 فاقد آن است و داده‌های سفارشی در فلش مشخص نوشته می‌شود</td></tr>
+      <tr><td><span class="en">SWD</span></td><td class="jt">شیوۀ دانلود با اشکال‌زدایی دوخطی؛ فقط برای سری CH32F/V applicable است و سرعت آن برای پایداری بیشتر قابل کاهش است</td></tr>
+      <tr><td><span class="en">ISP / BOOT0</span></td><td class="jt">شیوۀ دانلود از طریق سریال داخلی که ورود به آن با سطح پایۀ BOOT0 تعیین می‌شود</td></tr>
+      <tr><td><span class="en">P_USB1</span></td><td class="jt">تنها منبع تغذیۀ مجاز تراشۀ هدف هنگام دانلود از طریق USB</td></tr>
+      <tr><td><span class="en">S1 / S3</span></td><td class="jt">کلیدهای برنامه‌نویس آفلاین: S3 آغاز دانلود برنامه؛ S1 تأیید انتخاب و نگه‌داشتن آن رابط تغییر زبان را باز می‌کند</td></tr>
+      <tr><td><span class="en">زمان پایداری تغذیه</span></td><td class="jt">فاصلۀ زمانی که برنامه‌نویس پس از تغذیۀ تراشۀ هدف، پیش از آغاز ارتباط صبر می‌کند؛ برای بردهای با افزایش ولتاژ آهسته باید بیشتر شود</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN91001 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۲۵</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN91001</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
