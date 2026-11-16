@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>اشکال‌زدایی آنلاین با OpenOCD و GDB — ترجمۀ فارسی AN91005</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* toc page: always start at a fresh page; keep the toc-note below the header band (block y>=33.5pt) */
+.toc-page{ break-before:page; padding-top:48px; }
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">اشکال‌زدایی آنلاین با <span class="en">OpenOCD</span> و <span class="en">GDB</span></div>
+    <div class="t2">سرور اشکال‌زدایی و کلاینت <span class="en">GDB</span> برای تراشه‌های <span class="en">WCH RISC-V</span></div>
+    <div class="t3">پورت‌ها، شرح پارامترها، دستورهای پرکاربرد و بارگذاری دوبارۀ برنامه</div>
+  </div>
+  <div class="c-sub">آمادگی سخت‌افزاری با WCH-Link، جدول ابزارهای نرم‌افزاری، راه‌اندازی openocd با شرح تک‌به‌تک پارامترها (gdb_port/tcl_port/telnet_port و wch-riscv.cfg)، اتصال GDB و جدول دستورهای پرکاربرد، بارگذاری دوبارۀ نمادها و دانلود برنامه در حین اشکال‌زدایی</div>
+  <div class="c-desc">ترجمۀ فارسی سند رسمی <span class="en">AN91005</span> (نسخۀ ۱٫۰، منتشرۀ <span class="en">WCH</span>): این سند کاربردی چگونگی اشکال‌زدایی آنلاین MCUهای سری RISC-V شرکت WCH با استفاده از OpenOCD و GDB را معرفی می‌کند. OpenOCD در معماری اشکال‌زدایی نقش سرور اشکال‌زدایی را بر عهده دارد و مسئول ارتباط با اشکال‌زاد سخت‌افزاری و مدیریت تراشۀ هدف است؛ GDB به‌عنوان کلاینت اشکال‌زدایی از طریق پورت TCP با OpenOCD اتصال برقرار می‌کند، دستورهای اشکال‌زدایی را ارسال و اطلاعات وضعیت هدف را دریافت می‌کند.</div>
+  <div class="c-tags">
+    <span class="c-tag"><span class="en">OpenOCD · GDB</span></span>
+    <span class="c-tag"><span class="en">WCH-Link</span></span>
+    <span class="c-tag"><span class="en">CH32L103</span></span>
+    <span class="c-tag">پورت TCP 3333</span>
+    <span class="c-tag"><span class="en">wch-riscv.cfg</span></span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN91005 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">مقدمه | توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | آماده‌سازی محیط اشکال‌زدایی</span><span class="t-dots"></span><span class="t-page">۴</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-11"><span class="s-id">1.1</span><span>آمادگی سخت‌افزاری</span><span class="s-dots"></span><span class="s-page">۴</span></a>
+    <a class="toc-sub" href="#sec-111"><span class="s-id">1.1.1</span><span>زنجیره ابزار نرم‌افزاری</span><span class="s-dots"></span><span class="s-page">۴</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | روند اشکال‌زدایی</span><span class="t-dots"></span><span class="t-page">۴</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-21"><span class="s-id">2.1</span><span>راه‌اندازی openocd</span><span class="s-dots"></span><span class="s-page">۴</span></a>
+    <a class="toc-sub" href="#sec-211"><span class="s-id">2.1.1</span><span>شرح تک‌به‌تک پارامترها</span><span class="s-dots"></span><span class="s-page">۵</span></a>
+    <a class="toc-sub" href="#sec-212"><span class="s-id">2.1.2</span><span>نمونۀ اجرا</span><span class="s-dots"></span><span class="s-page">۶</span></a>
+    <a class="toc-sub" href="#sec-22"><span class="s-id">2.2</span><span>راه‌اندازی GDB</span><span class="s-dots"></span><span class="s-page">۶</span></a>
+    <a class="toc-sub" href="#sec-23"><span class="s-id">2.3</span><span>بارگذاری دوبارۀ نمادها و برنامه در حین اشکال‌زدایی</span><span class="s-dots"></span><span class="s-page">۷</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۴</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۸</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۵</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۸</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">جدول ۱</span><span>دامنۀ کاربرد سند</span><span class="f-dots"></span><span class="f-page">۳</span></div>
+        <div class="frow"><span class="f-id">جدول ۲</span><span>فهرست نرم‌افزارهای اشکال‌زدایی</span><span class="f-dots"></span><span class="f-page">۴</span></div>
+      </div>
+      <div>
+        <div class="frow"><span class="f-id">جدول ۳</span><span>دستورهای پرکاربرد GDB</span><span class="f-dots"></span><span class="f-page">۷</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> معماری اشکال‌زدایی دومرحله‌ای است: <span class="en">OpenOCD</span> به‌عنوان سرور با اشکال‌زاد <span class="en">WCH-Link</span> حرف می‌زند و تراشۀ هدف را مدیریت می‌کند و <span class="en">GDB</span> به‌عنوان کلاینت از طریق پورت <span class="en">TCP 3333</span> متصل می‌شود. دستور راه‌اندازی openocd از شش بخش تشکیل شده است: پورت‌های gdb/tcl/telnet (3333/6666/4444)، مسیر اسکریپت‌ها، فایل پیکربندی wch-riscv.cfg و شناسۀ مدل تراشه (chip_id CH32L10x). سپس riscv32-wch-elf-gdb با target remote وصل می‌شود؛ جدول ده دستور پرکاربرد (break، continue، step، next، stepi، info، backtrace، x، print) و بارگذاری نمادها با file و دانلود هم‌زمان برنامه با load شرح داده شده است.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>این سند کاربردی چگونگی اشکال‌زدایی آنلاین MCUهای سری <span class="en">RISC-V</span> شرکت WCH با استفاده از <span class="en">OpenOCD</span> و <span class="en">GDB</span> را معرفی می‌کند. <span class="en">OpenOCD</span> در معماری اشکال‌زدایی نقش سرور اشکال‌زدایی را بر عهده دارد و مسئول ارتباط با اشکال‌زاد سخت‌افزاری و مدیریت تراشۀ هدف است؛ <span class="en">GDB</span> به‌عنوان کلاینت اشکال‌زدایی از طریق پورت <span class="en">TCP</span> با <span class="en">OpenOCD</span> اتصال برقرار می‌کند، دستورهای اشکال‌زدایی را ارسال و اطلاعات وضعیت هدف را دریافت می‌کند.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>MCU عمومی</td><td><span class="en">CH32L103</span> و …</td></tr>
+  </table>
+</div>
+
+<h3 class="h2x" id="sec-intro-tech"><span class="dm">◆</span>توضیح مختصر فنی</h3>
+<p style="color:#9a8f83;font-size:11.6px;margin-top:-4px;">این بخش افزودۀ مترجم برای درک بهتر مفاهیم سند است و در متن اصلی وجود ندارد.</p>
+<p><b style="color:#8a4a12;">۱. معماری دومرحله‌ای اشکال‌زدایی</b></p>
+<p>در این روش دو برنامه جدا از هم کار می‌کنند: <span class="en">OpenOCD</span> سرور است و با سخت‌افزار <span class="en">WCH-Link</span> گفت‌وگو می‌کند؛ <span class="en">GDB</span> کلاینت است و دستورهای شما را اجرا می‌کند. میان این دو، اتصال <span class="en">TCP</span> روی پورت 3333 برقرار می‌شود؛ یعنی می‌توان GDB را حتی روی رایانۀ دیگری اجرا کرد.</p>
+<p><b style="color:#8a4a12;">۲. نقش فایل پیکربندی</b></p>
+<p>فایل <span class="en">wch-riscv.cfg</span> مشخص می‌کند اشکال‌زاد چه چیزی است و هدف چگونه شناخته شود؛ پارامتر <span class="en">chip_id</span> مدل دقیق تراشه را تعیین می‌کند تا الگوریتم فلش و نگاشت حافظۀ درست انتخاب شود. اگر مدل اشتباه باشد، دانلود یا اشکال‌زدایی به خطا می‌خورد.</p>
+<p><b style="color:#8a4a12;">۳. سه پورت جدا از هم</b></p>
+<p>OpenOCD هم‌زمان سه پورت گوش می‌دهد: 3333 برای GDB، 6666 برای اسکریپت TCL (که فرانت‌اند MRS نیز از آن استفاده می‌کند) و 4444 برای دستورهای بومی از طریق telnet؛ همین ساختار، خودکارسازی با اسکریپت را ممکن می‌کند.</p>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">آماده‌سازی محیط اشکال‌زدایی</div>
+  <div class="sec-divider"></div>
+</div>
+<h3 class="h2x" id="sec-11"><span class="dm">◆</span>۱.۱ آمادگی سخت‌افزاری</h3>
+<p>برای اشکال‌زدایی با <span class="en">OpenOCD + GDB</span> سخت‌افزار زیر لازم است:</p>
+<p style="margin:4px 0;">MCU هدف: برد توسعه یا برد هدف MCUهای سری <span class="en">RISC-V</span> شرکت WCH</p>
+<p style="margin:4px 0;">اشکال‌زاد: <span class="en">WCH-Link</span></p>
+<p style="margin:4px 0;">سیم اتصال: مطابق رابط اشکال‌زدایی تراشۀ هدف</p>
+<p><span class="en">WCH-Link</span> ماژول چندکارۀ اشکال‌زدایی و دانلود آنلاین است و اشکال‌زدایی و دانلود آنلاین MCUهای با معماری <span class="en">RISC-V</span> و همچنین MCUهای با هستۀ <span class="en">ARM</span> را پشتیبانی می‌کند و هم‌زمان یک کانال خروجی سریال نیز دارد.</p>
+<h3 class="h2x" id="sec-111"><span class="dm">◆</span>۱.۱.۱ زنجیره ابزار نرم‌افزاری</h3>
+<p>ابزارهای نرم‌افزاری مورد نیاز در جدول زیر آمده است:</p>
+<div class="tblwrap" id="tab-02">
+  <div class="tblcap"><span class="cap-pill">جدول ۲</span><span class="cap-text">فهرست نرم‌افزارهای اشکال‌زدایی</span></div>
+  <table class="tbl">
+    <tr><th style="width:30%;">ابزار</th><th style="width:38%;">شرح</th><th>شیوۀ دریافت</th></tr>
+    <tr><td><span class="en">OpenOCD</span> (نسخۀ WCH)</td><td>سرور اشکال‌زدایی؛ از اشکال‌زادهای سری <span class="en">WCH-Link</span> پشتیبانی می‌کند</td><td>در پوشۀ نصب <span class="en">MounRiver Studio / MounRiver Studio II</span></td></tr>
+    <tr><td><span class="en">RISC-V GDB</span></td><td>کلاینت اشکال‌زدایی؛ پشتیبان معماری <span class="en">RISC-V</span></td><td>همان‌جا</td></tr>
+    <tr><td><span class="en">wch-riscv.cfg</span></td><td>فایل پیکربندی هدف <span class="en">WCH RISC-V</span></td><td>همان‌جا</td></tr>
+    <tr><td>ابزار ترمینال</td><td>برای اجرای دستورهای <span class="en">OpenOCD</span> و <span class="en">GDB</span></td><td>همان‌جا</td></tr>
+  </table>
+</div>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">روند اشکال‌زدایی</div>
+  <div class="sec-divider"></div>
+</div>
+<h3 class="h2x" id="sec-21"><span class="dm">◆</span>۲.۱ راه‌اندازی openocd</h3>
+<p>شیوۀ راه‌اندازی نمونه به شکل زیر است:</p>
+<div class="codeblk">openocd.exe ^
+  -c "gdb_port 3333" ^
+  -c "tcl_port 6666" ^
+  -c "telnet_port 4444" ^
+  -s "&lt;OPENOCD_SCRIPTS_PATH&gt;" ^
+  -f "&lt;OPENOCD_SCRIPTS_PATH&gt;/wch-riscv.cfg" ^
+  -c "chip_id CH32L10x"</div>
+<p>دستور از شش بخش تشکیل شده و به‌ترتیب چهار مرحله را انجام می‌دهد: پیکربندی پورت‌ها ← تنظیم مسیر جست‌وجوی اسکریپت ← بارگذاری فایل پیکربندی هدف ← تعیین مدل تراشه.</p>
+<h3 class="h2x" id="sec-211"><span class="dm">◆</span>۲.۱.۱ شرح تک‌به‌تک پارامترها</h3>
+<p><b style="color:#8a4a12;">-c "gdb_port 3333"</b></p>
+<p>پورت گوش‌دادن <span class="en">GDB Server</span> در OpenOCD را روی 3333 تعیین می‌کند. GDB از طریق <span class="en">target extended-remote :3333</span> به این پورت وصل می‌شود و نشست اشکال‌زدایی از راه دور برقرار می‌شود.</p>
+<p><b style="color:#8a4a12;">-c "tcl_port 6666"</b></p>
+<p>پورت رابط اسکریپت <span class="en">TCL</span> را روی 6666 تعیین می‌کند. این پورت برای کنترل OpenOCD توسط ابزارهای خارجی از طریق اسکریپت TCL است؛ فرانت‌اند اشکال‌زدایی <span class="en">MounRiver Studio</span> نیز از همین پورت با OpenOCD تعامل می‌کند.</p>
+<p><b style="color:#8a4a12;">-c "telnet_port 4444"</b></p>
+<p>پورت رابط دستور <span class="en">Telnet</span> را روی 4444 تعیین می‌کند. توسعه‌دهنده می‌تواند با <span class="en">telnet localhost 4444</span> وصل شود و مستقیماً دستورهای بومی OpenOCD را بفرستد (مانند <span class="en">reset halt</span>، <span class="en">flash erase_sector</span>، <span class="en">mdw</span> و غیره)؛ برای اشکال‌زدایی سطح پایین و تأیید دستی مناسب است.</p>
+<p><b style="color:#8a4a12;">-s "&lt;OPENOCD_SCRIPTS_PATH&gt;"</b></p>
+<p>مسیر جست‌وجوی اسکریپت‌های OpenOCD را تنظیم می‌کند. <span class="en">MounRiver Studio</span> این را به پوشۀ bin در دایرکتوری نصب OpenOCD اشاره می‌دهد تا OpenOCD بتواند فایل‌های پیکربندی موجود در زیرپوشه‌های <span class="en">target/</span>، <span class="en">interface/</span> و غیره را پیدا کند.</p>
+<p><b style="color:#8a4a12;">-f "&lt;OPENOCD_SCRIPTS_PATH&gt;/wch-riscv.cfg"</b></p>
+<p>فایل پیکربندی رسمی هدف WCH یعنی <span class="en">wch-riscv.cfg</span> را بارگذاری می‌کند. این فایل پارامترهای هدف سری <span class="en">CH32 RISC-V</span> را تعریف می‌کند.</p>
+<p><b style="color:#8a4a12;">-c "chip_id CH32L10x"</b></p>
+<p>پس از بارگذاری فایل پیکربندی، شناسۀ مدل تراشه از طریق <span class="en">-c</span> پاس داده می‌شود. این پارامتر به OpenOCD اعلام می‌کند که مدل دقیق تراشۀ هدف <span class="en">CH32L10x</span> (سری CH32L103) است تا OpenOCD الگوریتم فلش و نگاشت حافظۀ درست را انتخاب کند. این پارامتر با پارامتر مدل تراشه در رابط پیکربندی دانلود داخل MRS یکسان است.</p>
+<h3 class="h2x" id="sec-212"><span class="dm">◆</span>۲.۱.۲ نمونۀ اجرا</h3>
+<p>پس از اجرای راه‌اندازی openocd خروجی زیر تولید می‌شود که یعنی فرایند سرویس openocd راه‌اندازی شده و به پورت‌ها گوش می‌دهد:</p>
+<div class="codeblk">Info : only one transport option; autoselect 'sdi'
+Warn : Transport "sdi" was already selected
+Ready for Remote Connections
+Info : Listening on port 6666 for tcl connections
+Info : Listening on port 4444 for telnet connections
+Info : WCH-LinkE  mode:RV version 2.22
+Info : wlink_init ok
+Info : clock speed 6000 kHz
+Info : [wch_riscv.cpu.0] datacount=2 progbufsize=8
+Info : [wch_riscv.cpu.0] Examined RISC-V core; found 1 harts
+Info : [wch_riscv.cpu.0]  XLEN=32, misa=0x40901105
+[wch_riscv.cpu.0] Target successfully examined.
+Info : starting gdb server for wch_riscv.cpu.0 on 3333
+Info : Listening on port 3333 for gdb connections</div>
+<h3 class="h2x" id="sec-22"><span class="dm">◆</span>۲.۲ راه‌اندازی GDB</h3>
+<p>ترمینال دیگری باز کنید و <span class="en">RISC-V GDB</span> را راه‌اندازی کنید، مثلاً:</p>
+<div class="codeblk">riscv32-wch-elf-gdb.exe &lt;FIRMWARE.ELF&gt;</div>
+<p>هنگام راه‌اندازی، <span class="en">&lt;FIRMWARE.ELF&gt;</span> اختیاری است؛ اگر elf مشخص نشود و بعداً به حل نماد نیاز باشد، می‌توان در GDB دستور <span class="en">file &lt;FIRMWARE.ELF&gt;</span> را برای بارگذاری نمادها اجرا کرد.</p>
+<p>سپس برای اتصال به openocd دستور زیر اجرا شود:</p>
+<div class="codeblk">target remote localhost:3333</div>
+<p><span class="en">localhost:3333</span> همان پورت گوش‌دادنِ مشخص‌شدۀ هنگام راه‌اندازی openocd است.</p>
+<p>پس از اتصال، برنامه متوقف می‌شود؛ در این حالت می‌توان برای ریست برنامه دستور زیر را اجرا کرد:</p>
+<div class="codeblk">monitor reset halt</div>
+<p>از این پس می‌توان رفتار تراشه را با دستورهای GDB کنترل کرد؛ خلاصۀ دستورهای پرکاربرد GDB در جدول زیر آمده است:</p>
+<div class="tblwrap" id="tab-03">
+  <div class="tblcap"><span class="cap-pill">جدول ۳</span><span class="cap-text">دستورهای پرکاربرد GDB</span></div>
+  <table class="tbl">
+    <tr><th style="width:30%;">دستور</th><th style="width:14%;">مخفف</th><th>کارکرد</th></tr>
+    <tr><td><span class="en">break &lt;location&gt;</span></td><td><span class="en">b</span></td><td>در مکان مشخص نقطۀ شکست می‌گذارد؛ برای شکست در نشانی مطلق باید <span class="en">*</span> پیش از نشانی بیاید</td></tr>
+    <tr><td><span class="en">continue</span></td><td><span class="en">c</span></td><td>ادامۀ اجرا تا نقطۀ شکست یا وقفه</td></tr>
+    <tr><td><span class="en">step</span></td><td><span class="en">s</span></td><td>اجرای پله‌ای؛ وارد تابع می‌شود</td></tr>
+    <tr><td><span class="en">next</span></td><td><span class="en">n</span></td><td>اجرای پله‌ای؛ از تابع عبور می‌کند</td></tr>
+    <tr><td><span class="en">stepi</span></td><td><span class="en">si</span></td><td>اجرای پله‌ایِ یک دستور اسمبلی</td></tr>
+    <tr><td><span class="en">info registers</span></td><td><span class="en">i r</span></td><td>نمایش همه ثبات‌ها</td></tr>
+    <tr><td><span class="en">backtrace</span></td><td><span class="en">bt</span></td><td>نمایش پیمانۀ فراخوانی</td></tr>
+    <tr><td><span class="en">info locals</span></td><td>—</td><td>نمایش متغیرهای محلی جاری</td></tr>
+    <tr><td><span class="en">x/&lt;n&gt;&lt;fmt&gt; &lt;addr&gt;</span></td><td>—</td><td>بررسی محتوای حافظه</td></tr>
+    <tr><td><span class="en">print &lt;expr&gt;</span></td><td><span class="en">p</span></td><td>چاپ مقدار عبارت</td></tr>
+  </table>
+</div>
+<h3 class="h2x" id="sec-23"><span class="dm">◆</span>۲.۳ بارگذاری دوبارۀ نمادها و برنامه در حین اشکال‌زدایی</h3>
+<p>همان‌طور که پیش‌تر گفته شد می‌توان با فراخوانی <span class="en">file &lt;FIRMWARE.ELF&gt;</span> در GDB نمادها را دوباره بارگذاری کرد؛ اما برنامه واقعاً با تراشه همگام نمی‌شود. اگر بخواهید هم‌زمان با بارگذاری نمادها، برنامه نیز دانلود شود، در GDB اجرا کنید:</p>
+<div class="codeblk">load &lt;FIRMWARE.ELF&gt;</div>
+<p>در این حالت GDB خروجی زیر را می‌دهد:</p>
+<div class="codeblk">Loading section .startup, size 0xf6 lma 0x0
+Loading section .vectors, size 0x114 lma 0xf8
+Loading section .text, size 0xda3a lma 0x20c
+Loading section .rodata, size 0xd84 lma 0xdc48
+Loading section .data, size 0xd0 lma 0xe9cc
+Loading section .noncacheable, size 0x1500 lma 0xea9c
+Start address 0x00000000, load size 65432
+Transfer rate: 12 KB/sec, 7270 bytes/write.</div>
+<p>می‌توان دید که هم‌زمان با بارگذاری نمادها، برنامه نیز دانلود شده است.</p>
+<div class="scen"><span class="lbl">نکتۀ تکمیلی: </span>علاوه بر اشکال‌زدایی با GDB، می‌توان از طریق پورت‌های tcl یا telnet با زبان‌های اسکریپت دیگر نیز اشکال‌زدایی کرد و بدین‌وسیله اشکال‌زدایی خودکار یا تأیید گروهی را پیاده‌سازی نمود.</div>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN91005</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/07/08</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">OpenOCD</span></td><td class="jt">سرور اشکال‌زدایی متن‌باز؛ واسط میان GDB و اشکال‌زاد سخت‌افزاری است و تراشۀ هدف را مدیریت می‌کند (نسخۀ WCH از اشکال‌زادهای WCH-Link پشتیبانی می‌کند)</td></tr>
+      <tr><td><span class="en">GDB</span></td><td class="jt">اشکال‌زاد GNU؛ کلاینت اشکال‌زدایی که دستورهای کاربر را اجرا و وضعیت هدف را نمایش می‌دهد؛ نسخۀ RISC-V آن riscv32-wch-elf-gdb.exe است</td></tr>
+      <tr><td><span class="en">WCH-Link / WCH-LinkE</span></td><td class="jt">ماژول چندکارۀ اشکال‌زدایی و دانلود آنلاین WCH؛ از MCUهای RISC-V و ARM پشتیبانی می‌کند و یک کانال UART هم دارد؛ در خروجی نمونه با mode:RV version 2.22 دیده می‌شود</td></tr>
+      <tr><td><span class="en">wch-riscv.cfg</span></td><td class="jt">فایل پیکربندی رسمی هدف WCH RISC-V که پارامترهای هدف سری CH32 را تعریف می‌کند؛ با گزینۀ -f بارگذاری می‌شود</td></tr>
+      <tr><td><span class="en">chip_id</span></td><td class="jt">پارامتر تعیین مدل دقیق تراشه (مانند CH32L10x) برای انتخاب الگوریتم فلش و نگاشت حافظۀ درست؛ با پارامتر مدل در رابط دانلود MRS یکسان است</td></tr>
+      <tr><td><span class="en">gdb_port / tcl_port / telnet_port</span></td><td class="jt">سه پورت OpenOCD: 3333 برای اتصال GDB، 6666 برای کنترل TCL (شامل فرانت‌اند MRS) و 4444 برای دستورهای بومی از طریق telnet</td></tr>
+      <tr><td><span class="en">رابط انتقال sdi</span></td><td class="jt">تنها گزینۀ انتقال در نسخۀ WCH که به‌طور خودکار انتخاب می‌شود (autoselect sdi)؛ رابط اشکال‌زدایی دوخط WCH</td></tr>
+      <tr><td><span class="en">target extended-remote</span></td><td class="jt">دستور اتصال GDB به سرور اشکال‌زدایی از راه دور؛ مثلاً target remote localhost:3333</td></tr>
+      <tr><td><span class="en">monitor reset halt</span></td><td class="jt">ارسال دستور بومی reset halt به OpenOCD از طریق GDB؛ هدف را ریست و بلافاصله متوقف می‌کند</td></tr>
+      <tr><td><span class="en">file / load</span></td><td class="jt">دستور file نمادها را از فایل ELF بارگذاری می‌کند و دستور load علاوه بر نمادها، برنامه را نیز به فلش هدف منتقل می‌کند</td></tr>
+      <tr><td><span class="en">FIRMWARE.ELF</span></td><td class="jt">فایل اجرایی ELF خروجی کامپایل که حاوی کد و جدول نمادهاست؛ مبنای حل نام توابع و متغیرها در GDB</td></tr>
+      <tr><td><span class="en">break / continue / step / next / stepi</span></td><td class="jt">دستورهای اجرا: نقطۀ شکست، ادامه تا شکست بعدی، پله با ورود به تابع، پله با عبور از تابع و پله در سطح دستور اسمبلی</td></tr>
+      <tr><td><span class="en">x/&lt;n&gt;&lt;fmt&gt;</span></td><td class="jt">دستور بررسی حافظه؛ مانند x/16xw 0x20000000 برای خواندن 16 کلمه به قالب هگز</td></tr>
+      <tr><td><span class="en">hart / XLEN</span></td><td class="jt">در خروجی شروع OpenOCD: hart هستۀ سخت‌افزاری RISC-V است و XLEN=32 عرض ثبات (معماری RV32)</td></tr>
+      <tr><td><span class="en">MounRiver Studio</span></td><td class="jt">محیط توسعه WCH؛ نصب آن OpenOCD نسخۀ WCH، GDB و فایل‌های پیکربندی را در پوشۀ نصب خود نگه می‌دارد و فرانت‌اند اشکال‌زدایی آن از پورت TCL استفاده می‌کند</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN91005 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۲۵</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN91005</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
