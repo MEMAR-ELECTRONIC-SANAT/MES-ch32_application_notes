@@ -18,6 +18,10 @@ Each application note is stored in a subfolder named after its AN identifier. Or
 - برای مقادیر الکتریکی و رجیسترها به Datasheet و Reference Manual مراجعه کنید. / Refer to the datasheet and reference manual for electrical limits and register details.
 - مثال‌ها را پیش از استفاده در محصول روی سخت‌افزار هدف آزمایش کنید. / Test examples on target hardware before production use.
 
+## تصاویر و دیاگرام‌های راهنما / Images and Diagrams
+
+[دارایی‌های MES / MES assets](../Images/GitHub-Assets/)
+
 ## تهیه و تدوین / Credits
 
 **معمار الکترونیک صنعت**  
@@ -30,8 +34,5 @@ Each application note is stored in a subfolder named after its AN identifier. Or
 - Instagram: https://www.instagram.com/Memar.Electronic
 - GitHub: https://github.com/MEMAR-ELECTRONIC-SANAT
 
-## تصاویر و دیاگرام‌های راهنما / Images and Diagrams
-
-[دارایی‌های MES / MES assets](../Images/GitHub-Assets/)
 
 <p align="center"><img src="../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo"></p>
