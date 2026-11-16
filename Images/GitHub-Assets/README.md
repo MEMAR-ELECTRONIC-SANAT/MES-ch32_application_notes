@@ -20,6 +20,10 @@ This directory stores images, SVGs, and visual elements used in **MEMAR ELECTRON
 
 Use relative paths in Markdown and account for the README's directory depth when constructing the image path.
 
+## تصاویر و دیاگرام‌های راهنما / Images and Diagrams
+
+فهرست کامل در همین پوشه قرار دارد. / Browse this directory for the complete asset collection.
+
 ## تهیه و تدوین / Credits
 
 **معمار الکترونیک صنعت**  
@@ -32,8 +36,5 @@ Use relative paths in Markdown and account for the README's directory depth when
 - Instagram: https://www.instagram.com/Memar.Electronic
 - GitHub: https://github.com/MEMAR-ELECTRONIC-SANAT
 
-## تصاویر و دیاگرام‌های راهنما / Images and Diagrams
-
-فهرست کامل در همین پوشه قرار دارد. / Browse this directory for the complete asset collection.
 
 <p align="center"><img src="MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo"></p>
