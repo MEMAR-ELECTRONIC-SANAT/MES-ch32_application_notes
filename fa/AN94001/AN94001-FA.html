@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>آزمون و حفاظت EMI در CH32 — ترجمۀ فارسی AN94001</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* toc page: always start at a fresh page; keep the toc-note below the header band (block y>=33.5pt) */
+.toc-page{ break-before:page; padding-top:48px; }
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">آزمون و حفاظت <span class="en">EMI</span> در <span class="en">CH32</span></div>
+    <div class="t2">از تشخیص منابع تداخل تا بهبود چیدمان <span class="en">PCB</span></div>
+    <div class="t3">۲۴ تصویر آزمون، فریت‌بید، خازن کنارگذر و تکنیک گسترش طیف</div>
+  </div>
+  <div class="c-sub">چهار منبع رایج تداخل (سیم‌کشی، فرکانس خروجی، پایۀ خروجی و حلقه) با تصاویر مقایسۀ واقعی آزمون؛ حفاظت سخت‌افزاری تغذیه و پایه‌ها با جدول فرکانس رزونانس خازن‌ها و مدار فریت‌بید؛ بهبود PCB با پردازش خطوط سیگنال، چیدمان خازن کنارگذر و کابل تلفیقی؛ و پردازش نرم‌افزاری با تکنیک گسترش طیف</div>
+  <div class="c-desc">ترجمۀ فارسی سند رسمی <span class="en">AN94001</span> (نسخۀ ۱٫۰، منتشرۀ <span class="en">WCH</span>): معمولاً EMI از منابع داخلی یا خارجی تولید می‌شود و از طریق القای الکترومغناطیسی، جفت‌شدگی الکترواستاتیک یا رسانایی بر مدار اثر می‌گذارد و آن را مختل می‌کند. این سند بر آزمون EMI و شیوه‌های بهبود آن از طریق برد PCB برای ارتقای ویژگی‌های EMI محصول تمرکز دارد.</div>
+  <div class="c-tags">
+    <span class="c-tag"><span class="en">EMI · EMC</span></span>
+    <span class="c-tag">آزمون تشعشعی</span>
+    <span class="c-tag"><span class="en">PCB</span></span>
+    <span class="c-tag">فریت‌بید و <span class="en">TVS</span></span>
+    <span class="c-tag">گسترش طیف</span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN94001 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">مقدمه | توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۴</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | آزمون EMI</span><span class="t-dots"></span><span class="t-page">۴</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-11"><span class="s-id">1.1</span><span>آزمون EMI</span><span class="s-dots"></span><span class="s-page">۵</span></a>
+    <a class="toc-sub" href="#sec-111"><span class="s-id">1.1.1</span><span>مزاحمت سیم‌کشی</span><span class="s-dots"></span><span class="s-page">۵</span></a>
+    <a class="toc-sub" href="#sec-112"><span class="s-id">1.1.2</span><span>فرکانس خروجی</span><span class="s-dots"></span><span class="s-page">۶</span></a>
+    <a class="toc-sub" href="#sec-113"><span class="s-id">1.1.3</span><span>مزاحمت پایۀ خروجی</span><span class="s-dots"></span><span class="s-page">۷</span></a>
+    <a class="toc-sub" href="#sec-114"><span class="s-id">1.1.4</span><span>مزاحمت حلقه</span><span class="s-dots"></span><span class="s-page">۸</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | حفاظت در برابر EMI</span><span class="t-dots"></span><span class="t-page">۹</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-21"><span class="s-id">2.1</span><span>حفاظت سخت‌افزاری</span><span class="s-dots"></span><span class="s-page">۱</span></a>
+    <a class="toc-sub" href="#sec-211"><span class="s-id">2.1.1</span><span>حفاظت تغذیه</span><span class="s-dots"></span><span class="s-page">۱</span></a>
+    <a class="toc-sub" href="#sec-212"><span class="s-id">2.1.2</span><span>حفاظت پایه‌ها</span><span class="s-dots"></span><span class="s-page">۱</span></a>
+    <a class="toc-sub" href="#sec-22"><span class="s-id">2.2</span><span>بهبود PCB</span><span class="s-dots"></span><span class="s-page">۱</span></a>
+    <a class="toc-sub" href="#sec-221"><span class="s-id">2.2.1</span><span>پردازش خطوط سیگنال</span><span class="s-dots"></span><span class="s-page">۱</span></a>
+    <a class="toc-sub" href="#sec-222"><span class="s-id">2.2.2</span><span>چیدمان PCB</span><span class="s-dots"></span><span class="s-page">۱</span></a>
+    <a class="toc-sub" href="#sec-23"><span class="s-id">2.3</span><span>پردازش نرم‌افزاری</span><span class="s-dots"></span><span class="s-page">۱۷</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۴</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۱۸</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۵</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۱۸</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">شکل ۱</span><span>نمودار آزمون EMI</span><span class="f-dots"></span><span class="f-page">۵</span></div>
+        <div class="frow"><span class="f-id">شکل ۲</span><span>مقایسۀ آزمون EMI سیم‌کشی</span><span class="f-dots"></span><span class="f-page">۶</span></div>
+        <div class="frow"><span class="f-id">شکل ۳</span><span>مقایسۀ آزمون EMI فرکانس اصلی سیستم</span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">شکل ۴</span><span>مقایسۀ آزمون EMI پایۀ خروجی</span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">شکل ۵</span><span>مقایسۀ آزمون EMI مسیر حلقه</span><span class="f-dots"></span><span class="f-page">۹</span></div>
+        <div class="frow"><span class="f-id">شکل ۶</span><span>پارامترهای نرخ مختلف</span><span class="f-dots"></span><span class="f-page">۱۱</span></div>
+        <div class="frow"><span class="f-id">شکل ۷</span><span>نمودار حفاظت GPIO</span><span class="f-dots"></span><span class="f-page">۱۱</span></div>
+        <div class="frow"><span class="f-id">شکل ۸</span><span>مقایسۀ حفاظت GPIO</span><span class="f-dots"></span><span class="f-page">۱۲</span></div>
+      </div>
+      <div>
+        <div class="frow"><span class="f-id">شکل ۹</span><span>مقایسۀ پردازش سیگنال</span><span class="f-dots"></span><span class="f-page">۱۳</span></div>
+        <div class="frow"><span class="f-id">شکل ۱۰</span><span>مقایسۀ نتیجۀ پردازش GPIO</span><span class="f-dots"></span><span class="f-page">۱۴</span></div>
+        <div class="frow"><span class="f-id">شکل ۱۱</span><span>نمودار کابل تلفیقی</span><span class="f-dots"></span><span class="f-page">۱۵</span></div>
+        <div class="frow"><span class="f-id">شکل ۱۲</span><span>مقایسۀ چیدمان خازن کنارگذر</span><span class="f-dots"></span><span class="f-page">۱۶</span></div>
+        <div class="frow"><span class="f-id">شکل ۱۳</span><span>پردازش سمت سیگنال</span><span class="f-dots"></span><span class="f-page">۱۶</span></div>
+        <div class="frow"><span class="f-id">شکل ۱۴</span><span>پردازش سیگنال رابط</span><span class="f-dots"></span><span class="f-page">۱۷</span></div>
+        <div class="frow"><span class="f-id">جدول ۱</span><span>دامنۀ کاربرد سند</span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">جدول ۲</span><span>فرکانس رزونانس نمونه برای ظرفیت‌های مختلف</span><span class="f-dots"></span><span class="f-page">۱۰</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> هر مدارِ در حال کار عادی، EMI تشعشع می‌کند؛ مقدار آن به فرکانس، جریان، سطح حلقۀ سیگنال و القاگری وابسته است. چهار مسیر رایج تداخل با تصاویر واقعی آزمون شناسایی می‌شوند: سیم‌کشی خارجی (حلت مشترک/تفاضلی)، هارمونیک‌های فرکانس ثابت، آنتن ناخواستۀ پایۀ خروجی و مسیر نامتقارن حلقه. حفاظت به ترتیب لایه‌ای انجام می‌شود: تضعیف منبع (انتخاب خازن با فرکانس رزونانس مناسب و موازی‌کردن ظرفیت‌ها با فاصلۀ ده‌برابر، کاهش ولتاژ تغذیه، LC فریت‌بید و TVS)، حفاظت پایه‌ها (کاهش نرخ خروجی، فریت‌بید سری با RC میراگر)، بهبود PCB (پوشش زمین خطوط، ویاهای زمین، چیدمان نزدیک خازن کنارگذر، کابل تلفیقی، اجتناب از دوقطبی متحول) و پردازش نرم‌افزاری با مدولاسیون پیوستۀ HSI برای پراکنده‌کردن انرژی طیفی.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>معمولاً <span class="en">EMI</span> از منابع داخلی یا خارجی تولید می‌شود و از طریق القای الکترومغناطیسی، جفت‌شدگی الکترواستاتیک یا رسانایی بر مدار اثر می‌گذارد و آن را مختل می‌کند؛ این سند بر آزمون <span class="en">EMI</span> و شیوه‌های بهبود آن از طریق برد <span class="en">PCB</span> برای ارتقای ویژگی‌های EMI محصول تمرکز دارد.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>MCU عمومی</td><td>سری عمومی <span class="en">CH32</span></td></tr>
+  </table>
+</div>
+
+<h3 class="h2x" id="sec-intro-tech"><span class="dm">◆</span>توضیح مختصر فنی</h3>
+<p style="color:#9a8f83;font-size:11.6px;margin-top:-4px;">این بخش افزودۀ مترجم برای درک بهتر مفاهیم سند است و در متن اصلی وجود ندارد.</p>
+<p><b style="color:#8a4a12;">۱. چرا هر مداری آنتن است؟</b></p>
+<p>هر حلقۀ جریانی که کلیدزنی می‌کند، مثل یک آنتن حلقوی رفتار می‌کند و انرژی فرکانس رادیویی (EMI) تشعشع می‌کند. اندازۀ تشعشع به فرکانس، جریان، سطح حلقۀ سیگنال و القاگری وابسته است؛ پس هرچه حلقه بزرگ‌تر یا لبه‌ها تندتر، تشعشع بیشتر.</p>
+<p><b style="color:#8a4a12;">۲. قبولی آزمون چگونه سنجیده می‌شود؟</b></p>
+<p>در اندازه‌گیری تشعشع، اگر قلۀ طیف از حد شبه‌قله (Quasi-Peak) کوچک‌تر باشد آزمون قبول است؛ اما به‌سبب عدم قطعیت‌های آزمون، معمولاً حاشیۀ امن در نظر گرفته می‌شود تا محصول پایدار بماند.</p>
+<p><b style="color:#8a4a12;">۳. ترتیب لایه‌ای حفاظت</b></p>
+<p>ترتیب درست دخالت در EMI: نخست انرژی منبع را تضعیف کن (سرعت لبه‌ها، ظرفیت‌ها)، سپس مسیر انتشار را بهبود بده (چیدمان، زمین) و در پایان با قطعات حفاظتی (فریت‌بید، TVS) محافظت کن.</p>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">آزمون EMI</div>
+  <div class="sec-divider"></div>
+</div>
+<p>محصولات مصرفی مانند ماکروویو، تلفن همراه، لپ‌تاپ و تلویزیون ماهواره‌ای همگی باید آزمون <span class="en">EMI</span> را بگذرانند تا هم مطمئن شوند تداخل مضر تولید نمی‌کنند و هم تداخل را تحمل می‌کنند و به اشتباه عمل نمی‌کنند.</p>
+<h3 class="h2x" id="sec-11"><span class="dm">◆</span>۱.۱ آزمون EMI</h3>
+<p>اندازه‌گیری تشعشع در اتاق حفاظ‌شده انجام می‌شود و فرکانس از <span class="en">30MHz</span> آغاز می‌گردد؛ بر اساس بالاترین ساعت داخلی محصول و استاندارد مناسب، تا <span class="en">1GHz-6GHz</span> یا حتی بیشتر می‌تواند ادامه یابد؛ اگر قلۀ آن از شبه‌قلۀ حد کوچک‌تر باشد می‌توان آن را قبول دانست؛ با این حال آزمون محصول درجۀ عدم قطعیتی دارد، بنابراین در آزمون معمولاً حاشیۀ امن در نظر گرفته→حاشیۀ امن در نظر گرفته می‌شود تا پایداری محصول تضمین شود. نمودار آزمون در شکل زیر آمده است:</p>
+<div class="fig" id="fig-01">
+  <div class="figbox"><img src="assets/img/an94001-fig01.png" alt="نمودار آزمون EMI" style="max-width:480px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱</span><span class="cap-text">نمودار آزمون <span class="en">EMI</span> (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>هر مدارِ در حال کار عادی، <span class="en">EMI</span> تشعشع می‌کند. مقدار تشعشع EMI به فرکانس، جریان، سطح حلقۀ جریان سیگنال و القاگری وابسته است. هر حلقۀ جریانی که منبع جریان کلیدزنی را حمل می‌کند، یک تشعشع‌گر و در نتیجه یک آنتن حلقوی است؛ بنابراین هر مداری انرژی فرکانس رادیویی یعنی EMI تشعشع می‌کند.</p>
+<h3 class="h2x" id="sec-111"><span class="dm">◆</span>۱.۱.۱ مزاحمت سیم‌کشی</h3>
+<p>وقتی مسیر رسانایی انتشار سیگنال، سیم‌های خارجی است، انرژی مزاحم در امتداد خط تغذیه یا خط سیگنال سیم به‌صورت رسانایی خارج می‌شود. بنابراین هنگام اتصال و انتقال با سیم خارجی، طول سیم و امپدانس مسیر، نتیجۀ آزمون را تحت تأثیر قرار می‌دهد و رسانایی می‌تواند به یکی از دو شیوه انجام شود:</p>
+<p style="margin:4px 0;"><b style="color:#8a4a12;">حلت مشترک:</b> زمانی رخ می‌دهد که نویز با فاز یکسان روی دو رسانا ظاهر شود؛ مانند خروج سیگنال و بازگشت آن.</p>
+<p style="margin:4px 0;"><b style="color:#8a4a12;">حلت تفاضلی:</b> زمانی رخ می‌دهد که نویز روی دو رسانا فاز مخالف داشته باشد.</p>
+<p>چون مسیر مزاحمت سیم‌کشی نسبتاً ساده است، هنگام اصلاح آزمون EMI می‌توان سیم‌کشی را جدا کرد و بررسی نمود که آیا مزاحمت از سیم است یا خیر. در اصلاح EMI محصول، می‌توان مقایسۀ اثر سیم‌کشی بر نتیجۀ EMI را دید:</p>
+<div class="fig" id="fig-02">
+  <div class="figbox" style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;">
+    <figure style="margin:0;text-align:center;"><img src="assets/img/an94001-fig02.png" alt="اتصال خط سیگنال" style="max-width:320px;border:1px solid #e2d9cb;border-radius:8px;"><figcaption style="font-size:11px;color:#8a7f72;margin-top:4px;">اتصال خط سیگنال: قلۀ بیش از حد</figcaption></figure>
+    <figure style="margin:0;text-align:center;"><img src="assets/img/an94001-fig03.png" alt="قطع خط سیگنال" style="max-width:320px;border:1px solid #e2d9cb;border-radius:8px;"><figcaption style="font-size:11px;color:#8a7f72;margin-top:4px;">قطع خط سیگنال: قبول (Pass)</figcaption></figure>
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۲</span><span class="cap-text">مقایسۀ آزمون <span class="en">EMI</span> سیم‌کشی (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+
+<h3 class="h2x" id="sec-112"><span class="dm">◆</span>۱.۱.۲ فرکانس خروجی</h3>
+<p>برای اثر فرکانس در آزمون EMI می‌توان به دو نکته اشاره کرد: ۱) هنگامی که خروجی خارجی وجود دارد یا MCU با فرکانس ثابت کار می‌کند، در فرکانس‌های جست‌وجو در یک فرکانس ثابت هارمونیک ظاهر می‌شود و باعث ایجاد قله می‌گردد. ۲) با افزایش فرکانس خروجی پایه و همراه با افزایش فرکانس و نرخ تغییر جریان سیگنال، انرژی تشعشعی نیز افزایش می‌یابد. نتیجۀ آزمون در فرکانس‌های مختلف در ادامه آمده است:</p>
+<div class="fig" id="fig-03">
+  <div class="figbox" style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;">
+    <figure style="margin:0;text-align:center;"><img src="assets/img/an94001-fig04.png" alt="فرکانس سیستم 48M" style="max-width:320px;border:1px solid #e2d9cb;border-radius:8px;"><figcaption style="font-size:11px;color:#8a7f72;margin-top:4px;">فرکانس سیستم <span class="en">48M</span></figcaption></figure>
+    <figure style="margin:0;text-align:center;"><img src="assets/img/an94001-fig05.png" alt="فرکانس سیستم 8M" style="max-width:320px;border:1px solid #e2d9cb;border-radius:8px;"><figcaption style="font-size:11px;color:#8a7f72;margin-top:4px;">فرکانس سیستم <span class="en">8M</span></figcaption></figure>
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۳</span><span class="cap-text">مقایسۀ آزمون <span class="en">EMI</span> فرکانس اصلی سیستم (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>می‌توان دید که در مقایسه با فرکانس اصلی سیستم 48M، هنگامی که سیستم با فرکانس 8M کار می‌کند، دامنۀ قلۀ آزمون EMI بهبود می‌یابد؛ اما این تنها یک ایده برای تعیین منبع تداخل EMI است. در برخی موارد صرفاً کاهش نرخ کار لزوماً EMI را بهبود نمی‌دهد؛ همچنین می‌توان از این شرایط را بررسی کرد: ۱) بهبود حفاظت سمت تغذیه؛ ۲) کاهش جریان خروجی پایه‌های IO و نرخ تناوب آن‌ها.</p>
+<h3 class="h2x" id="sec-113"><span class="dm">◆</span>۱.۱.۳ مزاحمت پایۀ خروجی</h3>
+<p>مزاحمت پایۀ خروجی عمدتاً در تداخلی که از خروجی پایه‌های MCU ایجاد می‌شود نمود دارد؛ وقتی جریان کلیدزنی فرکانس بالا از پایه عبور می‌کند، در حلقۀ فیزیکی محل آن (سیگنال و بازگشت)، «آنتن ناخواسته» مؤثری شکل می‌گیرد. جریان سیگنال از پایه خارج می‌شود، پس از بار از طریق صفحۀ زمین باز می‌گردد و یک حلقه می‌سازد؛ طبق قانون القای الکترومغناطیسی فارادی، حلقۀ جریان متغیر تشعشع تولید می‌کند؛ بنابراین هرچه سطح حلقه‌ای که PCB به‌عنوان آنتن تولید می‌کند بزرگ‌تر باشد؛ آنتن بزرگ‌تر و تشعشع بیشتر است. از سوی دیگر، وقتی پایۀ خروجی سیگنال می‌دهد، جریان حلقه در GND دستگاه گیرنده و GND مشترک PCB امپدانس ایجاد می‌کند و افت ولتاژ تولید می‌شود؛ جریان حلت مشترکی شکل می‌گیرد که به همه کابل‌های خارجی متصل به آن زمین می‌رود و یک آنتن پرکارایی می‌سازد.</p>
+<div class="fig" id="fig-04">
+  <div class="figbox" style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;">
+    <figure style="margin:0;text-align:center;"><img src="assets/img/an94001-fig06.png" alt="قطع پایۀ ارسال" style="max-width:320px;border:1px solid #e2d9cb;border-radius:8px;"><figcaption style="font-size:11px;color:#8a7f72;margin-top:4px;">قطع پایۀ ارسال</figcaption></figure>
+    <figure style="margin:0;text-align:center;"><img src="assets/img/an94001-fig07.png" alt="اتصال پایۀ ارسال" style="max-width:320px;border:1px solid #e2d9cb;border-radius:8px;"><figcaption style="font-size:11px;color:#8a7f72;margin-top:4px;">اتصال پایۀ ارسال</figcaption></figure>
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۴</span><span class="cap-text">مقایسۀ آزمون <span class="en">EMI</span> پایۀ خروجی (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>همان‌طور که در شکل بالا دیده می‌شود؛ هنگام بررسی تداخل EMI، می‌توان GPIO سمت ارسال را بالا کشید (لحیم‌زدایی) و بررسی کرد که آیا مزاحمت از GPIO است یا خیر.</p>
+<h3 class="h2x" id="sec-114"><span class="dm">◆</span>۱.۱.۴ مزاحمت حلقه</h3>
+<p>وقتی سیگنال منتقل‌شده با GND بای‌پس یا بدۀ فلزی هدایت‌کننده مسیر نامتقارنی بسازد و جریان در دو مسیر جریان داشته باشد، به‌سبب ساختار نامتقارن، میدان‌های تشعشعی در فاصله دور نمی‌توانند یکدیگر را خنثی کنند؛ بنابراین اثر تشعشعی به‌طور محسوسی افزایش می‌یابد.</p>
+<div class="fig" id="fig-05">
+  <div class="figbox" style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;">
+    <figure style="margin:0;text-align:center;"><img src="assets/img/an94001-fig08.png" alt="بای‌پس بدون اتصال بدۀ فلزی" style="max-width:320px;border:1px solid #e2d9cb;border-radius:8px;"><figcaption style="font-size:11px;color:#8a7f72;margin-top:4px;">بای‌پس بدون اتصال بدۀ فلزی</figcaption></figure>
+    <figure style="margin:0;text-align:center;"><img src="assets/img/an94001-fig09.png" alt="بای‌پس متصل به بدۀ فلزی" style="max-width:320px;border:1px solid #e2d9cb;border-radius:8px;"><figcaption style="font-size:11px;color:#8a7f72;margin-top:4px;">بای‌پس متصل به بدۀ فلزی</figcaption></figure>
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۵</span><span class="cap-text">مقایسۀ آزمون <span class="en">EMI</span> مسیر حلقه (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">حفاظت در برابر EMI</div>
+  <div class="sec-divider"></div>
+</div>
+<h3 class="h2x" id="sec-21"><span class="dm">◆</span>۲.۱ حفاظت سخت‌افزاری</h3>
+<p>حفاظت سخت‌افزاری EMI باید به ترتیب درست لایه‌ای دخالت داده شود؛ نخست انرژی منبع تضعیف شود، سپس با بهبود مسیر انتشار ادامه یابد و در نهایت با قطعات حفاظتی از آن حفاظت و بهبود انجام شود.</p>
+<h3 class="h3x" id="sec-211"><span class="dm">›</span>۲.۱.۱ حفاظت تغذیه</h3>
+<p>همه آنتن‌های ناخواسته برای درایو به جریان فرکانس بالا نیاز دارند و تغذیه به‌عنوان خروج نویز از دستگاه، مؤثرترین آنتن ناخواسته است؛ بنابراین کاهش تغییر ولتاژ و جریان می‌تواند به‌طور مؤثر انرژی تشعشعی را کم کند.</p>
+<p><b style="color:#8a4a12;">۱) انتخاب خازن</b></p>
+<p>هنگام انتخاب خازن به‌عنوان فیلتر نویز، کاربر باید همیشه دو ویژگی مهم خازن را در نظر بگیرد: محدودیت فرکانس بیشینه و رزونانس خود؛ رزونانس خود فرکانسی است که در آن خازن دیگر رفتار خازنی نشان نمی‌دهد و شبیه القاگر می‌شود. جدول مرجع فرکانس رزونانس نمونه برای ظرفیت‌های مختلف در ادامه آمده است:</p>
+<div class="tblwrap" id="tab-02">
+  <div class="tblcap"><span class="cap-pill">جدول ۲</span><span class="cap-text">فرکانس رزونانس نمونه برای ظرفیت‌های مختلف</span></div>
+  <table class="tbl">
+    <tr><th style="width:30%;">ظرفیت</th><th style="width:35%;"><span class="en">SRF</span> سیم‌دار</th><th><span class="en">SRF</span> چیپ‌دار</th></tr>
+    <tr><td><span class="en">1 µF</span></td><td><span class="en">2.5 MHz</span></td><td><span class="en">5 MHz</span></td></tr>
+    <tr><td><span class="en">0.1 µF</span></td><td><span class="en">8 MHz</span></td><td><span class="en">16MHz</span></td></tr>
+    <tr><td><span class="en">0.01 µF</span></td><td><span class="en">25 MHz</span></td><td><span class="en">50MHz</span></td></tr>
+    <tr><td><span class="en">1000pF</span></td><td><span class="en">80 MHz</span></td><td><span class="en">160MHz</span></td></tr>
+    <tr><td><span class="en">100pF</span></td><td><span class="en">250MHz</span></td><td><span class="en">500MHz</span></td></tr>
+    <tr><td><span class="en">10pF</span></td><td><span class="en">800MHz</span></td><td><span class="en">1.6 GHz</span></td></tr>
+  </table>
+</div>
+<p>بنابراین برای پوشش باند فرکانسی پهن‌تر، از خازن‌های با ظرفیت‌های مختلف به‌صورت موازی استفاده می‌شود (مانند <span class="en">10uF//0.1uf//0.01uf</span>). هنگام انتخاب گام ظرفیت، فاصلۀ ده‌برابر یا بیشتر استفاده شود تا ناحیۀ خازنی هر خازن تا حد امکان به هم وصل شود و در باند فرکانسی بحرانی قلۀ رزونانس ایجاد نکند.</p>
+<p><b style="color:#8a4a12;">۲) کاهش ولتاژ</b></p>
+<p>در روند آزمون، کاهش ولتاژ تغذیۀ MCU از <span class="en">5V</span> به <span class="en">3.3V</span> نتیجۀ آزمون EMI را بهبود می‌دهد؛ اگرچه کاهش ولتاژ عامل اصلی بهبود نیست اما یک شیوۀ بهبود برای آزمون EMI فراهم می‌کند. کاهش ولتاژ یعنی دامنۀ سیگنال کوچک‌تر می‌شود و تشعشع متناسب کاهش می‌یابد.</p>
+<p><b style="color:#8a4a12;">۳) حفاظت تغذیه</b></p>
+<p>برای حفاظت تغذیه می‌توان از سری‌کردن فریت‌بید در پیشانی و خازن کنارگذر در انتها، فیلتر <span class="en">LC</span> ساخت و سیگنال نویز را حذف کرد. هنگام استفاده از فریت‌بید، آن را پیش از خازن و نزدیک سمت منبع نویز قرار دهید تا نویز ابتدا توسط فریت‌بید سد شود و سپس با خازن بای‌پس شود. سمت تغذیه افزون بر سیگنال‌های فرکانس بالای پیوسته، باید با موج‌برگی و اضافه‌ولتاژ گذرا نیز روبه‌رو شود؛ بنابراین می‌توان دیود <span class="en">TVS</span> برای مهار ضربان‌های سیگنال پرولتاژ افزود.</p>
+<h3 class="h3x" id="sec-212"><span class="dm">›</span>۲.۱.۲ حفاظت پایه‌ها</h3>
+<p>برای حفاظت پایۀ خروجی، هم تداخل جریان حلت مشترک وجود دارد و هم تداخل جریان حلت تفاضلی؛ هنگام خروجی پایه، ریسک EMI عمدتاً از لبه‌های بیش از حد سریع پایه و زنگ‌زدن ناشی از ناهماهنگی امپدانس می‌آید. بنابراین می‌توان از پیکربندی حداکثر نرخ پورت خروجی پایۀ GPIO برای کاهش نرخ شیب و توان درایو پایه استفاده کرد و نرخ پرش خروجی را محدود کرد؛ به‌عنوان مثال در سری عمومی CH32، پارامترهای نرخ مختلف در شکل زیر آمده است.</p>
+<div class="fig" id="fig-06">
+  <div class="figbox"><img src="assets/img/an94001-fig10.png" alt="پارامترهای نرخ مختلف" style="max-width:460px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۶</span><span class="cap-text">پارامترهای نرخ مختلف (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>می‌توان فریت‌بید را به‌صورت سری با پایه وصل کرد که به‌طور مؤثر تشعشع را کاهش می‌دهد؛ اصل کار در شکل آمده است؛ معمولاً هرچه مقدار امپدانس <span class="en">FB2</span> بزرگ‌تر باشد، تشعشع کمتر است، اما برخی پارامترهای خود فریت‌بید باید هم‌زمان در نظر گرفته شوند؛ برای مثال با همان ویژگی امپدانس، هرچه مقدار L فریت‌بید پایین‌تر بهتر است. افزون بر این، پس از انتخاب فریت‌بید مناسب، باید آزمون حرارتی اجرای پیوسته فریت‌بید انجام شود و اضافه‌ولتاژ دو سر خازن C3 بررسی گردد. اگر اضافه‌ولتاژ کوچک باشد، D1 را می‌توان حذف کرد. شبکه RC ساخته‌شده از R1 و C3 از یک سو زنگ‌زدن IO را کُند می‌کند و از سوی دیگر در برابر اضافه‌ولتاژ ناشی از FB2 از IO حفاظت می‌کند.</p>
+<div class="fig" id="fig-07">
+  <div class="figbox"><img src="assets/img/an94001-fig11.png" alt="نمودار حفاظت GPIO" style="max-width:460px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۷</span><span class="cap-text">نمودار حفاظت <span class="en">GPIO</span> (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>آزمون مقایسه‌ای در شکل زیر آمده است:</p>
+<div class="fig" id="fig-08">
+  <div class="figbox" style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;">
+    <figure style="margin:0;text-align:center;"><img src="assets/img/an94001-fig12.png" alt="حذف فریت‌بید FB2" style="max-width:320px;border:1px solid #e2d9cb;border-radius:8px;"><figcaption style="font-size:11px;color:#8a7f72;margin-top:4px;">حذف فریت‌بید <span class="en">FB2</span></figcaption></figure>
+    <figure style="margin:0;text-align:center;"><img src="assets/img/an94001-fig13.png" alt="افزودن فریت‌بید FB2" style="max-width:320px;border:1px solid #e2d9cb;border-radius:8px;"><figcaption style="font-size:11px;color:#8a7f72;margin-top:4px;">افزودن فریت‌بید <span class="en">FB2</span></figcaption></figure>
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۸</span><span class="cap-text">مقایسۀ حفاظت <span class="en">GPIO</span> (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+
+<h3 class="h2x" id="sec-22"><span class="dm">◆</span>۲.۲ بهبود PCB</h3>
+<p>ملاحظات طراحی مدار و چیدمان PCB برای EMI به‌اندازۀ کارکرد اهمیت دارند؛ به‌ویژه یک زمین کامل لازم است: به‌راحتی صفحۀ زمین را تقسیم نکنید؛ بازگشت فرکانس بالا از مسیر با کمترین القاگری می‌گذرد و شکاف در صفحۀ زمین مسیر بازگشت را اجباری می‌کند و سطح حلقه به‌شدت افزایش می‌یابد.</p>
+<h3 class="h3x" id="sec-221"><span class="dm">›</span>۲.۲.۱ پردازش خطوط سیگنال</h3>
+<p>بر اساس آزمون‌ها، زنگ‌زدن ایجادشده از پایه‌های IO اغلب همراه با مشکلات در باند فرکانس بالا است؛ چون برخی ارتباطات فرکانس ارتباطی ثابتی دارند که ممکن است در یک فرکانس ثابت هارمونیک ایجاد کند و اغلب مشکل تشعشع بیش از حد را حل نمی‌کند. بنابراین هنگام ترسیم PCB، باید توجه شود که میان خطوط داده و ساعت پوشش زمین انجام شود و در لایۀ پایین یک صفحۀ مرجع زمین کامل وجود داشته باشد. افزون بر این، مسیر داده هنگام کشیدن باید از ویا اجتناب کند تا از ناپیوستگی امپدانس مسیر انتقال و ایجاد مسیر بازگشت جلوگیری شود. وقتی خط سیگنال مجبور به ویازدن است، باید در نزدیکی سیگنال ویای زمین قرار داده شود؛ پیشنهاد می‌شود از چند ویای زمین استفاده شود تا امپدانس بازگشت کاهش یابد.</p>
+<div class="fig" id="fig-09">
+  <div class="figbox" style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;">
+    <figure style="margin:0;text-align:center;"><img src="assets/img/an94001-fig14.png" alt="پردازش سیگنال مناسب" style="max-width:320px;border:1px solid #e2d9cb;border-radius:8px;"><figcaption style="font-size:11px;color:#8a7f72;margin-top:4px;">پردازش سیگنال مناسب</figcaption></figure>
+    <figure style="margin:0;text-align:center;"><img src="assets/img/an94001-fig15.png" alt="پردازش سیگنال نامناسب" style="max-width:320px;border:1px solid #e2d9cb;border-radius:8px;"><figcaption style="font-size:11px;color:#8a7f72;margin-top:4px;">پردازش سیگنال توصیه‌نشده</figcaption></figure>
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۹</span><span class="cap-text">مقایسۀ پردازش سیگنال (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>همان‌طور که در شکل آمده است: OUT پایۀ خروجی است؛ از اتصال بدون ویا استفاده می‌کند و لایۀ زیرین همگی صفحۀ مرجع زمین کامل است؛ هنگام کشیدن مسیر، در نزدیکی آن از ویای زمین برای کاهش امپدانس بازگشت استفاده می‌شود. در چیدمان توصیه‌نشده، خطوط داده و ساعت ویا دارند و اطراف ویا ویای زمین وجود ندارد؛ در پایین نیز صفحۀ مرجع زمین کامل وجود ندارد و انشعاب سیگنال هم هست.</p>
+<p>برای شیوۀ مسیرکشی متفاوت با شرایط مختلف، نتیجه در شکل زیر آمده است: به‌وضوح می‌توان دید که مواردی که آزمون را قبول نمی‌شوند همگی مشکل تشعشع مضرب صحیح 72M دارند؛ علت آن است که برنامه اصلی از انتقال SPI استفاده می‌کند و ساعت انتقال 18M است؛ بنابراین می‌توان دید که EMI در فرکانس‌های مضرب صحیح، تشعشعی بالاتر از آستانۀ EMI دارد و کاهش حداکثر نرخ تناوب پایۀ GPIO نیز بهبودی ایجاد نمی‌کند (فقط تداخل حالت فرکانس بالا را حذف می‌کند). پس از بازچیدمان مسیرها، مشکل تداخل EMI رفع شد.</p>
+<div class="fig" id="fig-10">
+  <div class="figbox" style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;">
+    <figure style="margin:0;text-align:center;"><img src="assets/img/an94001-fig16.png" alt="بدون پوشش زمین و 50M" style="max-width:330px;border:1px solid #e2d9cb;border-radius:8px;"><figcaption style="font-size:11px;color:#8a7f72;margin-top:4px;">سیگنال بدون پوشش زمین، حداکثر نرخ GPIO روی 50M</figcaption></figure>
+    <figure style="margin:0;text-align:center;"><img src="assets/img/an94001-fig17.png" alt="بدون پوشش زمین و 2M" style="max-width:330px;border:1px solid #e2d9cb;border-radius:8px;"><figcaption style="font-size:11px;color:#8a7f72;margin-top:4px;">سیگنال بدون پوشش زمین، حداکثر نرخ GPIO روی 2M</figcaption></figure>
+    <figure style="margin:0;text-align:center;"><img src="assets/img/an94001-fig18.png" alt="با پوشش زمین و 2M" style="max-width:330px;border:1px solid #e2d9cb;border-radius:8px;"><figcaption style="font-size:11px;color:#8a7f72;margin-top:4px;">سیگنال با پوشش زمین، حداکثر نرخ GPIO روی 2M</figcaption></figure>
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱۰</span><span class="cap-text">مقایسۀ نتیجۀ پردازش <span class="en">GPIO</span> (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>افزون بر این، برای خطوط رابط برد باید از چند رشتۀ زمین استفاده شود و با لای‌گذاری GND میان خطوط سیگنال، انتقال به شیوۀ کابل تلفیقی انجام شود؛ برای پورت گیرنده و خروجی می‌توان افزودن ورق فویل مسی را در نظر گرفت که به‌طور گسترده با زمین مرجع دو سر متصل می‌شود تا اختلاف امپدانس ورودی دو سر کاهش یابد.</p>
+<div class="fig" id="fig-11">
+  <div class="figbox"><img src="assets/img/an94001-fig19.png" alt="نمودار کابل تلفیقی" style="max-width:340px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱۱</span><span class="cap-text">نمودار کابل تلفیقی (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<h3 class="h3x" id="sec-222"><span class="dm">›</span>۲.۲.۲ چیدمان PCB</h3>
+<p><b style="color:#8a4a12;">۱) مسیرکشی سیگنال تغذیه</b></p>
+<p>انرژی تشعشعی EMI ارتباط قوی با اندازۀ سطح حلقۀ جریان دارد. در PCB دولایه نمی‌توان کنار هر سیگنال روی برد، مسیر زمین پیوسته و بدون قطع داشت، چون سطح آنتنی بزرگ تولید می‌شود. هرچه آنتن بزرگ‌تر، تشعشع بیشتر؛ به‌ویژه برای سیگنال‌های پرسرعت.</p>
+<p><b style="color:#8a4a12;">۲) چیدمان خازن کنارگذر</b></p>
+<p>برای حفاظت سمت تغذیۀ پایه‌های MCU، فریت‌بید باید مشخصاتی با امپدانس فرکانس بالا انتخاب شود؛ خازن مشخصات پکیج کوچک انتخاب شود و خازن باید تا حد ممکن نزدیک پایه‌های تغذیه و GND MCU باشد تا مسیرکشی تا حد ممکن کوتاه شود؛ اگر شرایط نصب PCB اجازه دهد، پایه‌های زمین هر خازن را می‌توان درون پد با ویا قرار داد.</p>
+<div class="fig" id="fig-12">
+  <div class="figbox" style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;">
+    <figure style="margin:0;text-align:center;"><img src="assets/img/an94001-fig20.png" alt="چیدمان توصیه‌نشده" style="max-width:320px;border:1px solid #e2d9cb;border-radius:8px;"><figcaption style="font-size:11px;color:#8a7f72;margin-top:4px;">چیدمان توصیه‌نشده؛ فاصله از پایه‌های تغذیه و GND زیاد و امپدانس حلقه بزرگ</figcaption></figure>
+    <figure style="margin:0;text-align:center;"><img src="assets/img/an94001-fig21.png" alt="چیدمان توصیه‌شده" style="max-width:320px;border:1px solid #e2d9cb;border-radius:8px;"><figcaption style="font-size:11px;color:#8a7f72;margin-top:4px;">چیدمان توصیه‌شده؛ نزدیک پایه‌های تغذیه و GND با ویای زمین برای پایه‌های خازن</figcaption></figure>
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱۲</span><span class="cap-text">مقایسۀ چیدمان خازن کنارگذر (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p><b style="color:#8a4a12;">۳) چیدمان برد</b></p>
+<p>پیشنهاد می‌شود از چیدمان برد چندلایه استفاده شود؛ یک لایه برای زمین‌ریزی و خازن کنارگذر و غیره با چند ویا و اتصال زمین نزدیک. اگر از برد پایۀ آلومینیومی استفاده می‌شود، بسیار باید به پردازش خط زمین توجه شود تا از تشکیل آنتن حلقوی جلوگیری شود؛ می‌توان از لایۀ آلومینیوم به‌عنوان صفحۀ زمین استفاده کرد؛ اگر پردازش ویژه ممکن نباشد، تا حد ممکن با مقاومت پرشی و غیره اتصال زمین کاملی فراهم شود. خط سیگنال بازگشتی PCB یعنی RX نیز پیشنهاد می‌شود مشابهاً با RC و فریت‌بید سری شود.</p>
+<div class="fig" id="fig-13">
+  <div class="figbox"><img src="assets/img/an94001-fig22.png" alt="پردازش سمت سیگنال" style="max-width:480px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱۳</span><span class="cap-text">پردازش سمت سیگنال (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>برد رابط تا حد ممکن از اتصال به زمین سمت دستگاه اجتناب کند تا از تشکیل آنتن دوقطبی متحول در کل سیستم جلوگیری شود. بدنۀ رابط USB تا حد ممکن مستقیماً به GND وصل نشود و تا حد ممکن از مسیرکشی برد رابط دور باشد؛ مثلاً زیر رابط USB زمین‌ریزی انجام نشود. در شکل زیر، برد رابط یک رابط توسعۀ USB است؛ پس از تغییر، از GND بدنۀ فلزی جدا شده و زیر رابط USB زمین‌ریزی انجام نمی‌شود.</p>
+<div class="fig" id="fig-14">
+  <div class="figbox" style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;">
+    <figure style="margin:0;text-align:center;"><img src="assets/img/an94001-fig23.png" alt="برد رابط USB" style="max-width:330px;border:1px solid #e2d9cb;border-radius:8px;"></figure>
+    <figure style="margin:0;text-align:center;"><img src="assets/img/an94001-fig24.png" alt="چیدمان پس از اصلاح" style="max-width:330px;border:1px solid #e2d9cb;border-radius:8px;"></figure>
+  </div>
+  <div class="figcap"><span class="cap-pill">شکل ۱۴</span><span class="cap-text">پردازش سیگنال رابط (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>افزون بر این، هنگام چیدمان مسیرهای تفاضلی و پرسرعت، تطابق امپدانس تفاضلی روی لایۀ اول PCB مجاور صفحۀ زمین حفظ شود؛ افزون بر این مطمئن شوید زیر همه خطوط ساعت و سیگنال‌های پرسرعت صفحۀ مرجع زمین بدون‌قطع وجود دارد، بدون شکاف یا حفره، و آن‌ها روی لایۀ اول مسیرکشی شده‌اند.</p>
+<h3 class="h2x" id="sec-23"><span class="dm">◆</span>۲.۳ پردازش نرم‌افزاری</h3>
+<p>وقتی نیازمندی دقیقی برای ساعت ارتباط وجود ندارد، می‌توان از تکنیک گسترش طیف برای مدولاسیون پیوسته و کوچک سیگنال ساعت استفاده کرد؛ مثلاً اگر ساعت SPI برابر 18M باشد؛ هنگام استفاده از ساعت داخلی، با تنظیم پیوستۀ مقدار فرکانس HSI می‌توان سیگنال SPI را در بازه‌ای متغیر کرد؛ می‌توان انرژی را دیگر روی یک نقطۀ فرکانسی ثابت واحد متمرکز نکرد، بلکه در بازۀ باندی پخش کرد. بدین ترتیب دامنۀ قله کوتاه می‌شود و EMI به‌طور مؤثر مهار می‌شود.</p>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN94001</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/11/06</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">EMI</span></td><td class="jt">تداخل الکترومغناطیسی؛ از منابع داخلی یا خارجی تولید و از طریق القای الکترومغناطیسی، جفت‌شدگی الکترواستاتیک یا رسانایی بر مدار اثر می‌گذارد</td></tr>
+      <tr><td><span class="en">آزمون تشعشعی (Radiated Emission)</span></td><td class="jt">اندازه‌گیری تشعشع در اتاق حفاظ‌شده از 30MHz به بالا؛ بر اساس بالاترین ساعت داخلی محصول تا 1-6GHz یا بیشتر</td></tr>
+      <tr><td><span class="en">شبه‌قله (Quasi-Peak)</span></td><td class="jt">وزن‌دهی استاندارد اندازه‌گیری تشعشع؛ اگر قلۀ اندازه‌گیری‌شده از شبه‌قلۀ حد کوچک‌تر باشد آزمون قبول محسوب می‌شود</td></tr>
+      <tr><td><span class="en">حلت مشترک (Common Mode)</span></td><td class="jt">حالتی که نویز با فاز یکسان روی دو رسانا ظاهر می‌شود؛ مانند خروج سیگنال و مسیر بازگشت آن</td></tr>
+      <tr><td><span class="en">حلت تفاضلی (Differential Mode)</span></td><td class="jt">حالتی که نویز روی دو رسانا با فاز مخالف ظاهر می‌شود</td></tr>
+      <tr><td><span class="en">آنتن ناخواسته (Unintentional Antenna)</span></td><td class="jt">هر حلقۀ جریانِ کلیدزنی که مثل آنتن عمل و انرژی RF تشعشع می‌کند؛ تغذیه مؤثرترین آنتناست</td></tr>
+      <tr><td><span class="en">SRF (فرکانس رزونانس خود)</span></td><td class="jt">فرکانسی که خازن دیگر رفتار خازنی ندارد و شبیه القاگر می‌شود؛ مبنای انتخاب ظرفیت برای پوشش باند فرکانسی</td></tr>
+      <tr><td><span class="en">فریت‌بید (Ferrite Bead)</span></td><td class="jt">قطعۀ جاذب نویز فرکانس بالا؛ سری با خط تغذیه یا خروجی می‌نشیند و در انتخاب آن علاوه بر امپدانس، مقدار L باید پایین باشد</td></tr>
+      <tr><td><span class="en">TVS</span></td><td class="jt">دیود حفاظت ولتاژ گذرا؛ برای مهار ضربان‌های پرولتاژ و گذرای تغذیه کنار LC به کار می‌رود</td></tr>
+      <tr><td><span class="en">نرخ شیب (Slew Rate / GPIO Speed)</span></td><td class="jt">پیکربندی حداکثر نرخ خروجی پایه در CH32؛ کاهش آن نرخ تغییر ولتاژ و توان تشعشعی را کم می‌کند</td></tr>
+      <tr><td><span class="en">زنگ‌زدن (Ringing)</span></td><td class="jt">نوسان لبه سیگنال به‌سبب ناهماهنگی امپدانس؛ شبکه RC سری روی خروجی آن را میرا می‌کند</td></tr>
+      <tr><td><span class="en">پوشش زمین (Guard Ground)</span></td><td class="jt">کشیدن خط زمین دور خطوط داده/ساعت با یک صفحۀ مرجع کامل در لایۀ زیرین؛ بازگشت جریان را کوتاه نگه می‌دارد</td></tr>
+      <tr><td><span class="en">ویای زمین (Ground Via)</span></td><td class="jt">چند ویای زمین کنار ویای سیگنال برای کوتاه‌کردن مسیر بازگشت و کاهش امپدانس حلقه</td></tr>
+      <tr><td><span class="en">کابل تلفیقی (Twisted Pair)</span></td><td class="jt">نقل‌قول‌کردن GND میان خطوط سیگنال برای کاهش تشعشع انتقال روی کابل رابط</td></tr>
+      <tr><td><span class="en">دوقطبی متحول (Mutated Dipole)</span></td><td class="jt">اتصال نادرست زمین میان برد رابط و بدۀ دستگاه که سیستم را به آنتن دوقطبی بزرگ تبدیل می‌کند</td></tr>
+      <tr><td><span class="en">گسترش طیف (Spread Spectrum)</span></td><td class="jt">مدولاسیون پیوسته و کوچک فرکانس ساعت (مثلاً HSI) برای پخش انرژی در باند و پایین‌آوردن قله</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN94001 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۲۵</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN94001</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
