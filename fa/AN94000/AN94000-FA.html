@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>سیستم تغذیه و پیش‌ران موتور در CH32M030 — ترجمۀ فارسی AN94000</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* toc page: always start at a fresh page; keep the toc-note below the header band (block y>=33.5pt) */
+.toc-page{ break-before:page; padding-top:48px; }
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">سیستم تغذیه و پیش‌ران موتور در <span class="en">CH32M030</span></div>
+    <div class="t2">سه دامنۀ ولتاژ <span class="en">VHV/VDD8/VDD33</span> و سه طرح تغذیه</div>
+    <div class="t3">نیم‌پل‌ها، خازن بوت‌استرپ، منطقۀ مرده و ترمز</div>
+  </div>
+  <div class="c-sub">معماری LDO سه‌مرحله‌ای داخلی و سه طرح تغذیه (VHV، VDD8، VDD33) با محاسبۀ بازده و اتلاف توان؛ خازن‌های کنارگذر، حفاظت اضافه‌ولتاژ/دمای PB4 با OV_CFG، پیش‌ران ۴ جفت نیم‌پل N-MOSFET و خازن بوت‌استرپ؛ سیکل‌های هدایت روتور BLDC، تولید سیگنال مکمل، محاسبۀ منطقۀ مرده DTG و ترمز با مقایسه‌گر داخلی</div>
+  <div class="c-desc">ترجمۀ فارسی سند رسمی <span class="en">AN94000</span> (نسخۀ ۱٫۰، منتشرۀ <span class="en">WCH</span>): MCU صنعتی موتور با کارکرد پایۀ CH32M030؛ این سند سیستم تغذیۀ تراشه و کاربرد موتور را معرفی می‌کند. ویژگی‌های اصلی شامل پشتیبانی تغذیه با ورودی ولتاژ بالا در بازۀ پهن و پشتیبانی از پیش‌ران پیش‌دروازۀ گیت ۴ جفت ترانزیستور توان نوع N است.</div>
+  <div class="c-tags">
+    <span class="c-tag"><span class="en">CH32M030</span></span>
+    <span class="c-tag"><span class="en">VHV · VDD8 · VDD33</span></span>
+    <span class="c-tag">پیش‌ران نیم‌پل</span>
+    <span class="c-tag"><span class="en">BLDC</span></span>
+    <span class="c-tag">منطقۀ مرده · ترمز</span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN94000 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">مقدمه | توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | شرح کامل طرح تغذیه</span><span class="t-dots"></span><span class="t-page">۴</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-11"><span class="s-id">1.1</span><span>پایه‌های ولتاژ و دامنه‌های ولتاژ</span><span class="s-dots"></span><span class="s-page">۴</span></a>
+    <a class="toc-sub" href="#sec-12"><span class="s-id">1.2</span><span>طرح‌های مختلف تغذیه</span><span class="s-dots"></span><span class="s-page">۱</span></a>
+    <a class="toc-sub" href="#sec-121"><span class="s-id">1.2.1</span><span>تغذیه با VHV به‌تنهایی</span><span class="s-dots"></span><span class="s-page">۱</span></a>
+    <a class="toc-sub" href="#sec-122"><span class="s-id">1.2.2</span><span>تغذیه با VDD8 به‌تنهایی</span><span class="s-dots"></span><span class="s-page">۱</span></a>
+    <a class="toc-sub" href="#sec-123"><span class="s-id">1.2.3</span><span>تغذیه با VDD33 به‌تنهایی</span><span class="s-dots"></span><span class="s-page">۱</span></a>
+    <a class="toc-sub" href="#sec-13"><span class="s-id">1.3</span><span>نکات طراحی</span><span class="s-dots"></span><span class="s-page">۱</span></a>
+    <a class="toc-sub" href="#sec-131"><span class="s-id">1.3.1</span><span>خازن کنارگذر</span><span class="s-dots"></span><span class="s-page">۱</span></a>
+    <a class="toc-sub" href="#sec-132"><span class="s-id">1.3.2</span><span>حفاظت اضافه‌ولتاژ / اضافه‌دما</span><span class="s-dots"></span><span class="s-page">۱</span></a>
+    <a class="toc-sub" href="#sec-133"><span class="s-id">1.3.3</span><span>ورودی/خروجی پرولتاژ و تغذیۀ پیش‌ران</span><span class="s-dots"></span><span class="s-page">۱</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | کاربرد پیش‌ران دامنۀ موتور</span><span class="t-dots"></span><span class="t-page">۱۰</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-21"><span class="s-id">2.1</span><span>شرح کامل درایو نیم‌پل</span><span class="s-dots"></span><span class="s-page">۱۰</span></a>
+    <a class="toc-sub" href="#sec-22"><span class="s-id">2.2</span><span>پیکربندی تایمر</span><span class="s-dots"></span><span class="s-page">۱</span></a>
+    <a class="toc-sub" href="#sec-221"><span class="s-id">2.2.1</span><span>تولید سیگنال</span><span class="s-dots"></span><span class="s-page">۱</span></a>
+    <a class="toc-sub" href="#sec-222"><span class="s-id">2.2.2</span><span>کارکرد منطقۀ مرده</span><span class="s-dots"></span><span class="s-page">۱</span></a>
+    <a class="toc-sub" href="#sec-223"><span class="s-id">2.2.3</span><span>سیگنال ترمز</span><span class="s-dots"></span><span class="s-page">۱</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۴</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۱۵</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۵</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۱۶</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">شکل ۱</span><span>تغذیه با VHV تنها</span><span class="f-dots"></span><span class="f-page">۵</span></div>
+        <div class="frow"><span class="f-id">شکل ۲</span><span>تغذیۀ خارجی مستقیم VDD8</span><span class="f-dots"></span><span class="f-page">۶</span></div>
+        <div class="frow"><span class="f-id">شکل ۳</span><span>تغذیۀ خارجی مستقیم VDD33 و VDD8</span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">شکل ۴</span><span>توپولوژی حفاظت ریست اضافه‌ولتاژ/دمای تراشه</span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">شکل ۵</span><span>نمودار ساختاری پیش‌ران یک نیم‌پل</span><span class="f-dots"></span><span class="f-page">۹</span></div>
+        <div class="frow"><span class="f-id">شکل ۶</span><span>توپولوژی موتور بدون‌جاروبک (BLDC)</span><span class="f-dots"></span><span class="f-page">۱۰</span></div>
+      </div>
+      <div>
+        <div class="frow"><span class="f-id">شکل ۷</span><span>خروجی مکمل و منطقۀ مرده</span><span class="f-dots"></span><span class="f-page">۱۳</span></div>
+        <div class="frow"><span class="f-id">شکل ۸</span><span>مدار نمونه‌برداری جریان ISP داخلی</span><span class="f-dots"></span><span class="f-page">۱۵</span></div>
+        <div class="frow"><span class="f-id">جدول ۱</span><span>دامنۀ کاربرد سند</span><span class="f-dots"></span><span class="f-page">۳</span></div>
+        <div class="frow"><span class="f-id">جدول ۲</span><span>جدول پایه‌ها و بارهای کارکردی</span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">جدول ۳</span><span>حالت‌های هدایت روتور</span><span class="f-dots"></span><span class="f-page">۱۱</span></div>
+        <div class="frow"><span class="f-id">جدول ۴</span><span>پیکربندی تایمر پیشرفته</span><span class="f-dots"></span><span class="f-page">۱۲</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> CH32M030 سه دامنۀ ولتاژ دارد: <span class="en">VHV</span> (4-29V، تغذیۀ رگولاتور پرولتاژ و پایه‌های HV)، <span class="en">VDD8</span> (4-10.5V، تغذیۀ پیش‌ران MV و رگولاتور پایین) و <span class="en">VDD33</span> (3.1-3.5V، I/O معمولی و ADC و هسته). سه طرح تغذیه ممکن است: فقط VHV (دو LDO داخلی فعال)، تغذیۀ خارجی VDD8 (کاهش اتلاف داخلی؛ شرط VDD8 ≤ VHV برای جلوگیری از بازگشت جریان) و تغذیۀ خارجی هم‌زمان VDD33/VDD8 (بهترین بازده؛ رابطۀ VDD33 ≤ VDD8 ≤ VHV). حفاظت اضافه‌ولتاژ/دما با تقسیم مقاومتی روی PB4 و بیت OV_CFG، پیش‌ران ۴ نیم‌پل با خازن بوت‌استرپ (~1uF)، منطقۀ مرده 10 بیت با فرمول‌های DTG و ترمز از طریق مقایسه‌گرهای CMP2/CMP3 با DAC اختصاصی شرح داده شده است.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>MCU صنعتی موتور با کارکرد پایۀ <span class="en">CH32M030</span>؛ این سند سیستم تغذیۀ تراشه و کاربرد موتور را معرفی می‌کند. ویژگی‌های اصلی آن شامل پشتیبانی تغذیه با ورودی ولتاژ بالا در بازۀ پهن و پشتیبانی از پیش‌ران پیش‌دروازۀ گیت ۴ جفت ترانزیستور توان نوع N است.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>MCU عمومی</td><td><span class="en">CH32M030</span></td></tr>
+  </table>
+</div>
+
+<h3 class="h2x" id="sec-intro-tech"><span class="dm">◆</span>توضیح مختصر فنی</h3>
+<p style="color:#9a8f83;font-size:11.6px;margin-top:-4px;">این بخش افزودۀ مترجم برای درک بهتر مفاهیم سند است و در متن اصلی وجود ندارد.</p>
+<p><b style="color:#8a4a12;">۱. سه دامنۀ ولتاژ یعنی چه؟</b></p>
+<p>CH32M030 سه سطح ولتاژ داخلی دارد: ورودی پرولتاژ <span class="en">VHV</span>، دامنۀ میانی <span class="en">VDD8</span> که پیش‌ران گیت‌ها را تغذیه می‌کند و دامنۀ منطقی <span class="en">VDD33</span>. دو رگولاتور (LDO) داخلی این سه دامنه را از هم جدا می‌کنند؛ طرح تغذیۀ خارجی شما تعیین می‌کند کدام LDOها کار کنند.</p>
+<p><b style="color:#8a4a12;">۲. خازن بوت‌استرپ برای چیست؟</b></p>
+<p>برای روشن‌کردن کامل ترانزیستور N-MOS بالایی، ولتاژ گیت باید حدود 10V بالاتر از سورس (که تا VHV بالا می‌رود) باشد. خازن بوت‌استرپ بین VB و VS انرژی لازم را ذخیره می‌کند: وقتی نیم‌پل پایینی هدایت می‌کند با VDD8 شارژ می‌شود و وقتی نیم‌پل بالایی هدایت می‌کند، تغذیۀ گیت را تا VHV+VDD8 بالا می‌برد.</p>
+<p><b style="color:#8a4a12;">۳. منطقۀ مرده و ترمز</b></p>
+<p>سوئیچینگ مکمل بدون فاصله باعث اتصال کوتاه لحظه‌ای (اتصال از پشت) می‌شود؛ تایمر پیشرفته با مولد 10 بیتِ منطقۀ مرده این فاصله را تضمین می‌کند و مقایسه‌گرهای داخلی با ورودی ترمز، در خطا خروجی‌ها را فوراً خاموش می‌کنند.</p>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">شرح کامل طرح تغذیه</div>
+  <div class="sec-divider"></div>
+</div>
+<p>طراحی سیستم تغذیۀ CH32M030 نسبتاً پیچیده است و ورودی پرولتاژ با بازۀ پهن را پشتیبانی می‌کند؛ این بخش طرح تغذیۀ تراشه، مدارهای نمونه و نکات را معرفی می‌کند تا کاربر طراحی تغذیه را به‌درستی کامل کند.</p>
+<h3 class="h2x" id="sec-11"><span class="dm">◆</span>۱.۱ پایه‌های ولتاژ و دامنه‌های ولتاژ</h3>
+<p>تغذیۀ <span class="en">CH32M030</span> را می‌توان به‌صورت رگولاتور داخلی سه‌مرحله‌ای دید؛ معماری آن چنین است: VHV پایۀ ورودی ولتاژ بالاست که از طریق رگولاتور پرولتاژ داخلی، ولتاژ تغذیۀ VDD8 را تأمین می‌کند و VDD8 از طریق رگولاتور پایین داخلی، ولتاژ تغذیۀ VDD33 را تولید می‌کند. پایه‌ها و بارهای کارکردی متناظر در جدول زیر آمده است.</p>
+<div class="tblwrap" id="tab-02">
+  <div class="tblcap"><span class="cap-pill">جدول ۲</span><span class="cap-text">جدول پایه‌ها و بارهای کارکردی</span></div>
+  <table class="tbl">
+    <tr><th style="width:20%;">دامنۀ ولتاژ</th><th style="width:20%;">نام پایه</th><th style="width:22%;">ولتاژ نامی</th><th>بار تغذیه‌شونده</th></tr>
+    <tr><td>دامنۀ پرولتاژ</td><td><span class="en">VHV</span></td><td><span class="en">4-29V</span></td><td>رگولاتور پرولتاژ داخلی و پایه‌های I/O پرولتاژ <span class="en">HV</span></td></tr>
+    <tr><td>دامنۀ ولتاژ متوسط</td><td><span class="en">VDD8</span></td><td><span class="en">4-10.5V</span></td><td>پایه‌های I/O پیش‌ران <span class="en">MV</span> و رگولاتور پایین داخلی</td></tr>
+    <tr><td>دامنۀ ولتاژ پایین</td><td><span class="en">VDD33</span></td><td><span class="en">3.1-3.5V</span></td><td>پایه‌های I/O معمولی و ADC و رگولاتور هسته</td></tr>
+  </table>
+</div>
+<h3 class="h2x" id="sec-12"><span class="dm">◆</span>۱.۲ طرح‌های مختلف تغذیه</h3>
+<p>CH32M030 بر اساس نیازهای کاربرد سیستم، سه طرح پیکربندی تغذیۀ نمونه ارائه می‌دهد. در طراحی، طرح مناسب باید با در نظر گرفتن هم‌زمان مصرف توان، بازده و هزینه انتخاب شود.</p>
+<h3 class="h3x" id="sec-121"><span class="dm">›</span>۱.۲.۱ تغذیه با VHV به‌تنهایی</h3>
+<p>چون CH32M030 دو رگولاتور داخلی دارد، می‌توان فقط <span class="en">VHV</span> را به‌تنهایی تغذیه کرد؛ یعنی تنها یک ورودی منبع تغذیۀ خارجی VHV؛ رگولاتورهای پرولتاژ و پایین داخلی به‌ترتیب برای VDD8 و VDD33 تغذیه فراهم می‌کنند. در این حالت تغذیه، پایه‌های VDD8 و VDD33 را می‌توان خروجی ولتاژ در نظر گرفت و تراشه بدون تراشۀ تغذیۀ اضافی به‌طور عادی کار می‌کند. مدار نمونۀ تغذیۀ VHV تنها در شکل آمده است.</p>
+<div class="fig" id="fig-01">
+  <div class="figbox"><img src="assets/img/an94000-fig01.png" alt="تغذیه با VHV تنها" style="max-width:380px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱</span><span class="cap-text">تغذیه با VHV تنها (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>ولتاژ ورودی VDD8 را می‌توان با ثبات تنظیم کرد؛ اما پیش از تنظیم باید به ولتاژ تغذیۀ VHV توجه شود: اگرچه بازۀ تغذیۀ VHV برابر 4-29V است، اما هنگامی که تغذیه پایین باشد، ولتاژ خروجی LDO افت می‌کند. اگر تغذیۀ VHV برابر 5V و ولتاژ انتخابی VDD8 برابر 5V باشد، LDO همچنان در ناحیۀ افت ولتاژ کار می‌کند و خروجی VDD8 حدود VHV−0.2V خواهد بود. بنابراین برای رسیدن به ولتاژ خروجی تنظیم‌شدۀ VDD8، پیشنهاد می‌شود ولتاژ تغذیۀ VHV برابر: <span class="en">VDD8+0.8V</span> باشد.</p>
+<h3 class="h3x" id="sec-122"><span class="dm">›</span>۱.۲.۲ تغذیه با VDD8 به‌تنهایی</h3>
+<p>در این طرح، VDD8 به‌طور جداگانه توسط LDO خارجی یا منبع کلیدی‌شونده تغذیه می‌شود و VHV همچنان بخش پرولتاژ تراشه را تغذیه می‌کند. این طرح بار مصرفی رگولاتور داخلی را کاهش می‌دهد. مدار نمونۀ تغذیۀ VDD8 تنها در شکل آمده است.</p>
+<div class="fig" id="fig-02">
+  <div class="figbox"><img src="assets/img/an94000-fig02.png" alt="تغذیۀ خارجی مستقیم VDD8" style="max-width:420px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۲</span><span class="cap-text">تغذیۀ خارجی مستقیم VDD8 (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>در این طرح، تغذیۀ خارجی می‌تواند به‌طور مؤثر از گرم‌شدن تراشه ناشی از مصرف داخلی زیاد جلوگیری کند. بر اساس ویژگی LDO، بازده آن را می‌توان به‌سادگی چنین دید:</p>
+<div class="codeblk"><span class="cm">η = (VOUT / VIN) × 100%</span></div>
+<p>اتلاف توان به شکل گرما آزاد می‌شود و هنگام کار تراشه، توان اتلافی را می‌توان چنین دید:</p>
+<div class="codeblk"><span class="cm">P = (Vin − VOUT) × IOUT</span></div>
+<p>می‌توان دید که در شرایط کار یکسان، هرچه ولتاژ ورودی بیشتر باشد، بازده تبدیل LDO داخلی پایین‌تر و توان اتلافی بیشتر است و دمای تراشه شدیدتر بالا می‌رود؛ بنابراین می‌توان از تغذیۀ خارجی VDD8 استفاده کرد. هنگام تغذیه، ولتاژ ورودی باید بالاتر از ولتاژ خروجی VDD8 باشد تا LDO داخلی در حالت بدون بار بماند.</p>
+<p>در این طرح، هرچند تغذیۀ VHV در درجه اول برای پایۀ پرولتاژ است، اما حتی در مواردی که از کاربرد پایۀ پرولتاژ VHV استفاده نمی‌شود نیز باید به VHV تغذیه داده شود تا از بازگشت جریان به LDO داخلی جلوگیری شود. بر اساس اصل LDO، هنگامی که VOUT از VIN به اندازۀ افت دیود بین سورس و دریین بیشتر شود، دیود به‌صورت مستقیم هدایت می‌کند و مسیر بازگشت جریان شکل می‌گیرد؛ اگر جریان تغذیه بیش از حد زیاد باشد ممکن است LDO آسیب ببیند و در زمان کار جریان بزرگی خارج شود و کار تراشه غیرعادی گردد. بنابراین برای کار عادی باید هم VDD8 و هم VHV تغذیه شوند و شرط ولتاژ تغذیه چنین است:</p>
+<div class="codeblk"><span class="cm">VDD8 ≤ VHV</span></div>
+<h3 class="h3x" id="sec-123"><span class="dm">›</span>۱.۲.۳ تغذیه با VDD33 به‌تنهایی</h3>
+<p>تغذیۀ VDD33 به‌تنهایی، بهترین طرح تغذیه از نظر بازده است؛ VDD8 و VDD33 هر دو توسط منبع خارجی به‌طور مستقل تغذیه می‌شوند و دو LDO داخلی کار نمی‌کنند. برای کاربردهایی با الزامات شدید در مصرف توان و دما مناسب است. مدار نمونۀ تغذیۀ VDD33 تنها در شکل آمده است.</p>
+<div class="fig" id="fig-03">
+  <div class="figbox"><img src="assets/img/an94000-fig03.png" alt="تغذیۀ خارجی مستقیم VDD33 و VDD8" style="max-width:420px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۳</span><span class="cap-text">تغذیۀ خارجی مستقیم VDD33 و VDD8 (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>در این طرح همچنان باید به VHV و VDD8 به‌طور جداگانه تغذیه داده شود و رابطۀ ولتاژ باید شرط <span class="en">VDD33 &lt;= VDD8 &lt;= VHV</span> را برآورده کند. منبع ولتاژ VDD3 هم‌زمان منبع تغذیۀ ADC داخلی و ولتاژ مرجع ADC است؛ بنابراین در این طرح، تغذیۀ مستقل VDD33 با منبع پایدار می‌تواند به‌طور مؤثر مزاحمت منبع تغذیه را کاهش دهد؛ افزون بر این، اگر بخواهید از منبع مرجع ولتاژ متفاوتی استفاده کنید، می‌توان از همان منبع پایدار برای تغذیۀ هم‌زمان VDD33، VDD8 و VHV استفاده کرد.</p>
+
+<h3 class="h2x" id="sec-13"><span class="dm">◆</span>۱.۳ نکات طراحی</h3>
+<p>بر اساس ویژگی‌های تغذیۀ CH32M030، از انتخاب خازن کنارگذر و طراحی مدار حفاظت اضافه‌ولتاژ/اضافه‌دما و تغذیۀ I/O پرولتاژ و پیش‌ران، برای کمک به اجتناب از ریسک طراحی سخت‌افزاری.</p>
+<h3 class="h3x" id="sec-131"><span class="dm">›</span>۱.۳.۱ خازن کنارگذر</h3>
+<p>معنای هسته‌ای خازن کنارگذر، پایدارسازی ولتاژ منبع تغذیه و مهار نویز تغذیه است. انتخاب درست ظرفیت و پارامترهای خازن کنارگذر مستقیماً بر صحت سیگنال و صحت تغذیه اثر می‌گذارد.</p>
+<p><b style="color:#8a4a12;">۱) انتخاب اندازۀ خازن:</b> هنگام روشن‌شدن CH32M030 اغلب نرخ تغییر جریان بسیار بالا (di/dt) همراه است؛ هنگامی که ولتاژ تغذیه در محدودۀ پرولتاژ است، بر اساس قانون القای الکترومغناطیسی:</p>
+<div class="codeblk"><span class="cm">V = L × di/dt</span></div>
+<p>هرچه ولتاژ تغذیه بالاتر باشد، پیک ولتاژ خروجی بیشتر می‌شود و ممکن است هنگام روشن‌شدن باعث ریست اضافه‌ولتاژ تراشه شود. بنابراین در انتخاب خازن کنارگذر، برای پایه‌های ولتاژ VHV و VDD8 شیوۀ <span class="en">10uF/0.1uF</span> برای مهار اثر اضافه‌شدن ولتاژ انتخاب می‌شود.</p>
+<p><b style="color:#8a4a12;">۲) انتخاب مشخصات خازن:</b> هنگام استفاده از خازن باید ولتاژ نامی مناسب انتخاب شود؛ اگر خازن با ولتاژ نامی پایین استفاده شود و ورودی پرولتاژ VHV از ولتاژ نامی خازن بیشتر شود، ضریب اریبی خازن بالا می‌رود و حتی ممکن است خازن بشکند و اتصال کوتاه رخ دهد. به‌طور کلی بهتر است ولتاژ نامی خازن سرامیکی معمولی حدود 2 تا 3 برابر بالاترین ولتاژ ورودی باشد؛ بنابراین برای تغذیۀ معمول VHV می‌توان انتخاب خازن با ولتاژ نامی حدود <span class="en">50V</span> را در نظر گرفت.</p>
+<p><b style="color:#8a4a12;">۳) پیشنهاد سیم‌کشی:</b> در سیم‌کشی منبع تغذیه باید تعداد ویاها و پیچ‌وتاب مسیر کم شود تا القاگری پارازیتی کاهش یابد و از اضافه‌شدن ولتاژ گذرای لحظۀ روشن‌شدن تراشه جلوگیری شود؛ خازن کنارگذر باید نزدیک پایه باشد و ترتیب مسیر تغذیه مطابق ظرفیت، ابتدا از خازن 10uF و سپس خازن 0.1uF عبور کند تا ویژگی‌های ESL و ESR بهبود یابد.</p>
+<h3 class="h3x" id="sec-132"><span class="dm">›</span>۱.۳.۲ حفاظت اضافه‌ولتاژ / اضافه‌دما</h3>
+<p>CH32M030 از حفاظت اضافه‌ولتاژ/اضافه‌دما پشتیبانی می‌کند؛ ولتاژ VHV از طریق تقسیم مقاومتی با ولتاژ مقایسۀ ریست PB4 مقایسه می‌شود و حفاظت ریست اضافه‌ولتاژ/اضافه‌دمای تراشه انجام می‌گیرد.</p>
+<div class="fig" id="fig-04">
+  <div class="figbox"><img src="assets/img/an94000-fig04.png" alt="توپولوژی حفاظت ریست اضافه‌ولتاژ/دمای تراشه" style="max-width:380px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۴</span><span class="cap-text">توپولوژی حفاظت ریست اضافه‌ولتاژ/دمای تراشه (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>VHV پس از تقسیم ولتاژ با دو مقاومت خارج از تراشه به PB4 وصل می‌شود و کارکرد آن از طریق پیکربندی ثبات قابل تنظیم است:</p>
+<p><b style="color:#8a4a12;">۱.</b> با پیکربندی <span class="en">OV_CFG</span> برابر 0، حفاظت اضافه‌ولتاژ اجباری فعال است؛ هنگامی که ولتاژ پایۀ PB4 از ولتاژ آستانۀ ریست اضافه‌ولتاژ <span class="en">OVP</span> بیشتر شود، سیستم در حالت ریست قرار می‌گیرد. مثلاً با مقاومت بالایی 200K و مقاومت پایینی 15K، مطابق نقطۀ ولتاژ ریست <span class="en">VOVP_REF</span>، ولتاژ ریست اضافه‌ولتاژ حدود 21.5V به دست می‌آید. بر اساس این کارکرد می‌توان از این دو شیوه استفاده کرد: ۱) R2 را ترمیستور انتخاب کرد تا در همان ولتاژ، با حس‌کردن دما، حفاظت اضافه‌دما انجام شود؛ ۲) R2 مقاومت ثابت باشد و بر اساس بازۀ ولتاژ VHV حفاظت اضافه‌ولتاژ انجام شود.</p>
+<p><b style="color:#8a4a12;">۲.</b> با پیکربندی <span class="en">OV_CFG</span> برابر 1، کارکرد تشخیص توسط کلمۀ پیکربندی <span class="en">SEL_IO_VHV</span> تعیین می‌شود: وقتی کلمۀ پیکربندی <span class="en">SEL_IO_VHV[1:0]</span> برابر <span class="en">10b</span> باشد، پایش تقسیم ولتاژ VHV انجام و مقدار کانال برای نمونه‌برداری ADC خوانده می‌شود؛ <span class="en">01b</span> یعنی PB4 به‌عنوان I/O معمولی استفاده می‌شود؛ <span class="en">11b</span> حفاظت اضافه‌ولتاژ اجباری است.</p>
+<h3 class="h3x" id="sec-133"><span class="dm">›</span>۱.۳.۳ ورودی/خروجی پرولتاژ و تغذیۀ پیش‌ران</h3>
+<p>CH32M030 دارای ۴ جفت پیش‌ران گیت نیم‌پل داخلی است و درایو نیم‌پل N-MOSFET را پشتیبانی می‌کند؛ ساختار درایو نیم‌پل داخلی در شکل زیر آمده است.</p>
+<div class="fig" id="fig-05">
+  <div class="figbox"><img src="assets/img/an94000-fig05.png" alt="نمودار ساختاری پیش‌ران یک نیم‌پل" style="max-width:480px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۵</span><span class="cap-text">نمودار ساختاری پیش‌ران یک نیم‌پل (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>می‌توان دید که نیم‌پل پایینی توسط پایۀ GPIO با ولتاژ VB کنترل می‌شود؛ هنگامی که خروجی پایین‌پل بالا باشد ترانزیستور پایین هدایت می‌کند و خروجی سطح پایین است، و بالایی توسط پایۀ پرولتاژ کنترل می‌شود؛ هنگامی که پایۀ بالایی سطح بالا خروجی بدهد ترانزیستور بالا هدایت می‌کند و ولتاژ خروجی سطح VHV است. بنابراین وقتی ترانزیستور پایین هدایت می‌کند، خروجی پایه ولتاژ VDD8 است و شرط هدایت ترانزیستور پایین برآورده می‌شود. وقتی ترانزیستور بالا هدایت می‌کند، به خازن بوت‌استرپ خارجی نیاز است تا ولتاژ خروجی پایۀ پرولتاژ (VB0) بالا برده شود؛ هنگامی که نیم‌پل پایینی هدایت می‌کند، ولتاژ VS0 به GND وصل است و از طریق ولتاژ VDD8 خازن شارژ می‌شود تا با سطح VDD8 برابر شود؛ هنگامی که نیم‌پل بالایی هدایت می‌کند، دیود مسیر تغذیۀ VDD8 قطع معکوس می‌شود و خازن نمی‌تواند از VDD8 شارژ بگیرد؛ انرژی آن از طریق VD0 به تغذیۀ گیت بالایی می‌رود و در این حالت سطح VS0 برابر VHV و سطح خروجی PB9 برابر <span class="en">VHV+VDD8</span> است.</p>
+<p><b style="color:#8a4a12;">انتخاب خازن بوت‌استرپ:</b> برای هر نیم‌پل باید بین VB-VS خازن بوت‌استرپ خارجی وصل شود. هنگام انتخاب خازن بوت‌استرپ باید به موارد زیر توجه کرد: <b>۱.</b> زمان شارژ/تخلیۀ خازن بوت‌استرپ — هنگامی که نیم‌پل پایین هدایت می‌کند و خازن شارژ می‌شود، اگر زمان هدایت کوتاه باشد ولتاژ شارژ خازن ممکن است کم بماند و شرط هدایت نیم‌پل بالایی برآورده نشود؛ بنابراین در فرکانس بالا خازن با ظرفیت کوچک‌تر و در فرکانس پایین خازن با ظرفیت بزرگ‌تر انتخاب می‌شود. <b>۲.</b> تشکیل رزونانس LC با القاگری مسیرها که باعث تحریک کاذب نیم‌پل می‌شود؛ بنابراین مسیر بین VB-VS باید تا حد ممکن کوتاه و پهن کشیده شود. <b>۳.</b> تأخیر درایو نیم‌پل بالایی — چون خازن بوت‌استرپ فرایند تخلیه دارد، هنگام هدایت نیم‌پل بالایی تأخیر تخلیه وجود دارد؛ بنابراین خازن بوت‌استرپ نباید آن‌قدر بزرگ باشد که به سخت‌افزار آسیب بزند و نباید آن‌قدر کوچک باشد که انرژی ذخیره ناکافی بماند و نیم‌پل بالایی نتواند به‌طور کامل هدایت کند؛ انتخاب خازن بوت‌استرپ حدود <span class="en">1uF</span> مناسب است.</p>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">کاربرد پیش‌ران دامنۀ موتور</div>
+  <div class="sec-divider"></div>
+</div>
+<h3 class="h2x" id="sec-21"><span class="dm">◆</span>۲.۱ شرح کامل درایو نیم‌پل</h3>
+<p>CH32M030 دارای ۴ درایو نیم‌پل داخلی است و توپولوژی آن می‌تواند برای موتور DC بدون جاروبک و موتور پله‌ای استفاده شود. توپولوژی موتور بدون جاروبک سه‌فازه (BLDC) به شرح زیر است:</p>
+<div class="fig" id="fig-06">
+  <div class="figbox"><img src="assets/img/an94000-fig06.png" alt="توپولوژی موتور بدون‌جاروبک (BLDC)" style="max-width:400px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۶</span><span class="cap-text">توپولوژی موتور بدون‌جاروبک BLDC (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>با کنترل ترانزیستورهای MOS نیم‌پل مطابق موقعیت روتور و تعویض الکترونیکی جهت جریان، فازهای موتور جابه‌جا می‌شوند؛ در هر لحظه یک فاز به پالس مثبت وصل است (نیم‌پل بالا)، یک فاز به پالس منفی (نیم‌پل پایین) و فاز سوم معلق است. با مثال فاز A، به‌ترتیب مطابق موقعیت روتور هدایت می‌شود:</p>
+<div class="tblwrap" id="tab-03">
+  <div class="tblcap"><span class="cap-pill">جدول ۳</span><span class="cap-text">حالت‌های هدایت روتور</span></div>
+  <table class="tbl">
+    <tr><th style="width:14%;">حالت</th><th style="width:22%;">ترانزیستورهای هدایت‌شونده</th><th style="width:30%;">مسیر جریان</th><th>جهت میدان استاتور</th></tr>
+    <tr><td>1</td><td><span class="en">Q1,Q4</span></td><td><span class="en">A-&gt;B</span></td><td><span class="en">30°</span></td></tr>
+    <tr><td>2</td><td><span class="en">Q1,Q6</span></td><td><span class="en">A-&gt;C</span></td><td><span class="en">90°</span></td></tr>
+    <tr><td>3</td><td><span class="en">Q3,Q4</span></td><td><span class="en">B-&gt;C</span></td><td><span class="en">150°</span></td></tr>
+    <tr><td>4</td><td><span class="en">Q3,Q2</span></td><td><span class="en">B-&gt;A</span></td><td><span class="en">210°</span></td></tr>
+    <tr><td>5</td><td><span class="en">Q5,Q2</span></td><td><span class="en">C-&gt;A</span></td><td><span class="en">270°</span></td></tr>
+    <tr><td>6</td><td><span class="en">Q5,Q4</span></td><td><span class="en">C-&gt;B</span></td><td><span class="en">330°</span></td></tr>
+  </table>
+</div>
+<p>هنگام کلیدزنی ترانزیستور نیم‌پل بالایی، چون بار القایی و پارازیت وجود دارد، نیروی ضد محرکه باعث پیک ولتاژ می‌شود؛ در انتخاب N-MOS باید مشخصاتی حداقل 50٪ تا 100٪ بالاتر از ولتاژ شین انتخاب شود؛ مثلاً برای ولتاژ تغذیه 25V باید ترانزیستور N-MOS با تحمل ولتاژ حدود 42V انتخاب شود.</p>
+<p>به‌سبب خازن بوت‌استرپ، در شرایط کار عادی ولتاژ <span class="en">VGS</span> برابر VDD8 است؛ چون نیم‌پل، درایو N-mos است، می‌توان با تنظیم ولتاژ VDD8 جریان بار را افزایش داد؛ VDD8 با بیت‌های <span class="en">VDD8_SEL[1:0]</span> روی <span class="en">5/8/9/10V</span> قابل انتخاب است. معمولاً در لحظۀ راه‌اندازی موتور، روی مبنای محدودسازی جریان، جریان <span class="en">ID</span> انتخاب N-MOS نیز حدود 50٪ تا 100٪ بالاتر از جریان نامی انتخاب می‌شود تا از آسیب قطعه جلوگیری شود.</p>
+<h3 class="h2x" id="sec-22"><span class="dm">◆</span>۲.۲ پیکربندی تایمر</h3>
+<p>پایه‌های دامنۀ کنترل CH32M030 به قطعۀ اضافی نیاز ندارند و می‌توان مستقیماً از کارکرد خروجی تایمر برای کنترل موتور استفاده کرد.</p>
+<h3 class="h3x" id="sec-221"><span class="dm">›</span>۲.۲.۱ تولید سیگنال</h3>
+<p>CH32M030 می‌تواند 2 مسیر سیگنال مکمل خروجی بدهد؛ کانال مقایسه/گرفتن معمولاً دو پایۀ خروجی دارد (کانال مقایسه/گرفتن 4 تنها یک پایۀ خروجی دارد) و می‌تواند دو سیگنال مکمل (<span class="en">OCx</span> و <span class="en">OCxN</span>) خروجی بدهد. قطبیت OCx و OCxN با بیت‌های <span class="en">CCxP</span> و <span class="en">CCxNP</span> به‌طور مستقل تنظیم می‌شود، فعال‌سازی خروجی با <span class="en">CCxE</span> و <span class="en">CCxNE</span> به‌طور مستقل انجام می‌شود و منطقۀ مرده و کنترل‌های دیگر با بیت‌های <span class="en">MOE</span>، <span class="en">OIS</span>، <span class="en">OISN</span>، <span class="en">OSSI</span> و <span class="en">OSSR</span> تنظیم می‌شوند. بیت‌های کنترل و حالت خروجی در جدول زیر آمده است:</p>
+<div class="tblwrap" id="tab-04">
+  <div class="tblcap"><span class="cap-pill">جدول ۴</span><span class="cap-text">پیکربندی تایمر پیشرفته</span></div>
+  <table class="tbl">
+    <tr><th><span class="en">MOE</span></th><th><span class="en">OSSI</span></th><th><span class="en">OSSR</span></th><th><span class="en">OCxE</span></th><th><span class="en">OCxNE</span></th><th>حالت خروجی <span class="en">OCx</span></th><th>حالت خروجی <span class="en">OCxN</span></th><th>کاربرد نمونه</th></tr>
+    <tr><td>1</td><td>×</td><td>0</td><td>0</td><td>0</td><td>خروجی ممنوع</td><td>خروجی ممنوع</td><td>عمومی</td></tr>
+    <tr><td>×</td><td>0</td><td>0</td><td>1</td><td>0</td><td>خروجی ممنوع</td><td><span class="en">OCxREF</span> + قطبیت</td><td>عمومی</td></tr>
+    <tr><td>×</td><td>0</td><td>1</td><td>0</td><td>0</td><td><span class="en">OCxREF</span> + قطبیت</td><td>خروجی ممنوع</td><td>عمومی</td></tr>
+    <tr><td>×</td><td>0</td><td>1</td><td>1</td><td>1</td><td><span class="en">OCxREF</span> + قطبیت + منطقۀ مرده</td><td><span class="en">OCxREF</span> + قطبیت + منطقۀ مرده</td><td>عمومی</td></tr>
+    <tr><td>×</td><td>1</td><td>0</td><td>0</td><td>0</td><td>خروجی ممنوع</td><td>خروجی ممنوع</td><td>کنترل موتور</td></tr>
+    <tr><td>×</td><td>1</td><td>0</td><td>1</td><td>0</td><td>حالت خاموش</td><td><span class="en">OCxREF</span> + قطبیت</td><td>کنترل موتور</td></tr>
+    <tr><td>×</td><td>1</td><td>1</td><td>0</td><td>1</td><td><span class="en">OCxREF</span> + قطبیت</td><td>حالت خاموش</td><td>کنترل موتور</td></tr>
+    <tr><td>×</td><td>1</td><td>1</td><td>1</td><td>1</td><td><span class="en">OCxREF</span> + قطبیت + منطقۀ مرده</td><td><span class="en">OCxREF</span> + قطبیت + منطقۀ مرده</td><td>کنترل موتور</td></tr>
+    <tr><td>0</td><td>0</td><td>×</td><td>×</td><td>×</td><td>خروجی ممنوع</td><td>خروجی ممنوع</td><td>خروجی از پورت I/O جدا می‌شود؛ همه PWM خاموش</td></tr>
+    <tr><td>0</td><td>1</td><td>×</td><td>×</td><td>×</td><td>حالت خاموش*</td><td>حالت خاموش*</td><td>همۀ PWM خاموش*</td></tr>
+  </table>
+</div>
+<p style="font-size:11px;color:#9a8f83;margin-top:-6px;">* ابتدا خروجی‌های OCx و OCxN به سطح غیرفعال متناظر اجبار می‌شوند، پس از یک منطقۀ مرده به سطح آزاد متناظر اجبار می‌شوند؛ تایمر کنترل خروجی را حفظ می‌کند. (× یعنی بدون اثر)</p>
+<p>مثلاً هنگامی که روی کانال پیکربندی‌شده به خروجی، به دلیل رویداد قطع یا عملیات نوشتاری نرم‌افزار مقدار <span class="en">MOE=1</span> شود، از گزینۀ حالت خاموش بیت حالت آزاد (<span class="en">OSSI</span>) استفاده می‌شود. وقتی این بیت 1 شود، ابتدا خروجی‌های OCx و OCxN به سطح غیرفعال متناظر اجبار می‌شوند و پس از یک منطقۀ مرده به سطح آزاد متناظر اجبار می‌گردند؛ تایمر کنترل خروجی را حفظ می‌کند.</p>
+<h3 class="h3x" id="sec-222"><span class="dm">›</span>۲.۲.۲ کارکرد منطقۀ مرده</h3>
+<p>در حالت ایده‌آل دو حالت کلیدزنی مکمل‌اند: هنگام روشن‌شدن نیم‌پل بالا، پایین فوراً خاموش می‌شود و برعکس؛ به این ترتیب جریان می‌تواند در جهت تعیین‌شده از موتور عبور کند. اما قطعات توان تأخیر روشن‌شدن و خاموش‌شدن دارند (حدود چند صد نانوثانیه)؛ اگر به شکل خروجی مکمل عمل شود، هنگام کلیدزنی قطعه، در همان لحظۀ کوتاه، نیم‌پل بالا و پایین هم‌زمان در حالت هدایت قرار می‌گیرند و این باعث تشکیل اتصال کوتاه میان منبع و زمین می‌شود و جریان کوتاه بزرگی در لحظه تولید می‌کند که ممکن است ترانزیستورهای MOS بالا و پایین را بسوزاند. بنابراین لازم است با شیوۀ درج منطقۀ مرده سخت‌افزاری، زمان‌های کلیدزنی از هم جدا شوند تا از هدایت هم‌زمان بالا و پایین جلوگیری شود.</p>
+<p>با فعال‌سازی خروجی‌های OCx و OCxN منطقۀ مرده درج می‌شود و هر کانال یک مولد منطقۀ مرده 10 بیت دارد. اگر OCx و OCxN فعال-بالا باشند: ۱. سیگنال خروجی OCx با سیگنال مرجع یکسان است، فقط لبه بالارونده آن نسبت به لبه بالاروندۀ سیگنال مرجع تأخیر دارد. ۲. سیگنال خروجی OCxN با سیگنال مرجع معکوس است، فقط لبه بالارونده آن نسبت به لبه پایین‌روندۀ سیگنال مرجع تأخیر دارد. شکل زیر رابطۀ OCx و OCxN با OCxREF را نشان می‌دهد و منطقۀ مرده را نمایش می‌دهد.</p>
+<div class="fig" id="fig-07">
+  <div class="figbox"><img src="assets/img/an94000-fig07.png" alt="خروجی مکمل و منطقۀ مرده" style="max-width:460px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۷</span><span class="cap-text">خروجی مکمل و منطقۀ مرده (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>پارامتر منطقۀ مرده با <span class="en">DTG[7:0]</span> و ساعت منطقۀ مرده (Tdtg) محاسبه می‌شود؛ ساعت منطقۀ مرده و مدت منطقۀ مرده (DT) به شرح زیر محاسبه می‌شوند:</p>
+<div class="codeblk"><span class="cm">اگر DTG[7:5] = 0xxb باشد:</span>  Tdtg = TDTS،            DT = DTG[7:0] × Tdtg
+<span class="cm">اگر DTG[7:5] = 10xb باشد:</span>  Tdtg = 2×TDTS،          DT = (64 + DTG[5:0]) × Tdtg
+<span class="cm">اگر DTG[7:5] = 110b باشد:</span>  Tdtg = 8×TDTS،          DT = (32 + DTG[4:0]) × Tdtg
+<span class="cm">اگر DTG[7:5] = 111b باشد:</span>  Tdtg = 16×TDTS،         DT = (32 + DTG[4:0]) × Tdtg</div>
+<p>که در آن TDTS با <span class="en">CKD[1:0]</span> پیکربندی می‌شود:</p>
+<div class="codeblk"><span class="cm">اگر CKD[1:0] = 00b باشد:</span>  TDTS = TCK_INT
+<span class="cm">اگر CKD[1:0] = 01b باشد:</span>  TDTS = 2×TCK_INT
+<span class="cm">اگر CKD[1:0] = 10b باشد:</span>  TDTS = 4×TCK_INT</div>
+<p>هنگام استفاده از توابع کتابخانه‌ای، پیکربندی درج منطقۀ مرده در کانال مکمل به شرح زیر است:</p>
+<div class="codeblk">void TIM1_Dead_Time_Init(u16 arr, u16 psc, u16 ccp)
+{
+    GPIO_InitTypeDef        GPIO_InitStructure = {0};
+    TIM_OCInitTypeDef       TIM_OCInitStructure = {0};
+    TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStructure = {0};
+    TIM_BDTRInitTypeDef     TIM_BDTRInitStructure = {0};
+
+    RCC_PB2PeriphClockCmd(RCC_PB2Periph_GPIOB | RCC_PB2Periph_TIM1, ENABLE);
+
+    <span class="cm">/* TIM1_CH1 */</span>
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_30MHz;
+    GPIO_Init(GPIOB, &amp;GPIO_InitStructure);
+
+    <span class="cm">/* TIM1_CH1N */</span>
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_30MHz;
+    GPIO_Init(GPIOB, &amp;GPIO_InitStructure);
+
+    TIM_TimeBaseInitStructure.TIM_Period = arr;
+    TIM_TimeBaseInitStructure.TIM_Prescaler = psc;
+    TIM_TimeBaseInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
+    TIM_TimeBaseInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
+    TIM_TimeBaseInit(TIM1, &amp;TIM_TimeBaseInitStructure);
+
+    TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM2;
+    TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
+    TIM_OCInitStructure.TIM_OutputNState = TIM_OutputNState_Enable;
+    TIM_OCInitStructure.TIM_Pulse = ccp;
+    TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
+    TIM_OCInitStructure.TIM_OCNPolarity = TIM_OCNPolarity_High;
+    TIM_OCInitStructure.TIM_OCIdleState = TIM_OCIdleState_Reset;
+    TIM_OCInitStructure.TIM_OCNIdleState = TIM_OCNIdleState_Reset;
+    TIM_OC1Init(TIM1, &amp;TIM_OCInitStructure);
+
+    TIM_BDTRInitStructure.TIM_OSSIState = TIM_OSSIState_Disable;
+    TIM_BDTRInitStructure.TIM_OSSRState = TIM_OSSRState_Disable;
+    TIM_BDTRInitStructure.TIM_LOCKLevel = TIM_LOCKLevel_OFF;
+    TIM_BDTRInitStructure.TIM_DeadTime = 0x03;
+    TIM_BDTRConfig(TIM1, &amp;TIM_BDTRInitStructure);
+
+    TIM_CtrlPWMOutputs(TIM1, ENABLE);
+    TIM_OC1PreloadConfig(TIM1, TIM_OCPreload_Disable);
+    TIM_ARRPreloadConfig(TIM1, ENABLE);
+    TIM_Cmd(TIM1, ENABLE);
+}</div>
+<h3 class="h3x" id="sec-223"><span class="dm">›</span>۲.۲.۳ سیگنال ترمز</h3>
+<p>سیگنال ترمز خروجی تایمر را خاموش می‌کند و سازوکار حفاظت خطا است. در CH32M030 سیگنال ترمز هم می‌تواند از طریق پایۀ ترمز تایمر با قطبیت متناظر تایمر را خاموش کند و هم می‌توان از مقایسۀ خروجی مقایسه‌گر استفاده کرد و با حالت خروجی، سیگنال ترمز را کامل کرد. در CH32M030 هر دوی CMP2 و CMP3 دارای کارکرد ترمز هستند؛ با تنظیم <span class="en">CMPx_BK_EN=1</span> ورودی ترمز فعال می‌شود و با تشخیص مقدار جریان مقایسه از طریق خروجی، حفاظت قطعات توان انجام می‌گیرد. CH32M030 از نمونه‌برداری جریان ISP پشتیبانی می‌کند؛ مقدار جریان از طریق پایۀ ورودی تقویت‌کننده جمع‌آوری، از طریق تقویت‌کننده به مقایسه‌گر ارسال و خروجی داده می‌شود؛ CMP2 و CMP3 هر دو ولتاژ مقایسۀ داخلی دارند که از طریق DAC اختصاصی پیکربندی می‌شود و مقایسۀ ولتاژ بدون افزودن قطعۀ اضافی کامل می‌شود:</p>
+<div class="fig" id="fig-08">
+  <div class="figbox"><img src="assets/img/an94000-fig08.png" alt="مدار نمونه‌برداری جریان ISP داخلی" style="max-width:480px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۸</span><span class="cap-text">مدار نمونه‌برداری جریان ISP داخلی (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>پیکربندی سیگنال ترمز با استفاده از کارکرد CMP به شکل زیر است:</p>
+<div class="codeblk">    TIM_BDTRInitStructure.TIM_Break = TIM_Break_Enable;
+    TIM_BDTRInitStructure.TIM_BreakPolarity = TIM_BreakPolarity_High;
+    TIM_BDTRInitStructure.TIM_AutomaticOutput = TIM_AutomaticOutput_Disable;</div>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN94000</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/07/08</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">CH32M030</span></td><td class="jt">MCU صنعتی موتور WCH با تغذیۀ پرولتاژ (تا 29V) و ۴ جفت پیش‌ران نیم‌پل N-MOSFET داخلی</td></tr>
+      <tr><td><span class="en">VHV</span></td><td class="jt">پایۀ ورودی ولتاژ بالا (4-29V)؛ تغذیۀ رگولاتور پرولتاژ داخلی و پایه‌های I/O پرولتاژ HV</td></tr>
+      <tr><td><span class="en">VDD8</span></td><td class="jt">دامنۀ ولتاژ متوسط (4-10.5V)؛ تغذیۀ پیش‌ران MV و رگولاتور پایین داخلی؛ با VDD8_SEL[1:0] روی 5/8/9/10V تنظیم می‌شود</td></tr>
+      <tr><td><span class="en">VDD33</span></td><td class="jt">دامنۀ ولتاژ پایین (3.1-3.5V)؛ تغذیۀ I/O معمولی و ADC و رگولاتور هسته؛ هم‌زمان مرجع ADC</td></tr>
+      <tr><td><span class="en">LDO سه‌مرحله‌ای</span></td><td class="jt">معماری داخلی: VHV ← رگولاتور پرولتاژ ← VDD8 ← رگولاتور پایین ← VDD33</td></tr>
+      <tr><td><span class="en">بازده LDO</span></td><td class="jt">η = (VOUT ÷ VIN) × 100%؛ اتلاف توان P = (Vin − VOUT) × IOUT به شکل گرما آزاد می‌شود</td></tr>
+      <tr><td><span class="en">بازگشت جریان (Backfeed)</span></td><td class="jt">اگر ولتاژ خروجی از ورودی LDO بیشتر شود، دیود بدنه هدایت می‌کند و جریان معکوس می‌تواند LDO را آسیب بزند؛ علت الزام VDD8 ≤ VHV</td></tr>
+      <tr><td><span class="en">خازن بوت‌استرپ</span></td><td class="jt">خازن بین VB و VS هر نیم‌پل (~1uF) که در هدایت پایین با VDD8 شارژ و در هدایت بالا تغذیۀ گیت بالایی را تا VHV+VDD8 بالا می‌برد</td></tr>
+      <tr><td><span class="en">VB0 / VS0 / VD0</span></td><td class="jt">تغذیۀ گیت بالایی، سورس بالایی و دیود بوت‌استرپ هر نیم‌پل در شکل ساختاری</td></tr>
+      <tr><td><span class="en">پیش‌ران گیت (Pre-driver)</span></td><td class="jt">۴ جفت پیش‌ران نیم‌پل داخلی برای MOSFETهای خارجی نوع N؛ پایه‌های کنترل پایین با سطح VDD8 و بالایی با سطح پرولتاژ</td></tr>
+      <tr><td><span class="en">منطقۀ مرده (Dead Time)</span></td><td class="jt">فاصلۀ اجباری بین خاموشی یک سوئیچ و روشنی مکمل آن برای جلوگیری از اتصال کوتاه؛ با بیت‌های DTG[7:0] تنظیم می‌شود</td></tr>
+      <tr><td><span class="en">DTG / TDTS / CKD</span></td><td class="jt">بیت‌های منطقۀ مرده و تقسیم ساعت تایمر: Tdtg برابر 1/2/8/16 برابر TDTS بسته به DTG[7:5]</td></tr>
+      <tr><td><span class="en">MOE / OSSI / OSSR</span></td><td class="jt">بیت‌های کنترل خروجی تایمر پیشرفته: فعال‌سازی اصلی، انتخاب وضعیت خاموش در حالت آزاد و حالت خاموشی انتخابی</td></tr>
+      <tr><td><span class="en">OCx / OCxN / OCxREF</span></td><td class="jt">خروجی اصلی، خروجی مکمل و سیگنال مرجع هر کانال؛ قطبیت با CCxP/CCxNP و فعال‌سازی با CCxE/CCxNE</td></tr>
+      <tr><td><span class="en">ترمز (Brake)</span></td><td class="jt">سازوکار حفاظت خطا که خروجی تایمر را خاموش می‌کند؛ از پایۀ ترمز یا خروجی مقایسه‌گر با TIM_Break_Enable فعال می‌شود</td></tr>
+      <tr><td><span class="en">CMP2 / CMP3</span></td><td class="jt">مقایسه‌گرهای داخلی دارای ورودی ترمز؛ با CMPx_BK_EN=1 فعال و ولتاژ مرجع با DAC اختصاصی تنظیم می‌شود</td></tr>
+      <tr><td><span class="en">ISP (نمونه‌برداری جریان)</span></td><td class="jt">سازوکار نمونه‌برداری جریان داخلی از طریق تقویت‌کننده؛ خروجی به مقایسه‌گر می‌رود و برای حفاظت قطعات توان استفاده می‌شود</td></tr>
+      <tr><td><span class="en">BLDC</span></td><td class="jt">موتور DC بدون جاروبک؛ با توپولوژی سه‌نیم‌پله و سیکل ۶ مرحله‌ای هدایت مطابق جدول حالت‌های روتور</td></tr>
+      <tr><td><span class="en">اتصال از پشت (Shoot-through)</span></td><td class="jt">هدایت هم‌زمان سوئیچ بالا و پایین یک نیم‌پل به‌سبب تأخیرهای سوئیچینگ؛ جریان کوتاه بزرگ تولید می‌کند و منطقۀ مرده برای پیشگیری از آن است</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN94000 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۲۵</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN94000</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
