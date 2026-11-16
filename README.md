@@ -91,6 +91,11 @@ This repository collects Application Notes (ANs) for **WCH CH32 microcontrollers
 - [WCH](https://www.wch.cn/) · [WCH Forum](https://www.wch.cn/bbs/forum-106-1.html)
 - [راهنماهای دوزبانه / Bilingual guides](fa/) · [اسناد چینی / Chinese sources](zh/)
 
+## تصاویر و دیاگرام‌های راهنما / Images and Diagrams
+
+- [دارایی‌های گرافیکی MES / MES visual assets](Images/GitHub-Assets/)
+- [بنر / Hero banner](Images/GitHub-Assets/MES-Hero-Banner.svg)
+
 ## تهیه و تدوین / Credits
 
 **معمار الکترونیک صنعت**  
@@ -103,9 +108,5 @@ This repository collects Application Notes (ANs) for **WCH CH32 microcontrollers
 - Instagram: https://www.instagram.com/Memar.Electronic
 - GitHub: https://github.com/MEMAR-ELECTRONIC-SANAT
 
-## تصاویر و دیاگرام‌های راهنما / Images and Diagrams
-
-- [دارایی‌های گرافیکی MES / MES visual assets](Images/GitHub-Assets/)
-- [بنر / Hero banner](Images/GitHub-Assets/MES-Hero-Banner.svg)
 
 <p align="center"><img src="Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo"></p>
