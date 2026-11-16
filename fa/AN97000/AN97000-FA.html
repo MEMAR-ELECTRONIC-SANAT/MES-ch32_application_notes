@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>ارتقای میان‌افزار USB-DFU در CH32 — ترجمۀ فارسی AN97000</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* toc page: always start at a fresh page; keep the toc-note below the header band (block y>=33.5pt) */
+.toc-page{ break-before:page; padding-top:48px; }
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">ارتقای میان‌افزار <span class="en">USB-DFU</span> در <span class="en">CH32</span></div>
+    <div class="t2">دانلود میان‌افزار فقط با انتقال کنترل USB و ابزار <span class="en">dfu-util</span></div>
+    <div class="t3">پارتیشن‌بندی فلش، ماشین حالت و اجرای تأخیری</div>
+  </div>
+  <div class="c-sub">هفت درخواست کلاس DFU، ماشین حالت ۱۱ حالته و پنج قاب داده اصلی با فرمول‌های wBlockNum و bwPollTimeout؛ طراحی توصیفگرهای USB و رشتۀ چیدمان حافظه؛ معماری Bootloader با سازوکار «آماده‌سازی در وقفه، اجرا در حلقه اصلی»؛ روند پاک‌سازی، تنظیم نشانی، نوشتن و خواندن با کد کامل و ضبط بسته‌ها؛ نصب درایور WinUSB و دستورهای dfu-util</div>
+  <div class="c-desc">ترجمۀ فارسی سند رسمی <span class="en">AN97000</span> (نسخۀ ۱٫۰، منتشرۀ <span class="en">WCH</span>): این سند کاربردی شیوۀ پیاده‌سازی ارتقای میان‌افزار USB-DFU بر پایۀ CH32 را معرفی می‌کند؛ تنها با انتقال کنترل USB می‌توان میان‌افزار را به دستگاه دانلود کرد، بدون نیاز به پروگرامر یا پایۀ اضافی. فلش درون تراشه به دو پارتیشن Bootloader و برنامه کاربردی تقسیم می‌شود و همراه با ابزار میزبان عمومی dfu-util، دانلود و بازخوانی میان‌افزار برنامه کاربردی انجام می‌شود.</div>
+  <div class="c-tags">
+    <span class="c-tag"><span class="en">USB-DFU</span></span>
+    <span class="c-tag"><span class="en">dfu-util</span></span>
+    <span class="c-tag"><span class="en">CH32L103 · USBFS</span></span>
+    <span class="c-tag"><span class="en">Bootloader</span></span>
+    <span class="c-tag"><span class="en">WinUSB</span></span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN97000 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">مقدمه | توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۴</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | مرور پروتکل DFU</span><span class="t-dots"></span><span class="t-page">۵</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-11"><span class="s-id">1.1</span><span>درخواست‌های کلاس DFU</span><span class="s-dots"></span><span class="s-page">۵</span></a>
+    <a class="toc-sub" href="#sec-12"><span class="s-id">1.2</span><span>ماشین حالت DFU</span><span class="s-dots"></span><span class="s-page">۵</span></a>
+    <a class="toc-sub" href="#sec-13"><span class="s-id">1.3</span><span>قاب‌های داده اصلی</span><span class="s-dots"></span><span class="s-page">۶</span></a>
+    <a class="toc-sub" href="#sec-131"><span class="s-id">1.3.1</span><span>قاب GET STATUS</span><span class="s-dots"></span><span class="s-page">۶</span></a>
+    <a class="toc-sub" href="#sec-132"><span class="s-id">1.3.2</span><span>قاب DOWNLOAD FIRMWARE</span><span class="s-dots"></span><span class="s-page">۷</span></a>
+    <a class="toc-sub" href="#sec-133"><span class="s-id">1.3.3</span><span>قاب UPLOAD FIRMWARE</span><span class="s-dots"></span><span class="s-page">۷</span></a>
+    <a class="toc-sub" href="#sec-134"><span class="s-id">1.3.4</span><span>قاب DNLOAD با طول صفر</span><span class="s-dots"></span><span class="s-page">۷</span></a>
+    <a class="toc-sub" href="#sec-135"><span class="s-id">1.3.5</span><span>قاب ABORT</span><span class="s-dots"></span><span class="s-page">۸</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | پیاده‌سازی DFU</span><span class="t-dots"></span><span class="t-page">۸</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-21"><span class="s-id">2.1</span><span>طرح کلی</span><span class="s-dots"></span><span class="s-page">۸</span></a>
+    <a class="toc-sub" href="#sec-22"><span class="s-id">2.2</span><span>طراحی توصیفگرهای USB</span><span class="s-dots"></span><span class="s-page">۹</span></a>
+    <a class="toc-sub" href="#sec-23"><span class="s-id">2.3</span><span>پیاده‌سازی نرم‌افزار</span><span class="s-dots"></span><span class="s-page">۱۰</span></a>
+    <a class="toc-sub" href="#sec-231"><span class="s-id">2.3.1</span><span>معماری نرم‌افزار</span><span class="s-dots"></span><span class="s-page">۱۰</span></a>
+    <a class="toc-sub" href="#sec-24"><span class="s-id">2.4</span><span>روند نرم‌افزار</span><span class="s-dots"></span><span class="s-page">۱۱</span></a>
+    <a class="toc-sub" href="#sec-241"><span class="s-id">2.4.1</span><span>ماشین حالت DFU و سازوکار اجرای تأخیری</span><span class="s-dots"></span><span class="s-page">۱۱</span></a>
+    <a class="toc-sub" href="#sec-242"><span class="s-id">2.4.2</span><span>روند ارسال میان‌افزار از میزبان</span><span class="s-dots"></span><span class="s-page">۱۱</span></a>
+    <a class="toc-sub" href="#sec-243"><span class="s-id">2.4.3</span><span>روند پاک‌سازی و تنظیم نشانی</span><span class="s-dots"></span><span class="s-page">۱۲</span></a>
+    <a class="toc-sub" href="#sec-244"><span class="s-id">2.4.4</span><span>روند نوشتن و خواندن میان‌افزار</span><span class="s-dots"></span><span class="s-page">۱۵</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b3"><span class="t-num">۴</span><span class="t-title">بخش ۳ | ابزار میزبان و عملیات ارتقا</span><span class="t-dots"></span><span class="t-page">۱۹</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-31"><span class="s-id">3.1</span><span>نصب درایور</span><span class="s-dots"></span><span class="s-page">۱۹</span></a>
+    <a class="toc-sub" href="#sec-32"><span class="s-id">3.2</span><span>ابزار میزبان</span><span class="s-dots"></span><span class="s-page">۲۰</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۵</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۲۳</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۶</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۲۳</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">شکل ۱</span><span>نمودار ساختار کلی</span><span class="f-dots"></span><span class="f-page">۹</span></div>
+        <div class="frow"><span class="f-id">شکل ۲</span><span>روند اجرای میزبان</span><span class="f-dots"></span><span class="f-page">۱۲</span></div>
+        <div class="frow"><span class="f-id">شکل ۳</span><span>ضبط بستۀ پاک‌سازی و تنظیم نشانی</span><span class="f-dots"></span><span class="f-page">۱۳</span></div>
+        <div class="frow"><span class="f-id">شکل ۴</span><span>روند پاک‌سازی</span><span class="f-dots"></span><span class="f-page">۱۳</span></div>
+        <div class="frow"><span class="f-id">شکل ۵</span><span>ضبط بستۀ نوشتن میان‌افزار</span><span class="f-dots"></span><span class="f-page">۱۵</span></div>
+        <div class="frow"><span class="f-id">شکل ۶</span><span>روند نوشتن میان‌افزار</span><span class="f-dots"></span><span class="f-page">۱۶</span></div>
+        <div class="frow"><span class="f-id">شکل ۷</span><span>ضبط بستۀ خواندن میان‌افزار</span><span class="f-dots"></span><span class="f-page">۱۸</span></div>
+        <div class="frow"><span class="f-id">شکل ۸</span><span>روند خواندن میان‌افزار</span><span class="f-dots"></span><span class="f-page">۱۸</span></div>
+        <div class="frow"><span class="f-id">شکل ۹</span><span>وضعیت دستگاه بدون درایور</span><span class="f-dots"></span><span class="f-page">۲۰</span></div>
+        <div class="frow"><span class="f-id">شکل ۱۰</span><span>وضعیت دستگاه پس از نصب درایور</span><span class="f-dots"></span><span class="f-page">۲۰</span></div>
+        <div class="frow"><span class="f-id">شکل ۱۱</span><span>نمایش فهرست دستگاه‌های DFU</span><span class="f-dots"></span><span class="f-page">۲۱</span></div>
+        <div class="frow"><span class="f-id">شکل ۱۲</span><span>نمایش دانلود میان‌افزار</span><span class="f-dots"></span><span class="f-page">۲۲</span></div>
+        <div class="frow"><span class="f-id">شکل ۱۳</span><span>نمایش خواندن میان‌افزار</span><span class="f-dots"></span><span class="f-page">۲۲</span></div>
+      </div>
+      <div>
+        <div class="frow"><span class="f-id">جدول ۱</span><span>دامنۀ کاربرد سند</span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">جدول ۲</span><span>تعریف درخواست‌های کلاس DFU</span><span class="f-dots"></span><span class="f-page">۵</span></div>
+        <div class="frow"><span class="f-id">جدول ۳</span><span>تعریف حالت‌های DFU</span><span class="f-dots"></span><span class="f-page">۶</span></div>
+        <div class="frow"><span class="f-id">جدول ۴</span><span>قالب پاسخ GET STATUS</span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">جدول ۵</span><span>قالب قاب فرمان</span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">جدول ۶</span><span>قالب قاب DNLOAD با طول صفر</span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">جدول ۷</span><span>قالب قاب ABORT</span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">جدول ۸</span><span>پارامترهای کلیدی توصیفگر دستگاه</span><span class="f-dots"></span><span class="f-page">۹</span></div>
+        <div class="frow"><span class="f-id">جدول ۹</span><span>فیلدهای توصیفگر کارکرد DFU</span><span class="f-dots"></span><span class="f-page">۹</span></div>
+        <div class="frow"><span class="f-id">جدول ۱۰</span><span>ترکیب فایل‌های پروژۀ Bootloader</span><span class="f-dots"></span><span class="f-page">۱۰</span></div>
+        <div class="frow"><span class="f-id">جدول ۱۱</span><span>انواع عملیات حلقه اصلی</span><span class="f-dots"></span><span class="f-page">۱۱</span></div>
+        <div class="frow"><span class="f-id">جدول ۱۲</span><span>دستورهای رایج dfu-util</span><span class="f-dots"></span><span class="f-page">۲۱</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> ارتقای میان‌افزار با کلاس <span class="en">DFU</span> فقط از طریق انتقال کنترل USB انجام می‌شود: هفت درخواست کلاس (0x00 تا 0x06)، ماشین حالت ۱۱ حالته با همگام‌سازی GETSTATUS/GETSTATE و قاب‌های داده (پاسخ 6 بایتی GET STATUS، قاب فرمان با wBlockNum&lt;2 شامل پاک‌سازی 0x41 و تنظیم نشانی 0x21، بلوک‌های داده 1024 بایتی با wBlockNum≥2 از بلوک 2، قاب DNLOAD طول صفر برای ورود به مرحلۀ Manifest و قاب ABORT). فلش به پارتیشن Bootloader و APP تقسیم می‌شود؛ توصیفگرها شامل VID 0x1A86 و رشتۀ چیدمان حافظه (@Internal Flash/0x08005000/044*001Kg) هستند. چون پاک‌سازی/برنامه‌ریزی فلش از محدودیت زمانی USB فراتر می‌رود، ماشین حالت با طرح دومرحله‌ای «آماده‌سازی در وقفه، اجرا در حلقه اصلی» و bwPollTimeout پیاده شده است. میزبان با dfu-util (پس از نصب درایور WinUSB) فهرست‌گیری، دانلود با 1a86:df11 و بازخوانی 45056 بایتی انجام می‌دهد.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>این سند کاربردی شیوۀ پیاده‌سازی ارتقای میان‌افزار <span class="en">USB-DFU</span> بر پایۀ CH32 را معرفی می‌کند؛ تنها با انتقال کنترل USB می‌توان میان‌افزار را به دستگاه دانلود کرد، بدون نیاز به پروگرامر یا پایۀ اضافی. فلش درون تراشه به دو پارتیشن <span class="en">Bootloader</span> و برنامه کاربردی تقسیم می‌شود و همراه با ابزار میزبان عمومی <span class="en">dfu-util</span>، دانلود و بازخوانی میان‌افزار برنامه کاربردی انجام می‌شود.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>MCU عمومی</td><td>MCUهای پشتیبان <span class="en">USBFS</span> مانند <span class="en">CH32L103</span></td></tr>
+  </table>
+</div>
+
+<h3 class="h2x" id="sec-intro-tech"><span class="dm">◆</span>توضیح مختصر فنی</h3>
+<p style="color:#9a8f83;font-size:11.6px;margin-top:-4px;">این بخش افزودۀ مترجم برای درک بهتر مفاهیم سند است و در متن اصلی وجود ندارد.</p>
+<p><b style="color:#8a4a12;">۱. DFU چیست؟</b></p>
+<p><span class="en">DFU</span> (ارتقای میان‌افزار دستگاه) کلاسی از USB است که ارتقای میان‌افزار را فقط با تراکنش‌های کنترل روی EP0 ممکن می‌کند؛ میزبان با درخواست‌های کلاس، داده را بلاک‌به‌بلاک به دستگاه می‌فرستد و دستگاه آن را در فلش می‌نویسد — بدون پروگرامر سیمی.</p>
+<p><b style="color:#8a4a12;">۲. چرا «اجرای تأخیری» لازم است؟</b></p>
+<p>USB برای هر تراکنش ضرب‌الاجل دارد اما پاک‌سازی/نوشتن فلش ممکن است چند میلی‌ثانیه طول بکشد؛ پس درخواست در وقفه فقط ثبت می‌شود، دستگاه با حالت <span class="en">dfuDNBUSY</span> و bwPollTimeout پاسخ می‌دهد و نوشتن واقعی در حلقه اصلی انجام می‌گیرد.</p>
+<p><b style="color:#8a4a12;">۳. رشتۀ چیدمان حافظه</b></p>
+<p>dfu-util نشانی پارتیشن را از رشتۀ رابط می‌خواند (مثل <span class="en">@Internal Flash/0x08005000/044*001Kg</span>) و خودکار پاک‌سازی و دانلود را انجام می‌دهد؛ یعنی برای دانلود، میزبان باید نشانی شروع APP را بداند.</p>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">مرور پروتکل DFU</div>
+  <div class="sec-divider"></div>
+</div>
+<h3 class="h2x" id="sec-11"><span class="dm">◆</span>۱.۱ درخواست‌های کلاس DFU</h3>
+<p>درخواست‌های کلاس DFU از طریق فاز SETUP انتقال کنترل ارسال می‌شوند؛ نوع درخواست <span class="en">0x21</span> (جهت OUT) یا <span class="en">0xA1</span> (جهت IN) است و wIndex شمارۀ رابط را حمل می‌کند. تعریف هر درخواست در جدول زیر آمده است.</p>
+<div class="tblwrap" id="tab-02">
+  <div class="tblcap"><span class="cap-pill">جدول ۲</span><span class="cap-text">تعریف درخواست‌های کلاس <span class="en">DFU</span></span></div>
+  <table class="tbl">
+    <tr><th style="width:14%;"><span class="en">bRequest</span></th><th style="width:24%;">نام</th><th style="width:18%;">جهت داده</th><th style="width:20%;"><span class="en">wValue</span></th><th>شرح کارکرد</th></tr>
+    <tr><td><span class="en">0x00</span></td><td><span class="en">DFU_DETACH</span></td><td>میزبان ← دستگاه</td><td>زمان وقفه</td><td>درخواست جدا شدن دستگاه از رابط جاری</td></tr>
+    <tr><td><span class="en">0x01</span></td><td><span class="en">DFU_DNLOAD</span></td><td>میزبان ← دستگاه</td><td><span class="en">wBlockNum</span></td><td>دانلود بلوک داده به دستگاه؛ طول صفر یعنی پایان انتقال</td></tr>
+    <tr><td><span class="en">0x02</span></td><td><span class="en">DFU_UPLOAD</span></td><td>دستگاه ← میزبان</td><td><span class="en">wBlockNum</span></td><td>بازخوانی بلوک داده از دستگاه</td></tr>
+    <tr><td><span class="en">0x03</span></td><td><span class="en">DFU_GETSTATUS</span></td><td>دستگاه ← میزبان</td><td><span class="en">0</span></td><td>استعلام وضعیت؛ ساختار وضعیت 6 بایتی برمی‌گرداند</td></tr>
+    <tr><td><span class="en">0x04</span></td><td><span class="en">DFU_CLRSTATUS</span></td><td>میزبان ← دستگاه</td><td><span class="en">0</span></td><td>پاک‌کردن وضعیت خطا</td></tr>
+    <tr><td><span class="en">0x05</span></td><td><span class="en">DFU_GETSTATE</span></td><td>دستگاه ← میزبان</td><td><span class="en">0</span></td><td>استعلام کد وضعیت؛ 1 بایت برمی‌گرداند و وضعیت را تغییر نمی‌دهد</td></tr>
+    <tr><td><span class="en">0x06</span></td><td><span class="en">DFU_ABORT</span></td><td>میزبان ← دستگاه</td><td><span class="en">0</span></td><td>لغو عملیات جاری و بازگشت به <span class="en">dfuIDLE</span></td></tr>
+  </table>
+</div>
+<h3 class="h2x" id="sec-12"><span class="dm">◆</span>۱.۲ ماشین حالت DFU</h3>
+<p>پروتکل در مجموع ۱۱ حالت تعریف می‌کند و میزبان و دستگاه با GETSTATUS/GETSTATE وضعیت را همگام نگه می‌دارند. حالت‌های پرکاربرد و معنای آن‌ها در جدول زیر آمده است.</p>
+<div class="tblwrap" id="tab-03">
+  <div class="tblcap"><span class="cap-pill">جدول ۳</span><span class="cap-text">تعریف حالت‌های <span class="en">DFU</span></span></div>
+  <table class="tbl">
+    <tr><th style="width:14%;">کد حالت</th><th style="width:30%;">نام حالت</th><th>شرح</th></tr>
+    <tr><td><span class="en">0/1</span></td><td><span class="en">appIDLE/appDETACH</span></td><td>حالت آزادِ اجرا / انتظار ریست USB</td></tr>
+    <tr><td><span class="en">2</span></td><td><span class="en">dfuIDLE</span></td><td>حالت آزادِ ارتقا؛ پذیرای DNLOAD و UPLOAD</td></tr>
+    <tr><td><span class="en">3</span></td><td><span class="en">dfuDNLOAD-SYNC</span></td><td>درخواست DNLOAD دریافت شده؛ در انتظار اتمام دریافت داده</td></tr>
+    <tr><td><span class="en">4</span></td><td><span class="en">dfuDNBUSY</span></td><td>در حال اجرای پاک‌سازی/برنامه‌ریزی؛ میزبان باید bwPollTimeout را انتظار بکشد</td></tr>
+    <tr><td><span class="en">5</span></td><td><span class="en">dfuDNLOAD-IDLE</span></td><td>یک بلوک داده پردازش شد؛ می‌توان بلوک بعدی را ادامه داد</td></tr>
+    <tr><td><span class="en">6</span></td><td><span class="en">dfuMANIFEST-SYNC</span></td><td>DNLOAD طول صفر دریافت شد؛ انتقال تمام و ورود به مرحلۀ تثبیت</td></tr>
+    <tr><td><span class="en">7</span></td><td><span class="en">dfuMANIFEST</span></td><td>در حال پردازش تثبیت</td></tr>
+    <tr><td><span class="en">8</span></td><td><span class="en">dfuMANIFEST-WAIT-RESET</span></td><td>انتظار ریست / شمارش دوباره USB</td></tr>
+    <tr><td><span class="en">9</span></td><td><span class="en">dfuUPLOAD-IDLE</span></td><td>حالت بازخوانی؛ می‌توان UPLOAD را ادامه داد</td></tr>
+    <tr><td><span class="en">10</span></td><td><span class="en">dfuERROR</span></td><td>حالت خطا؛ با CLRSTATUS پاک و بازیابی می‌شود</td></tr>
+  </table>
+</div>
+<h3 class="h2x" id="sec-13"><span class="dm">◆</span>۱.۳ قاب‌های داده اصلی</h3>
+<h4 class="h3x" id="sec-131"><span class="dm">›</span>۱.۳.۱ قاب GET STATUS</h4>
+<p>کارکرد این قاب، پرس‌وجوی وضعیت دستگاه است؛ وقتی پاسخ دستگاه آزاد باشد، انتقال داده بعدی انجام می‌شود، در غیر این صورت پس از bwPollTimeout پاسخ دستگاه، پرس‌وجوی دوباره انجام می‌گیرد. قالب پاسخ دستگاه به بستۀ GET STATUS میزبان در جدول زیر آمده است.</p>
+<div class="tblwrap" id="tab-04">
+  <div class="tblcap"><span class="cap-pill">جدول ۴</span><span class="cap-text">قالب پاسخ <span class="en">GET STATUS</span></span></div>
+  <table class="tbl">
+    <tr><th style="width:12%;">آفست</th><th style="width:26%;">فیلد</th><th style="width:12%;">طول</th><th>شرح</th></tr>
+    <tr><td><span class="en">0</span></td><td><span class="en">bStatus</span></td><td><span class="en">1</span></td><td><span class="en">0x00=OK</span>، <span class="en">0x03=errWRITE</span>، <span class="en">0x04=errERASE</span>، <span class="en">0x0E=errUNKNOWN</span></td></tr>
+    <tr><td><span class="en">1-3</span></td><td><span class="en">bwPollTimeout</span></td><td><span class="en">3</span></td><td>میزبان چقدر صبر کند و پرس‌وجوی دوباره بفرستد؛ بر حسب ms</td></tr>
+    <tr><td><span class="en">4</span></td><td><span class="en">bState</span></td><td><span class="en">1</span></td><td><span class="en">0x02=dfuIDLE</span>، <span class="en">0x03=dfuDNLOAD_SYNC</span>، <span class="en">0x04=dfuDNBUSY</span>، <span class="en">0x05=dfuDNLOAD_IDLE</span>، <span class="en">0x06=dfuMANIFEST_SYNC</span>، <span class="en">0x0A=dfuERROR</span></td></tr>
+    <tr><td><span class="en">5</span></td><td><span class="en">iString</span></td><td><span class="en">1</span></td><td>شاخص رشتۀ توصیف وضعیت (0x00)</td></tr>
+  </table>
+</div>
+<h4 class="h3x" id="sec-132"><span class="dm">›</span>۱.۳.۲ قاب DOWNLOAD FIRMWARE</h4>
+<p>قالب قاب DOWNLOAD FIRMWARE برابر <span class="en">[bmRequestType] [bRequest] [wValue] [wIndex] [wLength]</span> است که در آن wValue نمایندۀ wBlockNum است؛ <span class="en">wBlockNum&lt;2</span> یعنی فرمان ویژه و <span class="en">wBlockNum≥2</span> یعنی شاخص بلوک داده که شاخص اولین بلوک داده برابر 2 است. وقتی wBlockNum&lt;2 باشد میزبان قاب فرمان می‌فرستد و وقتی wBlockNum≥2 باشد میزبان 1024 بایت داده ارسال می‌کند. قالب قاب فرمان در جدول زیر آمده است.</p>
+<div class="tblwrap" id="tab-05">
+  <div class="tblcap"><span class="cap-pill">جدول ۵</span><span class="cap-text">قالب قاب فرمان</span></div>
+  <table class="tbl">
+    <tr><th style="width:12%;">آفست</th><th style="width:12%;">طول</th><th style="width:24%;">فیلد</th><th>شرح</th></tr>
+    <tr><td><span class="en">0</span></td><td><span class="en">1</span></td><td><span class="en">command</span></td><td><span class="en">0x41</span>=فرمان پاک‌سازی صفحه، <span class="en">0x21</span>=فرمان تنظیم اشاره‌گر نشانی</td></tr>
+    <tr><td><span class="en">1-4</span></td><td><span class="en">4</span></td><td><span class="en">address</span></td><td>نشانی آغازین فلش</td></tr>
+  </table>
+</div>
+<h4 class="h3x" id="sec-133"><span class="dm">›</span>۱.۳.۳ قاب UPLOAD FIRMWARE</h4>
+<p>قالب قاب UPLOAD FIRMWARE برابر <span class="en">[bmRequestType] [bRequest] [wValue] [wIndex] [wLength]</span> است که در آن wValue نمایندۀ wBlockNum است؛ در این قاب <span class="en">wBlockNum≥2</span> و مقدار 2 یعنی اولین بلوک داده‌ای که میزبان می‌خواهد بخواند.</p>
+<h4 class="h3x" id="sec-134"><span class="dm">›</span>۱.۳.۴ قاب DNLOAD با طول صفر</h4>
+<p>معنای این قاب آن است که همه دادۀ میان‌افزار ارسال شده و ورود به مرحلۀ Manifest آغاز می‌شود. قالب قاب DNLOAD طول صفر در جدول زیر آمده است.</p>
+<div class="tblwrap" id="tab-06">
+  <div class="tblcap"><span class="cap-pill">جدول ۶</span><span class="cap-text">قالب قاب <span class="en">DNLOAD</span> با طول صفر</span></div>
+  <table class="tbl">
+    <tr><th style="width:12%;">آفست</th><th style="width:12%;">طول</th><th style="width:24%;">فیلد</th><th>شرح</th></tr>
+    <tr><td><span class="en">0</span></td><td><span class="en">1</span></td><td><span class="en">bmRequestType</span></td><td><span class="en">0x21=OUT(0x00) | کلاس(0x20) | رابط(0x01)</span></td></tr>
+    <tr><td><span class="en">1</span></td><td><span class="en">1</span></td><td><span class="en">bRequest</span></td><td><span class="en">DFU_DNLOAD</span></td></tr>
+    <tr><td><span class="en">2-3</span></td><td><span class="en">2</span></td><td><span class="en">wValue</span></td><td><span class="en">0</span></td></tr>
+    <tr><td><span class="en">4-5</span></td><td><span class="en">2</span></td><td><span class="en">wIndex</span></td><td>شمارۀ رابط DFU</td></tr>
+    <tr><td><span class="en">6-7</span></td><td><span class="en">2</span></td><td><span class="en">wLength</span></td><td>طول صفر</td></tr>
+  </table>
+</div>
+<h4 class="h3x" id="sec-135"><span class="dm">›</span>۱.۳.۵ قاب ABORT</h4>
+<p>معنای این قاب لغو عملیات جاری است و مقدار فیلد bRequest برابر <span class="en">0x06</span> است. قالب قاب ABORT در جدول زیر آمده است.</p>
+<div class="tblwrap" id="tab-07">
+  <div class="tblcap"><span class="cap-pill">جدول ۷</span><span class="cap-text">قالب قاب <span class="en">ABORT</span></span></div>
+  <table class="tbl">
+    <tr><th style="width:12%;">آفست</th><th style="width:12%;">طول</th><th style="width:24%;">فیلد</th><th>شرح</th></tr>
+    <tr><td><span class="en">0</span></td><td><span class="en">1</span></td><td><span class="en">bmRequestType</span></td><td><span class="en">0x21=OUT(0x00) | کلاس(0x20) | رابط(0x01)</span></td></tr>
+    <tr><td><span class="en">1</span></td><td><span class="en">1</span></td><td><span class="en">bRequest</span></td><td><span class="en">DFU_ABORT</span></td></tr>
+    <tr><td><span class="en">2-3</span></td><td><span class="en">2</span></td><td><span class="en">wValue</span></td><td><span class="en">0</span></td></tr>
+    <tr><td><span class="en">4-5</span></td><td><span class="en">2</span></td><td><span class="en">wIndex</span></td><td>شمارۀ رابط DFU</td></tr>
+    <tr><td><span class="en">6-7</span></td><td><span class="en">2</span></td><td><span class="en">wLength</span></td><td>طول صفر</td></tr>
+  </table>
+</div>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">پیاده‌سازی DFU</div>
+  <div class="sec-divider"></div>
+</div>
+<h3 class="h2x" id="sec-21"><span class="dm">◆</span>۲.۱ طرح کلی</h3>
+<p>سیستم ارتقا از سه بخش تشکیل شده است: ابزار ارتقای PC یعنی <span class="en">dfu-util</span>، دی‌اف‌یو <span class="en">Bootloader</span> در فلش درون تراشۀ CH32 و برنامه کاربردی کاربر APP. ساختار کلی در شکل ۲-۱ آمده است.</p>
+<div class="fig" id="fig-01">
+  <div class="figbox"><img src="assets/img/an97000-fig01.png" alt="نمودار ساختار کلی" style="max-width:460px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱</span><span class="cap-text">نمودار ساختار کلی (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<h3 class="h2x" id="sec-22"><span class="dm">◆</span>۲.۲ طراحی توصیفگرهای USB</h3>
+<p>پارامترهای کلیدی توصیفگر دستگاه در جدول زیر آمده است.</p>
+<div class="tblwrap" id="tab-08">
+  <div class="tblcap"><span class="cap-pill">جدول ۸</span><span class="cap-text">پارامترهای کلیدی توصیفگر دستگاه</span></div>
+  <table class="tbl">
+    <tr><th style="width:28%;">فیلد</th><th style="width:26%;">مقدار</th><th>شرح</th></tr>
+    <tr><td><span class="en">bcdUSB</span></td><td><span class="en">0x0110</span></td><td><span class="en">USB1.10</span>؛ دستگاه پرسرعت</td></tr>
+    <tr><td><span class="en">bDeviceClass</span></td><td><span class="en">0x00</span></td><td>تعریف کلاس در سطح رابط</td></tr>
+    <tr><td><span class="en">bMaxPacketSize0</span></td><td>64 بایت</td><td>طول بستۀ نقطۀ پایانی کنترل</td></tr>
+    <tr><td><span class="en">idVendor</span></td><td><span class="en">0x1A86</span></td><td>VID فروشندۀ WCH</td></tr>
+    <tr><td><span class="en">idProduct</span></td><td>PID</td><td>بدون قید</td></tr>
+    <tr><td><span class="en">iProduct</span></td><td><span class="en">CH32 DFU Dev</span></td><td>رشتۀ محصول</td></tr>
+  </table>
+</div>
+<p>توصیفگر پیکربندی از توصیفگر پیکربندی، توصیفگر رابط و توصیفگر کارکرد DFU تشکیل شده است، طول کل 27 بایت است و رابط از نقطۀ پایانی اضافی استفاده نمی‌کند (bNumEndpoints=0). فیلدهای توصیفگر کارکرد DFU در جدول زیر آمده است.</p>
+<div class="tblwrap" id="tab-09">
+  <div class="tblcap"><span class="cap-pill">جدول ۹</span><span class="cap-text">فیلدهای توصیفگر کارکرد <span class="en">DFU</span></span></div>
+  <table class="tbl">
+    <tr><th style="width:28%;">فیلد</th><th style="width:26%;">مقدار</th><th>شرح</th></tr>
+    <tr><td><span class="en">bmAttributes</span></td><td><span class="en">0x0B</span></td><td><span class="en">bitCanDnload | bitCanUpload | bitWillDetach</span></td></tr>
+    <tr><td><span class="en">wDetachTimeOut</span></td><td>255ms</td><td>زمان وقفۀ جداشدن</td></tr>
+    <tr><td><span class="en">wTransferSize</span></td><td>1024 بایت</td><td>بیشترین مقدار داده در یک DNLOAD/UPLOAD</td></tr>
+    <tr><td><span class="en">bcdDFUVersion</span></td><td><span class="en">0x011A</span></td><td><span class="en">DFU1.1a</span></td></tr>
+  </table>
+</div>
+<p>رشتۀ رابط (iInterface=4) رشتۀ چیدمان حافظه را حمل می‌کند؛ برای مثال <span class="en">@Internal Flash/0x08005000/044*001Kg</span> اعلام می‌کند که از 0x08005000 به بعد، 44 سکتور پیوستۀ 1KB وجود دارد و ویژگی «g» یعنی خواندنی، نوشتنی و پاک‌شدنی. پس از تجزیۀ این رشته توسط dfu-util، پاک‌سازی و دانلود پارتیشن به‌طور خودکار کامل می‌شود.</p>
+<h3 class="h2x" id="sec-23"><span class="dm">◆</span>۲.۳ پیاده‌سازی نرم‌افزار</h3>
+<h4 class="h3x" id="sec-231"><span class="dm">›</span>۲.۳.۱ معماری نرم‌افزار</h4>
+<p>پروژۀ Bootloader بر پایۀ پروژۀ استاندارد USB شرکت CH32 ساخته شده و فایل‌های مرتبط با DFU به آن افزوده شده‌اند؛ کارکرد هر فایل در جدول زیر آمده است.</p>
+<div class="tblwrap" id="tab-10">
+  <div class="tblcap"><span class="cap-pill">جدول ۱۰</span><span class="cap-text">ترکیب فایل‌های پروژۀ <span class="en">Bootloader</span></span></div>
+  <table class="tbl">
+    <tr><th style="width:36%;">فایل</th><th>کارکرد</th></tr>
+    <tr><td><span class="en">main.c</span></td><td>روند اصلی: راه‌اندازی سیستم، بررسی اعتبار APP، راه‌اندازی DFU و حلقه اصلی</td></tr>
+    <tr><td><span class="en">usb_dfu.c/usb_dfu.h</span></td><td>پردازش درخواست‌های کلاس DFU، ماشین حالت، عملیات تأخیری، برنامه‌ریزی فلش و پرش به APP</td></tr>
+    <tr><td><span class="en">usb_desc.c/usb_desc.h</span></td><td>توصیفگرهای دستگاه/پیکربندی/کارکرد DFU/رشته‌ها</td></tr>
+    <tr><td><span class="en">ch32l103_usbfs_device.c/.h</span></td><td>استک دستگاه USBFS: شمارش، درخواست‌های استاندارد، توزیع وقفۀ EP0</td></tr>
+  </table>
+</div>
+<p>استک دستگاه USB در وقفۀ EP0 توزیع درخواست‌های استاندارد را کامل می‌کند و درخواست‌های کلاس (نوع درخواست 0x21/0xA1) به <span class="en">DFU_SetupRequest()</span> سپرده می‌شوند؛ فاز داده بسته به جهت با فراخوانی برگشتی <span class="en">DFU_EP0_OutHandler()</span> (دریافت داده DNLOAD) و <span class="en">DFU_EP0_InHandler()</span> (ارسال داده UPLOAD و پاسخ GETSTATUS) مدیریت می‌شود. برنامه اصلی پس از اتمام تشخیص راه‌اندازی وارد حلقه اصلی می‌شود و فراخوانی <span class="en">DFU_Process()</span> عملیات‌های ثبت‌شدۀ تأخیری را پردازش می‌کند.</p>
+<p>کد توزیع درخواست‌های کلاس در وقفۀ EP0 به شرح زیر است:</p>
+<div class="codeblk">if ( ( USBFS_SetupReqType &amp; USB_REQ_TYP_MASK ) == USB_REQ_TYP_CLASS ){
+    errflag = DFU_SetupRequest();
+    if( errflag == 0xFF ){
+        USBFSD-&gt;UEP0_TX_CTRL = USBFS_UEP_T_TOG | USBFS_UEP_T_RES_STALL;
+        USBFSD-&gt;UEP0_RX_CTRL = USBFS_UEP_R_TOG | USBFS_UEP_R_RES_STALL;
+    }
+    break;
+}</div>
+<h3 class="h2x" id="sec-24"><span class="dm">◆</span>۲.۴ روند نرم‌افزار</h3>
+<h4 class="h3x" id="sec-241"><span class="dm">›</span>۲.۴.۱ ماشین حالت DFU و سازوکار اجرای تأخیری</h4>
+<p>زمان پاک‌سازی/نوشتن فلش بسیار بیشتر از محدودیت زمانی تراکنش USB است؛ اگر برنامه‌ریزی مستقیماً در وقفه انجام شود، پاسخ‌دهی EP0 مسدود می‌شود. به همین دلیل ماشین حالت با طراحی دومرحله‌ای «آماده‌سازی در وقفه، اجرا در حلقه اصلی» پیاده شده است: پردازش در وقفۀ USB فقط اعتبارسنجی پارامترها و ثبت عملیات در انتظار (DFU_OP_WRITE/DFU_OP_ERASE/DFU_OP_SET_ADDR) را کامل می‌کند، سپس وارد dfuDNBUSY می‌شود و در پاسخ bwPollTimeout را برمی‌گرداند؛ پاک‌سازی و نوشتن واقعی توسط حلقه اصلی یعنی <span class="en">DFU_Process()</span> اجرا می‌شود و پس از اتمام، وضعیت به dfuDNLOAD-IDLE تغییر می‌کند؛ میزبان با GETSTATUS بعدی این وضعیت را می‌گیرد و بلوک بعدی را ادامه می‌دهد. جدول انواع عملیات حلقه اصلی در ادامه آمده است.</p>
+<div class="tblwrap" id="tab-11">
+  <div class="tblcap"><span class="cap-pill">جدول ۱۱</span><span class="cap-text">انواع عملیات حلقه اصلی</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">نوع</th><th>مقدار</th></tr>
+    <tr><td><span class="en">DFU_OP_NONE</span></td><td><span class="en">0</span></td></tr>
+    <tr><td><span class="en">DFU_OP_WRITE</span></td><td><span class="en">1</span></td></tr>
+    <tr><td><span class="en">DFU_OP_ERASE</span></td><td><span class="en">2</span></td></tr>
+    <tr><td><span class="en">DFU_OP_SET_ADDR</span></td><td><span class="en">3</span></td></tr>
+    <tr><td><span class="en">DFU_OP_JUMP_APP</span></td><td><span class="en">4</span></td></tr>
+  </table>
+</div>
+<h4 class="h3x" id="sec-242"><span class="dm">›</span>۲.۴.۲ روند ارسال میان‌افزار از میزبان</h4>
+<p>پس از آغاز روند ارتقا، میزبان وضعیت دستگاه را پرس‌وجو می‌کند و پس از آزاد شدن دستگاه، به‌ترتیب فرمان پاک‌سازی و فرمان تنظیم اشاره‌گر نشانی را می‌فرستد؛ پس از ارسال هر فرمان، به‌طور چرخه‌ای پرس‌وجو می‌کند تا دستگاه به حالت آزاد برگردد؛ سپس بسته‌های دادۀ میان‌افزار را به‌طور چرخه‌ای می‌فرستد و وضعیت دستگاه را پیوسته استعلام می‌کند تا کل میان‌افزار منتقل شود؛ در پایان میزبان بستۀ DNLOAD طول صفر را می‌فرستد و کل روند ارتقا به پایان می‌رسد. نمودار روند اجرای میزبان در شکل زیر آمده است.</p>
+<div class="fig" id="fig-02">
+  <div class="figbox"><img src="assets/img/an97000-fig02.png" alt="روند اجرای میزبان" style="max-width:330px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۲</span><span class="cap-text">روند اجرای میزبان (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+
+<h4 class="h3x" id="sec-243"><span class="dm">›</span>۲.۴.۳ روند پاک‌سازی و تنظیم نشانی</h4>
+<p>میزبان فرمان Download بلوک میان‌افزار و فرمان پاک‌سازی را می‌فرستد؛ دستگاه پس از دریافت، نشانی پاک‌سازی را ذخیره و ماشین حالت DFU را به حالت مشغول به‌روزرسانی می‌کند و نشانگر حلقه اصلی روی عملیات پاک‌سازی قرار می‌گیرد؛ میزبان به‌طور چرخه‌ای پرس‌وجوی Get Status می‌فرستد؛ دستگاه وضعیت مشغول را برمی‌گرداند و پس از آن حلقه اصلی عملیات پاک‌سازی واقعی را اجرا می‌کند؛ پس از اتمام پاک‌سازی، دستگاه وضعیت همگام DFU را به‌روزرسانی می‌کند، میزبان ادامه پرس‌وجوی Get Status را می‌دهد و دستگاه به حالت آزاد به‌روزرسانی و وضعیت آزاد را پاسخ می‌دهد؛ روند به پایان می‌رسد. منطق روند تنظیم نشانی مشابه روند پاک‌سازی است و به‌همان ترتیب به ارسال فرمان از میزبان، به‌روزرسانی ماشین حالت دستگاه، پرس‌وجوی وضعیت توسط میزبان و اجرای عملیات متناظر در حلقه اصلی دستگاه وابسته است. تصویر ضبط بسته‌های پاک‌سازی و تنظیم نشانی در شکل زیر و نمودار روند پاک‌سازی در شکل بعدی آمده است.</p>
+<div class="fig" id="fig-03">
+  <div class="figbox"><img src="assets/img/an97000-fig03.png" alt="ضبط بستۀ پاک‌سازی و تنظیم نشانی" style="max-width:480px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۳</span><span class="cap-text">ضبط بستۀ پاک‌سازی و تنظیم نشانی (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<div class="fig" id="fig-04">
+  <div class="figbox"><img src="assets/img/an97000-fig04.png" alt="روند پاک‌سازی" style="max-width:330px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۴</span><span class="cap-text">روند پاک‌سازی (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>کد مرتبط با ثبت فرمان‌های پاک‌سازی و تنظیم نشانی به شرح زیر است:</p>
+<div class="codeblk">static void DFU_PrepareDownload(void)
+{
+    uint32_t addr;
+
+    if (dfu_block_num == 0)
+    {
+        uint8_t cmd = dfu_buffer[0];
+        switch (cmd) {
+            case DFU_CMD_SET_ADDRESS_POINTER:
+                dfu_prog_addr = dfu_buffer[1]
+                    | ((uint32_t)dfu_buffer[2] &lt;&lt; 8)
+                    | ((uint32_t)dfu_buffer[3] &lt;&lt; 16)
+                    | ((uint32_t)dfu_buffer[4] &lt;&lt; 24);
+                dfu_pending_op = DFU_OP_SET_ADDR;
+                dfu_poll_timeout = 1;
+                dfu_state = DFU_STATE_dfuDNBUSY;
+                break;
+
+            case DFU_CMD_ERASE:
+                addr = dfu_buffer[1]
+                    | ((uint32_t)dfu_buffer[2] &lt;&lt; 8)
+                    | ((uint32_t)dfu_buffer[3] &lt;&lt; 16)
+                    | ((uint32_t)dfu_buffer[4] &lt;&lt; 24);
+                if (addr &gt;= DFU_APP_START_ADDR &amp;&amp; addr &lt;= DFU_FLASH_END_ADDR){
+                    dfu_pending_op = DFU_OP_ERASE;
+                    dfu_pending_addr = addr;
+                    dfu_poll_timeout = 15;
+                    dfu_state = DFU_STATE_dfuDNBUSY;
+                }
+                else{
+                    dfu_status = DFU_STATUS_errADDRESS;
+                    dfu_state = DFU_STATE_dfuERROR;
+                }
+                break;
+        }
+    }
+}</div>
+<p>کد مرتبط با پردازش پاک‌سازی و تنظیم نشانی در حلقه اصلی به شرح زیر است:</p>
+<div class="codeblk">case DFU_OP_ERASE:
+        {
+            uint8_t i;
+            FLASH_Unlock_Fast();
+            for (i = 0; i &lt; 4; i++) {
+                FLASH_ErasePage_Fast(dfu_pending_addr + i * DFU_FLASH_PAGE_SIZE);
+            }
+            FLASH_Lock_Fast();
+            dfu_state = DFU_STATE_dfuDNLOAD_SYNC;
+            break;
+        }
+        case DFU_OP_SET_ADDR:
+            dfu_state = DFU_STATE_dfuDNLOAD_SYNC;
+            break;</div>
+<h4 class="h3x" id="sec-244"><span class="dm">›</span>۲.۴.۴ روند نوشتن و خواندن میان‌افزار</h4>
+<p>هنگام نوشتن میان‌افزار، میزبان فرمان Download میان‌افزار و بسته داده را می‌فرستد؛ دستگاه پس از اتمام دریافت، ماشین حالت را به حالت مشغول به‌روزرسانی می‌کند و نشانگر حلقه اصلی روی عملیات نوشتن قرار می‌گیرد؛ میزبان پیوسته با ارسال Get Status وضعیت دستگاه را استعلام می‌کند، دستگاه وضعیت مشغول را برمی‌گرداند و حلقه اصلی نوشتن واقعی میان‌افزار را کامل می‌کند؛ پس از اتمام نوشتن، دستگاه وضعیت همگام را به‌روزرسانی می‌کند، میزبان ادامه پرس‌وجوی Get Status را می‌دهد و دستگاه به حالت آزاد تغییر و وضعیت آزاد را پاسخ می‌دهد؛ روند نوشتن این بستۀ داده میان‌افزار کامل می‌شود. تصویر ضبط بستۀ نوشتن میان‌افزار در شکل زیر و نمودار روند نوشتن در شکل بعدی آمده است.</p>
+<div class="fig" id="fig-05">
+  <div class="figbox"><img src="assets/img/an97000-fig05.png" alt="ضبط بستۀ نوشتن میان‌افزار" style="max-width:480px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۵</span><span class="cap-text">ضبط بستۀ نوشتن میان‌افزار (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<div class="fig" id="fig-06">
+  <div class="figbox"><img src="assets/img/an97000-fig06.png" alt="روند نوشتن میان‌افزار" style="max-width:330px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۶</span><span class="cap-text">روند نوشتن میان‌افزار (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>کد مرتبط با دریافت داده DNLOAD در EP0 به شرح زیر است:</p>
+<div class="codeblk">void DFU_EP0_OutHandler(void)
+{
+    uint16_t rx_len;
+    if (USBFS_SetupReqCode == DFU_DNLOAD){
+        rx_len = USBFSD-&gt;RX_LEN;
+        if (dfu_download_off + rx_len &lt;= DFU_TRANSFER_SIZE){
+            memcpy(&amp;dfu_buffer[dfu_download_off], USBFS_EP0_Buf, rx_len);
+            dfu_download_off += rx_len;
+        }
+        if ((rx_len &lt; DEF_USBD_UEP0_SIZE) ||(dfu_download_off &gt;= dfu_download_len)){
+            USBFSD-&gt;UEP0_TX_LEN = 0;
+            USBFSD-&gt;UEP0_TX_CTRL = USBFS_UEP_T_TOG | USBFS_UEP_T_RES_ACK;
+            dfu_data_ready = 1;
+        }
+        else{
+            USBFSD-&gt;UEP0_RX_CTRL ^= USBFS_UEP_R_TOG;
+        }
+    }
+}</div>
+<p>کد مرتبط با ثبت بلوک دادۀ میان‌افزار (wBlockNum≥2) به شرح زیر است:</p>
+<div class="codeblk">else if (dfu_block_num &gt;= 2)
+{
+    uint32_t addr = dfu_prog_addr + (uint32_t)(dfu_block_num - 2) * DFU_TRANSFER_SIZE;
+    if (addr &lt; DFU_APP_START_ADDR || addr &gt; DFU_FLASH_END_ADDR){
+        dfu_status = DFU_STATUS_errADDRESS;
+        dfu_state = DFU_STATE_dfuERROR;
+        return;
+    }
+    dfu_pending_op = DFU_OP_WRITE;
+    dfu_pending_addr = addr;
+    dfu_pending_len = dfu_download_len;
+    dfu_poll_timeout = 5;
+    dfu_state = DFU_STATE_dfuDNBUSY;
+}</div>
+<p>کد مرتبط با اجرای نوشتن که از حلقه اصلی فراخوانی می‌شود، به شرح زیر است:</p>
+<div class="codeblk">static void DFU_ExecuteDownload(void)
+{
+    switch (dfu_pending_op){
+        case DFU_OP_WRITE:
+            DFU_FlashProgram(dfu_pending_addr, dfu_buffer, dfu_pending_len);
+            dfu_state = DFU_STATE_dfuDNLOAD_SYNC;
+            break;
+}
+      dfu_pending_op = DFU_OP_NONE;
+      dfu_poll_timeout = 0;
+}</div>
+<p>برخلاف نوشتن، عملیات خواندن فلش زمان کوتاهی می‌برد و نیازی به سازوکار اجرای تأخیری نیست و مستقیماً در وقفۀ USB کامل می‌شود. روند خواندن میان‌افزار چنین است: میزبان فرمان Upload خواندن میان‌افزار را می‌فرستد، دستگاه بستۀ داده با اندازۀ مشخص را به میزبان برمی‌گرداند و بررسی می‌کند که آیا میان‌افزار به‌طور کامل بازپس‌گذاری شده است؛ اگر نه، عملیات آپلود به‌طور چرخه‌ای ادامه می‌یابد؛ پس از بازپس‌گذاری کامل میان‌افزار، میزبان بستۀ ABORT را می‌فرستد و روند آپلود میان‌افزار را لغو می‌کند. تصویر ضبط بستۀ خواندن میان‌افزار در شکل زیر و نمودار روند خواندن در شکل بعدی آمده است.</p>
+<div class="fig" id="fig-07">
+  <div class="figbox"><img src="assets/img/an97000-fig07.png" alt="ضبط بستۀ خواندن میان‌افزار" style="max-width:480px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۷</span><span class="cap-text">ضبط بستۀ خواندن میان‌افزار (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<div class="fig" id="fig-08">
+  <div class="figbox"><img src="assets/img/an97000-fig08.png" alt="روند خواندن میان‌افزار" style="max-width:250px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۸</span><span class="cap-text">روند خواندن میان‌افزار (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>کد مرتبط با انتخاب منبع دادۀ بازخوانی UPLOAD به شرح زیر است:</p>
+<div class="codeblk">if (dfu_block_num &gt;= 2)
+{
+    uint32_t addr = dfu_prog_addr + (uint32_t)(dfu_block_num - 2) * DFU_TRANSFER_SIZE;
+    if (addr &gt; DFU_FLASH_END_ADDR){
+        dfu_upload_src = 0; dfu_upload_avail = 0;
+    }
+    else{
+        dfu_upload_src = (const uint8_t *)addr;
+        uint32_t remaining = DFU_FLASH_END_ADDR - addr + 1;
+        dfu_upload_avail = (remaining &lt; DFU_TRANSFER_SIZE) ? (uint16_t)remaining : DFU_TRANSFER_SIZE;
+}
+</div>
+<p>کد مرتبط با ارسال داده UPLOAD در EP0 به شرح زیر است:</p>
+<div class="codeblk">void DFU_EP0_InHandler(void)
+{
+    uint16_t len;
+    if (USBFS_SetupReqCode == DFU_UPLOAD){
+        len = (USBFS_SetupReqLen &gt; DEF_USBD_UEP0_SIZE) ?DEF_USBD_UEP0_SIZE : USBFS_SetupReqLen;
+        if (len &gt; 0 &amp;&amp; dfu_upload_src != 0){
+            memcpy(USBFS_EP0_Buf, dfu_upload_src, len);
+            dfu_upload_src += len;
+        }
+        USBFS_SetupReqLen -= len;
+        dfu_upload_off += len;
+        USBFSD-&gt;UEP0_TX_LEN = len;
+        USBFSD-&gt;UEP0_TX_CTRL ^= USBFS_UEP_T_TOG;
+    }
+}
+}
+</div>
+
+<!-- ================= بخش ۳ ================= -->
+<div class="chapter-header" id="sec-b3">
+  <span class="sec-pill">بخش ۳</span>
+  <div class="sec-title">ابزار میزبان و عملیات ارتقا</div>
+  <div class="sec-divider"></div>
+</div>
+<h3 class="h2x" id="sec-31"><span class="dm">◆</span>۳.۱ نصب درایور</h3>
+<p>دستگاه DFU برای کارکرد عادی باید درایور <span class="en">WinUSB</span> نصب داشته باشد. اگر درایور متناسب نصب نشده باشد، دستگاه متناظر در مدیریت دستگاه ویندوز نشان‌دار با علامت تعجب زرد نمایش داده می‌شود. پس از تغییر VID یا PID، برای کارکرد عادی باید درایور دستگاه دوباره نصب شود؛ وضعیت دستگاه DFU بدون درایور در شکل زیر و وضعیت دستگاه پس از نصب درایور در شکل بعدی آمده است.</p>
+<div class="fig" id="fig-09">
+  <div class="figbox"><img src="assets/img/an97000-fig09.png" alt="وضعیت دستگاه بدون درایور" style="max-width:420px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۹</span><span class="cap-text">وضعیت دستگاه بدون درایور (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<div class="fig" id="fig-10">
+  <div class="figbox"><img src="assets/img/an97000-fig10.png" alt="وضعیت دستگاه پس از نصب درایور" style="max-width:420px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱۰</span><span class="cap-text">وضعیت دستگاه پس از نصب درایور (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<h3 class="h2x" id="sec-32"><span class="dm">◆</span>۳.۲ ابزار میزبان</h3>
+<p>می‌توان مستقیماً از ابزار خط فرمان متن‌باز <span class="en">dfu-util</span> برای نوشتن و خواندن میان‌افزار استفاده کرد. دستورهای رایج dfu-util در جدول زیر آمده است.</p>
+<div class="tblwrap" id="tab-12">
+  <div class="tblcap"><span class="cap-pill">جدول ۱۲</span><span class="cap-text">دستورهای رایج <span class="en">dfu-util</span></span></div>
+  <table class="tbl">
+    <tr><th style="width:52%;">فرمان</th><th>کارکرد</th></tr>
+    <tr><td><span class="en">dfu-util -l</span></td><td>فهرست دستگاه‌های DFU جاری</td></tr>
+    <tr><td><span class="en">.\dfu-util -d [VID]:[PID] -s [نشانی آغازین FLASH برنامه APP]:leave -D [APP.bin]</span></td><td>دانلود میان‌افزار از نشانی آغازین FLASH برنامه APP برای دستگاه با VID و PID مشخص</td></tr>
+    <tr><td><span class="en">.\dfu-util -d [VID]:[PID] -s [نشانی آغاز خواندن] -Z [تعداد بایت خواندنی] -U [read.bin]</span></td><td>خواندن میان‌افزار دستگاه؛ محتوای فلش به فایل bin محلی بازگردانده می‌شود</td></tr>
+  </table>
+</div>
+<p>با ورود <span class="en">dfu-util -l</span> در خط فرمان می‌توان اطلاعات دستگاه‌های DFU جاری را فهرست کرد. تصویر نمایش فهرست دستگاه‌های DFU در شکل زیر آمده است.</p>
+<div class="fig" id="fig-11">
+  <div class="figbox"><img src="assets/img/an97000-fig11.png" alt="نمایش فهرست دستگاه‌های DFU" style="max-width:480px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱۱</span><span class="cap-text">نمایش فهرست دستگاه‌های <span class="en">DFU</span> (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>با ورود <span class="en">.\dfu-util -d 1a86:df11 -s 0x08005000:leave -D app.bin</span> در خط فرمان، می‌توان میان‌افزار app.bin را به فلش دستگاه دانلود کرد؛ نشانی آغاز دانلود 0x08005000 است. تصویر نمایش دانلود میان‌افزار در شکل زیر آمده است.</p>
+<div class="fig" id="fig-12">
+  <div class="figbox"><img src="assets/img/an97000-fig12.png" alt="نمایش دانلود میان‌افزار" style="max-width:480px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱۲</span><span class="cap-text">نمایش دانلود میان‌افزار (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>با ورود <span class="en">.\dfu-util -d 1a86:df11 -s 0x08005000 -Z 45056 -U read.bin</span> در خط فرمان می‌توان از نشانی فلش دستگاه 0x08005000 شروع به خواندن 45056 بایت میان‌افزار و ذخیره در read.bin کرد. تصویر نمایش خواندن میان‌افزار در شکل زیر آمده است.</p>
+<div class="fig" id="fig-13">
+  <div class="figbox"><img src="assets/img/an97000-fig13.png" alt="نمایش خواندن میان‌افزار" style="max-width:480px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱۳</span><span class="cap-text">نمایش خواندن میان‌افزار (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN97000</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/08/27</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">DFU</span></td><td class="jt">کلاس USB برای ارتقای میان‌افزار دستگاه؛ دانلود/بازخوانی تنها با انتقال کنترل روی EP0، بدون پروگرامر و بدون پایۀ BOOT اضافی</td></tr>
+      <tr><td><span class="en">dfu-util</span></td><td class="jt">ابزار میزبان متن‌باز DFU؛ فهرست‌گیری دستگاه (-l)، دانلود (-D) و بازخوانی (-U) را با گزینۀ -s انجام می‌دهد</td></tr>
+      <tr><td><span class="en">پارتیشن‌بندی فلش</span></td><td class="jt">فلش درون تراشه به Bootloader و برنامه کاربردی APP تقسیم می‌شود؛ Bootloader پس از هر راه‌اندازی، اعتبار APP را بررسی و در صورت لزوم وارد DFU می‌شود</td></tr>
+      <tr><td><span class="en">انتقال کنترل / SETUP</span></td><td class="jt">فاز اول هر تراکنش کنترل USB؛ نوع درخواست کلاس 0x21 (OUT) یا 0xA1 (IN) و wIndex شمارۀ رابط DFU</td></tr>
+      <tr><td><span class="en">wBlockNum</span></td><td class="jt">مقدار wValue در DFU_DNLOAD/UPLOAD؛ کمتر از 2 یعنی قاب فرمان و 2 به بالا یعنی شمارۀ بلوک داده (اولین بلوک = 2)</td></tr>
+      <tr><td><span class="en">bwPollTimeout</span></td><td class="jt">فاصلۀ زمانی (ms) در پاسخ GET STATUS که میزبان باید پیش از پرس‌وجوی بعدی صبر کند؛ برای عملیات طولانی پاک‌سازی/برنامه‌ریزی</td></tr>
+      <tr><td><span class="en">ماشین حالت DFU</span></td><td class="jt">۱۱ حالت از appIDLE تا dfuERROR؛ همگام‌سازی میزبان و دستگاه با GETSTATUS/GETSTATE و عبور از dfuDNBUSY هنگام عملیات فلش</td></tr>
+      <tr><td><span class="en">مرحلۀ Manifest</span></td><td class="jt">مرحلۀ تثبیت پس از دریافت قاب DNLOAD طول صفر؛ پایان انتقال داده و ورود به dfuMANIFEST و سپس dfuMANIFEST-WAIT-RESET</td></tr>
+      <tr><td><span class="en">رشتۀ چیدمان حافظه</span></td><td class="jt">رشته روی رابط USB (مانند @Internal Flash/0x08005000/044*001Kg) که dfu-util را برای پاک‌سازی و دانلود خودکار پارتیشن هدایت می‌کند</td></tr>
+      <tr><td><span class="en">توصیفگر کارکرد DFU</span></td><td class="jt">بایت‌های bmAttributes=0x0B (قابلیت دانلود/آپلود/جدا شدن)، wDetachTimeOut=255ms، wTransferSize=1024 و bcdDFUVersion=0x011A</td></tr>
+      <tr><td><span class="en">WinUSB</span></td><td class="jt">درایور عمومی ویندوز که دستگاه DFU برای کارکرد dfu-util به آن نیاز دارد؛ پس از تغییر VID/PID باید دوباره نصب شود</td></tr>
+      <tr><td><span class="en">USBFS</span></td><td class="jt">جانۀ USB پرسرعت CH32L103 که پشتیبان USB1.1 با bMaxPacketSize0=64 است و پشتیبانی میزبان dfu-util را فراهم می‌کند</td></tr>
+      <tr><td><span class="en">EP0</span></td><td class="jt">نقطۀ پایانی کنترل USB؛ درخواست‌های کلاس در وقفه EP0 توزیع و پاسخ‌ها با DFU_EP0_OutHandler/InHandler مدیریت می‌شوند</td></tr>
+      <tr><td><span class="en">اجرای تأخیری (دومرحله‌ای)</span></td><td class="jt">سازوکار «آماده‌سازی در وقفه، اجرا در حلقه اصلی»: وقفه فقط عملیات را ثبت و bwPollTimeout می‌دهد و حلقه اصلی با DFU_Process() پاک‌سازی/نوشتن واقعی را انجام می‌دهد</td></tr>
+      <tr><td><span class="en">DFU_OP_*</span></td><td class="jt">انواع عملیات ثبت‌شده در حلقه اصلی: NONE=0، WRITE=1، ERASE=2، SET_ADDR=3 و JUMP_APP=4</td></tr>
+      <tr><td><span class="en">VID / PID</span></td><td class="jt">شناسۀ فروشنده و محصول USB؛ VID ساخت WCH برابر 0x1A86 و PID طبق انتخاب کاربر بدون قید</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN97000 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۲۵</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN97000</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
