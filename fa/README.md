@@ -83,6 +83,10 @@ Each note reports status according to the PDF and HTML files actually present. T
 - نام Peripheralها، رجیسترها، مقادیر و واحدها را با سند اصلی تطبیق دهید. / Cross-check peripheral names, registers, values, and units against the source.
 - پیش از استفاده در محصول، روی سخت‌افزار واقعی اعتبارسنجی کنید. / Validate on real hardware before production use.
 
+## تصاویر و دیاگرام‌های راهنما / Images and Diagrams
+
+[دارایی‌های گرافیکی MES / MES visual assets](../Images/GitHub-Assets/)
+
 ## تهیه و تدوین / Credits
 
 **معمار الکترونیک صنعت**  
@@ -95,8 +99,5 @@ Each note reports status according to the PDF and HTML files actually present. T
 - Instagram: https://www.instagram.com/Memar.Electronic
 - GitHub: https://github.com/MEMAR-ELECTRONIC-SANAT
 
-## تصاویر و دیاگرام‌های راهنما / Images and Diagrams
-
-[دارایی‌های گرافیکی MES / MES visual assets](../Images/GitHub-Assets/)
 
 <p align="center"><img src="../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo"></p>
