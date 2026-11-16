@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>ناحیۀ واژۀ کاربر به‌عنوان DataFlash — ترجمۀ فارسی AN90002</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">ناحیۀ واژۀ کاربر به‌عنوان <span class="en">DataFlash</span></div>
+    <div class="t2">ذخیرۀ داده‌های ماندگار در میکروکنترلرهای <span class="en">WCH</span></div>
+    <div class="t3">برنامۀ‌نویسی ۱۶ بیتی و برنامۀ‌نویسی سریع صفحۀ <span class="en">FLASH</span></div>
+  </div>
+  <div class="c-sub">تفاوت‌های برنامۀ‌نویسی ناحیۀ واژۀ کاربر در سری‌های MCU عمومی، ذخیرۀ داده با برنامۀ‌نویسی ۱۶ بیتی و صفحۀ سریع و نکات مهم استفاده (ماکروها، اندازۀ مؤثر و هم‌کنش با ابزارها)</div>
+  <div class="c-desc">ترجمۀ فارسی سند رسمی <span class="en">AN90002</span> (نسخۀ ۱٫۰، منتشرۀ <span class="en">WCH</span>): در برخی کاربردها لازم است اطلاعات پس از قطع و وصل مجدد تغذیه نیز حفظ شوند؛ وقتی ظرفیت حافظۀ Flash محدود است می‌توان از بخش حافظۀ مخصوص کاربران (User Word Area) به‌عنوان DataFlash بهره گرفت. سند دو شیوۀ برنامۀ‌نویسی ۱۶ بیتی و صفحۀ سریع، توابع کامل ذخیرۀ داده و نکات استفاده شامل اندازۀ واقعی ناحیه و هم‌کنش با ابزارهای دانلود را شرح می‌دهد؛ نسخۀ فارسی با توضیح مختصر فنی (تعریف DataFlash، مقایسۀ SRAM و DataFlash و نکات دوام فلش) همراه شده است.</div>
+  <div class="c-tags">
+    <span class="c-tag">ناحیۀ واژۀ کاربر</span>
+    <span class="c-tag"><span class="en">DataFlash</span></span>
+    <span class="c-tag"><span class="en">OBR / CTLR</span></span>
+    <span class="c-tag"><span class="en">CH32V203 · CH32L103</span></span>
+    <span class="c-tag">برنامۀ‌نویسی <span class="en">FLASH</span></span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN90002 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">مقدمه | توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | تفاوت‌های برنامۀ‌نویسی واژۀ کاربر</span><span class="t-dots"></span><span class="t-page">۴</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-11"><span class="s-id">1.1</span><span>برنامۀ‌نویسی ۱۶ بیتی واژۀ کاربر</span><span class="s-dots"></span><span class="s-page">۴</span></a>
+    <a class="toc-sub" href="#sec-12"><span class="s-id">1.2</span><span>برنامۀ‌نویسی سریع صفحۀ واژۀ کاربر</span><span class="s-dots"></span><span class="s-page">۵</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | استفاده از ناحیۀ واژۀ کاربر به‌عنوان DataFlash</span><span class="t-dots"></span><span class="t-page">۶</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-21"><span class="s-id">2.1</span><span>ذخیرۀ داده با برنامۀ‌نویسی ۱۶ بیتی</span><span class="s-dots"></span><span class="s-page">۶</span></a>
+    <a class="toc-sub" href="#sec-22"><span class="s-id">2.2</span><span>ذخیرۀ داده با برنامۀ‌نویسی سریع صفحه</span><span class="s-dots"></span><span class="s-page">۸</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b3"><span class="t-num">۴</span><span class="t-title">بخش ۳ | نکات استفاده</span><span class="t-dots"></span><span class="t-page">۱۰</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-31"><span class="s-id">3.1</span><span>تفاوت ماکروها</span><span class="s-dots"></span><span class="s-page">۱۰</span></a>
+    <a class="toc-sub" href="#sec-32"><span class="s-id">3.2</span><span>اندازۀ واقعی فلش ناحیۀ واژۀ کاربر</span><span class="s-dots"></span><span class="s-page">۱۱</span></a>
+    <a class="toc-sub" href="#sec-33"><span class="s-id">3.3</span><span>استفاده همراه ابزارها</span><span class="s-dots"></span><span class="s-page">۱۱</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۵</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۱۲</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۶</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۱۲</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">شکل ۱</span><span>بیت‌های برنامۀ‌نویسی واژۀ کاربر</span><span class="f-dots"></span><span class="f-page">۵</span></div>
+        <div class="frow"><span class="f-id">شکل ۲</span><span>توصیف ثبات CTLR</span><span class="f-dots"></span><span class="f-page">۵</span></div>
+        <div class="frow"><span class="f-id">جدول ۱</span><span>دامنۀ کاربرد سند</span><span class="f-dots"></span><span class="f-page">۳</span></div>
+      </div>
+      <div>
+        <div class="frow"><span class="f-id">جدول ۲</span><span>مقایسۀ SRAM و DataFlash</span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">جدول ۳</span><span>ظرفیت واقعی فلش واژۀ کاربر</span><span class="f-dots"></span><span class="f-page">۱۱</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> هنگامی که منابع <span class="en">FLASH</span> میکروکنترلر محدود است، ناحیۀ واژۀ کاربر (<span class="en">User Word</span>) می‌تواند به‌عنوان <span class="en">DataFlash</span> برای ذخیرۀ داده‌های ماندگار به کار رود. این سند تفاوت برنامۀ‌نویسی ۱۶ بیتی و برنامۀ‌نویسی سریع صفحه، توابع نمونۀ ذخیرۀ داده و نکات استفاده (ماکروها، اندازۀ واقعی ناحیه و هم‌کنش با ابزارهای دانلود) را شرح می‌دهد.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p>در برخی کاربردها، لازم است اطلاعاتی در حافظۀ میکروکنترلر ذخیره شوند تا پس از قطع و وصل مجدد تغذیه، تراشه بتواند اطلاعات مهمِ ذخیره‌شدۀ آخرین مرتبه یا وضعیت‌های خاص سیستم را بازیابی و شناسایی کند. ویژگی اصلی این نوع ذخیره‌سازی، حفظ اطلاعات پس از قطع برق (<span class="en">Non-Volatile Storage</span>) است.</p>
+<p>معمولاً حافظۀ داخلی <span class="en">Flash</span> میکروکنترلر برای این منظور استفاده می‌شود؛ اما اگر ظرفیت حافظۀ Flash محدود باشد، می‌توان از بخش حافظۀ مخصوص کاربران (<span class="en">User Word Area</span>) نیز برای ذخیرۀ اطلاعات استفاده کرد. این یادداشت کاربردی (<span class="en">Application Note</span>) به بررسی نکات و ملاحظات مهم استفاده از ناحیۀ User Word به‌عنوان حافظۀ DataFlash برای ذخیرۀ اطلاعات می‌پردازد.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>MCU عمومی</td><td>همۀ MCUهای عمومی</td></tr>
+  </table>
+</div>
+
+<h3 class="h2x" id="sec-intro-tech"><span class="dm">◆</span>توضیح مختصر فنی</h3>
+<p style="color:#9a8f83;font-size:11.6px;margin-top:-4px;">این بخش افزودۀ مترجم برای درک بهتر مفاهیم سند است و در متن اصلی وجود ندارد.</p>
+<p><b style="color:#8a4a12;">۱. DataFlash چیست؟</b></p>
+<p><span class="en">DataFlash</span> در این کاربرد به بخشی از حافظۀ Flash گفته می‌شود که به‌جای نگهداری کد برنامه، برای ذخیرۀ اطلاعات متغیر و تنظیمات سیستم استفاده می‌شود؛ برای مثال:</p>
+<div class="bl">آخرین تنظیمات دستگاه</div>
+<div class="bl">پارامترهای کالیبراسیون</div>
+<div class="bl">شماره سریال و شناسۀ دستگاه</div>
+<div class="bl">شمارندۀ تعداد دفعات روشن‌شدن</div>
+<div class="bl">آخرین وضعیت عملکرد دستگاه</div>
+<div class="bl">مقادیر تنظیم‌شده توسط کاربر</div>
+<p><b style="color:#8a4a12;">۲. User Word Area چیست؟</b></p>
+<p><span class="en">User Word Area</span> بخشی اختصاصی از حافظۀ Flash میکروکنترلر است که برای نگهداری اطلاعات کاربر در نظر گرفته شده است. در صورت پشتیبانی تراشه، می‌توان از این ناحیه برای ذخیرۀ داده‌های دائمی استفاده کرد.</p>
+<p><b style="color:#8a4a12;">۳. تفاوت SRAM و DataFlash</b></p>
+<div class="tblwrap" id="tab-02">
+  <div class="tblcap"><span class="cap-pill">جدول ۲</span><span class="cap-text">مقایسۀ <span class="en">SRAM</span> و <span class="en">DataFlash</span></span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">ویژگی</th><th style="width:30%;"><span class="en">SRAM</span></th><th><span class="en">DataFlash</span></th></tr>
+    <tr><td>حفظ اطلاعات پس از قطع برق</td><td>خیر</td><td>بله</td></tr>
+    <tr><td>قابلیت خواندن و نوشتن</td><td>بله</td><td>بله</td></tr>
+    <tr><td>سرعت نوشتن</td><td>بالا</td><td>پایین‌تر</td></tr>
+    <tr><td>تعداد دفعات نوشتن</td><td>بسیار زیاد</td><td>محدود</td></tr>
+    <tr><td>کاربرد اصلی</td><td>داده‌های موقت</td><td>تنظیمات و اطلاعات دائمی</td></tr>
+  </table>
+</div>
+<div class="scen"><span class="lbl">نکته فنی مهم: </span>حافظۀ Flash محدودیت تعداد دفعات پاک‌کردن و نوشتن دارد. بنابراین برای اطلاعاتی که مرتب تغییر می‌کنند، باید از روش‌هایی مانند مدیریت دفعات نوشتن (<span class="en">Wear Leveling</span>)، ذخیره‌سازی نسخه‌دار و بررسی صحت داده‌ها (<span class="en">CRC</span>) استفاده کرد.</div>
+<p><b style="color:#8a4a12;">نتیجه: </b>این یادداشت کاربردی روش استفاده از فضای <span class="en">User Word</span> حافظۀ Flash میکروکنترلرهای <span class="en">WCH</span> را به‌عنوان حافظۀ دائمی برای ذخیرۀ تنظیمات و اطلاعاتی که باید پس از قطع برق باقی بمانند، آموزش می‌دهد.</p>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">تفاوت‌های برنامۀ‌نویسی واژۀ کاربر</div>
+  <div class="sec-divider"></div>
+</div>
+<p>روش برنامۀ‌نویسی ناحیۀ واژۀ کاربر در تراشه‌های سری‌های مختلف MCU عمومی متفاوت است و نقطۀ تفاوت، پشتیبانی یا عدم پشتیبانی از برنامۀ‌نویسی ۱۶ بیتی (<span class="en">Half-Word</span>) است.</p>
+<h3 class="h2x" id="sec-11"><span class="dm">◆</span>۱.۱ برنامۀ‌نویسی ۱۶ بیتی واژۀ کاربر</h3>
+<p>قابلیت فعال‌سازی برنامۀ‌نویسی واژۀ کاربر در بیت ۴ ثبات <span class="en">CTLR</span> قرار دارد؛ همان‌طور که در شکل ۱ نشان داده شده، قابلیت <span class="en">OBPG</span>. پیش از استفاده از این قابلیت باید بازکردن معمولی FLASH اجرا شود و در فرایند عملیات، سخت‌افزار به‌طور خودکار ۸ بیت را وارونه کرده و در موقعیت نشانی+1 می‌نویسد. تراشه‌های دارای این قابلیت عمدتاً عبارت‌اند از: <span class="en">CH32V2/3</span>، <span class="en">CH32V1</span>، <span class="en">CH32V003</span>، <span class="en">CH641</span>، <span class="en">CH32M030</span>، <span class="en">CH32H417</span>، <span class="en">CH32V205</span>، <span class="en">CH32V407</span>، <span class="en">CH32X315</span> و … .</p>
+<div class="fig" id="fig-11">
+  <div class="figbox"><img src="assets/img/an90002-ubits.png" alt="بیت‌های برنامۀ‌نویسی واژۀ کاربر" style="max-width:470px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱</span><span class="cap-text">بیت‌های برنامۀ‌نویسی واژۀ کاربر (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>روند عملیات FLASH ناحیۀ واژۀ کاربر به این صورت است: ابتدا بازکردن معمولی FLASH اجرا می‌شود، سپس پاک‌کردن واژۀ کاربر (متناظر بیت ۵ در شکل ۱)، سپس آغاز برنامۀ‌نویسی واژۀ کاربر و در پایان قفل‌کردن FLASH برای جلوگیری از عملیات اشتباه. اگر در طول فرایند بیت‌های کارکردی واژۀ کاربر تغییر کنند، پس از ریست سیستم به ثبات <span class="en">OBR</span> بارگذاری می‌شوند تا اثر کنند.</p>
+<h3 class="h2x" id="sec-12"><span class="dm">◆</span>۱.۲ برنامۀ‌نویسی سریع صفحۀ واژۀ کاربر</h3>
+<p>برای تراشه‌هایی که از برنامۀ‌نویسی ۱۶ بیتی پشتیبانی نمی‌کنند، تنها روش برنامۀ‌نویسی سریع صفحه ممکن است؛ توصیف ثبات در شکل ۲ آمده است و بیت ۰ و بیت ۴ هر دو رزرو هستند. این روش با برنامۀ‌نویسی ۱۶ بیتی تفاوت بزرگی دارد: نخست آنکه سخت‌افزار ۸ بیت را وارونه کرده و در موقعیت نشانی+1 نمی‌نویسد؛ در ماهیت این ناحیه مانند یک FLASH معمولی در نظر گرفته می‌شود، پس منطق عملیات مشابه FLASH ناحیۀ کاربر است. بنابراین هم انتخاب پاک‌سازی سریع صفحه و هم پاک‌کردن واژۀ کاربر امکان‌پذیر است. در نتیجه هنگام استفاده به‌عنوان DataFlash، داده با روش برنامۀ‌نویسی سریع صفحه نوشته می‌شود و اگر بخواهید بیشترین داده ممکن ذخیره شود، می‌توان شرط وارونگی را نادیده گرفت و مانند FLASH معمولی داده ذخیره کرد. تراشه‌های دارای این قابلیت عمدتاً عبارت‌اند از: <span class="en">CH32V006</span>، <span class="en">CH32L103</span>، <span class="en">CH32X035</span>، <span class="en">CH643</span> و … .</p>
+<div class="fig" id="fig-12">
+  <div class="figbox"><img src="assets/img/an90002-ctlr.png" alt="توصیف ثبات CTLR" style="max-width:470px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۲</span><span class="cap-text">توصیف ثبات <span class="en">CTLR</span> (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>روند عملیات FLASH ناحیۀ واژۀ کاربر به این صورت است: ابتدا بازکردن سریع FLASH اجرا می‌شود، سپس پاک‌کردن واژۀ کاربر (متناظر بیت ۵ در شکل ۱) یا پاک‌سازی سریع صفحه، سپس آغاز برنامۀ‌نویسی سریع و در پایان قفل‌کردن FLASH برای جلوگیری از عملیات اشتباه. اگر در طول فرایند بیت‌های کارکردی واژۀ کاربر تغییر کنند، پس از ریست سیستم به ثبات OBR بارگذاری می‌شوند تا اثر کنند.</p>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">استفاده از ناحیۀ واژۀ کاربر به‌عنوان DataFlash</div>
+  <div class="sec-divider"></div>
+</div>
+<h3 class="h2x" id="sec-21"><span class="dm">◆</span>۲.۱ ذخیرۀ داده با برنامۀ‌نویسی ۱۶ بیتی در ناحیۀ واژۀ کاربر</h3>
+<p>چون پیش از نوشتن FLASH باید پاک‌سازی انجام شود، در ابتدا لازم است داده‌های کلیدی خوانده و در بافر ذخیره شوند و در گام نوشتن، علاوه بر نشانی هدف، بقیۀ داده‌ها نیز پر شوند. در اینجا با <span class="en">V203</span> پیاده‌سازی می‌شود.</p>
+<p>ماکروهای کلیدی:</p>
+<div class="codeblk"><span class="cm">/* DATAFLASH Size */</span>
+#define Size_DataFlash                    (0x400-8)
+#define Size_DataFlash_OB                 (0x400)</div>
+<p>آرایه‌های بافر:</p>
+<div class="codeblk">uint8_t        rBuf[Size_DataFlash_OB];
+uint8_t        wBuf[Size_DataFlash];</div>
+<p>تابع پیاده‌سازی به این صورت است:</p>
+<div class="codeblk long"><span class="cm">/*********************************************************************
+* @fn        FLASH_DataFlash_WRTTE
+*
+* @brief     Storing Data Segments to User Word Areas .
+*
+* @param     Rbuf - Array saved before user word erase
+*            Rlen - the length of array 'Rbuf' , and the value of Rlen
+*                   shoud be no more than 1024.
+*            Wbuf - Array of data you want to store .
+*            Wlen - the length of array 'Wbuf' which will be store,and
+*                   the value of Wlen shoud be no more than (Rlen-8).
+*            Wadr - the starting address to be store.the value of Wadr
+*                   should fulfill (Wadr/2 ==0)
+*
+* @return    FLASH Status - The returned value can be:
+*            FLASH_ADR_RANGE_ERROR, FLASH_ALIGN_ERROR,
+*            FLASH_OP_RANGE_ERROR or FLASH_COMPLETE.
+*/</span>
+FLASH_Status FLASH_DataFlash_WRTTE(uint8_t * Rbuf, uint16_t Rlen,
+                                   uint8_t * Wbuf, uint16_t Wlen,
+                                   uint32_t Wadr)
+{
+    uint32_t Addr = OB_BASE;
+    uint16_t i;
+    uint8_t * Rbuf1 = Rbuf;
+    uint8_t * Wbuf1 = Wbuf;
+    FLASH_Status status = FLASH_COMPLETE;
+
+    if(Rlen &gt; Size_DataFlash_OB || Rlen &lt;= (Size_DataFlash_OB-Size_DataFlash))
+    {
+        return FLASH_ADR_RANGE_ERROR;
+    }
+
+    if((Wadr &lt; (OB_BASE+0x10)) || ((Wadr+(Wlen&lt;&lt;1)) &gt; (OB_BASE+(Rlen&lt;&lt;1))))
+    {
+        return FLASH_OP_RANGE_ERROR;
+    }
+
+    if((Wadr &amp; 1) || (Wlen == 0))
+    {
+        return FLASH_ALIGN_ERROR;
+    }
+
+    /* OptionBytes and DataFlash Unlock*/
+    FLASH-&gt;OBKEYR = FLASH_KEY1;
+    FLASH-&gt;OBKEYR = FLASH_KEY2;
+
+    /* Read OptionBytes and DataFlash */
+    for(i = 0; i &lt; Size_DataFlash_OB; i++)
+    {
+        *(uint8_t *)Rbuf1 = *(uint8_t *)(OB_BASE + 2 * i);
+        Rbuf1 += 1;
+    }
+
+    /* Erase OptionBytes and DataFlash */
+    FLASH-&gt;CTLR |= CR_OPTER_Set;
+    FLASH-&gt;CTLR |= CR_STRT_Set;
+    while(FLASH-&gt;STATR &amp; SR_BSY)
+        ;
+    FLASH-&gt;CTLR &amp;= ~CR_OPTER_Set;
+
+    /* Write OptionBytes and DataFlash */
+    Rbuf1 = (Rbuf + ((Wadr - OB_BASE) &gt;&gt; 1));
+
+    for(i = 0; i &lt; Wlen; i++)
+    {
+        *(uint8_t *)Rbuf1 = *(uint8_t *)Wbuf1;
+        Rbuf1 += 1;
+        Wbuf1 += 1;
+    }
+
+    FLASH-&gt;CTLR |= CR_OPTPG_Set;
+
+    while(Rlen)
+    {
+        *(uint16_t*)Addr = ((uint16_t)(*(uint8_t*)Rbuf) &amp; 0x00FF) |
+                           ((uint16_t)(~(*(uint8_t*)Rbuf))&lt;&lt;8);
+        Addr += 2;
+        while(FLASH-&gt;STATR &amp; SR_BSY)
+            ;
+        Rbuf += 1;
+        Rlen -= 1;
+    }
+
+    FLASH-&gt;CTLR &amp;= ~CR_OPTPG_Set;
+
+    /* OptionBytes and DataFlash Lock*/
+    FLASH-&gt;CTLR &amp;= ~(0x00000200);
+
+    return status;
+}</div>
+
+<h3 class="h2x" id="sec-22"><span class="dm">◆</span>۲.۲ ذخیرۀ داده با برنامۀ‌نویسی سریع صفحه در ناحیۀ واژۀ کاربر</h3>
+<p>ماکروهای کلیدی:</p>
+<div class="codeblk"><span class="cm">/* DATAFLASH Size */</span>
+#define Size_DataFlash                    (0x100-16)
+#define Size_DataFlash_OB                 (0x100)</div>
+<p>آرایه‌های بافر:</p>
+<div class="codeblk">uint32_t        rBuf[Size_DataFlash_OB/4];
+uint32_t        wBuf[Size_DataFlash/4];</div>
+<p>تابع پیاده‌سازی به این صورت است:</p>
+<div class="codeblk long"><span class="cm">/*********************************************************************
+* @fn        FLASH_DataFlash_WRTTE
+*
+* @brief     Storing Data Segments to User Word Areas .
+*
+* @param     Rbuf - Array saved before user word erase
+*            Rlen - the length of array 'Rbuf' , and the value of Rlen
+*                   shoud be no more than 1024.
+*            Wbuf - Array of data you want to store .
+*            Wlen - the length of array 'Wbuf' which will be store,and
+*                   the value of Wlen shoud be no more than (Rlen-8).
+*            Wadr - the starting address to be store.the value of Wadr
+*                   should fulfill (Wadr/2 ==0)
+*
+* @return    FLASH Status - The returned value can be:
+*            FLASH_ADR_RANGE_ERROR, FLASH_ALIGN_ERROR,
+*            FLASH_OP_RANGE_ERROR or FLASH_COMPLETE.
+*/</span>
+FLASH_Status FLASH_DataFlash_WRTTE(uint32_t * Rbuf, uint16_t Rlen,
+                                   uint32_t * Wbuf, uint16_t Wlen,
+                                   uint32_t Wadr)
+{
+    uint32_t Addr = OB_BASE;
+    uint32_t AddrLoad = OB_BASE;
+    uint16_t i;
+    uint32_t * Rbuf1 = Rbuf;
+    uint32_t * Wbuf1 = Wbuf;
+    uint8_t size;
+    uint16_t len = Wlen&gt;&gt;2;
+    FLASH_Status status = FLASH_COMPLETE;
+
+    if(Rlen &gt; Size_DataFlash_OB || Rlen &lt;= (Size_DataFlash_OB-Size_DataFlash))
+    {
+        return FLASH_ADR_RANGE_ERROR;
+    }
+
+    if((Wadr &lt; (OB_BASE+0x10)) || ((Wadr+Wlen) &gt; (OB_BASE+Rlen)))
+    {
+        return FLASH_OP_RANGE_ERROR;
+    }
+
+    if((Wadr &amp; 1) || (Wlen == 0))
+    {
+        return FLASH_ALIGN_ERROR;
+    }
+
+    /* OptionBytes and DataFlash Unlock*/
+    FLASH-&gt;OBKEYR = FLASH_KEY1;
+    FLASH-&gt;OBKEYR = FLASH_KEY2;
+
+    /* Read OptionBytes and DataFlash */
+    for(i = 0; i &lt; (Size_DataFlash_OB/4); i++)
+    {
+        *(uint32_t *)Rbuf1 = *(uint32_t *)(OB_BASE + 4 * i);
+        Rbuf1 += 1;
+    }
+
+    /* Erase OptionBytes and DataFlash */
+    FLASH-&gt;CTLR |= CR_OPTER_Set;
+    FLASH-&gt;CTLR |= CR_STRT_Set;
+    while(FLASH-&gt;STATR &amp; SR_BSY)
+        ;
+    FLASH-&gt;CTLR &amp;= ~CR_OPTER_Set;
+
+    /* Write OptionBytes and DataFlash */
+    Rbuf1 = (Rbuf + ((Wadr - OB_BASE) &gt;&gt; 2));
+
+    for(i = 0; i &lt; len; i++)
+    {
+        *(uint32_t *)Rbuf1 = *(uint32_t *)Wbuf1;
+        Rbuf1 += 1;
+        Wbuf1 += 1;
+    }
+
+    i = Size_DataFlash_OB/256;
+    do{
+        FLASH-&gt;CTLR |= CR_PAGE_PG;
+        FLASH-&gt;CTLR |= CR_BUF_RST;
+        while(FLASH-&gt;STATR &amp; SR_BSY)
+            ;
+        size = 64;
+        while(size)
+        {
+            *(uint32_t *)AddrLoad = *(uint32_t *)Rbuf;
+            FLASH-&gt;CTLR |= CR_BUF_LOAD;
+            while(FLASH-&gt;STATR &amp; SR_BSY)
+                ;
+            AddrLoad += 4;
+            Rbuf += 1;
+            size -= 1;
+        }
+
+        FLASH-&gt;ADDR = Addr;
+        FLASH-&gt;CTLR |= CR_STRT_Set;
+        while(FLASH-&gt;STATR &amp; SR_BSY)
+            ;
+        FLASH-&gt;CTLR &amp;= ~CR_PAGE_PG;
+        Addr += 256;
+    }while(--i);
+
+    /* OptionBytes and DataFlash Lock*/
+    FLASH-&gt;CTLR &amp;= ~(0x00000200);
+
+    return status;
+}</div>
+
+<!-- ================= بخش ۳ ================= -->
+<div class="chapter-header" id="sec-b3">
+  <span class="sec-pill">بخش ۳</span>
+  <div class="sec-title">نکات استفاده</div>
+  <div class="sec-divider"></div>
+</div>
+<h3 class="h2x" id="sec-31"><span class="dm">◆</span>۳.۱ تفاوت ماکروها</h3>
+<p><span class="en">Size_DataFlash</span> تعداد بایت‌های مؤثری است که تراشه می‌تواند به‌عنوان DataFlash برای ذخیرۀ اطلاعات استفاده کند.</p>
+<p><span class="en">Size_DataFlash_OB</span> تعداد بایت‌های دادۀ مؤثری است که کل ناحیۀ واژۀ کاربر تراشه ذخیره می‌کند.</p>
+<p>چون در تراشه‌های دارای برنامۀ‌نویسی ۱۶ بیتی، سخت‌افزار به‌طور خودکار وارونه‌سازی انجام می‌دهد، فضای ذخیرۀ مؤثر نصف کل فضا است؛ اما در روش برنامۀ‌نویسی سریع صفحه سخت‌افزار در وارونگی مشارکت نمی‌کند، پس بقیۀ ناحیۀ واژۀ کاربر نیز برای ذخیرۀ داده قابل استفاده است. برای مثال اندازۀ واقعی ناحیۀ واژۀ کاربر <span class="en">V203</span> برابر <span class="en">2KB</span> است؛ بنابراین <span class="en">Size_DataFlash_OB</span> برابر <span class="en">0x400</span> و <span class="en">Size_DataFlash</span> برابر <span class="en">(0x400-8)</span> است؛ عدد 8 متناظر ۱۶ بایت ابتدایی است که مؤثرِ آن ۸ بایت است. اندازۀ واقعی واژۀ کاربر <span class="en">L103</span> برابر ۲۵۶ بایت است؛ بنابراین <span class="en">Size_DataFlash_OB</span> برابر <span class="en">0x100</span> و <span class="en">Size_DataFlash</span> برابر <span class="en">(0x100-16)</span> است.</p>
+<h3 class="h2x" id="sec-32"><span class="dm">◆</span>۳.۲ اندازۀ واقعی قابل استفاده FLASH ناحیۀ واژۀ کاربر</h3>
+<p>با توجه به بخش ۳.۱ ممکن است این پرسش پیش بیاید که اندازۀ FLASH واژۀ کاربر <span class="en">V203</span> با مقدار نشاندار در کتاب مغایرت دارد؛ کتاب تنها ۱۲۸ بایت قابل استفاده را توصیف کرده اما در واقعیت 2K است. علت آن است که در ابتدا این ناحیه تنها برای ۱۶ بایت نخست واژۀ کاربر در نظر گرفته شده و بقیۀ FLASH اضافی بوده است؛ و چون ظرفیت FLASH بسته‌بندی‌های مختلف متفاوت است، اندازۀ ناحیۀ قابل استفاده واژۀ کاربر بین مدل‌ها یکسان نیست و داده‌های دقیق به‌سختی یکدست می‌شود. بنابراین در اینجا ظرفیتِ اندازه‌گیری‌شدۀ واقعی ملاک است که عموماً کمتر از مقدار نشاندار کتاب نیست.</p>
+<p>ظرفیت‌های رایج در جدول ۳ آمده است.</p>
+<div class="tblwrap" id="tab-03">
+  <div class="tblcap"><span class="cap-pill">جدول ۳</span><span class="cap-text">ظرفیت واقعی FLASH ناحیۀ واژۀ کاربر</span></div>
+  <table class="tbl">
+    <tr><th style="width:50%;">مدل تراشه</th><th>ظرفیت واقعی FLASH ناحیۀ واژۀ کاربر</th></tr>
+    <tr><td><span class="en">CH32V307</span></td><td>2KB</td></tr>
+    <tr><td><span class="en">CH32V203</span></td><td>2KB</td></tr>
+    <tr><td><span class="en">CH32V208</span></td><td>2KB</td></tr>
+    <tr><td><span class="en">VH32V003</span></td><td>64B</td></tr>
+    <tr><td><span class="en">CH32V103</span></td><td>16B</td></tr>
+    <tr><td><span class="en">CH32X035</span></td><td>256B</td></tr>
+    <tr><td><span class="en">CH32L103</span></td><td>256B</td></tr>
+  </table>
+</div>
+<h3 class="h2x" id="sec-33"><span class="dm">◆</span>۳.۳ استفاده همراه ابزارها</h3>
+<p>برخی ابزارها در فرایند استفاده ثبات‌های پیکربندی تراشه را تنظیم می‌کنند؛ چون پیش از پیکربندی پاک‌سازی کامل انجام می‌شود، مانند <span class="en">LinkUtility</span> و <span class="en">ISPStudio</span>. بنابراین در فرایند دانلود مجدد با ابزار یا سایر عملیات، داده‌های ذخیره‌شده در ناحیۀ واژۀ کاربر پاک می‌شود. اگر با <span class="en">MounRiver Studio</span> دانلود معمولی انجام شود ناحیۀ واژۀ کاربر پیکربندی نمی‌شود، مگر در عملیات فعال‌سازی/رفع محافظت خواندن. به این نکته باید توجه ویژه داشت.</p>
+<p>روش پردازش نرم‌افزاری می‌تواند این قابلیت را بیشتر بهینه کند؛ برای مثال افزودن گام تشخیص و ورود مجدد به ناحیۀ واژۀ کاربر در ابتدای برنامه می‌تواند تا حدی عملیات اشتباه ابزارها را جبران کند.</p>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN90002</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/09/28</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">واژۀ کاربر (User Word)</span></td><td class="jt">ناحیۀ FLASH مخصوص واژه‌های انتخابی کاربر (OptionBytes)؛ پس از قطع تغذیه داده‌های آن حفظ می‌شود و می‌تواند به‌عنوان DataFlash استفاده شود</td></tr>
+      <tr><td><span class="en">OBR</span></td><td class="jt">ثبات گزینۀ گزینشی؛ بیت‌های کارکردی واژۀ کاربر پس از ریست سیستم در آن بارگذاری می‌شوند و اثر می‌کنند</td></tr>
+      <tr><td><span class="en">CTLR</span></td><td class="jt">ثبات کنترل FLASH؛ بیت‌های OBPG (برنامۀ‌نویسی واژۀ کاربر)، OBER/OBTER (پاک‌سازی واژۀ کاربر) و PG/PER در آن تعریف می‌شوند</td></tr>
+      <tr><td><span class="en">OBPG</span></td><td class="jt">بیت ۴ ثبات CTLR؛ فعال‌ساز برنامۀ‌نویسی واژۀ کاربر که با وارونگی خودکار ۸ بیتی و نوشتن در نشانی+1 همراه است</td></tr>
+      <tr><td><span class="en">برنامۀ‌نویسی ۱۶ بیتی (Half-Word)</span></td><td class="jt">نوشتن هم‌زمان ۱۶ بیت (نیم‌کلمه) در ناحیۀ واژۀ کاربر؛ سخت‌افزار ۸ بیت را وارونه می‌کند و فضای ذخیرۀ مؤثر نصف کل فضا می‌شود</td></tr>
+      <tr><td><span class="en">برنامۀ‌نویسی سریع صفحه</span></td><td class="jt">نوشتن صفحۀ 256 بایتی با <span class="en">CR_PAGE_PG</span> و <span class="en">CR_BUF_LOAD</span>؛ بدون وارونگی سخت‌افزاری و مانند FLASH معمولی</td></tr>
+      <tr><td><span class="en">بازکردن FLASH</span></td><td class="jt">نوشتن کلیدهای <span class="en">FLASH_KEY1/KEY2</span> در <span class="en">OBKEYR</span>؛ پیش‌نیاز هر عملیات پاک‌سازی یا برنامۀ‌نویسی</td></tr>
+      <tr><td><span class="en">DataFlash</span></td><td class="jt">ناحیۀ داده ماندگار درون ناحیۀ واژۀ کاربر که به‌جای کد برنامه برای ذخیرۀ اطلاعات متغیر و تنظیمات سیستم (مانند کالیبراسیون، شماره سریال و شمارنده‌ها) به کار می‌رود</td></tr>
+      <tr><td><span class="en">SRAM</span></td><td class="jt">حافظۀ دسترسی تصادفی ایستا؛ نوشتن سریع و با دفعات نامحدود اما فرّار — با قطع تغذیه محتوای آن از بین می‌رود</td></tr>
+      <tr><td><span class="en">OB_BASE</span></td><td class="jt">نشانی پایۀ ناحیۀ واژۀ کاربر؛ مبنای محاسبۀ آدرس‌ها در توابع نمونۀ سند</td></tr>
+      <tr><td><span class="en">Size_DataFlash</span></td><td class="jt">تعداد بایت‌های مؤثر قابل ذخیره؛ مانند <span class="en">0x400-8</span> در CH32V203 و <span class="en">0x100-16</span> در CH32L103</td></tr>
+      <tr><td><span class="en">Size_DataFlash_OB</span></td><td class="jt">اندازۀ کل ناحیۀ واژۀ کاربر؛ مانند <span class="en">0x400</span> در CH32V203 و <span class="en">0x100</span> در CH32L103</td></tr>
+      <tr><td><span class="en">LinkUtility / ISPStudio</span></td><td class="jt">ابزارهایی که پیش از پیکربندی ثبات‌ها پاک‌سازی کامل اجرا می‌کنند و می‌توانند داده‌های واژۀ کاربر را پاک کنند</td></tr>
+      <tr><td><span class="en">MounRiver Studio</span></td><td class="jt">محیط توسعه؛ دانلود معمولی با آن ناحیۀ واژۀ کاربر را پیکربندی نمی‌کند مگر در عملیات محافظت خواندن</td></tr>
+      <tr><td><span class="en">محافظت خواندن</span></td><td class="jt">عملیاتی که با پیکربندی واژۀ کاربر فعال یا رفع می‌شود و از خواندن محتوای FLASH جلوگیری می‌کند</td></tr>
+      <tr><td><span class="en">Wear Leveling (مدیریت فرسایش)</span></td><td class="jt">تکنیک پخش‌کردن دفعات نوشتن روی نواحی مختلف فلش برای افزایش طول عمر حافظه</td></tr>
+      <tr><td><span class="en">CRC</span></td><td class="jt">بازرسی افزونگی چرخه‌ای؛ روش بررسی صحت داده‌های ذخیره‌شده پس از خواندن</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN90002 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۲۴</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN90002</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
