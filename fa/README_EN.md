@@ -18,8 +18,8 @@ The collection is intended for electronics engineers, hardware designers, firmwa
 
 At the time this README was prepared, the Persian directory contains **49 application-note folders**:
 
-- **28 notes have both Persian PDF and HTML editions**, suitable for offline reading/printing and online viewing.
-- **21 notes are awaiting translation and technical review.** Their individual guide pages and any available supporting media are present, but final Persian PDF and HTML editions have not yet been published.
+- **43 notes have both Persian PDF and HTML editions**, suitable for offline reading/printing and online viewing.
+- **6 notes are awaiting translation and technical review.** Their individual guide pages and any available supporting media are present, but final Persian PDF and HTML editions have not yet been published.
 - **49 individual README guides** describe each note and provide access to its original source.
 
 > **Important:** The presence of a directory or README does not mean that the full translation is complete. The table below reflects the files actually present in the repository. PDF and HTML links are provided only where those files exist.
@@ -96,21 +96,21 @@ The PDF and HTML columns link only to files currently present in the repository.
 | AN25001 | SAI vs. I2S and SAI Usage | [Persian guide](./AN25001/README.md) | [AN25001 FA.pdf](./AN25001/AN25001%20FA.pdf) | [AN25001-FA.html](./AN25001/AN25001-FA.html) | Published |
 | AN26001 | SPI vs. QSPI and QSPI Usage | [Persian guide](./AN26001/README.md) | [AN26001 FA.pdf](./AN26001/AN26001%20FA.pdf) | [AN26001-FA.html](./AN26001/AN26001-FA.html) | Published |
 | AN29000 | FMC-Based SDRAM Driver Fundamentals | [Persian guide](./AN29000/README.md) | [AN29000 FA.pdf](./AN29000/AN29000%20FA.pdf) | [AN29000-FA.html](./AN29000/AN29000-FA.html) | Published |
-| AN31001 | Digital Filter Usage on CH32H417 | [Persian guide](./AN31001/README.md) | — | — | Translation pending |
-| AN35000 | ARGB Comparison and Fundamentals | [Persian guide](./AN35000/README.md) | — | — | Translation pending |
-| AN36000 | PSRAM Usage Guide | [Persian guide](./AN36000/README.md) | — | — | Translation pending |
-| AN36001 | Running Code from PSRAM | [Persian guide](./AN36001/README.md) | — | — | Translation pending |
-| AN36002 | Porting LVGL to V467 and Driving Displays with PSRAM | [Persian guide](./AN36002/README.md) | — | — | Translation pending |
-| AN37000 | USB PD Usage and MCU Comparison | [Persian guide](./AN37000/README.md) | — | — | Translation pending |
-| AN90000 | CH32H417QEU-R1-1v1 Development Board Guide | [Persian guide](./AN90000/README.md) | — | — | Translation pending |
-| AN90001 | Lightweight WCHGUI Development: Control-Box Example | [Persian guide](./AN90001/README.md) | — | — | Translation pending |
-| AN90002 | Using the User Area as DataFlash | [Persian guide](./AN90002/README.md) | — | — | Translation pending |
-| AN90003 | Porting FatFs to MounRiver Studio | [Persian guide](./AN90003/README.md) | — | — | Translation pending |
-| AN91000 | Debug Configuration for Dual-Core MCUs | [Persian guide](./AN91000/README.md) | — | — | Translation pending |
-| AN91001 | Offline Programmer User Guide | [Persian guide](./AN91001/README.md) | — | — | Translation pending |
-| AN91002 | LD and Startup File Configuration | [Persian guide](./AN91002/README.md) | — | — | Translation pending |
-| AN91003 | LINK Download Procedure for External FLASH | [Persian guide](./AN91003/README.md) | — | — | Translation pending |
-| AN91004 | LINK and MRS Tips | [Persian guide](./AN91004/README.md) | — | — | Translation pending |
+| AN31001 | Digital Filter Usage on CH32H417 | [Persian guide](./AN31001/README.md) | [AN31001 FA.pdf](./AN31001/AN31001%20FA.pdf) | [AN31001-FA.html](./AN31001/AN31001-FA.html) | Published |
+| AN35000 | ARGB Comparison and Fundamentals | [Persian guide](./AN35000/README.md) | [AN35000 FA.pdf](./AN35000/AN35000%20FA.pdf) | [AN35000-FA.html](./AN35000/AN35000-FA.html) | Published |
+| AN36000 | PSRAM Usage Guide | [Persian guide](./AN36000/README.md) | [AN36000 FA.pdf](./AN36000/AN36000%20FA.pdf) | [AN36000-FA.html](./AN36000/AN36000-FA.html) | Published |
+| AN36001 | Running Code from PSRAM | [Persian guide](./AN36001/README.md) | [AN36001 FA.pdf](./AN36001/AN36001%20FA.pdf) | [AN36001-FA.html](./AN36001/AN36001-FA.html) | Published |
+| AN36002 | Porting LVGL to V467 and Driving Displays with PSRAM | [Persian guide](./AN36002/README.md) | [AN36002 FA.pdf](./AN36002/AN36002%20FA.pdf) | [AN36002-FA.html](./AN36002/AN36002-FA.html) | Published |
+| AN37000 | USB PD Usage and MCU Comparison | [Persian guide](./AN37000/README.md) | [AN37000 FA.pdf](./AN37000/AN37000%20FA.pdf) | [AN37000-FA.html](./AN37000/AN37000-FA.html) | Published |
+| AN90000 | CH32H417QEU-R1-1v1 Development Board Guide | [Persian guide](./AN90000/README.md) | [AN90000-FA.pdf](./AN90000/AN90000-FA.pdf) | [AN90000-FA.html](./AN90000/AN90000-FA.html) | Published |
+| AN90001 | Lightweight WCHGUI Development: Control-Box Example | [Persian guide](./AN90001/README.md) | [AN90001-FA.pdf](./AN90001/AN90001-FA.pdf) | [AN90001-FA.html](./AN90001/AN90001-FA.html) | Published |
+| AN90002 | Using the User Area as DataFlash | [Persian guide](./AN90002/README.md) | [AN90002 FA.pdf](./AN90002/AN90002%20FA.pdf) | [AN90002-FA.html](./AN90002/AN90002-FA.html) | Published |
+| AN90003 | Porting FatFs to MounRiver Studio | [Persian guide](./AN90003/README.md) | [AN90003 FA.pdf](./AN90003/AN90003%20FA.pdf) | [AN90003-FA.html](./AN90003/AN90003-FA.html) | Published |
+| AN91000 | Debug Configuration for Dual-Core MCUs | [Persian guide](./AN91000/README.md) | [AN91000 FA.pdf](./AN91000/AN91000%20FA.pdf) | [AN91000-FA.html](./AN91000/AN91000-FA.html) | Published |
+| AN91001 | Offline Programmer User Guide | [Persian guide](./AN91001/README.md) | [AN91001 FA.pdf](./AN91001/AN91001%20FA.pdf) | [AN91001-FA.html](./AN91001/AN91001-FA.html) | Published |
+| AN91002 | LD and Startup File Configuration | [Persian guide](./AN91002/README.md) | [AN91002 FA.pdf](./AN91002/AN91002%20FA.pdf) | [AN91002-FA.html](./AN91002/AN91002-FA.html) | Published |
+| AN91003 | LINK Download Procedure for External FLASH | [Persian guide](./AN91003/README.md) | [AN91003 FA.pdf](./AN91003/AN91003%20FA.pdf) | [AN91003-FA.html](./AN91003/AN91003-FA.html) | Published |
+| AN91004 | LINK and MRS Tips | [Persian guide](./AN91004/README.md) | [AN91004 FA.pdf](./AN91004/AN91004%20FA.pdf) | [AN91004-FA.html](./AN91004/AN91004-FA.html) | Published |
 | AN91005 | Command-Line Debugging | [Persian guide](./AN91005/README.md) | — | — | Translation pending |
 | AN91006 | Diagnosing MCU Issues During Debugging | [Persian guide](./AN91006/README.md) | — | — | Translation pending |
 | AN93000 | Comparison of Display Interfaces | [Persian guide](./AN93000/README.md) | — | — | Translation pending |
