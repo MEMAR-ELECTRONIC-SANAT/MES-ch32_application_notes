@@ -1,100 +1,39 @@
-<p align="center"><img src="Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider"></p>
+<p align="center"><img src="../Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider"></p>
 
-# یادداشت‌های کاربردی میکروکنترلرهای WCH CH32 / WCH CH32 Application Notes
+# اسناد اصلی WCH CH32 / Original WCH CH32 Documents
 
-[🇮🇷 فارسی](README.md) · [🇬🇧 English](README_EN.md) · [🇨🇳 اسناد اصلی چینی / Original Chinese](README_zh.md)
+[🇮🇷 فارسی / Persian](README.md) · [🇬🇧 English](README_EN.md) · [فهرست دوزبانه / Bilingual index](../fa/README.md)
 
-## معرفی مخزن / Repository Overview
+## معرفی / Overview
 
-این مخزن مجموعه‌ای از یادداشت‌های کاربردی (Application Notes یا AN) برای میکروکنترلرهای **WCH CH32** است. اسناد، راهنمای عملی برای قابلیت‌های MCU، طراحی سخت‌افزار، پیکربندی Firmware، راه‌اندازی Peripheralها، عیب‌یابی و بهینه‌سازی ارائه می‌کنند. این مطالب مکمل Datasheet و Reference Manual هستند و جایگزین آن‌ها نیستند.
+این پوشه نسخه‌های اصلی چینی اسناد Application Note شرکت WCH را نگهداری می‌کند. فایل‌های منبع، مانند Markdown و PDF، در زیرپوشه‌های متناظر با شناسه هر یادداشت قرار دارند. برای مطالعه ترجمه‌ها و راهنماهای فارسی و انگلیسی، از فهرست دوزبانه استفاده کنید.
 
-This repository collects Application Notes (ANs) for **WCH CH32 microcontrollers**, covering MCU features, hardware design, firmware configuration, peripheral bring-up, debugging, and optimization. These notes complement, but do not replace, the relevant datasheets and reference manuals.
+This directory preserves the original Chinese WCH Application Note documents. Source files, such as Markdown and PDF, are organized in subfolders named after each Application Note ID. For Persian-English reading guides and available translations, use the bilingual index.
 
-## ساختار و زبان‌ها / Structure and Languages
+## ساختار پوشه / Directory Structure
 
-- `fa/`: راهنماهای دوزبانه فارسی و انگلیسی / Bilingual Persian-English guides.
-- `zh/`: اسناد اصلی چینی WCH / Original WCH Chinese documents.
-- `Images/GitHub-Assets/`: دارایی‌های گرافیکی MES / MES visual assets.
-- `Index.csv`: نمایه اسناد / Document index.
+- هر یادداشت در مسیر `ANxxxxx/` قرار دارد. / Each note is stored in an `ANxxxxx/` directory.
+- فایل‌های Markdown و PDF اصلی، در صورت ارائه توسط منبع، در همان پوشه نگهداری می‌شوند. / Original Markdown and PDF files are retained in the corresponding folder when provided by the source.
+- رسانه‌ها و تصاویر وابسته به هر سند در پوشه `media/` قرار می‌گیرند. / Supporting images and media are stored in each note's `media/` folder when available.
 
-## راهنمای استفاده / How to Use
+## راهنمای فنی / Technical Guidance
 
-1. شناسه یا موضوع را در جدول بیابید. / Find the required topic or AN ID in the table.
-2. راهنمای دوزبانه را برای وضعیت ترجمه و فایل‌های موجود باز کنید. / Open the bilingual guide for translation status and available files.
-3. PDF برای مطالعه آفلاین و HTML برای مرورگر است؛ فقط فایل‌های موجود پیوند داده می‌شوند. / Use PDF for offline reading and HTML for browser viewing; only existing files are linked.
-4. مدل MCU، پکیج، Revision و محدودیت‌های الکتریکی را با Datasheet و Reference Manual تطبیق دهید. / Verify the MCU, package, revision, and electrical limits against the datasheet and reference manual.
-5. کد نمونه را با نسخه MounRiver Studio (MRS)، کتابخانه و سخت‌افزار خود آزمایش کنید. / Validate examples with your MRS version, libraries, and target hardware.
-
-## فهرست یادداشت‌ها / Application Notes Index
-
-| ID | عنوان فارسی | English title | راهنمای دوزبانه / Bilingual guide | سند اصلی / Source |
-|---|---|---|---|---|
-| AN01000 | یادداشت کاربردی مصرف کم | Low-Power Application Note | [راهنما / Guide](fa/AN01000/README.md) | [Source](zh/AN01000/AN01000.md) |
-| AN01001 | تغذیه خارجی VDD12 | External VDD12 Power Supply | [راهنما / Guide](fa/AN01001/README.md) | [Source](zh/AN01001/AN01001.md) |
-| AN01002 | راهبردهای کاهش توان در CH32L103 | Power-Reduction Strategies for CH32L103 | [راهنما / Guide](fa/AN01002/README.md) | [Source](zh/AN01002/AN01002.md) |
-| AN01003 | تحلیل علت‌های Reset تراشه | MCU Reset-Cause Analysis | [راهنما / Guide](fa/AN01003/README.md) | [Source](zh/AN01003/AN01003.md) |
-| AN03000 | راهنمای استفاده از ICache در CH32H417 | Using ICache on CH32H417 | [راهنما / Guide](fa/AN03000/README.md) | [Source](zh/AN03000/AN03000.md) |
-| AN03001 | تخصیص وقفه و بیدارسازی تراشه‌های دو هسته‌ای | Interrupt Allocation and Wake-Up on Dual-Core MCUs | [راهنما / Guide](fa/AN03001/README.md) | [Source](zh/AN03001/AN03001.md) |
-| AN03002 | معرفی CoreMark و تنظیمات امتیازدهی | CoreMark Introduction and Benchmark Configuration | [راهنما / Guide](fa/AN03002/README.md) | [Source](zh/AN03002/AN03002.md) |
-| AN03003 | دستورهای ویژه هسته QingKe RISC-V | QingKe RISC-V Core Special Instructions | [راهنما / Guide](fa/AN03003/README.md) | [Source](zh/AN03003/AN03003.md) |
-| AN03004 | مقایسه سرعت اجرا در حافظه‌های مختلف | Execution-Speed Comparison Across Memory Types | [راهنما / Guide](fa/AN03004/README.md) | [Source](zh/AN03004/AN03004.md) |
-| AN03005 | قابلیت‌های ویژه هسته در CH32H417 | Special Core Features of CH32H417 | [راهنما / Guide](fa/AN03005/README.md) | [Source](zh/AN03005/AN03005.md) |
-| AN08000 | نکات DMA در سری CH32H417/415/416 | DMA Considerations for CH32H417/415/416 | [راهنما / Guide](fa/AN08000/README.md) | [Source](zh/AN08000/AN08000.md) |
-| AN09000 | استفاده و نکات ADC در MCUهای عمومی | ADC Usage and Design Notes for General-Purpose MCUs | [راهنما / Guide](fa/AN09000/README.md) | [Source](zh/AN09000/AN09000.md) |
-| AN09001 | راهنمای استفاده از ADC در CH32X315 | Using the ADC on CH32X315 | [راهنما / Guide](fa/AN09001/README.md) | [Source](zh/AN09001/AN09001.md) |
-| AN10000 | راهنمای کاربردی صفحه‌کلید لمسی WCH | WCH Touch-Keypad Application Guide | [راهنما / Guide](fa/AN10000/README.md) | [Source](zh/AN10000/AN10000.md) |
-| AN11000 | مقایسه و کاربرد RTC/Systick/TIM/LPTIM | RTC/Systick/TIM/LPTIM Comparison and Applications | [راهنما / Guide](fa/AN11000/README.md) | [Source](zh/AN11000/AN11000.md) |
-| AN11001 | عملکرد و کاربرد تایمرهای کم‌حجم | Low-Power Timer Operation and Applications | [راهنما / Guide](fa/AN11001/README.md) | [Source](zh/AN11001/AN11001.md) |
-| AN11002 | نکات TIM در کاربردهای موتور | TIM Considerations for Motor Applications | [راهنما / Guide](fa/AN11002/README.md) | [Source](zh/AN11002/AN11002.md) |
-| AN14000 | آموزش پایه استفاده از SerDes | SerDes Fundamentals and Usage | [راهنما / Guide](fa/AN14000/README.md) | [Source](zh/AN14000/AN14000.md) |
-| AN16001 | مقایسه I2C و I3C و راهنمای I3C | I2C and I3C Comparison and I3C Guide | [راهنما / Guide](fa/AN16001/README.md) | [Source](zh/AN16001/AN16001.md) |
-| AN17000 | آموزش استفاده از SPI Host و NSS | Using SPI Host and NSS | [راهنما / Guide](fa/AN17000/README.md) | [Source](zh/AN17000/AN17000.md) |
-| AN21000 | راهنمای استفاده از SDIO در حالت Slave | Using SDIO in Slave Mode | [راهنما / Guide](fa/AN21000/README.md) | [Source](zh/AN21000/AN21000.md) |
-| AN22000 | کارت چندرسانه‌ای SDMMC و ارتباط در حالت Slave | SDMMC Card and Slave-Mode Communication | [راهنما / Guide](fa/AN22000/README.md) | [Source](zh/AN22000/AN22000.md) |
-| AN23000 | معرفی عملکرد و استفاده از PIOC | PIOC Features and Usage | [راهنما / Guide](fa/AN23000/README.md) | [Source](zh/AN23000/AN23000.md) |
-| AN24000 | راهنمای استفاده از OPA در سری عمومی CH32 | Using OPA on General-Purpose CH32 MCUs | [راهنما / Guide](fa/AN24000/README.md) | [Source](zh/AN24000/AN24000.md) |
-| AN24001 | راهنمای استفاده از CMP در سری عمومی CH32 | Using CMP on General-Purpose CH32 MCUs | [راهنما / Guide](fa/AN24001/README.md) | [Source](zh/AN24001/AN24001.md) |
-| AN25001 | مقایسه SAI و I2S و راهنمای SAI | SAI and I2S Comparison and SAI Guide | [راهنما / Guide](fa/AN25001/README.md) | [Source](zh/AN25001/AN25001.md) |
-| AN26001 | مقایسه SPI و QSPI و راهنمای QSPI | SPI and QSPI Comparison and QSPI Guide | [راهنما / Guide](fa/AN26001/README.md) | [Source](zh/AN26001/AN26001.md) |
-| AN29000 | آموزش پایه درایور SDRAM با FMC | FMC-Based SDRAM Driver Fundamentals | [راهنما / Guide](fa/AN29000/README.md) | [Source](zh/AN29000/AN29000.md) |
-| AN31001 | راهنمای استفاده از فیلتر دیجیتال در CH32H417 | Using the Digital Filter on CH32H417 | [راهنما / Guide](fa/AN31001/README.md) | [Source](zh/AN31001/AN31001.md) |
-| AN35000 | مقایسه ARGB و آموزش پایه | ARGB Comparison and Fundamentals | [راهنما / Guide](fa/AN35000/README.md) | [Source](zh/AN35000/AN35000.md) |
-| AN36000 | راهنمای استفاده از PSRAM | PSRAM Usage Guide | [راهنما / Guide](fa/AN36000/README.md) | [Source](zh/AN36000/AN36000.md) |
-| AN36001 | اجرای کد در PSRAM | Executing Code from PSRAM | [راهنما / Guide](fa/AN36001/README.md) | [Source](zh/AN36001/AN36001.md) |
-| AN36002 | انتقال LVGL به V467 و راه‌اندازی نمایشگر با PSRAM | Porting LVGL to V467 and Driving a Display with PSRAM | [راهنما / Guide](fa/AN36002/README.md) | [Source](zh/AN36002/AN36002.md) |
-| AN37000 | استفاده از USB PD و مقایسه تراشه‌ها | USB PD Usage and MCU Comparison | [راهنما / Guide](fa/AN37000/README.md) | [Source](zh/AN37000/AN37000.md) |
-| AN90000 | راهنمای برد توسعه CH32H417QEU-R1-1v1 | CH32H417QEU-R1-1v1 Development Board Guide | [راهنما / Guide](fa/AN90000/README.md) | [Source](zh/AN90000/AN90000.md) |
-| AN90001 | توسعه WCHGUI سبک؛ نمونه کنترل‌باکس | Lightweight WCHGUI Development: Control-Box Example | [راهنما / Guide](fa/AN90001/README.md) | [Source](zh/AN90001/AN90001.md) |
-| AN90002 | استفاده از ناحیه کاربر به‌عنوان DataFlash | Using the User Area as DataFlash | [راهنما / Guide](fa/AN90002/README.md) | [Source](zh/AN90002/AN90002.md) |
-| AN90003 | انتقال فایل‌سیستم FatFS به MRS | Porting the FatFS File System to MRS | [راهنما / Guide](fa/AN90003/README.md) | [Source](zh/AN90003/AN90003.md) |
-| AN91000 | تنظیمات و نکات عیب‌یابی تراشه‌های دو هسته‌ای | Dual-Core MCU Configuration and Debugging | [راهنما / Guide](fa/AN91000/README.md) | [Source](zh/AN91000/AN91000.md) |
-| AN91001 | راهنمای استفاده از پروگرامر آفلاین | Offline Programmer Usage Guide | [راهنما / Guide](fa/AN91001/README.md) | [Source](zh/AN91001/AN91001.md) |
-| AN91002 | پیکربندی فایل‌های LD و Startup | LD and Startup File Configuration | [راهنما / Guide](fa/AN91002/README.md) | [Source](zh/AN91002/AN91002.md) |
-| AN91003 | فرایند LINK برای دانلود در FLASH خارجی | LINK Process for Programming External FLASH | [راهنما / Guide](fa/AN91003/README.md) | [Source](zh/AN91003/AN91003.md) |
-| AN91004 | نکات کاربردی LINK و MRS | Practical LINK and MRS Notes | [راهنما / Guide](fa/AN91004/README.md) | [Source](zh/AN91004/AN91004.md) |
-| AN91005 | روش عیب‌یابی از طریق خط فرمان | Command-Line Debugging | [راهنما / Guide](fa/AN91005/README.md) | [Source](zh/AN91005/AN91005.md) |
-| AN91006 | تشخیص مشکلات تراشه هنگام Debug | Diagnosing MCU Issues During Debug | [راهنما / Guide](fa/AN91006/README.md) | [Source](zh/AN91006/AN91006.md) |
-| AN93000 | مقایسه رابط‌های راه‌اندازی نمایشگر | Display-Interface Comparison | [راهنما / Guide](fa/AN93000/README.md) | [Source](zh/AN93000/AN93000.md) |
-| AN94000 | معرفی M030 برای تغذیه و کاربردهای موتور | M030 Introduction for Power and Motor Applications | [راهنما / Guide](fa/AN94000/README.md) | [Source](zh/AN94000/AN94000.md) |
-| AN94001 | نکات مرتبط با EMI | EMI Considerations | [راهنما / Guide](fa/AN94001/README.md) | [Source](zh/AN94001/AN94001.md) |
-| AN97000 | ارتقای Firmware از طریق CH32 USB DFU | Firmware Upgrade via CH32 USB DFU | [راهنما / Guide](fa/AN97000/README.md) | [Source](zh/AN97000/AN97000.md) |
-
-## نکات فنی / Engineering Notes
-
-- Application Note جایگزین Datasheet، Reference Manual، Errata یا مستندات رسمی ابزار نیست. / An Application Note does not replace datasheets, reference manuals, errata, or official tool documentation.
-- اعداد، واحدها، کلاک، حافظه، تغذیه، USB، RF و EMI را مستقل اعتبارسنجی کنید. / Independently validate values, units, clocks, memory, power, USB, RF, and EMI.
-- پیش از استفاده در محصول، طراحی را روی سخت‌افزار واقعی آزمایش کنید. / Test the design on real hardware before production use.
-- برای گزارش خطا، شناسه AN، مدل MCU، نسخه ابزار و مراحل بازتولید را درج کنید. / Include the AN ID, MCU model, tool version, and reproduction steps when reporting issues.
+- متن چینی اصلی را با راهنمای دوزبانه همان شناسه مقایسه کنید. / Compare the original Chinese document with the bilingual guide for the same AN ID.
+- برای مقادیر الکتریکی، رجیسترها و محدودیت‌های هر قطعه به Datasheet و Reference Manual مدل دقیق مراجعه کنید. / Consult the exact device datasheet and reference manual for electrical limits, registers, and device-specific constraints.
+- مثال‌ها را پیش از استفاده در محصول روی سخت‌افزار هدف آزمایش کنید. / Test examples on the target hardware before production use.
+- ترجمه‌ها و یادداشت‌های تکمیلی جایگزین اسناد رسمی WCH نیستند. / Translations and supplementary notes do not replace official WCH documentation.
 
 ## منابع / Resources
 
-- [WCH](https://www.wch.cn/) · [WCH Forum](https://www.wch.cn/bbs/forum-106-1.html)
-- [راهنماهای دوزبانه / Bilingual guides](fa/) · [اسناد چینی / Chinese sources](zh/)
+- [فهرست راهنماهای دوزبانه / Bilingual guide index](../fa/README.md)
+- [صفحه اصلی مخزن / Repository overview](../README.md)
+- [دارایی‌های گرافیکی MES / MES visual assets](../Images/GitHub-Assets/)
+- [وب‌سایت رسمی WCH / WCH official website](https://www.wch.cn/)
 
 ## تصاویر و دیاگرام‌های راهنما / Images and Diagrams
 
-- [دارایی‌های گرافیکی MES / MES visual assets](Images/GitHub-Assets/)
-- [بنر / Hero banner](Images/GitHub-Assets/MES-Hero-Banner.svg)
+- [دارایی‌های گرافیکی MES / MES visual assets](../Images/GitHub-Assets/)
+- [جداکننده بخش‌ها / Section divider](../Images/GitHub-Assets/MES-Divider.svg)
 
 ## تهیه و تدوین / Credits
 
@@ -108,5 +47,4 @@ This repository collects Application Notes (ANs) for **WCH CH32 microcontrollers
 - Instagram: https://www.instagram.com/Memar.Electronic
 - GitHub: https://github.com/MEMAR-ELECTRONIC-SANAT
 
-
-<p align="center"><img src="Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo"></p>
+<p align="center"><img src="../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo"></p>
