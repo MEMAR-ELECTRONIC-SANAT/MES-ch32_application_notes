@@ -52,10 +52,6 @@
 
 مقادیر و مثال‌های مربوط به رجیسترها یا خانواده‌های خاص، به همان مدل‌ها و شرایط ذکرشده در متن اصلی محدود هستند و نباید بدون بررسی به سایر تراشه‌ها تعمیم داده شوند.
 
-## تصاویر و دیاگرام‌های راهنما
-
-تصاویر، نمودارها و نمونه‌های مورد استفاده در راهنمای فارسی در فایل HTML و PDF درج شده‌اند. برای نمایش با قالب‌بندی و تصاویر کامل، از نسخه HTML یا PDF استفاده کنید.
-
 ## نسخه و وضعیت سند
 
 | مورد | توضیحات |
@@ -76,6 +72,14 @@
 
 </div>
 
+<p align="center">
+  <img src="../../Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider">
+</p>
+
+## تصاویر و دیاگرام‌های راهنما
+
+تصاویر، نمودارها و نمونه‌های مورد استفاده در راهنمای فارسی در فایل HTML و PDF درج شده‌اند. برای نمایش با قالب‌بندی و تصاویر کامل، از نسخه HTML یا PDF استفاده کنید.
+
 ## تهیه و تدوین
 
 **معمار الکترونیک صنعت**\\
@@ -89,4 +93,6 @@
 - پیج اینستاگرام: [https://www.instagram.com/Memar.Electronic](https://www.instagram.com/Memar.Electronic)
 - GitHub: [MEMAR-ELECTRONIC-SANAT](https://github.com/MEMAR-ELECTRONIC-SANAT)
 
-![MES Animated Logo](../../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg)
+<p align="center">
+  <img src="../../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo">
+</p>

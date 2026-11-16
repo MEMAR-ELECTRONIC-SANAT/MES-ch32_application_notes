@@ -106,6 +106,10 @@
 4. **در صورت کمبود SRAM، انتقال پشته را بررسی کنید:** در سناریوهای آزمون‌شده، قرارگیری پشته در PSRAM نسبت به انتقال کد یا داده اثر منفی کمتری بر کارایی داشته است.
 5. **نتایج را روی سخت‌افزار هدف اعتبارسنجی کنید:** ظرفیت و نوع PSRAM، فرکانس‌ها، تنظیمات Linker، نسخه کامپایلر و الگوی دسترسی برنامه می‌توانند نتیجه نهایی را تغییر دهند.
 
+<p align="center">
+  <img src="../../Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider">
+</p>
+
 ## تصاویر و دیاگرام‌های راهنما
 
 نمودار توزیع نتایج CoreMark و تصاویر و جداول مرتبط با چیدمان حافظه در نسخه HTML و مستندات اصلی ارائه شده‌اند. برای مشاهده جزئیات گرافیکی و داده‌های آزمون، از [نسخه HTML فارسی](./AN03004-FA.html) استفاده کنید.
@@ -125,4 +129,6 @@
 - اینستاگرام: [MEMAR Electronic](https://www.instagram.com/Memar.Electronic)
 - GitHub: [MEMAR-ELECTRONIC-SANAT](https://github.com/MEMAR-ELECTRONIC-SANAT)
 
-![MES Animated Logo](../../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg)
+<p align="center">
+  <img src="../../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo">
+</p>

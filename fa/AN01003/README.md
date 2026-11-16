@@ -36,6 +36,10 @@
 - مقادیر ولتاژ، جریان، رجیسترها و تنظیمات باید با دیتاشیت و مرجع فنی همان مدل MCU تطبیق داده شوند.
 - توصیه‌های مربوط به خازن و تغذیه، جایگزین بررسی پایداری منبع، مسیر PCB، زمین و اندازه‌گیری با اسیلوسکوپ در شرایط واقعی بار نیستند.
 
+<p align="center">
+  <img src="../../Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider">
+</p>
+
 ## تصاویر و دیاگرام‌های راهنما
 
 تصاویر و نمودارهای همراه سند در پوشۀ زیر قرار دارند:
@@ -57,4 +61,6 @@
 - پیج اینستاگرام: [https://www.instagram.com/Memar.Electronic](https://www.instagram.com/Memar.Electronic)
 - GitHub: [MEMAR-ELECTRONIC-SANAT](https://github.com/MEMAR-ELECTRONIC-SANAT)
 
-![MES Animated Logo](../../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg)
+<p align="center">
+  <img src="../../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo">
+</p>

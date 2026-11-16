@@ -120,6 +120,10 @@
 
 </div>
 
+<p align="center">
+  <img src="../../Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider">
+</p>
+
 ## تصاویر و دیاگرام‌های راهنما
 
 برای مشاهده صفحه‌آرایی کامل، شکل‌ها، جدول‌ها، فهرست کدها و تصاویر به‌کاررفته در راهنما، فایل‌های زیر را باز کنید:
@@ -142,4 +146,6 @@
 
 **مشاهده سایر آموزش‌ها:** [مخازن آموزشی معمار الکترونیک صنعت](https://github.com/MEMAR-ELECTRONIC-SANAT)
 
-![MES Animated Logo](../../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg)
+<p align="center">
+  <img src="../../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo">
+</p>

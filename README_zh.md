@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo">
-</p>
-
 # WCH CH32 微控制器应用笔记
 
 <p align="center">
@@ -133,4 +129,8 @@
 
 <p align="center">
   <img src="Images/GitHub-Assets/MES-Thank-You-Footer.svg" width="100%" alt="Thank you for visiting MES">
+</p>
+
+<p align="center">
+  <img src="../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo">
 </p>

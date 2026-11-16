@@ -65,6 +65,10 @@
 
 > **توجه:** PDF فارسی در مخزن با نام `AN03001 FA.pdf` موجود است. نام فایل و مسیرها را هنگام لینک‌دهی حفظ کنید.
 
+<p align="center">
+  <img src="../../Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider">
+</p>
+
 ## تصاویر و دیاگرام‌های راهنما
 
 تصاویر سند فارسی در پوشه [assets/img](./assets/img/) قرار دارند و شامل دیاگرام‌های رجیسترهای فعال‌سازی و وضعیت وقفه، VTF، آستانه اولویت، Pending، اولویت و تخصیص مجوز، PFIC wake events و SCTLR هستند.
@@ -82,4 +86,6 @@
 - اینستاگرام: [Memar.Electronic](https://www.instagram.com/Memar.Electronic)
 - GitHub: [MEMAR-ELECTRONIC-SANAT](https://github.com/MEMAR-ELECTRONIC-SANAT)
 
-![MES Animated Logo](../../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg)
+<p align="center">
+  <img src="../../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo">
+</p>

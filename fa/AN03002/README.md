@@ -91,6 +91,10 @@
 - [سند اصلی چینی](../../zh/AN03002/AN03002.md)
 - [تصاویر و نمودارهای HTML](./assets/img/)
 
+<p align="center">
+  <img src="../../Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider">
+</p>
+
 ## تصاویر و دیاگرام‌های راهنما
 
 تصاویر و نمودارهای سند در پوشه [assets/img](./assets/img/) قرار دارند؛ از جمله نتایج CoreMark برای CH32H417، مقایسه سطوح بهینه‌سازی در CH32V307، مقایسه نسخه‌های GCC و نتایج CH32V205 در پیکربندی‌های حافظه متفاوت.
@@ -108,4 +112,6 @@
 - اینستاگرام: [Memar.Electronic](https://www.instagram.com/Memar.Electronic)
 - GitHub: [MEMAR-ELECTRONIC-SANAT](https://github.com/MEMAR-ELECTRONIC-SANAT)
 
-![MES Animated Logo](../../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg)
+<p align="center">
+  <img src="../../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo">
+</p>

@@ -118,6 +118,10 @@
 - برای نمایش در GitHub از تگ HTML یعنی img استفاده کنید؛ پشتیبانی انیمیشن ممکن است بسته به مرورگر و نحوه نمایش متفاوت باشد.
 - رنگ‌های اصلی: آبی تیره، آبی کبالت، فیروزه‌ای و سفید یخی.
 
+<p align="center">
+  <img src="./MES-Divider.svg" width="100%" alt="MES Divider">
+</p>
+
 ## تصاویر و دیاگرام‌های راهنما
 
 جداکننده اختصاصی MES برای تفکیک بصری بخش‌های README:
@@ -137,4 +141,6 @@
 - [Instagram](https://www.instagram.com/Memar.Electronic)
 - [مشاهده سایر آموزش‌ها و پروژه‌ها در GitHub](https://github.com/MEMAR-ELECTRONIC-SANAT)
 
-![MES Animated Logo](MES_Animated_Logo_640x480.svg)
+<p align="center">
+  <img src="./MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo">
+</p>
