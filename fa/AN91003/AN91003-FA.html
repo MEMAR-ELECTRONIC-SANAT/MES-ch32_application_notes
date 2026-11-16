@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>دانلود FLASH خارجی با ابزار Link — ترجمۀ فارسی AN91003</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+/* fonts loaded via external stylesheet: assets/fonts/fonts.css */
+
+/* ---------- palette & base ---------- */
+@page { size: 794px 1123px; margin: 48px 0 52px 0; }
+@page fb { margin: 0; }
+:root{
+  --black:#0d0b09;
+  --copper:#e08038;
+  --copper-deep:#c86828;
+  --copper-dark:#9a5a24;
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --tan:#f2e8db;
+  --tan-border:#e6d7c2;
+  --cream:#f7ecdd;
+  --text:#26221e;
+  --muted:#6f6a64;
+  --line:#e7dfd6;
+}
+html,body{ margin:0; padding:0; width:794px; background:var(--bg); color:var(--text);
+  font-family:'Vazirmatn','DejaVu Sans',sans-serif; font-size:14.5px; line-height:1.95; }
+.cover, .ending{ background:var(--black); page:fb; }
+*{ box-sizing:border-box; }
+@media screen {
+  html{ height:auto; display:flex; justify-content:center; background:#1a1714; }
+  body{ transform-origin:top center; margin:20px auto; }
+}
+p{ margin:0 0 11px; text-align:justify; text-justify:inter-word; }
+.en{ direction:ltr; unicode-bidi:isolate; }
+code, .mono{ font-family:'DejaVu Sans Mono',monospace; font-size:0.84em; direction:ltr; unicode-bidi:isolate;
+  background:#f4ede4; border-radius:4px; padding:1px 5px; color:#8a4d1f; white-space:nowrap; }
+
+/* ---------- cover ---------- */
+/* height 1122px (not 1123): an exact-fit named page emits a spurious blank page;
+   the 1px sliver at the bottom edge is patched dark in the stamp step */
+.cover{ width:794px; height:1122px; color:#f5efe9; position:relative;
+  display:flex; flex-direction:column; }
+.cover .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.corner{ position:absolute; width:26px; height:26px; }
+.corner.tl{ top:12px; right:12px; border-top:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.tr{ top:12px; left:12px; border-top:2px solid var(--copper); border-left:2px solid var(--copper); }
+.corner.bl{ bottom:12px; right:12px; border-bottom:2px solid var(--copper); border-right:2px solid var(--copper); }
+.corner.br{ bottom:12px; left:12px; border-bottom:2px solid var(--copper); border-left:2px solid var(--copper); }
+.c-strip{ text-align:center; padding:58px 60px 0; position:relative; z-index:2; }
+.c-strip .l1{ font-size:14px; font-weight:700; color:var(--copper); }
+.c-strip .l1 .sep{ color:#7a6a58; font-weight:400; margin:0 8px; }
+.c-strip .l1 .lat{ font-size:11px; letter-spacing:3px; color:#cfc9c2; font-weight:500; }
+.c-strip .l2{ font-size:10.5px; color:#8d857c; margin-top:4px; letter-spacing:1px; }
+.c-logo{ text-align:center; margin-top:26px; position:relative; z-index:2; }
+.c-logo img{ width:236px; }
+.c-kicker{ text-align:center; margin-top:24px; color:var(--copper); font-size:13px; letter-spacing:1px; position:relative; z-index:2; }
+.c-kicker .lat{ letter-spacing:4px; font-size:11px; color:#b7ada3; }
+.c-title{ text-align:center; margin-top:20px; font-weight:900; line-height:1.5; position:relative; z-index:2; }
+.c-title .t1{ font-size:38px; color:var(--copper); }
+.c-title .t2{ font-size:38px; color:#f8f6f3; }
+.c-title .t3{ font-size:31px; color:var(--copper); margin-top:2px; }
+.c-sub{ text-align:center; margin-top:18px; color:#d9d2cb; font-size:14.5px; max-width:600px; margin-left:auto; margin-right:auto; line-height:2; position:relative; z-index:2; }
+.c-desc{ text-align:center; margin-top:16px; color:#b0a89f; font-size:12.5px; line-height:2.05; max-width:636px; margin-left:auto; margin-right:auto; position:relative; z-index:2; }
+.c-tags{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:636px; margin:20px auto 0; position:relative; z-index:2; }
+.c-tag{ border:1px solid rgba(224,128,56,.55); border-radius:999px; padding:5px 17px; font-size:12px; color:#e9ddd0; }
+.c-bottom{ margin-top:auto; padding:0 60px 54px; position:relative; z-index:2; }
+.c-bottom .ver{ text-align:center; color:#8d857c; font-size:11px; margin-bottom:14px; letter-spacing:.5px; }
+.c-bottom .ver b{ color:var(--copper); font-weight:700; }
+
+/* ---------- toc page ---------- */
+.toc-page{ width:794px; min-height:1023px; background:var(--bg); break-after:page; padding:26px 58px 20px; }
+.toc-note{ color:var(--copper-dark); font-size:11px; margin-bottom:5px; }
+.toc-page h1{ margin:0 0 4px; font-size:28px; font-weight:900; color:#1d1915; }
+.toc-underline{ width:72px; height:3px; background:var(--copper); border-radius:2px; margin-bottom:12px; }
+.toc-row{ display:flex; align-items:baseline; gap:10px; padding:6px 2px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--text); }
+.toc-row .t-num{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:20px; }
+.toc-row .t-title{ font-size:14.5px; font-weight:700; }
+.toc-row .t-dots{ flex:1; border-bottom:1.5px dotted #c9bfae; margin:0 4px 4px; min-width:30px; }
+.toc-row .t-page{ color:var(--copper-dark); font-weight:800; font-size:13px; min-width:24px; text-align:left; }
+.toc-subwrap{ display:grid; grid-template-columns:1fr 1fr; column-gap:26px; margin-top:10px; }
+.toc-sub{ display:flex; align-items:baseline; gap:7px; padding:3px 2px; font-size:11.2px; border-bottom:1px dotted #e2d9cb; text-decoration:none; color:var(--muted); }
+.toc-sub .s-id{ color:var(--copper-dark); font-weight:700; min-width:44px; direction:ltr; unicode-bidi:isolate; text-align:right; }
+.toc-sub .s-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:16px; }
+.toc-sub .s-page{ color:var(--copper-dark); font-weight:700; min-width:18px; text-align:left; }
+.toc-figs{ margin-top:12px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:11px 16px 7px; }
+.toc-figs h3{ margin:0 0 6px; font-size:12.5px; color:var(--copper-dark); font-weight:800; }
+.toc-figs .cols{ display:grid; grid-template-columns:1.4fr 1fr; column-gap:22px; }
+.toc-figs .frow{ display:flex; align-items:baseline; gap:6px; padding:2.5px 0; font-size:10.9px; color:var(--muted); }
+.toc-figs .frow .f-id{ color:var(--copper-dark); font-weight:700; white-space:nowrap; }
+.toc-figs .frow .f-dots{ flex:1; border-bottom:1px dotted #d8cfc0; margin:0 3px 3px; min-width:14px; }
+.toc-figs .frow .f-page{ color:var(--copper-dark); font-weight:700; }
+.abstract{ margin-top:12px; background:var(--cream); border:1px solid #e8d2b4; border-radius:12px; padding:11px 16px; font-size:11.4px; color:#4a443d; text-align:justify; line-height:1.85; }
+.abstract b{ color:var(--copper-dark); }
+.pgmark{ position:absolute; top:0; right:0; font-size:2px; color:#faf7f5; }
+
+/* ---------- flowing body ---------- */
+.main-content{ background:var(--bg); padding:26px 58px 30px; }
+.sec-pill{ display:inline-block; background:var(--copper); color:#fff; border-radius:999px; padding:4px 20px;
+  font-size:12.5px; font-weight:700; margin-bottom:10px; }
+.chapter-header{ position:relative; break-after:avoid; break-inside:avoid; margin-top:26px; }
+.chapter-header .sec-title{ font-size:27px; font-weight:900; color:#1d1915; line-height:1.4; }
+.sec-divider{ width:88px; height:3px; background:var(--copper); border-radius:2px; margin:10px 0 16px; }
+h3.h2x{ position:relative; font-size:17.5px; font-weight:800; color:#241f1a; margin:20px 0 10px; break-after:avoid; }
+h3.h2x .dm{ color:var(--copper); font-size:14px; margin-left:7px; }
+h4.h3x{ position:relative; font-size:15.5px; font-weight:800; color:#241f1a; margin:18px 0 9px; break-after:avoid; }
+h4.h3x .dm{ color:var(--copper); font-size:12px; margin-left:7px; }
+.note{ background:var(--cream); border:1px solid #e8d2b4; border-radius:10px; padding:11px 16px;
+  font-size:12.5px; color:#4a443d; margin:10px 0 14px; break-inside:avoid; text-align:justify; }
+.note .lbl{ color:var(--copper-dark); font-weight:800; }
+.bl{ position:relative; padding-right:22px; margin:0 0 10px; text-align:justify; }
+.bl::before{ content:'●'; color:var(--copper); position:absolute; right:0; top:0; font-size:10px; line-height:3.1; }
+.steps{ margin:4px 0 12px; padding:0; list-style:none; }
+.steps li{ position:relative; padding-right:34px; margin-bottom:8px; text-align:justify; break-inside:avoid; }
+.steps li::before{ content:attr(data-n); position:absolute; right:0; top:1px; width:24px; height:24px; border-radius:50%;
+  background:var(--tan); color:var(--copper-dark); font-size:12px; font-weight:800; text-align:center; line-height:24px; }
+.formula{ direction:ltr; text-align:center; font-family:'DejaVu Sans Mono',monospace; font-size:14.5px;
+  background:var(--card); border:1px dashed var(--tan-border); border-radius:10px; padding:10px 14px;
+  margin:12px auto 14px; width:70%; break-inside:avoid; color:#3d3327; }
+
+/* figures */
+.fig{ position:relative; break-inside:avoid; margin:16px 0 20px; }
+.figbox{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 16px 12px; text-align:center; }
+.figbox img{ max-width:100%; max-height:650px; height:auto; }
+.figbox img + img{ margin-top:8px; }
+.figcap{ display:flex; align-items:flex-start; gap:10px; margin-top:10px; }
+.figcap .cap-pill{ background:var(--copper); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.figcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+
+/* tables */
+table.tbl thead{ display:table-header-group; }
+table.tbl tr{ break-inside:avoid; }
+.tblwrap.glosswrap{ break-inside:auto; }
+.tblwrap{ break-inside:avoid; margin:16px 0 20px; position:relative; }
+.tblcap{ display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.tblcap .cap-pill{ background:var(--copper-deep); color:#fff; border-radius:999px; padding:2.5px 15px; font-size:11.5px;
+  font-weight:700; white-space:nowrap; margin-top:2px; }
+.tblcap .cap-text{ color:var(--muted); font-size:12.3px; line-height:1.9; text-align:right; }
+table.tbl{ width:100%; border-collapse:collapse; font-size:12.3px; }
+table.tbl th{ background:var(--tan); color:var(--copper-dark); font-weight:800; padding:8px 10px;
+  border:1px solid var(--tan-border); text-align:center; }
+table.tbl td{ padding:8px 10px; border:1px solid var(--line); background:var(--card); text-align:center; vertical-align:middle; }
+table.tbl td.jt{ text-align:right; }
+table.tbl tr:nth-child(even) td{ background:#fbf7f3; }
+table.tbl .en-cell{ direction:ltr; unicode-bidi:isolate; }
+
+/* glossary + history */
+table.gloss td:first-child{ white-space:nowrap; font-weight:700; color:var(--copper-dark); background:#fbf7f3; }
+table.gloss{ font-size:11.3px; }
+table.gloss td{ padding:5px 8px; }
+.back-section{ margin-top:12px; }
+.tblwrap.glosswrap{ margin-top:10px; }
+
+/* ---------- ending page ---------- */
+.ending{ width:794px; height:1123px; color:#f5efe9;
+  position:relative; display:flex; flex-direction:column; align-items:center; }
+.ending .frame{ position:absolute; inset:12px; border:1px solid rgba(224,128,56,.4); pointer-events:none; }
+.e-logo{ margin-top:56px; }
+.e-logo img{ width:218px; }
+.e-name{ margin-top:26px; text-align:center; }
+.e-name .fa{ font-size:24px; font-weight:900; color:var(--copper); }
+.e-name .en{ font-size:12.5px; letter-spacing:4px; color:#cfc9c2; margin-top:4px; }
+.e-text{ margin-top:26px; max-width:600px; color:#b0a89f; font-size:12.8px; line-height:2.1; text-align:center; }
+.e-thanks{ margin-top:16px; color:var(--copper); font-size:14px; font-weight:700; text-align:center; }
+.e-ver{ margin-top:8px; color:#8d857c; font-size:11px; text-align:center; }
+.e-contact-title{ margin-top:26px; color:var(--copper); font-size:14.5px; font-weight:800; }
+.c-card{ margin-top:16px; width:560px; background:#16120e; border:1px solid rgba(224,128,56,.45); border-radius:14px; padding:8px 22px; }
+.c-row{ display:flex; align-items:center; gap:14px; padding:12px 2px; border-bottom:1px solid rgba(224,128,56,.18); }
+.c-row:last-child{ border-bottom:none; }
+.c-row .c-label{ color:var(--copper); font-size:12px; font-weight:700; min-width:96px; }
+.c-row .c-val{ flex:1; color:#f0ebe5; font-size:12.5px; text-align:left; direction:ltr; unicode-bidi:isolate; }
+.c-row .c-ic{ width:30px; height:30px; border:1px solid rgba(224,128,56,.6); border-radius:50%; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; }
+.c-row .c-ic svg{ width:14px; height:14px; stroke:var(--copper); fill:none; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.e-bottom{ margin-top:auto; padding:0 40px 48px; text-align:center; }
+.e-bottom .hair{ width:340px; height:1px; background:rgba(224,128,56,.4); margin:0 auto 12px; }
+.e-bottom .l1{ color:#8d857c; font-size:10.8px; line-height:1.9; }
+.e-bottom .l2{ color:var(--copper); font-size:10.8px; margin-top:6px; }
+
+/* code blocks (for docs with C/asm listings) */
+.codeblk{ direction:ltr; text-align:left; background:#16120e; color:#e8e2da; border:1px solid #2c241c; border-radius:12px;
+  padding:13px 18px; margin:12px 0 16px; font-family:'DejaVu Sans Mono',monospace; font-size:11.3px; line-height:1.72;
+  white-space:pre-wrap; break-inside:avoid; }
+.codeblk.long{ break-inside:auto; }
+.codeblk .cm{ color:#9a8f83; }
+/* scenario box */
+.scen{ background:var(--card); border:1px solid var(--tan-border); border-right:3px solid var(--copper); border-radius:10px;
+  padding:10px 16px; margin:10px 0 14px; font-size:12.6px; break-inside:avoid; text-align:justify; }
+.scen .lbl{ color:var(--copper-dark); font-weight:800; }
+/* compact TOC page (for docs with long figure lists) */
+.toc-page{ padding-top:60px; }
+.toc-underline{ margin-bottom:8px; }
+.toc-row{ padding:4.5px 2px; }
+.toc-figs{ margin-top:10px; padding:8px 14px 5px; }
+.toc-figs h3{ margin:0 0 5px; font-size:12px; }
+.toc-figs .frow{ padding:0.9px 0; font-size:10.3px; }
+.abstract{ margin-top:10px; padding:9px 14px; font-size:10.6px; line-height:1.62; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<div class="cover">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="c-strip">
+    <div class="l1">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    <div class="l2">همراه شما در مسیر طراحی و ساخت مدارهای مطمئن</div>
+  </div>
+  <div class="c-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="c-kicker">جزوهٔ آموزشی مهندسی الکترونیک &nbsp;<span class="lat">|&nbsp; ELECTRONICS GUIDE</span></div>
+  <div class="c-title">
+    <div class="t1">دانلود <span class="en">FLASH</span> خارجی با ابزار <span class="en">Link</span></div>
+    <div class="t2">الگوریتم <span class="en">SPI/QSPI</span> و پیکربندی گام‌به‌گام</div>
+    <div class="t3">پروژۀ الگوریتم، <span class="en">flash_conf.h</span> و آزمون سرعت دانلود</div>
+  </div>
+  <div class="c-sub">اصول پیاده‌سازی ابزار Link برای FLASH خارجی، پیکربندی پروژۀ الگوریتم (نگاشت پایه‌های SPI، تقسیم ساعت، دستورهای پاک‌سازی/نوشتن، انتخاب CS)، روند تنظیم در نرم‌افزار Link و جدول نتایج آزمون سرعت دانلود برای CH32V006/L103/V203/V205 در برابر CH347</div>
+  <div class="c-desc">ترجمۀ فارسی سند رسمی <span class="en">AN91003</span> (نسخۀ ۱٫۰، منتشرۀ <span class="en">WCH</span>): FLASH خارجی برای زمانی است که فضای ذخیره‌سازی داخلی تراشه کافی نباشد و معمولاً با SPI یا QSPI متصل می‌شود؛ می‌توان داده‌های ویژۀ بزرگ مانند اطلاعات تصویر را در آن نگه داشت و تراشه آن‌ها را بخواند و نمایش دهد. روش سازگارسازی دانلود FLASH خارجی بر پایۀ ابزارهای موجود که در این سند می‌آید می‌تواند به‌طور مؤثر بازدهی را بالا ببرد.</div>
+  <div class="c-tags">
+    <span class="c-tag"><span class="en">WCH-Link · External FLASH</span></span>
+    <span class="c-tag"><span class="en">SPI / QSPI</span></span>
+    <span class="c-tag"><span class="en">CH32V203 · V205</span></span>
+    <span class="c-tag">الگوریتم دانلود</span>
+    <span class="c-tag"><span class="en">W25Q16 · CH347</span></span>
+    <span class="c-tag">واژه‌نامهٔ فنی</span>
+  </div>
+  <div class="c-bottom">
+    <div class="ver">ترجمۀ فارسی <span class="en">AN91003 V1.0</span> · <b>نسخۀ ۱٫۰</b> — آبان ۱۴۰۵</div>
+    <div class="c-strip" style="padding:0;">
+      <div class="l1" style="font-size:12px;">معمار الکترونیک صنعت<span class="sep">|</span><span class="lat">MEMAR ELECTRONIC SANAT (MES)</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<div class="toc-page">
+  <div class="toc-note">فهرست مطالب — برای پرش به بخش موردنظر، روی ردیف آن کلیک کنید؛ شمارۀ صفحه‌ها بر اساس صفحات فیزیکی <span class="en">PDF</span> است.</div>
+  <h1>فهرست مطالب</h1>
+  <div class="toc-underline"></div>
+
+  <a class="toc-row" href="#sec-intro"><span class="t-num">۱</span><span class="t-title">مقدمه | توضیحات و دامنۀ کاربرد</span><span class="t-dots"></span><span class="t-page">۳</span></a>
+  <a class="toc-row" href="#sec-b1"><span class="t-num">۲</span><span class="t-title">بخش ۱ | پیاده‌سازی ابزار Link</span><span class="t-dots"></span><span class="t-page">۴</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-11"><span class="s-id">1.1</span><span>نمودار اصول دانلود از FLASH خارجی</span><span class="s-dots"></span><span class="s-page">۴</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b2"><span class="t-num">۳</span><span class="t-title">بخش ۲ | راهنمای عملیاتی</span><span class="t-dots"></span><span class="t-page">۶</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-21"><span class="s-id">2.1</span><span>پیکربندی پروژۀ الگوریتم دانلود FLASH خارجی</span><span class="s-dots"></span><span class="s-page">۶</span></a>
+    <a class="toc-sub" href="#sec-22"><span class="s-id">2.2</span><span>روند پیکربندی Link برای FLASH خارجی</span><span class="s-dots"></span><span class="s-page">۷</span></a>
+  </div>
+  <a class="toc-row" href="#sec-b3"><span class="t-num">۴</span><span class="t-title">بخش ۳ | آزمون سرعت دانلود</span><span class="t-dots"></span><span class="t-page">۹</span></a>
+  <div class="toc-subwrap">
+    <a class="toc-sub" href="#sec-31"><span class="s-id">3.1</span><span>آزمون سرعت دانلود از FLASH خارجی</span><span class="s-dots"></span><span class="s-page">۹</span></a>
+  </div>
+  <a class="toc-row" href="#sec-ver"><span class="t-num">۵</span><span class="t-title">تاریخچۀ نسخه‌ها و بیانیه</span><span class="t-dots"></span><span class="t-page">۹</span></a>
+  <a class="toc-row" href="#sec-gloss"><span class="t-num">۶</span><span class="t-title">واژگان کلیدی (واژه‌نامهٔ فنی)</span><span class="t-dots"></span><span class="t-page">۱۰</span></a>
+
+  <div class="toc-figs">
+    <h3>فهرست شکل‌ها، جدول‌ها و کدها</h3>
+    <div class="cols">
+      <div>
+        <div class="frow"><span class="f-id">شکل ۱</span><span>روند دانلود FLASH داخلی</span><span class="f-dots"></span><span class="f-page">۴</span></div>
+        <div class="frow"><span class="f-id">شکل ۲</span><span>روند دانلود FLASH خارجی</span><span class="f-dots"></span><span class="f-page">۵</span></div>
+        <div class="frow"><span class="f-id">شکل ۳</span><span>نگاشت پایه‌های SPI</span><span class="f-dots"></span><span class="f-page">۶</span></div>
+        <div class="frow"><span class="f-id">شکل ۴</span><span>تقسیم فرکانس ساعت SPI</span><span class="f-dots"></span><span class="f-page">۶</span></div>
+        <div class="frow"><span class="f-id">شکل ۵</span><span>دستورهای FLASH</span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">شکل ۶</span><span>پایۀ انتخاب قطعه (CS) نرم‌افزاری SPI</span><span class="f-dots"></span><span class="f-page">۷</span></div>
+        <div class="frow"><span class="f-id">شکل ۷</span><span>پیکربندی پروژۀ الگوریتم</span><span class="f-dots"></span><span class="f-page">۷</span></div>
+      </div>
+      <div>
+        <div class="frow"><span class="f-id">شکل ۸</span><span>انتخاب Memory Type — حالت External</span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">شکل ۹</span><span>فهرست تراشه‌ها</span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">شکل ۱۰</span><span>افزودن میان‌افزار الگوریتم</span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">شکل ۱۱</span><span>افزودن میان‌افزار دانلود هدف</span><span class="f-dots"></span><span class="f-page">۸</span></div>
+        <div class="frow"><span class="f-id">جدول ۱</span><span>دامنۀ کاربرد سند</span><span class="f-dots"></span><span class="f-page">۳</span></div>
+        <div class="frow"><span class="f-id">جدول ۲</span><span>نتایج آزمون سرعت دانلود</span><span class="f-dots"></span><span class="f-page">۹</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="abstract"><b>چکیده —</b> دانلود از <span class="en">FLASH</span> خارجی در ابزار <span class="en">Link</span> بر پایۀ شیوۀ دانلود موجود پیاده شده است: فایلِ گزارش‌شده از سمت نرم‌افزار با الگوریتمی که کارکرد <span class="en">SPI/QSPI</span> را فعال می‌کند به قطعۀ خارجی منتقل می‌شود. پیکربندی الگوریتم با ماکروهای فایل <span class="en">flash_conf.h</span> انجام می‌شود (نگاشت پایه‌ها، تقسیم ساعت، دستورهای پاک‌سازی/نوشتن و پایۀ CS نرم‌افزاری) و پس از تیک <span class="en">Creat algorithm file</span>، فایل <span class="en">algorithm.bin</span> در نرم‌افزار Link با حالت <span class="en">External</span> افزوده می‌شود. جدول نتایج، سرعت دانلود SPI/QSPI تراشه‌های CH32V006، L103، V203 و V205 را در برابر CH347 (120.41KB/s) نشان می‌دهد و اتصال دوخط اولویت دارد.</div>
+</div>
+
+<div class="main-content">
+
+<!-- ================= مقدمه ================= -->
+<div class="chapter-header" id="sec-intro">
+  <span class="sec-pill">مقدمه</span>
+  <div class="sec-title">توضیحات و دامنۀ کاربرد</div>
+  <div class="sec-divider"></div>
+</div>
+<p><span class="en">FLASH</span> خارجی در زمانی استفاده می‌شود که فضای ذخیره‌سازی درون تراشه کافی نباشد و معمولاً با <span class="en">SPI</span> یا <span class="en">QSPI</span> متصل می‌شود. می‌توان داده‌های ویژۀ بزرگ مانند اطلاعات تصویر را در آن ذخیره کرد و سپس تراشه آن‌ها را بخواند و نمایش دهد. روش سازگارسازی دانلود <span class="en">FLASH</span> خارجی بر پایۀ ابزارهای موجود که در این سند می‌آید، می‌تواند تا حدی بازدهی را به‌طور مؤثر بالا ببرد.</p>
+<div class="tblwrap" id="tab-01">
+  <div class="tblcap"><span class="cap-pill">جدول ۱</span><span class="cap-text">دامنۀ کاربرد سند</span></div>
+  <table class="tbl">
+    <tr><th style="width:40%;">دامنۀ کاربرد</th><th>سری</th></tr>
+    <tr><td>MCU عمومی</td><td><span class="en">CH32L103</span>، <span class="en">CH32V203</span>، <span class="en">CH32V205</span>، <span class="en">CH32V006</span> و …</td></tr>
+  </table>
+</div>
+
+<h3 class="h2x" id="sec-intro-tech"><span class="dm">◆</span>توضیح مختصر فنی</h3>
+<p style="color:#9a8f83;font-size:11.6px;margin-top:-4px;">این بخش افزودۀ مترجم برای درک بهتر مفاهیم سند است و در متن اصلی وجود ندارد.</p>
+<p><b style="color:#8a4a12;">۱. معماری «الگوریتم دانلود» چیست؟</b></p>
+<p>هنگام دانلود، ابزار <span class="en">Link</span> یک برنامه کوچک (الگوریتم) را در <span class="en">RAM</span> تراشۀ هدف بارگذاری می‌کند؛ این برنامه دستورهای پاک‌سازی، نوشتن و تأیید را روی <span class="en">FLASH</span> اجرا می‌کند. برای <span class="en">FLASH</span> خارجی، الگوریتم باید افزون بر رساندن داده به جانۀ هدف، خودش جانۀ <span class="en">SPI/QSPI</span> را راه بیندازد و با قطعۀ خارجی گفت‌وگو کند؛ بنابراین پارامترهای اتصال (پایه‌ها، سرعت، دستورها و CS) باید با قطعۀ واقعی شما سازگار باشند.</p>
+<p><b style="color:#8a4a12;">۲. نقش flash_conf.h</b></p>
+<p>تمام پارامترهای قابل تغییر پروژۀ الگوریتم به‌صورت ماکرو در فایل <span class="en">flash_conf.h</span> تعریف شده‌اند؛ یعنی برای سازگاری با برد و قطعۀ خود، تنها همین ماکروها را ویرایش و پروژه را دوباره کامپایل می‌کنید تا فایل <span class="en">algorithm.bin</span> ساخته شود.</p>
+<p><b style="color:#8a4a12;">۳. تک‌خطی و دوخطی چه تأثیری دارد؟</b></p>
+<p>اتصال اشکال‌زدایی WCH به دو شکل تک‌خطی و دوخطی است. جدول بخش ۳ نشان می‌دهد سهم اثر سرعتِ دوخط از سرعت SPI بیشتر است؛ بنابراین اگر تراشه از دوخط پشتیبانی می‌کند، اولویت با اتصال دوخطی است.</p>
+
+<!-- ================= بخش ۱ ================= -->
+<div class="chapter-header" id="sec-b1">
+  <span class="sec-pill">بخش ۱</span>
+  <div class="sec-title">پیاده‌سازی ابزار Link</div>
+  <div class="sec-divider"></div>
+</div>
+<p>اصل پیاده‌سازی دانلود از <span class="en">FLASH</span> خارجی در ابزار <span class="en">Link</span> چنین است: بر پایۀ شیوۀ دانلود موجود <span class="en">Link</span>، فایلِ گزارش‌شده از سمت نرم‌افزار، از طریق ماژول سخت‌افزاری <span class="en">SPI/QSPI</span> به <span class="en">FLASH</span> خارجی منتقل می‌شود.</p>
+<h3 class="h2x" id="sec-11"><span class="dm">◆</span>۱.۱ نمودار اصول دانلود از FLASH خارجی</h3>
+<p>نخست روند دانلود <span class="en">FLASH</span> داخلی؛ به شکل ۱ مراجعه کنید. پس از اتصال تک‌خطی/دوخطی، الگوریتم <span class="en">FLASH</span> داخلی دانلود می‌شود و پس از اتمام آن، انتقال داده فایل هدف آغاز می‌شود؛ الگوریتم داده را دریافت می‌کند و با کنترل ثبات‌های <span class="en">FLASH</span>، دانلود و تأیید را انجام می‌دهد؛ با گذر تأیید، روند به پایان می‌رسد.</p>
+<div class="fig" id="fig-01">
+  <div class="figbox"><img src="assets/img/an91003-fig01.png" alt="روند دانلود FLASH داخلی" style="max-width:300px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱</span><span class="cap-text">روند دانلود <span class="en">FLASH</span> داخلی (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>روند دانلود از <span class="en">FLASH</span> خارجی در شکل ۲ آمده است؛ بخشی از ساختار تغییر کرده است: نخست الگوریتم پس از اتصال دوخطی متفاوت است — الگوریتم کارکرد <span class="en">SPI/QSPI</span> را فعال می‌کند تا با <span class="en">FLASH</span> خارجی ارتباط برقرار کند؛ دوم پس از آنکه نرم‌افزار انتقال فایل را آغاز کرد، چون <span class="en">FLASH</span> خارجی از طریق <span class="en">SPI/QSPI</span> اتصال فیزیکی دارد، دانلود داده باید با کنترل اتصال جانۀ پیرامونی انجام شود.</p>
+<div class="fig" id="fig-02">
+  <div class="figbox"><img src="assets/img/an91003-fig02.png" alt="روند دانلود FLASH خارجی" style="max-width:300px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۲</span><span class="cap-text">روند دانلود <span class="en">FLASH</span> خارجی (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+
+<!-- ================= بخش ۲ ================= -->
+<div class="chapter-header" id="sec-b2">
+  <span class="sec-pill">بخش ۲</span>
+  <div class="sec-title">راهنمای عملیاتی</div>
+  <div class="sec-divider"></div>
+</div>
+<p>روند دانلود <span class="en">FLASH</span> خارجی با <span class="en">Link</span> نسبت به دانلود <span class="en">FLASH</span> داخلی تفاوت دارد و نکتۀ اصلی آن، افزودن الگوریتم دانلود مناسب است. تراشه‌هایی که در حال حاضر از این کارکرد پشتیبانی می‌کنند، همگی پروژۀ پیکربندی الگوریتم دانلود را ارائه می‌دهند و می‌توان پارامترهای <span class="en">SPI/QSPI</span> را بسته به نیاز واقعی پیکربندی کرد.</p>
+<h3 class="h2x" id="sec-21"><span class="dm">◆</span>۲.۱ پیکربندی پروژۀ الگوریتم دانلود FLASH خارجی</h3>
+<p>پروژۀ پیکربندی الگوریتم دانلود <span class="en">FLASH</span> خارجی <span class="en">CH32V203</span> را به‌عنوان مثال در نظر بگیرید؛ پیکربندی‌های قابل تغییر همگی به‌صورت ماکرو در فایل <span class="en">flash_conf.h</span> تعریف شده‌اند.</p>
+<p>انتخاب پایه‌های نگاشت <span class="en">SPI</span>، مطابق شکل ۳.</p>
+<div class="fig" id="fig-03">
+  <div class="figbox"><img src="assets/img/an91003-fig03.png" alt="نگاشت پایه‌های SPI" style="max-width:360px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۳</span><span class="cap-text">نگاشت پایه‌های <span class="en">SPI</span> (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>انتخاب سرعت <span class="en">SPI</span>، مطابق شکل ۴.</p>
+<div class="fig" id="fig-04">
+  <div class="figbox"><img src="assets/img/an91003-fig04.png" alt="تقسیم فرکانس ساعت SPI" style="max-width:360px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۴</span><span class="cap-text">تقسیم فرکانس ساعت <span class="en">SPI</span> (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>می‌توان بر اساس دستورهایی که تراشۀ <span class="en">FLASH</span> پشتیبانی می‌کند، دستورهای پاک‌سازی/نوشتن را انتخاب کرد، مطابق شکل ۵.</p>
+<div class="fig" id="fig-05">
+  <div class="figbox"><img src="assets/img/an91003-fig05.png" alt="دستورهای FLASH" style="max-width:340px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۵</span><span class="cap-text">دستورهای <span class="en">FLASH</span> (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>پایۀ انتخاب قطعه (<span class="en">CS</span>) نرم‌افزاری <span class="en">SPI</span> قابل شخصی‌سازی است، مطابق شکل ۶.</p>
+<div class="fig" id="fig-06">
+  <div class="figbox"><img src="assets/img/an91003-fig06.png" alt="پایۀ CS نرم‌افزاری SPI" style="max-width:400px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۶</span><span class="cap-text">پایۀ انتخاب قطعه (<span class="en">CS</span>) نرم‌افزاری <span class="en">SPI</span> (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>در پیکربندی پروژه، تیک «<span class="en">Creat algorithm file</span>» زده شود؛ پس از کامپایل، فایل الگوریتم هدف <span class="en">algorithm.bin</span> ساخته می‌شود، مطابق شکل ۷.</p>
+<div class="fig" id="fig-07">
+  <div class="figbox"><img src="assets/img/an91003-fig07.png" alt="پیکربندی پروژۀ الگوریتم" style="max-width:480px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۷</span><span class="cap-text">پیکربندی پروژۀ الگوریتم (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<h3 class="h2x" id="sec-22"><span class="dm">◆</span>۲.۲ روند پیکربندی Link برای FLASH خارجی</h3>
+<p>نخست در <span class="en">Memory Type</span> حالت <span class="en">External</span> انتخاب شود، مطابق شکل ۸.</p>
+<div class="fig" id="fig-08">
+  <div class="figbox"><img src="assets/img/an91003-fig08.png" alt="انتخاب Memory Type" style="max-width:280px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۸</span><span class="cap-text">انتخاب <span class="en">Memory Type</span> (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>سری تراشۀ متناظر انتخاب شود، مطابق شکل ۹.</p>
+<div class="fig" id="fig-09">
+  <div class="figbox"><img src="assets/img/an91003-fig09.png" alt="فهرست تراشه‌ها" style="max-width:280px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۹</span><span class="cap-text">فهرست تراشه‌ها (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>پروژۀ الگوریتم کامپایل‌شده افزوده شود:</p>
+<div class="fig" id="fig-10">
+  <div class="figbox"><img src="assets/img/an91003-fig10.png" alt="افزودن میان‌افزار الگوریتم" style="max-width:360px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱۰</span><span class="cap-text">افزودن میان‌افزار الگوریتم (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<p>میان‌افزار دانلود افزوده و کلیک دانلود/تأیید شود:</p>
+<div class="fig" id="fig-11">
+  <div class="figbox"><img src="assets/img/an91003-fig11.png" alt="افزودن میان‌افزار دانلود هدف" style="max-width:400px;"></div>
+  <div class="figcap"><span class="cap-pill">شکل ۱۱</span><span class="cap-text">افزودن میان‌افزار دانلود هدف (برچسب‌ها مطابق سند اصلی)</span></div>
+</div>
+<div class="scen"><span class="lbl">توجه: </span>اگر تأیید دانلود خطا داد، پیشنهاد می‌شود بررسی کنید که پیکربندی پروژۀ الگوریتم درست باشد، دستور پاک‌سازی پشتیبانی می‌شود یا خیر، و فرکانس <span class="en">SPI</span> را پایین بیاورید.</div>
+
+<!-- ================= بخش ۳ ================= -->
+<div class="chapter-header" id="sec-b3">
+  <span class="sec-pill">بخش ۳</span>
+  <div class="sec-title">آزمون سرعت دانلود</div>
+  <div class="sec-divider"></div>
+</div>
+<h3 class="h2x" id="sec-31"><span class="dm">◆</span>۳.۱ آزمون سرعت دانلود از FLASH خارجی</h3>
+<p>تراشه‌هایی که در حال حاضر از این کارکرد پشتیبانی می‌کنند، به‌سبب تفاوت فرکانس دوخط و فرکانس <span class="en">SPI</span>، سرعت واقعی دانلود از <span class="en">FLASH</span> خارجی متفاوت دارند. تراشۀ <span class="en">FLASH</span> آزمون‌شده <span class="en">W25Q16</span> است و سرعت دانلود با مقایسۀ کارکرد USB-to-SPI تراشۀ <span class="en">CH347</span> سنجیده شده است. نتایج در جدول زیر آمده است.</p>
+<div class="tblwrap" id="tab-02">
+  <div class="tblcap"><span class="cap-pill">جدول ۲</span><span class="cap-text">نتایج آزمون سرعت دانلود</span></div>
+  <table class="tbl">
+    <tr><th style="width:34%;"></th><th style="width:33%;">سرعت دانلود <span class="en">SPI</span></th><th>سرعت دانلود <span class="en">QSPI</span></th></tr>
+    <tr><td><span class="en">V006</span></td><td><span class="en">29.15KB/s</span></td><td>-</td></tr>
+    <tr><td><span class="en">L103</span></td><td><span class="en">31.48KB/s</span></td><td>-</td></tr>
+    <tr><td><span class="en">V203</span></td><td><span class="en">53.04KB/s</span></td><td>-</td></tr>
+    <tr><td><span class="en">V205</span></td><td><span class="en">66.56KB/s</span></td><td><span class="en">72.8KB/s</span></td></tr>
+    <tr><td><span class="en">CH347</span></td><td><span class="en">120.41KB/s</span></td><td>-</td></tr>
+  </table>
+</div>
+<p>از نتایج می‌توان دید که در طرح فعلی، سرعت دانلود تراشه‌های مختلف متفاوت است؛ علت اصلی در سرعت دوخط و سرعت <span class="en">SPI</span> است و سهم اثر سرعت دوخط بیشتر است. مثلاً تراشۀ <span class="en">V006</span> بالاترین فرکانس اصلی پایین دارد و سرعت واقعی کل، کندتر است. افزون بر این، در برخی تراشه‌هایی که از تک‌خط و دوخط پشتیبانی می‌کنند، سرعت دوخط به‌طور چشمگیری بیشتر از تک‌خط است؛ بنابراین در استفاده، اولویت با اتصال دوخط است.</p>
+
+  <!-- ================= تاریخچه + بیانیه ================= -->
+  <div class="chapter-header back-section" id="sec-ver">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">تاریخچۀ نسخه‌ها و بیانیه</div>
+    <div class="sec-divider"></div>
+  </div>
+  <div class="tblwrap" id="tab-hist">
+    <div class="tblcap"><span class="cap-pill">جدول تاریخچه</span><span class="cap-text">تاریخچۀ نسخه‌های سند اصلی <span class="en">AN91003</span></span></div>
+    <table class="tbl">
+      <tr><th style="width:28%;">تاریخ</th><th style="width:22%;">نسخه</th><th>شرح تغییرات</th></tr>
+      <tr><td><span class="en">2026/07/08</span></td><td><span class="en">V1.0</span></td><td>انتشار نسخۀ اول</td></tr>
+    </table>
+  </div>
+  <h3 class="h2x"><span class="dm">◆</span>بیانیه</h3>
+  <p>این راهنما صرفاً جهت مرجع ارائه شده است و نویسندۀ سند اصلی می‌تواند بدون اطلاع قبلی و در هر زمان، تغییراتی در محتوای آن اعمال کند. ترجمۀ فارسی این سند توسط تیم معمار الکترونیک صنعت تهیه شده است؛ برای اطمینان از به‌روزترین نسخه به <span class="en">https://wch.cn</span> مراجعه کنید.</p>
+
+  <!-- ================= واژگان کلیدی ================= -->
+  <div class="chapter-header back-section" id="sec-gloss">
+    <span class="sec-pill">پیوست</span>
+    <div class="sec-title">واژگان کلیدی (واژه‌نامهٔ فنی)</div>
+    <div class="sec-divider"></div>
+  </div>
+  <p>اصطلاحات فنی سخت‌افزار مطابق سند اصلی به‌صورت انگلیسی حفظ شده‌اند. جدول زیر معادل‌ها و شرح کوتاه هر واژه را برای مرجع سریع جمع می‌کند.</p>
+  <div class="tblwrap glosswrap" id="tab-gloss">
+    <div class="tblcap"><span class="cap-pill">جدول واژگان</span><span class="cap-text">واژگان کلیدی به‌کاررفته در این جزوه</span></div>
+    <table class="tbl gloss">
+      <thead><tr><th style="width:26%;">واژه</th><th>یعنی چه؟</th></tr></thead>
+      <tr><td><span class="en">WCH-Link</span></td><td class="jt">پروگرامر و اشکال‌زاد رسمی WCH؛ در این سند ابزار پایه برای افزودن قابلیت دانلود از FLASH خارجی</td></tr>
+      <tr><td><span class="en">FLASH خارجی</span></td><td class="jt">قطعۀ حافظۀ سری خارج از تراشه (مانند W25Qxx) که با SPI یا QSPI به MCU متصل می‌شود؛ برای نگهداری داده‌های بزرگ مانند تصویر</td></tr>
+      <tr><td><span class="en">QSPI</span></td><td class="jt">گذرگاه سریال چهارخطی؛ نسخۀ سریع‌تر SPI با چهار خط داده، برای اتصال FLASH خارجی</td></tr>
+      <tr><td><span class="en">الگوریتم دانلود (Download Algorithm)</span></td><td class="jt">برنامه‌ای که هنگام دانلود در RAM تراشۀ هدف بارگذاری و اجرا می‌شود تا عملیات پاک‌سازی، نوشتن و تأیید FLASH انجام شود؛ در نسخۀ خارجی باید SPI/QSPI را نیز راه‌اندازی کند</td></tr>
+      <tr><td><span class="en">algorithm.bin</span></td><td class="jt">فایل الگوریتم دانلود که پس از تیک گزینۀ Creat algorithm file در پروژۀ الگوریتم و کامپایل ساخته می‌شود</td></tr>
+      <tr><td><span class="en">flash_conf.h</span></td><td class="jt">فایل پیکربندی پروژۀ الگوریتم؛ تمام پارامترهای قابل تغییر به‌صورت ماکرو در آن تعریف شده‌اند: نگاشت پایه‌ها، تقسیم ساعت، دستورها و پایۀ CS</td></tr>
+      <tr><td><span class="en">FLASH_SPI_REMAP</span></td><td class="jt">ماکرو انتخاب نگاشت پایه‌های SPI پروژۀ الگوریتم؛ مقدارهای 0، 1 و 2 دارد</td></tr>
+      <tr><td><span class="en">FLASH_SPEED_SYSCLK_DIV</span></td><td class="jt">ماکرو انتخاب سرعت SPI بر اساس تقسیم ساعت سیستم؛ مقدارهای 0 تا 7 (تقسیم 2 تا 256)</td></tr>
+      <tr><td><span class="en">FLASH_ERASE_SECTOR / FLASH_ERASE_BLOCK</span></td><td class="jt">ماکروهای انتخاب دستور پاک‌سازی سکتوری یا بلوکی مطابق پشتیبانی تراشۀ FLASH</td></tr>
+      <tr><td><span class="en">FLASH_CS_PORT / FLASH_CS_PIN</span></td><td class="jt">ماکروهای شخصی‌سازی پایۀ انتخاب قطعه (CS) نرم‌افزاری SPI</td></tr>
+      <tr><td><span class="en">Memory Type: External</span></td><td class="jt">گزینۀ نرم‌افزار Link برای انتخاب رسانۀ خارجی به‌جای FLASH داخلی تراشه</td></tr>
+      <tr><td><span class="en">تک‌خطی/دوخطی (Single/Dual-wire)</span></td><td class="jt">شیوه‌های اتصال اشکال‌زدایی و دانلود WCH؛ در تراشه‌های پشتیبان، اتصال دوخطی سرعت دانلود را به‌طور چشمگیر بالا می‌برد</td></tr>
+      <tr><td><span class="en">W25Q16</span></td><td class="jt">فلش سری 2MB قطعۀ آزمون در جدول سرعت این سند</td></tr>
+      <tr><td><span class="en">CH347</span></td><td class="jt">تراشۀ سریع WCH با کارکرد USB-to-SPI/UART؛ در جدول سرعت به‌عنوان مرجع مقایسه (120.41KB/s) آمده است</td></tr>
+      <tr><td><span class="en">Creat algorithm file</span></td><td class="jt">گزینۀ پیکربندی پروژه در MRS که با کامپایل، فایل الگوریتم دانلود را تولید می‌کند</td></tr>
+      <tr><td><span class="en">Auto download when WCH-Link was linked</span></td><td class="jt">گزینه‌ای در پیکربندی نرم‌افزار Link برای آغاز خودکار دانلود پس از اتصال WCH-Link</td></tr>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================== ENDING ============================== -->
+<div class="ending">
+  <div class="frame"></div>
+  <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+  <div class="e-logo"><img src="assets/img/mes-logo.png" alt="MES"></div>
+  <div class="e-name">
+    <div class="fa">معمار الکترونیک صنعت</div>
+    <div class="en">MEMAR ELECTRONIC SANAT (MES)</div>
+  </div>
+  <div class="e-text">در مورد مطالب این جزوه و ترجمه، بدیهی است که از نقطه‌نظرات و پیشنهادهای شما عزیزان در این راستا خوشحال می‌شویم. همچنین اشکالات، کم‌وکاستی‌ها و پرسش‌های خود را در این مورد با ما در میان بگذارید تا در نسخه‌های بعدی لحاظ شوند.</div>
+  <div class="e-thanks">با تشکر، حسن معماری</div>
+  <div class="e-ver">ترجمۀ فارسی سند <span class="en">AN91003 V1.0</span> · نسخۀ ۱٫۰ — تاریخ ساخت: ۱۴۰۵/۰۸/۲۵</div>
+  <div class="e-contact-title">راه‌های ارتباط با ما</div>
+  <div class="c-card">
+    <div class="c-row">
+      <span class="c-label">گیت‌هاب</span>
+      <a class="c-val" style="text-decoration:none;" href="https://github.com/MEMAR-ELECTRONIC-SANAT">https://github.com/MEMAR-ELECTRONIC-SANAT</a>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path fill="#e08038" stroke="none" d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.082-.73.082-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.295-1.552 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">کانال تلگرام</span>
+      <span class="c-val">https://t.me/Memar_Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">پیج اینستاگرام</span>
+      <span class="c-val">https://www.instagram.com/Memar.Electronic</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg></span>
+    </div>
+    <div class="c-row">
+      <span class="c-label">ایمیل</span>
+      <span class="c-val">Memari.h@gmail.com</span>
+      <span class="c-ic"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m2 7 10 6L22 7"/></svg></span>
+    </div>
+  </div>
+  <div class="e-bottom">
+    <div class="hair"></div>
+    <div class="l1">آموزش، طراحی و ساخت بردهای الکترونیکی صنعتی — این جزوه با افتخار توسط تیم معمار الکترونیک صنعت برای جامعۀ مهندسی ایران تهیه شده است.</div>
+    <div class="l2">ترجمۀ فارسی بر پایۀ سند رسمی <span class="en">AN91003</span> نسخۀ <span class="en">V1.0</span> منتشرۀ <span class="en">WCH</span> — <span class="en">https://wch.cn</span></div>
+  </div>
+</div>
+
+</body>
+</html>
