@@ -24,7 +24,7 @@ This infographic provides a visual overview of the WCH CH32 Application Notes co
 
 <p align="center">
   <a href="WCH%20CH32%20Application%20Notes%20Infographic.png">
-    <img src="WCH%20CH32%20Application%20Notes%20Infographic.png" width="100%" alt="WCH CH32 Application Notes Infographic">
+    <img src="WCH%20CH32%20Application%20Notes%20Infographic.png" width="60%" alt="WCH CH32 Application Notes Infographic">
   </a>
 </p>
 
@@ -38,7 +38,7 @@ This promotional graphic is intended for repository announcements and sharing th
 
 <p align="center">
   <a href="WCH%20CH32%20Application%20Notes%20Promo.png">
-    <img src="WCH%20CH32%20Application%20Notes%20Promo.png" width="100%" alt="WCH CH32 Application Notes Promotional Image">
+    <img src="WCH%20CH32%20Application%20Notes%20Promo.png" width="60%" alt="WCH CH32 Application Notes Promotional Image">
   </a>
 </p>
 
