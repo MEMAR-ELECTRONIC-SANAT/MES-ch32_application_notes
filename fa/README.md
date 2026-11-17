@@ -1,10 +1,22 @@
 <p align="center"><img src="../Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider"></p>
 
+<div dir="rtl" align="right">
+
 # راهنمای دوزبانه فارسی و انگلیسی — یادداشت‌های WCH CH32
+
+</div>
+
+<div dir="rtl" align="right">
 
 ## معرفی / Overview
 
+</div>
+
+<div dir="rtl" align="right">
+
 پوشه `fa` راهنماهای دوزبانه فارسی و انگلیسی یادداشت‌های کاربردی WCH CH32 را در خود جای می‌دهد. هر شناسه AN پوشه مستقلی دارد و فایل‌های PDF و HTML فارسی و رسانه‌های همراه، در صورت موجود بودن، در همان پوشه نگهداری می‌شوند.
+
+</div>
 
 <div dir="ltr" align="left">
 
@@ -12,7 +24,11 @@ The `fa` directory contains bilingual Persian-English guides for WCH CH32 Applic
 
 </div>
 
+<div dir="rtl" align="right">
+
 ## ساختار / Structure
+
+</div>
 
 | مسیر / Path | توضیح فارسی | English description |
 |---|---|---|
@@ -21,7 +37,11 @@ The `fa` directory contains bilingual Persian-English guides for WCH CH32 Applic
 | `ANxxxxx FA.pdf` | نسخه PDF فارسی، در صورت انتشار | Persian PDF edition, when available |
 | `media/` | تصاویر و نمودارهای همراه | Supporting images and diagrams |
 
+<div dir="rtl" align="right">
+
 ## فهرست / Index
+
+</div>
 
 | شناسه | موضوع فارسی | English topic | راهنما / Guide |
 |---|---|---|---|
@@ -75,9 +95,17 @@ The `fa` directory contains bilingual Persian-English guides for WCH CH32 Applic
 | AN94001 | نکات مرتبط با EMI | EMI Considerations | [مشاهده / Open](AN94001/README.md) |
 | AN97000 | ارتقای Firmware از طریق CH32 USB DFU | Firmware Upgrade via CH32 USB DFU | [مشاهده / Open](AN97000/README.md) |
 
+<div dir="rtl" align="right">
+
 ## وضعیت انتشار / Publication Status
 
+</div>
+
+<div dir="rtl" align="right">
+
 وضعیت هر یادداشت بر اساس وجود واقعی PDF و HTML در مخزن مشخص می‌شود؛ وجود README یا پوشه به‌تنهایی به معنی تکمیل ترجمه نیست.
+
+</div>
 
 <div dir="ltr" align="left">
 
@@ -85,21 +113,49 @@ Each note reports status according to the PDF and HTML files actually present. T
 
 </div>
 
+<div dir="rtl" align="right">
+
 ## نکات فنی / Engineering Notes
 
+</div>
+
+<div dir="rtl" align="right">
+
 - دیتاشیت و Reference Manual مدل دقیق MCU را بررسی کنید. / Consult the exact MCU datasheet and reference manual.
+
+</div>
+<div dir="rtl" align="right">
+
 - نام Peripheralها، رجیسترها، مقادیر و واحدها را با سند اصلی تطبیق دهید. / Cross-check peripheral names, registers, values, and units against the source.
+
+</div>
+<div dir="rtl" align="right">
+
 - پیش از استفاده در محصول، روی سخت‌افزار واقعی اعتبارسنجی کنید. / Validate on real hardware before production use.
+
+</div>
+
+<div dir="rtl" align="right">
 
 ## تصاویر و دیاگرام‌های راهنما / Images and Diagrams
 
+</div>
+
 [دارایی‌های گرافیکی MES / MES visual assets](../Images/GitHub-Assets/)
 
+<div dir="rtl" align="right">
+
 ## تهیه و تدوین / Credits
+
+</div>
+
+<div dir="rtl" align="right">
 
 <div dir="rtl" align="right">
 
 **معمار الکترونیک صنعت**  
+
+</div>
 
 </div>
 <div dir="ltr" align="left">
@@ -110,7 +166,11 @@ Each note reports status according to the PDF and HTML files actually present. T
 
 <div dir="rtl" align="right">
 
+<div dir="rtl" align="right">
+
 همراه شما در مسیر طراحی و ساخت مدارهای مطمئن  
+
+</div>
 
 </div>
 <div dir="ltr" align="left">
