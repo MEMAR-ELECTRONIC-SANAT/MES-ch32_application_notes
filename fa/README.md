@@ -6,7 +6,11 @@
 
 پوشه `fa` راهنماهای دوزبانه فارسی و انگلیسی یادداشت‌های کاربردی WCH CH32 را در خود جای می‌دهد. هر شناسه AN پوشه مستقلی دارد و فایل‌های PDF و HTML فارسی و رسانه‌های همراه، در صورت موجود بودن، در همان پوشه نگهداری می‌شوند.
 
+<div dir="ltr" align="left">
+
 The `fa` directory contains bilingual Persian-English guides for WCH CH32 Application Notes. Each AN has a dedicated folder containing links to available Persian PDF/HTML editions and supporting media.
+
+</div>
 
 ## ساختار / Structure
 
@@ -75,7 +79,11 @@ The `fa` directory contains bilingual Persian-English guides for WCH CH32 Applic
 
 وضعیت هر یادداشت بر اساس وجود واقعی PDF و HTML در مخزن مشخص می‌شود؛ وجود README یا پوشه به‌تنهایی به معنی تکمیل ترجمه نیست.
 
+<div dir="ltr" align="left">
+
 Each note reports status according to the PDF and HTML files actually present. The existence of a README or folder alone does not mean that a translation is complete.
+
+</div>
 
 ## نکات فنی / Engineering Notes
 
@@ -89,15 +97,43 @@ Each note reports status according to the PDF and HTML files actually present. T
 
 ## تهیه و تدوین / Credits
 
+<div dir="rtl" align="right">
+
 **معمار الکترونیک صنعت**  
+
+</div>
+<div dir="ltr" align="left">
+
 **MEMAR ELECTRONIC SANAT (MES)**
 
+</div>
+
+<div dir="rtl" align="right">
+
 همراه شما در مسیر طراحی و ساخت مدارهای مطمئن  
+
+</div>
+<div dir="ltr" align="left">
+
 *Your partner in designing and building reliable circuits.*
 
+</div>
+
+<div dir="ltr" align="left">
+
 - Telegram: https://t.me/Memar_Electronic
+
+</div>
+<div dir="ltr" align="left">
+
 - Instagram: https://www.instagram.com/Memar.Electronic
+
+</div>
+<div dir="ltr" align="left">
+
 - GitHub: https://github.com/MEMAR-ELECTRONIC-SANAT
+
+</div>
 
 
 <p align="center"><img src="../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo"></p>
