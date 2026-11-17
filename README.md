@@ -2,13 +2,25 @@
 
 <p align="center"><img src="Images/GitHub-Assets/MES-Hero-Banner.svg" width="100%" alt="معمار الکترونیک صنعت | MEMAR ELECTRONIC SANAT"></p>
 
+<div dir="rtl" align="right">
+
 # یادداشت‌های کاربردی به **زبان فارسی** برای میکروکنترلرهای WCH CH32 / WCH CH32 Application Notes
+
+</div>
 
 [🇮🇷 فارسی](README.md) · [🇬🇧 English](README_EN.md) · [🇨🇳 اسناد اصلی چینی / Original Chinese](README_zh.md)
 
+<div dir="rtl" align="right">
+
 ## معرفی مخزن / Repository Overview
 
+</div>
+
+<div dir="rtl" align="right">
+
 این مخزن مجموعه‌ای از یادداشت‌های کاربردی (Application Notes یا AN) برای میکروکنترلرهای **WCH CH32** است. اسناد، راهنمای عملی برای قابلیت‌های MCU، طراحی سخت‌افزار، پیکربندی Firmware، راه‌اندازی Peripheralها، عیب‌یابی و بهینه‌سازی ارائه می‌کنند. این مطالب مکمل Datasheet و Reference Manual هستند و جایگزین آن‌ها نیستند.
+
+</div>
 
 <div dir="ltr" align="left">
 
@@ -18,22 +30,70 @@ This repository collects Application Notes (ANs) for **WCH CH32 microcontrollers
 
 <p align="center"><img src="Images/GitHub-Assets/MES-Project-Card.svg" width="100%" alt="MES CH32 Application Notes Project Card"></p>
 
+<div dir="rtl" align="right">
+
 ## ساختار و زبان‌ها / Structure and Languages
 
+</div>
+
+<div dir="rtl" align="right">
+
 - `fa/`: راهنماهای دوزبانه فارسی و انگلیسی / Bilingual Persian-English guides.
+
+</div>
+<div dir="rtl" align="right">
+
 - `zh/`: اسناد اصلی چینی WCH / Original WCH Chinese documents.
+
+</div>
+<div dir="rtl" align="right">
+
 - `Images/GitHub-Assets/`: دارایی‌های گرافیکی MES / MES visual assets.
+
+</div>
+<div dir="rtl" align="right">
+
 - `Index.csv`: نمایه اسناد / Document index.
+
+</div>
+
+<div dir="rtl" align="right">
 
 ## راهنمای استفاده / How to Use
 
+</div>
+
+<div dir="rtl" align="right">
+
 1. شناسه یا موضوع را در جدول بیابید. / Find the required topic or AN ID in the table.
+
+</div>
+<div dir="rtl" align="right">
+
 2. راهنمای دوزبانه را برای وضعیت ترجمه و فایل‌های موجود باز کنید. / Open the bilingual guide for translation status and available files.
+
+</div>
+<div dir="rtl" align="right">
+
 3. PDF برای مطالعه آفلاین و HTML برای مرورگر است؛ فقط فایل‌های موجود پیوند داده می‌شوند. / Use PDF for offline reading and HTML for browser viewing; only existing files are linked.
+
+</div>
+<div dir="rtl" align="right">
+
 4. مدل MCU، پکیج، Revision و محدودیت‌های الکتریکی را با Datasheet و Reference Manual تطبیق دهید. / Verify the MCU, package, revision, and electrical limits against the datasheet and reference manual.
+
+</div>
+<div dir="rtl" align="right">
+
 5. کد نمونه را با نسخه MounRiver Studio (MRS)، کتابخانه و سخت‌افزار خود آزمایش کنید. / Validate examples with your MRS version, libraries, and target hardware.
 
+</div>
+
+<div dir="rtl" align="right">
+
 ## فهرست یادداشت‌ها / Application Notes Index
+
+</div>
 
 | ID | عنوان فارسی | English title | راهنمای دوزبانه / Bilingual guide | سند اصلی / Source |
 |---|---|---|---|---|
@@ -87,40 +147,104 @@ This repository collects Application Notes (ANs) for **WCH CH32 microcontrollers
 | AN94001 | نکات مرتبط با EMI | EMI Considerations | [راهنما / Guide](fa/AN94001/README.md) | [Source](zh/AN94001/AN94001.md) |
 | AN97000 | ارتقای Firmware از طریق CH32 USB DFU | Firmware Upgrade via CH32 USB DFU | [راهنما / Guide](fa/AN97000/README.md) | [Source](zh/AN97000/AN97000.md) |
 
+<div dir="rtl" align="right">
+
 ## نکات فنی / Engineering Notes
+
+</div>
 
 <p align="center"><img src="Images/GitHub-Assets/MES-Status-Strip.svg" width="100%" alt="MES Documentation Status"></p>
 
+<div dir="rtl" align="right">
+
 - Application Note جایگزین Datasheet، Reference Manual، Errata یا مستندات رسمی ابزار نیست. / An Application Note does not replace datasheets, reference manuals, errata, or official tool documentation.
+
+</div>
+<div dir="rtl" align="right">
+
 - اعداد، واحدها، کلاک، حافظه، تغذیه، USB، RF و EMI را مستقل اعتبارسنجی کنید. / Independently validate values, units, clocks, memory, power, USB, RF, and EMI.
+
+</div>
+<div dir="rtl" align="right">
+
 - پیش از استفاده در محصول، طراحی را روی سخت‌افزار واقعی آزمایش کنید. / Test the design on real hardware before production use.
+
+</div>
+<div dir="rtl" align="right">
+
 - برای گزارش خطا، شناسه AN، مدل MCU، نسخه ابزار و مراحل بازتولید را درج کنید. / Include the AN ID, MCU model, tool version, and reproduction steps when reporting issues.
 
+</div>
+
+<div dir="rtl" align="right">
+
 ## منابع / Resources
+
+</div>
 
 <div dir="ltr" align="left">
 
 - [WCH](https://www.wch.cn/) · [WCH Forum](https://www.wch.cn/bbs/forum-106-1.html)
 
 </div>
+<div dir="rtl" align="right">
+
 - [راهنماهای دوزبانه / Bilingual guides](fa/) · [اسناد چینی / Chinese sources](zh/)
+
+</div>
+
+<div dir="rtl" align="right">
 
 ## تصاویر و دیاگرام‌های راهنما / Images and Diagrams
 
+</div>
+
+<div dir="rtl" align="right">
+
 - [دارایی‌های گرافیکی MES / MES visual assets](Images/GitHub-Assets/)
+
+</div>
+<div dir="rtl" align="right">
+
 - [بنر معرفی / Hero banner](Images/GitHub-Assets/MES-Hero-Banner.svg)
+
+</div>
+<div dir="rtl" align="right">
+
 - [کارت پروژه / Project card](Images/GitHub-Assets/MES-Project-Card.svg)
+
+</div>
+<div dir="rtl" align="right">
+
 - [سربرگ بخش / Section header](Images/GitHub-Assets/MES-Section-Header.svg)
+
+</div>
+<div dir="rtl" align="right">
+
 - [نوار وضعیت / Status strip](Images/GitHub-Assets/MES-Status-Strip.svg)
+
+</div>
+<div dir="rtl" align="right">
+
 - [تصویر پایانی / Thank-you footer](Images/GitHub-Assets/MES-Thank-You-Footer.svg)
 
+</div>
+
+<div dir="rtl" align="right">
+
 ## تهیه و تدوین / Credits
+
+</div>
 
 <p align="center"><img src="Images/GitHub-Assets/MES-Thank-You-Footer.svg" width="100%" alt="Thank you for using MES resources"></p>
 
 <div dir="rtl" align="right">
 
+<div dir="rtl" align="right">
+
 **معمار الکترونیک صنعت**  
+
+</div>
 
 </div>
 <div dir="ltr" align="left">
@@ -131,7 +255,11 @@ This repository collects Application Notes (ANs) for **WCH CH32 microcontrollers
 
 <div dir="rtl" align="right">
 
+<div dir="rtl" align="right">
+
 همراه شما در مسیر طراحی و ساخت مدارهای مطمئن  
+
+</div>
 
 </div>
 <div dir="ltr" align="left">
