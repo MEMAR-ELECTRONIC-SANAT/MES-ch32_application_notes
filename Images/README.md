@@ -261,3 +261,5 @@ This directory is intended for repository artwork and documentation visuals. Tec
 </p>
 
 [بازگشت به مخزن اصلی / Back to the main repository](../)
+
+<p align="center"><img src="GitHub-Assets/MES_Animated_Logo_640x480.svg" width="160" alt="MES Animated Logo"></p>
