@@ -2,7 +2,7 @@
 
 <p align="center"><img src="Images/GitHub-Assets/MES-Hero-Banner.svg" width="100%" alt="معمار الکترونیک صنعت | MEMAR ELECTRONIC SANAT"></p>
 
-# یادداشت‌های کاربردی میکروکنترلرهای WCH CH32 / WCH CH32 Application Notes
+# یادداشت‌های کاربردی به **زبان فارسی** برای میکروکنترلرهای WCH CH32 / WCH CH32 Application Notes
 
 [🇮🇷 فارسی](README.md) · [🇬🇧 English](README_EN.md) · [🇨🇳 اسناد اصلی چینی / Original Chinese](README_zh.md)
 
