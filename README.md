@@ -10,7 +10,11 @@
 
 این مخزن مجموعه‌ای از یادداشت‌های کاربردی (Application Notes یا AN) برای میکروکنترلرهای **WCH CH32** است. اسناد، راهنمای عملی برای قابلیت‌های MCU، طراحی سخت‌افزار، پیکربندی Firmware، راه‌اندازی Peripheralها، عیب‌یابی و بهینه‌سازی ارائه می‌کنند. این مطالب مکمل Datasheet و Reference Manual هستند و جایگزین آن‌ها نیستند.
 
+<div dir="ltr" align="left">
+
 This repository collects Application Notes (ANs) for **WCH CH32 microcontrollers**, covering MCU features, hardware design, firmware configuration, peripheral bring-up, debugging, and optimization. These notes complement, but do not replace, the relevant datasheets and reference manuals.
+
+</div>
 
 <p align="center"><img src="Images/GitHub-Assets/MES-Project-Card.svg" width="100%" alt="MES CH32 Application Notes Project Card"></p>
 
@@ -94,7 +98,11 @@ This repository collects Application Notes (ANs) for **WCH CH32 microcontrollers
 
 ## منابع / Resources
 
+<div dir="ltr" align="left">
+
 - [WCH](https://www.wch.cn/) · [WCH Forum](https://www.wch.cn/bbs/forum-106-1.html)
+
+</div>
 - [راهنماهای دوزبانه / Bilingual guides](fa/) · [اسناد چینی / Chinese sources](zh/)
 
 ## تصاویر و دیاگرام‌های راهنما / Images and Diagrams
@@ -110,14 +118,42 @@ This repository collects Application Notes (ANs) for **WCH CH32 microcontrollers
 
 <p align="center"><img src="Images/GitHub-Assets/MES-Thank-You-Footer.svg" width="100%" alt="Thank you for using MES resources"></p>
 
+<div dir="rtl" align="right">
+
 **معمار الکترونیک صنعت**  
+
+</div>
+<div dir="ltr" align="left">
+
 **MEMAR ELECTRONIC SANAT (MES)**
 
+</div>
+
+<div dir="rtl" align="right">
+
 همراه شما در مسیر طراحی و ساخت مدارهای مطمئن  
+
+</div>
+<div dir="ltr" align="left">
+
 *Your partner in designing and building reliable circuits.*
 
+</div>
+
+<div dir="ltr" align="left">
+
 - Telegram: https://t.me/Memar_Electronic
+
+</div>
+<div dir="ltr" align="left">
+
 - Instagram: https://www.instagram.com/Memar.Electronic
+
+</div>
+<div dir="ltr" align="left">
+
 - GitHub: https://github.com/MEMAR-ELECTRONIC-SANAT
+
+</div>
 
 <p align="center"><img src="Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo"></p>
