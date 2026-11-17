@@ -256,10 +256,10 @@ This directory is intended for repository artwork and documentation visuals. Tec
 
 </div>
 
-<p align="center">
-  <img src="GitHub-Assets/MES_Animated_Logo_640x480.svg" width="240" alt="MES Animated Logo">
-</p>
+
 
 [بازگشت به مخزن اصلی / Back to the main repository](../)
 
-<p align="center"><img src="GitHub-Assets/MES_Animated_Logo_640x480.svg" width="160" alt="MES Animated Logo"></p>
+<p align="center">
+  <img src="../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="140" alt="MES Animated Logo">
+</p>
