@@ -10,7 +10,11 @@
 
 این پوشه نسخه‌های اصلی چینی اسناد Application Note شرکت WCH را نگهداری می‌کند. فایل‌های منبع، مانند Markdown و PDF، در زیرپوشه‌های متناظر با شناسه هر یادداشت قرار دارند. برای مطالعه ترجمه‌ها و راهنماهای فارسی و انگلیسی، از فهرست دوزبانه استفاده کنید.
 
+<div dir="ltr" align="left">
+
 This directory preserves the original Chinese WCH Application Note documents. Source files, such as Markdown and PDF, are organized in subfolders named after each Application Note ID. For Persian-English reading guides and available translations, use the bilingual index.
+
+</div>
 
 <p align="center"><img src="Images/GitHub-Assets/MES-Project-Card.svg" width="100%" alt="MES WCH CH32 Application Notes"></p>
 
@@ -51,14 +55,42 @@ This directory preserves the original Chinese WCH Application Note documents. So
 
 <p align="center"><img src="Images/GitHub-Assets/MES-Thank-You-Footer.svg" width="100%" alt="Thank you for using MES resources"></p>
 
+<div dir="rtl" align="right">
+
 **معمار الکترونیک صنعت**  
+
+</div>
+<div dir="ltr" align="left">
+
 **MEMAR ELECTRONIC SANAT (MES)**
 
+</div>
+
+<div dir="rtl" align="right">
+
 همراه شما در مسیر طراحی و ساخت مدارهای مطمئن  
+
+</div>
+<div dir="ltr" align="left">
+
 *Your partner in designing and building reliable circuits.*
 
+</div>
+
+<div dir="ltr" align="left">
+
 - Telegram: https://t.me/Memar_Electronic
+
+</div>
+<div dir="ltr" align="left">
+
 - Instagram: https://www.instagram.com/Memar.Electronic
+
+</div>
+<div dir="ltr" align="left">
+
 - GitHub: https://github.com/MEMAR-ELECTRONIC-SANAT
+
+</div>
 
 <p align="center"><img src="Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo"></p>
