@@ -176,13 +176,21 @@ The complete list of available notes, Persian and English titles, bilingual guid
 
 </div>
 
+<div dir="rtl" align="right">
+
 ## تهیه و تدوین / Credits
+
+</div>
 
 <p align="center"><img src="Images/GitHub-Assets/MES-Thank-You-Footer.svg" width="100%" alt="Thank you for using MES resources"></p>
 
 <div dir="rtl" align="right">
 
+<div dir="rtl" align="right">
+
 **معمار الکترونیک صنعت**  
+
+</div>
 
 </div>
 <div dir="ltr" align="left">
@@ -193,7 +201,11 @@ The complete list of available notes, Persian and English titles, bilingual guid
 
 <div dir="rtl" align="right">
 
+<div dir="rtl" align="right">
+
 همراه شما در مسیر طراحی و ساخت مدارهای مطمئن  
+
+</div>
 
 </div>
 <div dir="ltr" align="left">
