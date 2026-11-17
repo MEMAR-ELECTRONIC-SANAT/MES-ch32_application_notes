@@ -1,204 +1,63 @@
-<p align="center"><img src="Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES Divider"></p>
+<p align="center"><img src="Images/GitHub-Assets/MES-Divider.svg" width="100%" alt="MES 分隔线"></p>
 
-<p align="center"><img src="Images/GitHub-Assets/MES-Hero-Banner.svg" width="100%" alt="MEMAR ELECTRONIC SANAT | MES"></p>
-
-<div dir="rtl" align="right">
-
-# اسناد اصلی WCH CH32 / Original WCH CH32 Documents
-
-</div>
-
-[🇮🇷 فارسی / Persian](README.md) · [🇬🇧 English](README_EN.md) · [فهرست دوزبانه / Bilingual index](fa/README.md)
-
-<div dir="rtl" align="right">
-
-## معرفی / Overview
-
-</div>
-
-<div dir="rtl" align="right">
-
-این پوشه نسخه‌های اصلی چینی اسناد Application Note شرکت WCH را نگهداری می‌کند. فایل‌های منبع، مانند Markdown و PDF، در زیرپوشه‌های متناظر با شناسه هر یادداشت قرار دارند. برای مطالعه ترجمه‌ها و راهنماهای فارسی و انگلیسی، از فهرست دوزبانه استفاده کنید.
-
-</div>
+<p align="center"><img src="Images/GitHub-Assets/MES-Hero-Banner.svg" width="100%" alt="麦玛电子工业 MES"></p>
 
 <div dir="ltr" align="left">
 
-This directory preserves the original Chinese WCH Application Note documents. Source files, such as Markdown and PDF, are organized in subfolders named after each Application Note ID. For Persian-English reading guides and available translations, use the bilingual index.
+# WCH CH32 原始中文文档
 
 </div>
 
-<p align="center"><img src="Images/GitHub-Assets/MES-Project-Card.svg" width="100%" alt="MES WCH CH32 Application Notes"></p>
+## 项目介绍
 
-<div dir="rtl" align="right">
+本目录用于保存 WCH（沁恒微电子）发布的 CH32 系列应用笔记原始中文文档。Markdown、PDF 等源文件按照对应的应用笔记编号存放在各自的子目录中。
 
-## ساختار پوشه / Directory Structure
+如需查看其他语言的参考资料，请返回项目主页并查阅相关目录。
 
-</div>
+<p align="center"><img src="Images/GitHub-Assets/MES-Project-Card.svg" width="100%" alt="MES WCH CH32 应用笔记"></p>
 
-<div dir="rtl" align="right">
+## 目录结构
 
-- هر یادداشت در مسیر `ANxxxxx/` قرار دارد. / Each note is stored in an `ANxxxxx/` directory.
+- 每篇应用笔记均存放在对应的 `ANxxxxx/` 目录中。
+- 如果原始资料包含 Markdown 或 PDF 文件，则保存在相应目录内。
+- 每篇文档所需的图片及其他媒体资源存放在该文档目录下的 `media/` 文件夹中（如有）。
 
-</div>
-<div dir="rtl" align="right">
+<p align="center"><img src="Images/GitHub-Assets/MES-Status-Strip.svg" width="100%" alt="MES 文档状态"></p>
 
-- فایل‌های Markdown و PDF اصلی، در صورت ارائه توسط منبع، در همان پوشه نگهداری می‌شوند. / Original Markdown and PDF files are retained in the corresponding folder when provided by the source.
+## 技术说明
 
-</div>
-<div dir="rtl" align="right">
+- 建议结合相同编号的参考资料阅读原始中文文档。
+- 对于电气参数、寄存器定义及芯片使用限制，请以对应型号的官方数据手册和参考手册为准。
+- 在将示例代码用于实际产品之前，请先在目标硬件平台上进行充分测试。
+- 本项目中的译文及补充说明不能替代 WCH 官方技术文档。
 
-- رسانه‌ها و تصاویر وابسته به هر سند در پوشه `media/` قرار می‌گیرند. / Supporting images and media are stored in each note's `media/` folder when available.
+## 相关资源
 
-</div>
+- [项目主页](README.md)
+- [MES 图形资源目录](Images/GitHub-Assets/)
+- [WCH 官方网站](https://www.wch.cn/)
 
-<div dir="rtl" align="right">
+## 图片与示意图
 
-## راهنمای فنی / Technical Guidance
+<p align="center"><img src="Images/GitHub-Assets/MES-Section-Header.svg" width="100%" alt="MES 章节标题"></p>
 
-</div>
+- [MES 图形资源目录](Images/GitHub-Assets/)
+- [章节分隔图](Images/GitHub-Assets/MES-Divider.svg)
+- [项目横幅](Images/GitHub-Assets/MES-Hero-Banner.svg)
+- [项目展示卡片](Images/GitHub-Assets/MES-Project-Card.svg)
+- [文档状态栏](Images/GitHub-Assets/MES-Status-Strip.svg)
+- [致谢页脚图片](Images/GitHub-Assets/MES-Thank-You-Footer.svg)
 
-<p align="center"><img src="Images/GitHub-Assets/MES-Status-Strip.svg" width="100%" alt="MES Documentation Status"></p>
+## 制作与整理
 
-<div dir="rtl" align="right">
+<p align="center"><img src="Images/GitHub-Assets/MES-Thank-You-Footer.svg" width="100%" alt="感谢使用 MES 资源"></p>
 
-- متن چینی اصلی را با راهنمای دوزبانه همان شناسه مقایسه کنید. / Compare the original Chinese document with the bilingual guide for the same AN ID.
+**麦玛电子工业（MEMAR ELECTRONIC SANAT，MES）**
 
-</div>
-<div dir="rtl" align="right">
-
-- برای مقادیر الکتریکی، رجیسترها و محدودیت‌های هر قطعه به Datasheet و Reference Manual مدل دقیق مراجعه کنید. / Consult the exact device datasheet and reference manual for electrical limits, registers, and device-specific constraints.
-
-</div>
-<div dir="rtl" align="right">
-
-- مثال‌ها را پیش از استفاده در محصول روی سخت‌افزار هدف آزمایش کنید. / Test examples on the target hardware before production use.
-
-</div>
-<div dir="rtl" align="right">
-
-- ترجمه‌ها و یادداشت‌های تکمیلی جایگزین اسناد رسمی WCH نیستند. / Translations and supplementary notes do not replace official WCH documentation.
-
-</div>
-
-<div dir="rtl" align="right">
-
-## منابع / Resources
-
-</div>
-
-<div dir="rtl" align="right">
-
-- [فهرست راهنماهای دوزبانه / Bilingual guide index](fa/README.md)
-
-</div>
-<div dir="rtl" align="right">
-
-- [صفحه اصلی مخزن / Repository overview](README.md)
-
-</div>
-<div dir="rtl" align="right">
-
-- [دارایی‌های گرافیکی MES / MES visual assets](Images/GitHub-Assets/)
-
-</div>
-<div dir="rtl" align="right">
-
-- [وب‌سایت رسمی WCH / WCH official website](https://www.wch.cn/)
-
-</div>
-
-<div dir="rtl" align="right">
-
-## تصاویر و دیاگرام‌های راهنما / Images and Diagrams
-
-</div>
-
-<p align="center"><img src="Images/GitHub-Assets/MES-Section-Header.svg" width="100%" alt="MES Section Header"></p>
-
-<div dir="rtl" align="right">
-
-- [دارایی‌های گرافیکی MES / MES visual assets](Images/GitHub-Assets/)
-
-</div>
-<div dir="rtl" align="right">
-
-- [جداکننده بخش‌ها / Section divider](Images/GitHub-Assets/MES-Divider.svg)
-
-</div>
-<div dir="rtl" align="right">
-
-- [بنر معرفی / Hero banner](Images/GitHub-Assets/MES-Hero-Banner.svg)
-
-</div>
-<div dir="rtl" align="right">
-
-- [کارت پروژه / Project card](Images/GitHub-Assets/MES-Project-Card.svg)
-
-</div>
-<div dir="rtl" align="right">
-
-- [نوار وضعیت / Status strip](Images/GitHub-Assets/MES-Status-Strip.svg)
-
-</div>
-<div dir="rtl" align="right">
-
-- [تصویر پایانی / Thank-you footer](Images/GitHub-Assets/MES-Thank-You-Footer.svg)
-
-</div>
-
-<div dir="rtl" align="right">
-
-## تهیه و تدوین / Credits
-
-</div>
-
-<p align="center"><img src="Images/GitHub-Assets/MES-Thank-You-Footer.svg" width="100%" alt="Thank you for using MES resources"></p>
-
-<div dir="rtl" align="right">
-
-<div dir="rtl" align="right">
-
-**معمار الکترونیک صنعت**  
-
-</div>
-
-</div>
-<div dir="ltr" align="left">
-
-**MEMAR ELECTRONIC SANAT (MES)**
-
-</div>
-
-<div dir="rtl" align="right">
-
-<div dir="rtl" align="right">
-
-همراه شما در مسیر طراحی و ساخت مدارهای مطمئن  
-
-</div>
-
-</div>
-<div dir="ltr" align="left">
-
-*Your partner in designing and building reliable circuits.*
-
-</div>
-
-<div dir="ltr" align="left">
+与您携手设计和制造可靠的电路。
 
 - Telegram: https://t.me/Memar_Electronic
-
-</div>
-<div dir="ltr" align="left">
-
 - Instagram: https://www.instagram.com/Memar.Electronic
-
-</div>
-<div dir="ltr" align="left">
-
 - GitHub: https://github.com/MEMAR-ELECTRONIC-SANAT
 
-</div>
-
-<p align="center"><img src="Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES Animated Logo"></p>
+<p align="center"><img src="Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="360" alt="MES 动态标志"></p>
