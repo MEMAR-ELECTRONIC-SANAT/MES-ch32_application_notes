@@ -6,7 +6,11 @@
 
 این پوشه مجموعه‌ای از تصاویر معرفی، اینفوگرافیک‌ها و عناصر گرافیکی مورد استفاده در مخزن **یادداشت‌های کاربردی میکروکنترلرهای WCH CH32** را در بر می‌گیرد. تصاویر این بخش برای آشنایی سریع با محتوای مخزن، معرفی مجموعه یادداشت‌های کاربردی و استفاده در مستندات و صفحات GitHub آماده شده‌اند.
 
+<div dir="ltr" align="left">
+
 This directory contains promotional images, infographics, and reusable visual assets for the **WCH CH32 Application Notes** repository. These resources provide an overview of the repository, introduce its application-note collection, and support consistent presentation across GitHub documentation.
+
+</div>
 
 ## ساختار پوشه / Directory Structure
 
@@ -20,7 +24,11 @@ This directory contains promotional images, infographics, and reusable visual as
 
 این تصویر برای ارائه نمایی فشرده و تصویری از مجموعه یادداشت‌های کاربردی WCH CH32 در نظر گرفته شده است. می‌توان از آن برای معرفی موضوع مخزن و راهنمایی اولیه مخاطب درباره محتوای مجموعه استفاده کرد.
 
+<div dir="ltr" align="left">
+
 This infographic provides a visual overview of the WCH CH32 Application Notes collection. It can be used to introduce the repository and give readers an at-a-glance view of its contents.
+
+</div>
 
 <p align="center">
   <a href="WCH%20CH32%20Application%20Notes%20Infographic.png">
@@ -32,9 +40,17 @@ This infographic provides a visual overview of the WCH CH32 Application Notes co
 
 ## تصویر معرفی مخزن / Repository Promotional Image
 
+<div dir="rtl" align="right">
+
 این تصویر برای معرفی مجموعه و انتشار در شبکه‌های اجتماعی، کانال‌های اطلاع‌رسانی و سایر بسترهای ارتباطی مناسب است.
 
+</div>
+
+<div dir="ltr" align="left">
+
 This promotional graphic is intended for repository announcements and sharing through social media, communication channels, and other platforms.
+
+</div>
 
 <p align="center">
   <a href="WCH%20CH32%20Application%20Notes%20Promo.png">
@@ -48,7 +64,11 @@ This promotional graphic is intended for repository announcements and sharing th
 
 زیرپوشه `GitHub-Assets` شامل فایل‌های SVG قابل استفاده مجدد برای ایجاد ظاهر بصری یکپارچه در مستندات MES است. این عناصر در طراحی سربرگ‌ها، جداکننده‌ها، کارت‌های معرفی پروژه و بخش‌های مختلف README کاربرد دارند.
 
+<div dir="ltr" align="left">
+
 The `GitHub-Assets` subdirectory contains reusable SVG graphics that help maintain a consistent visual identity across MES documentation. These assets include banners, section headers, dividers, project cards, and closing graphics.
+
+</div>
 
 | فایل / File | کاربرد / Purpose |
 |---|---|
@@ -60,41 +80,101 @@ The `GitHub-Assets` subdirectory contains reusable SVG graphics that help mainta
 | [MES-Thank-You-Footer.svg](GitHub-Assets/MES-Thank-You-Footer.svg) | تصویر پایانی مستندات / Documentation footer |
 | [MES_Animated_Logo_640x480.svg](GitHub-Assets/MES_Animated_Logo_640x480.svg) | لوگوی متحرک MES / Animated MES logo |
 
+<div dir="rtl" align="right">
+
 برای مشاهده توضیحات کامل و پیش‌نمایش دارایی‌های گرافیکی، به فایل راهنمای زیر مراجعه کنید:
 
+</div>
+
+<div dir="ltr" align="left">
+
 For detailed descriptions and previews of the visual assets, see:
+
+</div>
 
 [راهنمای دارایی‌های گرافیکی MES / MES GitHub Assets README](GitHub-Assets/README.md)
 
 ## نحوه استفاده / Usage
 
 - برای نمایش تصاویر در فایل‌های Markdown، از مسیر نسبی فایل‌ها استفاده کنید.
+<div dir="rtl" align="right">
+
 - برای مشاهده تصویر در اندازه کامل یا دریافت آن، روی تصویر یا پیوند مربوط به آن کلیک کنید.
+
+</div>
 - فایل‌های SVG را می‌توان مستقیماً در READMEها و مستندات Markdown به کار برد.
 - هنگام انتقال یا تغییر نام فایل‌ها، مسیرهای ارجاع‌شده در READMEها را نیز به‌روزرسانی کنید.
 
+<div dir="ltr" align="left">
+
 - Use relative file paths to embed images in Markdown documents.
+
+</div>
+<div dir="ltr" align="left">
+
 - Click an image or its link to view or download the full-size file.
+
+</div>
+<div dir="ltr" align="left">
+
 - SVG assets can be embedded directly in README files and Markdown documentation.
+
+</div>
+<div dir="ltr" align="left">
+
 - If files are moved or renamed, update their references in the relevant README files.
+
+</div>
 
 ## تصاویر و دیاگرام‌های راهنما / Images and Diagrams
 
 این پوشه برای نگهداری تصاویر معرفی و عناصر گرافیکی مرتبط با مستندات مخزن در نظر گرفته شده است. محتوای فنی و توضیحات هر Application Note در پوشه‌های مربوط به زبان‌ها و در فایل‌های راهنمای همان یادداشت ارائه می‌شود.
 
+<div dir="ltr" align="left">
+
 This directory is intended for repository artwork and documentation visuals. Technical explanations and the detailed content of each Application Note are maintained in the corresponding language directories and individual application-note guides.
+
+</div>
 
 ## تهیه و تدوین / Credits
 
+<div dir="rtl" align="right">
+
 **معمار الکترونیک صنعت**  
+
+</div>
+<div dir="ltr" align="left">
+
 **MEMAR ELECTRONIC SANAT (MES)**
 
+</div>
+
+<div dir="rtl" align="right">
+
 همراه شما در مسیر طراحی و ساخت مدارهای مطمئن  
+
+</div>
+<div dir="ltr" align="left">
+
 *Your partner in designing and building reliable circuits.*
 
+</div>
+
+<div dir="ltr" align="left">
+
 - GitHub: https://github.com/MEMAR-ELECTRONIC-SANAT
+
+</div>
+<div dir="ltr" align="left">
+
 - Telegram: https://t.me/Memar_Electronic
+
+</div>
+<div dir="ltr" align="left">
+
 - Instagram: https://www.instagram.com/Memar.Electronic
+
+</div>
 
 <p align="center">
   <img src="GitHub-Assets/MES_Animated_Logo_640x480.svg" width="240" alt="MES Animated Logo">
