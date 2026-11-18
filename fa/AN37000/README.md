@@ -20,7 +20,7 @@
 
 | نوع سند | پیوند |
 |---|---|
-| سند اصلی WCH (Markdown) | — |
+| سند اصلی WCH (Markdown) | [مشاهده سند اصلی WCH](../../zh/AN37000/AN37000.md) |
 | PDF فارسی | [AN37000 FA.pdf](AN37000%20FA.pdf) |
 | HTML فارسی | [AN37000-FA.html](AN37000-FA.html) |
 
@@ -64,7 +64,7 @@ When available, use PDF for offline reading and printing, and HTML for browser-b
 
 | Document | Link |
 |---|---|
-| Original WCH Markdown | — |
+| Original WCH Markdown | [Open original WCH document](../../zh/AN37000/AN37000.md) |
 | Persian PDF | [AN37000 FA.pdf](AN37000%20FA.pdf) |
 | Persian HTML | [AN37000-FA.html](AN37000-FA.html) |
 
