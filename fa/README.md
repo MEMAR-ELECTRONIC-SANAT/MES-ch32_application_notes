@@ -32,6 +32,20 @@ The `fa` directory contains bilingual Persian-English guides for WCH CH32 Applic
 
 <div dir="rtl" align="right">
 
+## دسترسی به مستندات
+
+برای مشاهده فهرست و نسخه اصلی مستندات WCH با قالب Markdown، به [فهرست اسناد اصلی WCH](../zh/README.md) مراجعه کنید. همچنین می‌توانید از [پوشه اسناد اصلی چینی](../zh/) به فایل Markdown هر Application Note دسترسی پیدا کنید.
+
+</div>
+
+<div dir="ltr" align="left">
+
+## Access to Original Documentation
+
+For the original WCH documentation in Markdown format, see the [WCH original documents index](../zh/README.md). You can also browse the [original Chinese documentation directory](../zh/) to open the Markdown file for each Application Note.
+
+</div>
+
 ## ساختار / Structure
 
 </div>
