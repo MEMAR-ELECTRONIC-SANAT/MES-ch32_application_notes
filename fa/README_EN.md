@@ -2,6 +2,12 @@
 
 <div dir="ltr" align="left">
 
+[🇬🇧 English](README_EN.md) · [🇮🇷 فارسی](README.md)
+
+</div>
+
+<div dir="ltr" align="left">
+
 # WCH CH32 Application Notes — English Guide
 
 ## Overview
