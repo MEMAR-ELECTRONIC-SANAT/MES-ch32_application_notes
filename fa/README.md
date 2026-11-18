@@ -2,6 +2,12 @@
 
 <div dir="rtl" align="right">
 
+[🇮🇷 فارسی](README.md) · [🇬🇧 English](README_EN.md)
+
+</div>
+
+<div dir="rtl" align="right">
+
 # راهنمای دوزبانه فارسی و انگلیسی — یادداشت‌های WCH CH32
 
 </div>
@@ -196,5 +202,5 @@ Each note reports status according to the PDF and HTML files actually present. T
 </div>
 
 <p align="center">
-  <img src="../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="140" alt="MES Animated Logo">
+  <img src="../Images/GitHub-Assets/MES_Animated_Logo_640x480.svg" width="180" alt="MES Animated Logo">
 </p>
