@@ -20,7 +20,7 @@
 
 | نوع سند | پیوند |
 |---|---|
-| سند اصلی WCH (Markdown) | — |
+| سند اصلی WCH (Markdown) | [مشاهده سند اصلی WCH](../../zh/AN90000/AN90000.md) |
 | PDF فارسی | [AN90000-FA.pdf](AN90000-FA.pdf) |
 | HTML فارسی | [AN90000-FA.html](AN90000-FA.html) |
 
@@ -64,7 +64,7 @@ When available, use PDF for offline reading and printing, and HTML for browser-b
 
 | Document | Link |
 |---|---|
-| Original WCH Markdown | — |
+| Original WCH Markdown | [Open original WCH document](../../zh/AN90000/AN90000.md) |
 | Persian PDF | [AN90000-FA.pdf](AN90000-FA.pdf) |
 | Persian HTML | [AN90000-FA.html](AN90000-FA.html) |
 
