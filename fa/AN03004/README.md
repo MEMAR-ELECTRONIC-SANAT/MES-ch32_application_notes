@@ -20,7 +20,7 @@
 
 | نوع سند | پیوند |
 |---|---|
-| سند اصلی WCH (Markdown) | — |
+| سند اصلی WCH (Markdown) | [مشاهده سند اصلی WCH](../../zh/AN03004/AN03004.md) |
 | PDF فارسی | [AN03004.pdf](AN03004.pdf) |
 | HTML فارسی | [AN03004-FA.html](AN03004-FA.html) |
 
@@ -64,7 +64,7 @@ When available, use PDF for offline reading and printing, and HTML for browser-b
 
 | Document | Link |
 |---|---|
-| Original WCH Markdown | — |
+| Original WCH Markdown | [Open original WCH document](../../zh/AN03004/AN03004.md) |
 | Persian PDF | [AN03004.pdf](AN03004.pdf) |
 | Persian HTML | [AN03004-FA.html](AN03004-FA.html) |
 
