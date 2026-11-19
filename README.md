@@ -195,6 +195,36 @@ This repository collects Application Notes (ANs) for **WCH CH32 microcontrollers
 
 <div dir="rtl" align="right">
 
+## منبع اصلی و توضیحات ترجمه / Original Source and Translation Notice
+
+</div>
+
+<div dir="rtl" align="right">
+
+منبع اصلی این مخزن، پروژه رسمی WCH در نشانی زیر است:
+
+- [مخزن اصلی WCH: openwch/ch32_application_notes](https://github.com/openwch/ch32_application_notes)
+
+محتوای مستندات این مخزن MES بر اساس منبع اصلی تهیه شده و هدف آن، ترجمه مطالب و یادداشت‌های کاربردی به زبان فارسی و تسهیل دسترسی فارسی‌زبانان به این مستندات است. فایل‌های اصلی چینی نیز در پوشه `zh/` نگهداری شده‌اند. این مخزن ادعایی درباره تألیف مستقل Application Noteهای اصلی یا توسعه و تغییر مستقل محتوای فنی پروژه WCH ندارد؛ تغییرات MES در چارچوب ترجمه و ارائه مستندات انجام شده‌اند.
+
+برای دریافت مرجع اصلی و بررسی آخرین نسخه‌ها، به مخزن رسمی WCH مراجعه کنید.
+
+</div>
+
+<div dir="ltr" align="left">
+
+The original source of this repository is the official WCH project:
+
+- [Original WCH repository: openwch/ch32_application_notes](https://github.com/openwch/ch32_application_notes)
+
+The documentation in this MES repository is based on the original source. Its purpose is to translate the application notes and related documentation into Persian and make them more accessible to Persian-speaking readers. The original Chinese files are also retained in the `zh/` directory. This repository does not claim independent authorship of the original Application Notes or independent development or modification of WCH's technical content; MES contributions are limited to translation and documentation presentation.
+
+Please refer to the official WCH repository for the original source and the latest versions.
+
+</div>
+
+<div dir="rtl" align="right">
+
 ## تصاویر و دیاگرام‌های راهنما / Images and Diagrams
 
 </div>
